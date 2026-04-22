@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm view:*)",
+      "Bash(timeout 300 npx tsc --noEmit)",
+      "Bash(npx tsc:*)",
+      "Bash(rm -f yarn.lock package-lock.json)",
+      "Bash(npm install:*)",
+      "Bash(npm ls:*)",
+      "Bash(npx @next/codemod@canary --help)",
+      "Bash(npx @next/codemod@canary)",
+      "Bash(npx @next/codemod@canary -f)",
+      "Bash(npx @next/codemod@canary -f .)",
+      "Bash(npm list:*)",
+      "Bash(npm run:*)"
+    ]
+  }
+}

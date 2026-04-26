@@ -1,6 +1,6 @@
-import { DEFAULT_ROLE, ROLE_PERMISSIONS, ROLES_LIST } from 'src/config/permissions';
-
 import type { Role, Permission, ParsedPermission } from 'src/types/permissions';
+
+import { ROLES_LIST, DEFAULT_ROLE, ROLE_PERMISSIONS } from 'src/config/permissions';
 
 // ----------------------------------------------------------------------
 

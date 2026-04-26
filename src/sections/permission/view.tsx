@@ -1,36 +1,45 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { m } from 'framer-motion';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Container from '@mui/material/Container';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 import { paths } from 'src/routes/paths';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { ForbiddenIllustration } from 'src/assets/illustrations';
 
+import { Can } from 'src/components/can';
+import { varBounce, MotionContainer } from 'src/components/animate';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-
-import { RoleBasedGuard } from 'src/auth/guard';
 
 // ----------------------------------------------------------------------
 
+const denied = (
+  <Container component={MotionContainer} sx={{ textAlign: 'center' }}>
+    <m.div variants={varBounce('in')}>
+      <Typography variant="h3" sx={{ mb: 2 }}>
+        Permission denied
+      </Typography>
+    </m.div>
+
+    <m.div variants={varBounce('in')}>
+      <Typography sx={{ color: 'text.secondary' }}>
+        You do not have permission to access this page.
+      </Typography>
+    </m.div>
+
+    <m.div variants={varBounce('in')}>
+      <ForbiddenIllustration sx={{ my: { xs: 5, sm: 10 } }} />
+    </m.div>
+  </Container>
+);
+
 export function PermissionDeniedView() {
-  const [currentRole, setCurrentRole] = useState('admin');
-
-  const handleChangeRole = useCallback(
-    (event: React.MouseEvent<HTMLElement>, newRole: string | null) => {
-      if (newRole !== null) {
-        setCurrentRole(newRole);
-      }
-    },
-    []
-  );
-
   return (
     <DashboardContent>
       <CustomBreadcrumbs
@@ -39,20 +48,7 @@ export function PermissionDeniedView() {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <Box sx={{ gap: 1, mb: 5, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Typography variant="subtitle2">My role:</Typography>
-
-        <ToggleButtonGroup exclusive value={currentRole} size="small" onChange={handleChangeRole}>
-          <ToggleButton value="admin" aria-label="Admin">
-            Admin
-          </ToggleButton>
-          <ToggleButton value="user" aria-label="User">
-            User
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Box>
-
-      <RoleBasedGuard hasContent currentRole={currentRole} allowedRoles={['admin']} sx={{ py: 10 }}>
+      <Can permission="management:view" fallback={denied}>
         <Box sx={{ gap: 3, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
           {Array.from({ length: 8 }, (_, index) => (
             <Card key={index}>
@@ -66,7 +62,7 @@ export function PermissionDeniedView() {
             </Card>
           ))}
         </Box>
-      </RoleBasedGuard>
+      </Can>
     </DashboardContent>
   );
 }

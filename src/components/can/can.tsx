@@ -1,9 +1,9 @@
 'use client';
 
-import { usePermissions } from 'src/hooks/use-permissions';
-
 import type { ReactNode } from 'react';
 import type { Permission } from 'src/types/permissions';
+
+import { usePermissions } from 'src/hooks/use-permissions';
 
 // ----------------------------------------------------------------------
 

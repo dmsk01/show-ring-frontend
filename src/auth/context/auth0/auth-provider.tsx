@@ -4,7 +4,8 @@ import type { AppState } from '@auth0/auth0-react';
 
 import { useAuth0, Auth0Provider } from '@auth0/auth0-react';
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import { getPermissionsForRole, normalizeRole } from 'src/utils/permissions';
+
+import { normalizeRole, getPermissionsForRole } from 'src/utils/permissions';
 
 import axios from 'src/lib/axios';
 import { CONFIG } from 'src/global-config';

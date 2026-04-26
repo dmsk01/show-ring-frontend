@@ -6,7 +6,8 @@ import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useSetState } from 'minimal-shared/hooks';
 import { useMemo, useEffect, useCallback } from 'react';
-import { getPermissionsForRole, normalizeRole } from 'src/utils/permissions';
+
+import { normalizeRole, getPermissionsForRole } from 'src/utils/permissions';
 
 import axios from 'src/lib/axios';
 import { AUTH, FIRESTORE } from 'src/lib/firebase';

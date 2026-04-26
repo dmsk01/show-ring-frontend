@@ -6,7 +6,8 @@ import { Amplify } from 'aws-amplify';
 import { useSetState } from 'minimal-shared/hooks';
 import { useMemo, useEffect, useCallback } from 'react';
 import { fetchAuthSession, fetchUserAttributes } from 'aws-amplify/auth';
-import { getPermissionsForRole, normalizeRole } from 'src/utils/permissions';
+
+import { normalizeRole, getPermissionsForRole } from 'src/utils/permissions';
 
 import axios from 'src/lib/axios';
 import { CONFIG } from 'src/global-config';

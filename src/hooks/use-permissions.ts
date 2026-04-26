@@ -1,10 +1,12 @@
 'use client';
 
+import type { Permission } from 'src/types/permissions';
+
 import { useMemo } from 'react';
-import { useAuthContext } from 'src/auth/hooks';
+
 import { can, canAny, canAll } from 'src/utils/permissions';
 
-import type { Permission } from 'src/types/permissions';
+import { useAuthContext } from 'src/auth/hooks';
 
 // ----------------------------------------------------------------------
 

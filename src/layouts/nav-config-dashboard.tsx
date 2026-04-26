@@ -46,21 +46,6 @@ const ICONS = {
 
 // ----------------------------------------------------------------------
 
-/**
- * Input nav data is an array of navigation section items used to define the structure and content of a navigation bar.
- * Each section contains a subheader and an array of items, which can include nested children items.
- *
- * Each item can have the following properties:
- * - `title`: The title of the navigation item.
- * - `path`: The URL path the item links to.
- * - `icon`: An optional icon component to display alongside the title.
- * - `info`: Optional additional information to display, such as a label.
- * - `allowedRoles`: An optional array of roles that are allowed to see the item.
- * - `caption`: An optional caption to display below the title.
- * - `children`: An optional array of nested navigation items.
- * - `disabled`: An optional boolean to disable the item.
- * - `deepMatch`: An optional boolean to indicate if the item should match subpaths.
- */
 export const navData: NavSectionProps['data'] = [
   /**
    * Overview
@@ -183,24 +168,10 @@ export const navData: NavSectionProps['data'] = [
     subheader: 'Misc',
     items: [
       {
-        /**
-         * Permissions can be set for each item by using the `allowedRoles` property.
-         * - If `allowedRoles` is not set (default), all roles can see the item.
-         * - If `allowedRoles` is an empty array `[]`, no one can see the item.
-         * - If `allowedRoles` contains specific roles, only those roles can see the item.
-         *
-         * Examples:
-         * - `allowedRoles: ['user']` - only users with the 'user' role can see this item.
-         * - `allowedRoles: ['admin']` - only users with the 'admin' role can see this item.
-         * - `allowedRoles: ['admin', 'manager']` - only users with the 'admin' or 'manager' roles can see this item.
-         *
-         * Combine with the `checkPermissions` prop to build conditional expressions.
-         * Example usage can be found in: src/sections/_examples/extra/navigation-bar-view/nav-vertical.{jsx | tsx}
-         */
         title: 'Permission',
         path: paths.dashboard.permission,
         icon: ICONS.lock,
-        allowedRoles: ['admin', 'manager'],
+        permission: 'management:view',
         caption: 'Only admin can see this item.',
       },
       {

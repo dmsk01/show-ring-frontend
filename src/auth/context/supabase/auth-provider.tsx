@@ -4,7 +4,8 @@ import type { AuthState } from '../../types';
 
 import { useSetState } from 'minimal-shared/hooks';
 import { useMemo, useEffect, useCallback } from 'react';
-import { getPermissionsForRole, normalizeRole } from 'src/utils/permissions';
+
+import { normalizeRole, getPermissionsForRole } from 'src/utils/permissions';
 
 import axios from 'src/lib/axios';
 import { supabase } from 'src/lib/supabase';

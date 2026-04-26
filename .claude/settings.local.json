@@ -23,7 +23,8 @@
       "Bash(rmdir src/services src/store src/types)",
       "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('rhf:', p.dependencies['react-hook-form']\\); console.log\\('zod:', p.dependencies['zod']\\); console.log\\('hookform-resolvers:', p.dependencies['@hookform/resolvers']\\);\")",
       "WebFetch(domain:github.com)",
-      "Bash(ls \"G:/Work/show-ring-mobile/\"*.md)"
+      "Bash(ls \"G:/Work/show-ring-mobile/\"*.md)",
+      "Bash(ls G:/Work/show-ring/src/layouts/types*)"
     ]
   }
 }

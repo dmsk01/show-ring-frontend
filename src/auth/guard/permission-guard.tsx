@@ -1,16 +1,17 @@
 'use client';
 
+import type { Permission } from 'src/types/permissions';
+
 import { useState, useEffect } from 'react';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { usePermissions } from 'src/hooks/use-permissions';
+
 import { SplashScreen } from 'src/components/loading-screen';
 
-import { usePermissions } from 'src/hooks/use-permissions';
 import { useAuthContext } from '../hooks';
-
-import type { Permission } from 'src/types/permissions';
 
 // ----------------------------------------------------------------------
 

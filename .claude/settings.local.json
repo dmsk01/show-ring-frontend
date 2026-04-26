@@ -12,7 +12,18 @@
       "Bash(npx @next/codemod@canary -f)",
       "Bash(npx @next/codemod@canary -f .)",
       "Bash(npm list:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "WebFetch(domain:docs.expo.dev)",
+      "WebSearch",
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(ls G:/Work/show-ring/src/global-config.*)",
+      "Bash(wc:*)",
+      "Bash(rm -f src/services/auth.service.ts src/store/auth.ts src/hooks/use-auth.ts src/types/auth.ts)",
+      "Bash(rmdir src/services src/store src/types)",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('rhf:', p.dependencies['react-hook-form']\\); console.log\\('zod:', p.dependencies['zod']\\); console.log\\('hookform-resolvers:', p.dependencies['@hookform/resolvers']\\);\")",
+      "WebFetch(domain:github.com)",
+      "Bash(ls \"G:/Work/show-ring-mobile/\"*.md)"
     ]
   }
 }

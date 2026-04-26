@@ -4,6 +4,7 @@ import type { AppState } from '@auth0/auth0-react';
 
 import { useAuth0, Auth0Provider } from '@auth0/auth0-react';
 import { useMemo, useState, useEffect, useCallback } from 'react';
+import { getPermissionsForRole, normalizeRole } from 'src/utils/permissions';
 
 import axios from 'src/lib/axios';
 import { CONFIG } from 'src/global-config';
@@ -73,24 +74,30 @@ function AuthProviderContainer({ children }: Props) {
 
   const status = isLoading ? 'loading' : checkAuthenticated;
 
-  const memoizedValue = useMemo(
-    () => ({
-      user: user
-        ? {
-            ...user,
-            id: user?.sub,
-            accessToken,
-            displayName: user?.name,
-            photoURL: user?.picture,
-            role: user?.role ?? 'admin',
-          }
-        : null,
+  const memoizedValue = useMemo(() => {
+    const role = normalizeRole(user?.role);
+    const normalizedUser = user
+      ? {
+          ...user,
+          id: user?.sub,
+          accessToken,
+          displayName: user?.name,
+          photoURL: user?.picture,
+          role,
+        }
+      : null;
+    const permissions = normalizedUser
+      ? ((user?.permissions as string[] | undefined) ?? getPermissionsForRole(role))
+      : [];
+
+    return {
+      user: normalizedUser,
+      permissions,
       loading: status === 'loading',
       authenticated: status === 'authenticated',
       unauthenticated: status === 'unauthenticated',
-    }),
-    [accessToken, status, user]
-  );
+    };
+  }, [accessToken, status, user]);
 
   return <AuthContext value={memoizedValue}>{children}</AuthContext>;
 }

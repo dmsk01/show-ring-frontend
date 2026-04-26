@@ -14,9 +14,8 @@ import { varBounce, MotionContainer } from 'src/components/animate';
 // ----------------------------------------------------------------------
 
 /**
- * NOTE:
- * This component is for reference only.
- * You can customize the logic and conditions to better suit your application's requirements.
+ * @deprecated Use `<Can>` from `src/components/can` for conditional rendering,
+ * or `<PermissionGuard>` from `src/auth/guard` for route-level protection.
  */
 
 export type RoleBasedGuardProp = {

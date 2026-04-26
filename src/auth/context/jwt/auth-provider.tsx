@@ -4,6 +4,7 @@ import type { AuthState } from '../../types';
 
 import { useSetState } from 'minimal-shared/hooks';
 import { useMemo, useEffect, useCallback } from 'react';
+import { getPermissionsForRole, normalizeRole } from 'src/utils/permissions';
 
 import axios, { endpoints } from 'src/lib/axios';
 
@@ -58,16 +59,22 @@ export function AuthProvider({ children }: Props) {
 
   const status = state.loading ? 'loading' : checkAuthenticated;
 
-  const memoizedValue = useMemo(
-    () => ({
-      user: state.user ? { ...state.user, role: state.user?.role ?? 'admin' } : null,
+  const memoizedValue = useMemo(() => {
+    const role = normalizeRole(state.user?.role);
+    const user = state.user ? { ...state.user, role } : null;
+    const permissions = user
+      ? ((state.user?.permissions as string[] | undefined) ?? getPermissionsForRole(role))
+      : [];
+
+    return {
+      user,
+      permissions,
       checkUserSession,
       loading: status === 'loading',
       authenticated: status === 'authenticated',
       unauthenticated: status === 'unauthenticated',
-    }),
-    [checkUserSession, state.user, status]
-  );
+    };
+  }, [checkUserSession, state.user, status]);
 
   return <AuthContext value={memoizedValue}>{children}</AuthContext>;
 }

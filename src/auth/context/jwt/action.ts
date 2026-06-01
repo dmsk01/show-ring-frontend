@@ -29,10 +29,14 @@ export const signUp = async ({ email, password }: SignUpParams): Promise<void> =
   storeTokens(res.data);
 };
 
-/** Sign out — best-effort backend logout, then clear local session */
+/** Sign out — best-effort backend logout (revokes the refresh token), then clear local session */
 export const signOut = async (): Promise<void> => {
   try {
-    await axios.post(endpoints.auth.logout);
+    const refreshToken = sessionStorage.getItem(JWT_REFRESH_STORAGE_KEY);
+    // Backend requires { refresh_token } to revoke it; skip the call if we don't have one.
+    if (refreshToken) {
+      await axios.post(endpoints.auth.logout, { refresh_token: refreshToken });
+    }
   } catch {
     // ignore network/401 on logout
   } finally {

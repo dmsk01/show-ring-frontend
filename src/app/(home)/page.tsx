@@ -1,15 +1,15 @@
 import type { Metadata } from 'next';
 
-import { HomeView } from 'src/sections/home/view';
+import { LandingView } from 'src/sections/landing/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata: Metadata = {
-  title: 'Minimals UI: The starting point for your next project',
+  title: 'Show Ring — выставки собак и кошек онлайн',
   description:
-    'The starting point for your next project with Minimal UI Kit, built on the newest version of Material-UI ©, ready to be customized to your style',
+    'Show Ring — платформа для участия в выставках собак и кошек по правилам РКФ и FCI: регистрация на выставку, профиль питомника, учёт родословных и титулов, заявки и результаты в одном месте.',
 };
 
 export default function Page() {
-  return <HomeView />;
+  return <LandingView />;
 }

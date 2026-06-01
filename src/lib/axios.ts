@@ -4,34 +4,72 @@ import axios from 'axios';
 
 import { CONFIG } from 'src/global-config';
 
+import { JWT_STORAGE_KEY, JWT_REFRESH_STORAGE_KEY } from 'src/auth/context/jwt/constant';
+
 // ----------------------------------------------------------------------
 
 const axiosInstance = axios.create({
-  baseURL: CONFIG.serverUrl,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: CONFIG.serverUrl, // '/api' → proxied to backend by Next.js rewrites
+  headers: { 'Content-Type': 'application/json' },
 });
 
-/**
- * Optional: Add token (if using auth)
- *
- axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// Attach bearer on every request (survives token refresh, unlike axios.defaults).
+axiosInstance.interceptors.request.use((config) => {
+  if (typeof window !== 'undefined') {
+    const token = sessionStorage.getItem(JWT_STORAGE_KEY);
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
   return config;
 });
-*
-*/
+
+// On 401: try refresh once, then retry the original request.
+let refreshPromise: Promise<string | null> | null = null;
+
+async function refreshAccessToken(): Promise<string | null> {
+  const refreshToken =
+    typeof window !== 'undefined' ? sessionStorage.getItem(JWT_REFRESH_STORAGE_KEY) : null;
+  if (!refreshToken) return null;
+
+  try {
+    const res = await axios.post(`${CONFIG.serverUrl}${endpoints.auth.refresh}`, {
+      refresh_token: refreshToken,
+    });
+    const { access_token, refresh_token } = res.data;
+    sessionStorage.setItem(JWT_STORAGE_KEY, access_token);
+    if (refresh_token) sessionStorage.setItem(JWT_REFRESH_STORAGE_KEY, refresh_token);
+    return access_token;
+  } catch {
+    sessionStorage.removeItem(JWT_STORAGE_KEY);
+    sessionStorage.removeItem(JWT_REFRESH_STORAGE_KEY);
+    return null;
+  }
+}
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => {
-    const message = error?.response?.data?.message || error?.message || 'Something went wrong!';
-    console.error('Axios error:', message);
-    return Promise.reject(new Error(message));
+  async (error) => {
+    const original = error.config as (AxiosRequestConfig & { _retry?: boolean }) | undefined;
+    const status = error?.response?.status;
+
+    const isAuthCall = original?.url?.includes('/auth/');
+
+    if (status === 401 && original && !original._retry && !isAuthCall) {
+      original._retry = true;
+      refreshPromise = refreshPromise ?? refreshAccessToken();
+      const newToken = await refreshPromise;
+      refreshPromise = null;
+
+      if (newToken) {
+        original.headers = { ...original.headers, Authorization: `Bearer ${newToken}` };
+        return axiosInstance(original);
+      }
+    }
+
+    const message =
+      error?.response?.data?.detail || error?.response?.data?.message || error?.message || 'Something went wrong!';
+    return Promise.reject(new Error(typeof message === 'string' ? message : 'Request failed'));
   }
 );
 
@@ -42,29 +80,37 @@ export default axiosInstance;
 export const fetcher = async <T = unknown>(
   args: string | [string, AxiosRequestConfig]
 ): Promise<T> => {
-  try {
-    const [url, config] = Array.isArray(args) ? args : [args, {}];
-
-    const res = await axiosInstance.get<T>(url, config);
-
-    return res.data;
-  } catch (error) {
-    console.error('Fetcher failed:', error);
-    throw error;
-  }
+  const [url, config] = Array.isArray(args) ? args : [args, {}];
+  const res = await axiosInstance.get<T>(url, config);
+  return res.data;
 };
 
 // ----------------------------------------------------------------------
 
 export const endpoints = {
+  // --- ShowTail backend ---
+  auth: {
+    me: '/users/me',
+    profile: '/users/me/profile',
+    signIn: '/auth/login',
+    signUp: '/auth/register',
+    refresh: '/auth/refresh',
+    logout: '/auth/logout',
+  },
+  dog: {
+    list: '/dogs',
+    details: (id: string) => `/dogs/${id}`,
+    pedigree: (id: string) => `/dogs/${id}/pedigree`,
+    titles: (id: string) => `/dogs/${id}/titles`,
+  },
+  reference: {
+    breeds: '/references/breeds',
+    kennels: '/kennels',
+  },
+  // --- Minimal Kit demo endpoints (parked; kept so demo actions keep compiling) ---
   chat: '/api/chat',
   kanban: '/api/kanban',
   calendar: '/api/calendar',
-  auth: {
-    me: '/api/auth/me',
-    signIn: '/api/auth/sign-in',
-    signUp: '/api/auth/sign-up',
-  },
   mail: {
     list: '/api/mail/list',
     details: '/api/mail/details',

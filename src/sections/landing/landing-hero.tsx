@@ -13,9 +13,7 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { allLangs } from 'src/locales';
 import { CONFIG } from 'src/global-config';
-import { LanguagePopover } from 'src/layouts/components/language-popover';
 
 import { Iconify } from 'src/components/iconify';
 import { varFade, MotionViewport } from 'src/components/animate';
@@ -26,16 +24,18 @@ import { useLanding } from './landing-lang-context';
 
 const asset = (name: string) => `${CONFIG.assetsDir}/assets/landing/${name}`;
 
-const FloatDecor = ({ src, sx }: { src: string; sx?: object }) => (
+type StencilProps = { name: string; sx?: object; duration?: number; delay?: number };
+
+const Stencil = ({ name, sx, duration = 9, delay = 0 }: StencilProps) => (
   <Box
     component={m.img}
-    src={src}
+    src={asset(`stencil/${name}.svg`)}
     alt=""
     aria-hidden
     initial={{ y: 0 }}
-    animate={{ y: [0, -14, 0] }}
-    transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-    sx={[{ position: 'absolute', pointerEvents: 'none' }, ...(Array.isArray(sx) ? sx : [sx])]}
+    animate={{ y: [0, -10, 0] }}
+    transition={{ duration, repeat: Infinity, ease: 'easeInOut', delay }}
+    sx={[{ position: 'absolute', pointerEvents: 'none', opacity: 0.4 }, ...(Array.isArray(sx) ? sx : [sx])]}
   />
 );
 
@@ -54,19 +54,13 @@ export function LandingHero() {
         }),
       ]}
     >
-      {/* Decorative background */}
-      <Box
-        component="img"
-        src={asset('blob.svg')}
-        alt=""
-        aria-hidden
-        sx={{ position: 'absolute', top: -80, right: -120, width: 520, opacity: 0.9 }}
-      />
-      <FloatDecor src={asset('ring.svg')} sx={{ top: 80, left: '6%', width: 84, opacity: 0.5, display: { xs: 'none', md: 'block' } }} />
-      <FloatDecor src={asset('rosette.svg')} sx={{ bottom: 60, left: '12%', width: 72, opacity: 0.7, display: { xs: 'none', md: 'block' } }} />
-      <FloatDecor src={asset('paw.svg')} sx={{ top: 120, right: '10%', width: 64, opacity: 0.35, display: { xs: 'none', md: 'block' } }} />
-
-      <LanguagePopover data={allLangs} sx={{ position: 'absolute', top: 24, right: 24, zIndex: 9 }} />
+      {/* Minimalist stencil decor — subtle, outline-only, must not pull focus */}
+      <Stencil name="circle" sx={{ top: '8%', right: '-4%', width: 220, opacity: 0.18 }} duration={11} />
+      <Stencil name="trophy" sx={{ top: 70, left: '7%', width: 64, display: { xs: 'none', md: 'block' } }} />
+      <Stencil name="medal" sx={{ top: 130, right: '9%', width: 52, opacity: 0.5, display: { xs: 'none', sm: 'block' } }} delay={1.2} />
+      <Stencil name="dog" sx={{ bottom: 56, left: '11%', width: 64, display: { xs: 'none', md: 'block' } }} delay={0.6} />
+      <Stencil name="cat" sx={{ bottom: 80, right: '12%', width: 56, display: { xs: 'none', md: 'block' } }} delay={1.8} />
+      <Stencil name="circle" sx={{ bottom: '-6%', left: '-3%', width: 160, opacity: 0.16 }} duration={13} delay={0.4} />
 
       <Container component={MotionViewport} sx={{ position: 'relative', zIndex: 2 }}>
         <Stack sx={{ maxWidth: 760, mx: 'auto', textAlign: 'center', alignItems: 'center' }}>

@@ -1,3 +1,5 @@
+import type { Role } from 'src/types/permissions';
+
 export type UserType = Record<string, any> | null;
 
 export type AuthState = {
@@ -10,6 +12,7 @@ export type AuthContextValue = {
   loading: boolean;
   authenticated: boolean;
   unauthenticated: boolean;
+  roles: Role[];
   permissions: string[];
   checkUserSession?: () => Promise<void>;
 };

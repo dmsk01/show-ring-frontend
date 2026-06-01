@@ -11,16 +11,16 @@ import { useAuthContext } from 'src/auth/hooks';
 // ----------------------------------------------------------------------
 
 export function usePermissions() {
-  const { user, permissions } = useAuthContext();
+  const { roles, permissions } = useAuthContext();
 
   return useMemo(
     () => ({
-      role: user?.role,
+      roles,
       permissions,
       can: (perm: Permission | string) => can(perm, permissions),
       canAny: (perms: readonly (Permission | string)[]) => canAny(perms, permissions),
       canAll: (perms: readonly (Permission | string)[]) => canAll(perms, permissions),
     }),
-    [user?.role, permissions]
+    [roles, permissions]
   );
 }

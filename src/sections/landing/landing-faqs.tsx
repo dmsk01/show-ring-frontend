@@ -24,9 +24,9 @@ import { useLanding } from './landing-lang-context';
 
 export function LandingFAQs() {
   const { t } = useLanding();
-  const [expanded, setExpanded] = useState<string | false>(t.faqs.items[0]?.q ?? false);
+  const [expanded, setExpanded] = useState<number | false>(0);
 
-  const handleChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
+  const handleChange = (panel: number) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
 
@@ -65,14 +65,14 @@ export function LandingFAQs() {
         </Stack>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          {t.faqs.items.map((item) => (
+          {t.faqs.items.map((item, index) => (
             <Accordion
-              key={item.q}
+              key={index}
               disableGutters
               component={m.div}
               variants={varFade('inUp', { distance: 24 })}
-              expanded={expanded === item.q}
-              onChange={handleChange(item.q)}
+              expanded={expanded === index}
+              onChange={handleChange(index)}
               sx={{
                 px: 2.5,
                 py: 1,

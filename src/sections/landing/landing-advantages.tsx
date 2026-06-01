@@ -44,7 +44,7 @@ export function LandingAdvantages() {
           }}
         >
           {t.advantages.items.map((item, index) => (
-            <Box key={item.title} component={m.div} variants={varFade('inUp', { distance: 24 })}>
+            <Box key={index} component={m.div} variants={varFade('inUp', { distance: 24 })}>
               <Card
                 sx={{
                   p: 4,

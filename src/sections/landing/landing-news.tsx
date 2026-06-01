@@ -56,7 +56,7 @@ export function LandingNews() {
         <Box sx={{ mt: { xs: 4, md: 6 } }}>
           <Carousel carousel={carousel}>
             {t.news.items.map((item, index) => (
-              <Card key={item.title} sx={{ height: 1 }}>
+              <Card key={index} sx={{ height: 1 }}>
                 <Box
                   component="img"
                   alt={item.title}

@@ -43,7 +43,7 @@ export function LandingStats() {
         >
           {t.stats.items.map((item, index) => (
             <Box
-              key={item.label}
+              key={index}
               component={m.div}
               variants={varFade('inUp', { distance: 24 })}
               sx={{ textAlign: 'center' }}

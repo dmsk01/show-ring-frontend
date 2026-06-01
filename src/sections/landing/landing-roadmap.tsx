@@ -41,7 +41,7 @@ export function LandingRoadmap() {
           }}
         >
           {t.roadmap.steps.map((step, index) => (
-            <TimelineItem key={step.title}>
+            <TimelineItem key={index}>
               <TimelineSeparator>
                 <TimelineDot color="primary" sx={{ p: 1.5 }}>
                   <Iconify icon={ICONS[index]} width={24} />

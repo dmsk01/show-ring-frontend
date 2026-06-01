@@ -105,6 +105,10 @@ export const endpoints = {
     pedigree: (id: string) => `/dogs/${id}/pedigree`,
     titles: (id: string) => `/dogs/${id}/titles`,
   },
+  kennel: {
+    list: '/kennels',
+    details: (id: string) => `/kennels/${id}`,
+  },
   reference: {
     breeds: '/references/breeds',
     kennels: '/kennels',

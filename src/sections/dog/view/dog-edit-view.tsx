@@ -19,6 +19,9 @@ export function DogEditView({ id }: Props) {
 
   if (dogLoading) return <LoadingScreen />;
 
+  // Avoid silently falling into "create" mode when the dog id is missing/deleted.
+  if (!dog) return <DashboardContent>Dog not found.</DashboardContent>;
+
   return (
     <DashboardContent>
       <CustomBreadcrumbs

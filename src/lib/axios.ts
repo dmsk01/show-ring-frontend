@@ -57,9 +57,11 @@ axiosInstance.interceptors.response.use(
 
     if (status === 401 && original && !original._retry && !isAuthCall) {
       original._retry = true;
-      refreshPromise = refreshPromise ?? refreshAccessToken();
+      // Single-flight: concurrent 401s share one refresh; reset only once it settles.
+      refreshPromise = refreshPromise ?? refreshAccessToken().finally(() => {
+        refreshPromise = null;
+      });
       const newToken = await refreshPromise;
-      refreshPromise = null;
 
       if (newToken) {
         original.headers = { ...original.headers, Authorization: `Bearer ${newToken}` };

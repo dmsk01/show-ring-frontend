@@ -9,7 +9,6 @@ import { LandingHero } from '../landing-hero';
 import { LandingFAQs } from '../landing-faqs';
 import { LandingStats } from '../landing-stats';
 import { LandingRoadmap } from '../landing-roadmap';
-import { LandingProvider } from '../landing-lang-context';
 import { LandingAdvantages } from '../landing-advantages';
 
 // ----------------------------------------------------------------------
@@ -18,7 +17,7 @@ export function LandingView() {
   const pageProgress = useScrollProgress();
 
   return (
-    <LandingProvider>
+    <>
       <ScrollProgress
         variant="linear"
         progress={pageProgress.scrollYProgress}
@@ -34,6 +33,6 @@ export function LandingView() {
       <LandingFAQs />
       <LandingNews />
       <LandingSeo />
-    </LandingProvider>
+    </>
   );
 }

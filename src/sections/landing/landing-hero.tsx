@@ -13,12 +13,14 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { allLangs } from 'src/locales';
 import { CONFIG } from 'src/global-config';
+import { LanguagePopover } from 'src/layouts/components/language-popover';
 
 import { Iconify } from 'src/components/iconify';
 import { varFade, MotionViewport } from 'src/components/animate';
 
-import { useLanding, LandingLangToggle } from './landing-lang-context';
+import { useLanding } from './landing-lang-context';
 
 // ----------------------------------------------------------------------
 
@@ -64,7 +66,7 @@ export function LandingHero() {
       <FloatDecor src={asset('rosette.svg')} sx={{ bottom: 60, left: '12%', width: 72, opacity: 0.7, display: { xs: 'none', md: 'block' } }} />
       <FloatDecor src={asset('paw.svg')} sx={{ top: 120, right: '10%', width: 64, opacity: 0.35, display: { xs: 'none', md: 'block' } }} />
 
-      <LandingLangToggle sx={{ position: 'absolute', top: 24, right: 24, zIndex: 9 }} />
+      <LanguagePopover data={allLangs} sx={{ position: 'absolute', top: 24, right: 24, zIndex: 9 }} />
 
       <Container component={MotionViewport} sx={{ position: 'relative', zIndex: 2 }}>
         <Stack sx={{ maxWidth: 760, mx: 'auto', textAlign: 'center', alignItems: 'center' }}>
@@ -115,9 +117,16 @@ export function LandingHero() {
           </m.div>
 
           <m.div variants={varFade('in')}>
-            <Stack direction="row" spacing={3} sx={{ mt: 6, opacity: 0.8 }}>
-              {['dog.svg', 'cat.svg', 'trophy.svg', 'podium.svg'].map((icon) => (
-                <Box key={icon} component="img" src={asset(icon)} alt="" aria-hidden sx={{ width: 40, height: 40 }} />
+            <Stack direction="row" spacing={{ xs: 2, sm: 3 }} sx={{ mt: 6 }}>
+              {['dog', 'cat', 'trophy', 'medal'].map((icon) => (
+                <Box
+                  key={icon}
+                  component="img"
+                  src={asset(`hero/${icon}.svg`)}
+                  alt=""
+                  aria-hidden
+                  sx={{ width: { xs: 48, sm: 56 }, height: { xs: 48, sm: 56 } }}
+                />
               ))}
             </Stack>
           </m.div>

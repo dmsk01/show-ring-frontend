@@ -63,6 +63,23 @@ export const navData: NavSectionProps['data'] = [
     ],
   },
   /**
+   * ShowTail
+   */
+  {
+    subheader: 'ShowTail',
+    items: [
+      {
+        title: 'Dogs',
+        path: paths.dashboard.dogs.root,
+        icon: ICONS.product,
+        children: [
+          { title: 'List', path: paths.dashboard.dogs.root },
+          { title: 'Create', path: paths.dashboard.dogs.new },
+        ],
+      },
+    ],
+  },
+  /**
    * Management
    */
   {

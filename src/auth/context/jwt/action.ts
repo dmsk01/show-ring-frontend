@@ -3,84 +3,40 @@
 import axios, { endpoints } from 'src/lib/axios';
 
 import { setSession } from './utils';
-import { JWT_STORAGE_KEY } from './constant';
+import { JWT_REFRESH_STORAGE_KEY } from './constant';
 
 // ----------------------------------------------------------------------
 
-export type SignInParams = {
-  email: string;
-  password: string;
-};
+export type SignInParams = { email: string; password: string };
+export type SignUpParams = { email: string; password: string };
 
-export type SignUpParams = {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-};
+function storeTokens(data: { access_token?: string; refresh_token?: string }) {
+  const { access_token, refresh_token } = data;
+  if (!access_token) throw new Error('Access token not found in response');
+  setSession(access_token);
+  if (refresh_token) sessionStorage.setItem(JWT_REFRESH_STORAGE_KEY, refresh_token);
+}
 
-/** **************************************
- * Sign in
- *************************************** */
+/** Sign in — POST /auth/login → { access_token, refresh_token, token_type } */
 export const signInWithPassword = async ({ email, password }: SignInParams): Promise<void> => {
-  try {
-    const params = { email, password };
-
-    const res = await axios.post(endpoints.auth.signIn, params);
-
-    const { accessToken } = res.data;
-
-    if (!accessToken) {
-      throw new Error('Access token not found in response');
-    }
-
-    setSession(accessToken);
-  } catch (error) {
-    console.error('Error during sign in:', error);
-    throw error;
-  }
+  const res = await axios.post(endpoints.auth.signIn, { email, password });
+  storeTokens(res.data);
 };
 
-/** **************************************
- * Sign up
- *************************************** */
-export const signUp = async ({
-  email,
-  password,
-  firstName,
-  lastName,
-}: SignUpParams): Promise<void> => {
-  const params = {
-    email,
-    password,
-    firstName,
-    lastName,
-  };
-
-  try {
-    const res = await axios.post(endpoints.auth.signUp, params);
-
-    const { accessToken } = res.data;
-
-    if (!accessToken) {
-      throw new Error('Access token not found in response');
-    }
-
-    sessionStorage.setItem(JWT_STORAGE_KEY, accessToken);
-  } catch (error) {
-    console.error('Error during sign up:', error);
-    throw error;
-  }
+/** Sign up — POST /auth/register (same token shape) */
+export const signUp = async ({ email, password }: SignUpParams): Promise<void> => {
+  const res = await axios.post(endpoints.auth.signUp, { email, password });
+  storeTokens(res.data);
 };
 
-/** **************************************
- * Sign out
- *************************************** */
+/** Sign out — best-effort backend logout, then clear local session */
 export const signOut = async (): Promise<void> => {
   try {
-    await setSession(null);
-  } catch (error) {
-    console.error('Error during sign out:', error);
-    throw error;
+    await axios.post(endpoints.auth.logout);
+  } catch {
+    // ignore network/401 on logout
+  } finally {
+    setSession(null);
+    sessionStorage.removeItem(JWT_REFRESH_STORAGE_KEY);
   }
 };

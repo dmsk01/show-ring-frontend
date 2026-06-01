@@ -5,25 +5,17 @@ import type { AuthState } from '../../types';
 import { useSetState } from 'minimal-shared/hooks';
 import { useMemo, useEffect, useCallback } from 'react';
 
-import { normalizeRole, getPermissionsForRole } from 'src/utils/permissions';
+import { normalizeRoles, getPermissionsForRoles } from 'src/utils/permissions';
 
 import axios, { endpoints } from 'src/lib/axios';
 
+import { setSession } from './utils';
 import { JWT_STORAGE_KEY } from './constant';
 import { AuthContext } from '../auth-context';
-import { setSession, isValidToken } from './utils';
 
 // ----------------------------------------------------------------------
 
-/**
- * NOTE:
- * We only build demo at basic level.
- * Customer will need to do some extra handling yourself if you want to extend the logic and other features...
- */
-
-type Props = {
-  children: React.ReactNode;
-};
+type Props = { children: React.ReactNode };
 
 export function AuthProvider({ children }: Props) {
   const { state, setState } = useSetState<AuthState>({ user: null, loading: true });
@@ -32,19 +24,20 @@ export function AuthProvider({ children }: Props) {
     try {
       const accessToken = sessionStorage.getItem(JWT_STORAGE_KEY);
 
-      if (accessToken && isValidToken(accessToken)) {
-        setSession(accessToken);
-
-        const res = await axios.get(endpoints.auth.me);
-
-        const { user } = res.data;
-
-        setState({ user: { ...user, accessToken }, loading: false });
-      } else {
+      if (!accessToken) {
         setState({ user: null, loading: false });
+        return;
       }
+
+      setSession(accessToken);
+      // /users/me; if access token is expired the response interceptor refreshes once.
+      const res = await axios.get(endpoints.auth.me);
+      const user = res.data;
+
+      setState({ user: { ...user, accessToken }, loading: false });
     } catch (error) {
       console.error(error);
+      setSession(null);
       setState({ user: null, loading: false });
     }
   }, [setState]);
@@ -57,18 +50,15 @@ export function AuthProvider({ children }: Props) {
   // ----------------------------------------------------------------------
 
   const checkAuthenticated = state.user ? 'authenticated' : 'unauthenticated';
-
   const status = state.loading ? 'loading' : checkAuthenticated;
 
   const memoizedValue = useMemo(() => {
-    const role = normalizeRole(state.user?.role);
-    const user = state.user ? { ...state.user, role } : null;
-    const permissions = user
-      ? ((state.user?.permissions as string[] | undefined) ?? getPermissionsForRole(role))
-      : [];
+    const roles = normalizeRoles(state.user?.roles);
+    const permissions = state.user ? getPermissionsForRoles(roles) : [];
 
     return {
-      user,
+      user: state.user,
+      roles: state.user ? roles : [],
       permissions,
       checkUserSession,
       loading: status === 'loading',

@@ -87,6 +87,7 @@ export function AuthProvider({ children }: Props) {
 
     return {
       user,
+      roles: user ? [role] : [],
       permissions,
       checkUserSession,
       loading: status === 'loading',

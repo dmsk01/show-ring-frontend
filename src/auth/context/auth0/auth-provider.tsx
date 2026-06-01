@@ -93,6 +93,7 @@ function AuthProviderContainer({ children }: Props) {
 
     return {
       user: normalizedUser,
+      roles: normalizedUser ? [role] : [],
       permissions,
       loading: status === 'loading',
       authenticated: status === 'authenticated',

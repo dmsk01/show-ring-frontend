@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { it, expect, describe } from 'vitest';
 
 import { ROLES_LIST, DEFAULT_ROLE, ROLE_PERMISSIONS } from 'src/config/permissions';
 

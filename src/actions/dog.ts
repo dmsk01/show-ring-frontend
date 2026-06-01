@@ -1,8 +1,8 @@
 import type { SWRConfiguration } from 'swr';
 import type { IDogPage, IDogItem, IDogTitle, IDogCreate, IDogUpdate } from 'src/types/dog';
 
-import useSWR, { mutate } from 'swr';
 import { useMemo } from 'react';
+import useSWR, { mutate } from 'swr';
 
 import axios, { fetcher, endpoints } from 'src/lib/axios';
 

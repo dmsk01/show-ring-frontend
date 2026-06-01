@@ -2,7 +2,7 @@
   "compilerOptions": {
     /* Bundler */
     "baseUrl": ".",
-    "ignoreDeprecations": "6.0",
+    "ignoreDeprecations": "5.0",
     "module": "esnext",
     "jsx": "react-jsx",
     "allowJs": true,

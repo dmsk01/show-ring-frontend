@@ -36,7 +36,8 @@ export function applySettingsToTheme(
   // const secondaryColorPalette = createPaletteChannel(secondaryColorPresets[primaryColor]);
 
   const updateColorScheme = (schemeName: ThemeColorScheme) => {
-    const currentScheme = theme.colorSchemes?.[schemeName];
+    const rawScheme = theme.colorSchemes?.[schemeName];
+    const currentScheme = rawScheme && typeof rawScheme === 'object' ? rawScheme : undefined;
 
     const updatedPalette = {
       ...currentScheme?.palette,

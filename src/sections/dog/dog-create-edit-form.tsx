@@ -15,7 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { createDog, updateDog } from 'src/actions/dog';
+import { createDog, updateDog, useGetDogs } from 'src/actions/dog';
 import { useGetBreeds, useGetKennels } from 'src/actions/reference';
 
 import { toast } from 'src/components/snackbar';
@@ -30,6 +30,8 @@ export const DogSchema = z.object({
   sex: z.enum(['male', 'female']),
   breed_id: z.string().min(1, { error: 'Breed is required!' }),
   kennel_id: z.string().nullable(),
+  father_id: z.string().nullable(),
+  mother_id: z.string().nullable(),
   date_of_birth: z.string().nullable(),
   color: z.string().nullable(),
   rkf_number: z.string().nullable(),
@@ -47,12 +49,15 @@ export function DogCreateEditForm({ currentDog }: Props) {
 
   const { breeds } = useGetBreeds();
   const { kennels } = useGetKennels();
+  const { dogs } = useGetDogs({ per_page: 200 });
 
   const defaultValues: DogSchemaType = {
     name: '',
     sex: 'male',
     breed_id: '',
     kennel_id: '',
+    father_id: '',
+    mother_id: '',
     date_of_birth: null,
     color: null,
     rkf_number: null,
@@ -71,6 +76,8 @@ export function DogCreateEditForm({ currentDog }: Props) {
           sex: currentDog.sex,
           breed_id: currentDog.breed_id,
           kennel_id: currentDog.kennel_id ?? '',
+          father_id: currentDog.father_id ?? '',
+          mother_id: currentDog.mother_id ?? '',
           date_of_birth: currentDog.date_of_birth,
           color: currentDog.color,
           rkf_number: currentDog.rkf_number,
@@ -88,7 +95,12 @@ export function DogCreateEditForm({ currentDog }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const payload = { ...data, kennel_id: data.kennel_id || null };
+      const payload = {
+        ...data,
+        kennel_id: data.kennel_id || null,
+        father_id: data.father_id || null,
+        mother_id: data.mother_id || null,
+      };
       if (currentDog) {
         await updateDog(currentDog.id, payload);
         toast.success('Update success!');
@@ -134,6 +146,26 @@ export function DogCreateEditForm({ currentDog }: Props) {
                 {kennel.name}
               </MenuItem>
             ))}
+          </Field.Select>
+          <Field.Select name="father_id" label="Father">
+            <MenuItem value="">—</MenuItem>
+            {dogs
+              .filter((dog) => dog.id !== currentDog?.id)
+              .map((dog) => (
+                <MenuItem key={dog.id} value={dog.id}>
+                  {dog.name}
+                </MenuItem>
+              ))}
+          </Field.Select>
+          <Field.Select name="mother_id" label="Mother">
+            <MenuItem value="">—</MenuItem>
+            {dogs
+              .filter((dog) => dog.id !== currentDog?.id)
+              .map((dog) => (
+                <MenuItem key={dog.id} value={dog.id}>
+                  {dog.name}
+                </MenuItem>
+              ))}
           </Field.Select>
           <Field.Text name="date_of_birth" label="Date of birth" placeholder="YYYY-MM-DD" />
           <Field.Text name="color" label="Color" />

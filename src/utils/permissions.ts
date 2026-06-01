@@ -49,3 +49,28 @@ export function getPermissionsForRole(
 export function normalizeRole(value: unknown): Role {
   return ROLES_LIST.includes(value as Role) ? (value as Role) : DEFAULT_ROLE;
 }
+
+// ----------------------------------------------------------------------
+
+type ApiRole = string | { role?: string };
+
+/** Maps `/users/me` roles ([{role}]) or bare strings to known Role[]; falls back to [DEFAULT_ROLE]. */
+export function normalizeRoles(value: readonly ApiRole[] | null | undefined): Role[] {
+  const raw = (value ?? [])
+    .map((r) => (typeof r === 'string' ? r : r?.role))
+    .filter((r): r is string => Boolean(r));
+
+  const known = raw.filter((r): r is Role => ROLES_LIST.includes(r as Role));
+
+  return known.length ? known : [DEFAULT_ROLE];
+}
+
+/** Union (deduped) of permissions across all given roles. */
+export function getPermissionsForRoles(
+  roles: readonly Role[],
+  matrix: Record<Role, Permission[]> = ROLE_PERMISSIONS
+): Permission[] {
+  const set = new Set<Permission>();
+  roles.forEach((role) => (matrix[role] ?? []).forEach((p) => set.add(p)));
+  return [...set];
+}

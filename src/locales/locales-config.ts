@@ -29,7 +29,7 @@ import {
 // ----------------------------------------------------------------------
 
 // Supported languages
-export const supportedLngs = ['en', 'fr', 'vi', 'cn', 'ar'] as const;
+export const supportedLngs = ['en', 'ru', 'fr', 'vi', 'cn', 'ar'] as const;
 export type LangCode = (typeof supportedLngs)[number];
 
 // Fallback and default namespace
@@ -69,6 +69,13 @@ export const allLangs: LangOption[] = [
     systemValue: {
       components: { ...enUSDate.components, ...enUSDataGrid.components },
     },
+  },
+  {
+    value: 'ru',
+    label: 'Русский',
+    countryCode: 'RU',
+    adapterLocale: 'ru',
+    numberFormat: { code: 'ru-RU', currency: 'RUB' },
   },
   {
     value: 'fr',

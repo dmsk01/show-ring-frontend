@@ -15,6 +15,7 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { useGetDogs } from 'src/actions/dog';
+import { useGetBreeds } from 'src/actions/reference';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -35,6 +36,7 @@ import { DogTableFiltersResult } from '../dog-table-filters-result';
 
 const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'name', label: 'Name' },
+  { id: 'breed', label: 'Breed', width: 200 },
   { id: 'sex', label: 'Sex', width: 120 },
   { id: 'rkf_number', label: 'RKF #', width: 160 },
   { id: 'date_of_birth', label: 'Born', width: 140 },
@@ -47,6 +49,8 @@ export function DogListView() {
 
   const filters = useSetState<IDogTableFilters>({ search: '', breed_id: '', kennel_id: '', sex: 'all' });
   const { state: currentFilters } = filters;
+
+  const { breeds } = useGetBreeds();
 
   const { dogs, dogsTotal, dogsLoading, dogsEmpty } = useGetDogs({
     page: table.page + 1, // backend is 1-based
@@ -77,7 +81,7 @@ export function DogListView() {
       />
 
       <Card>
-        <DogTableToolbar filters={filters} onResetPage={table.onResetPage} breedOptions={[]} />
+        <DogTableToolbar filters={filters} onResetPage={table.onResetPage} breedOptions={breeds} />
 
         {canReset && (
           <DogTableFiltersResult filters={filters} totalResults={dogsTotal} sx={{ p: 2.5, pt: 0 }} />
@@ -93,6 +97,7 @@ export function DogListView() {
                   <DogTableRow
                     key={row.id}
                     row={row}
+                    breedName={breeds.find((breed) => breed.id === row.breed_id)?.name}
                     detailsHref={paths.dashboard.dogs.details(row.id)}
                     editHref={paths.dashboard.dogs.edit(row.id)}
                   />

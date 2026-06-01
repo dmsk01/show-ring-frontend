@@ -19,11 +19,12 @@ import { CustomPopover } from 'src/components/custom-popover';
 
 type Props = {
   row: IDogItem;
+  breedName?: string;
   detailsHref: string;
   editHref: string;
 };
 
-export function DogTableRow({ row, detailsHref, editHref }: Props) {
+export function DogTableRow({ row, breedName, detailsHref, editHref }: Props) {
   const menuActions = usePopover();
 
   return (
@@ -33,6 +34,10 @@ export function DogTableRow({ row, detailsHref, editHref }: Props) {
           <Link component={RouterLink} href={detailsHref} color="inherit" sx={{ fontWeight: 600 }}>
             {row.name}
           </Link>
+        </TableCell>
+
+        <TableCell sx={{ color: breedName ? 'text.primary' : 'text.disabled' }}>
+          {breedName ?? '—'}
         </TableCell>
 
         <TableCell>

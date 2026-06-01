@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useGetBreeds } from 'src/actions/reference';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetDog, useGetDogTitles } from 'src/actions/dog';
 
@@ -28,6 +29,9 @@ export function DogDetailView({ id }: Props) {
 
   const { dog, dogLoading } = useGetDog(id);
   const { titles } = useGetDogTitles(id);
+  const { breeds } = useGetBreeds();
+
+  const breedName = breeds.find((breed) => breed.id === dog?.breed_id)?.name;
 
   if (dogLoading) return <LoadingScreen />;
   if (!dog) return <DashboardContent>Dog not found.</DashboardContent>;
@@ -62,6 +66,7 @@ export function DogDetailView({ id }: Props) {
       {tab === 'info' && (
         <Card sx={{ p: 3 }}>
           <Stack spacing={1.5}>
+            <Typography variant="body2">Breed: {breedName ?? '—'}</Typography>
             <Typography variant="body2">Sex: {dog.sex}</Typography>
             <Typography variant="body2">RKF #: {dog.rkf_number ?? '—'}</Typography>
             <Typography variant="body2">Born: {dog.date_of_birth ?? '—'}</Typography>

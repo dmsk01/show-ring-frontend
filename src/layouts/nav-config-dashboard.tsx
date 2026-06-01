@@ -77,6 +77,15 @@ export const navData: NavSectionProps['data'] = [
           { title: 'Create', path: paths.dashboard.dogs.new },
         ],
       },
+      {
+        title: 'Kennels',
+        path: paths.dashboard.kennels.root,
+        icon: ICONS.folder,
+        children: [
+          { title: 'List', path: paths.dashboard.kennels.root },
+          { title: 'Create', path: paths.dashboard.kennels.new },
+        ],
+      },
     ],
   },
   /**

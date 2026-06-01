@@ -48,7 +48,7 @@ export function PermissionDeniedView() {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <Can permission="management:view" fallback={denied}>
+      <Can permission="dashboard:view" fallback={denied}>
         <Box sx={{ gap: 3, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
           {Array.from({ length: 8 }, (_, index) => (
             <Card key={index}>

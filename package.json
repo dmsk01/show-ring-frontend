@@ -20,7 +20,9 @@
     "re:build-npm": "npm run clean && npm install && npm run build",
     "tsc:dev": "yarn dev & yarn tsc:watch",
     "tsc:watch": "tsc --noEmit --watch",
-    "tsc:print": "npx tsc --showConfig"
+    "tsc:print": "npx tsc --showConfig",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "engines": {
     "node": ">=20"
@@ -48,7 +50,7 @@
     "@hookform/resolvers": "^5.2.1",
     "@iconify/react": "^6.0.0",
     "@mui/lab": "^7.0.0-beta.16",
-    "@mui/material": "7.3.1",
+    "@mui/material": "^7.3.2",
     "@mui/material-nextjs": "^7.3.0",
     "@mui/stylis-plugin-rtl": "^7.3.1",
     "@mui/x-data-grid": "^8.9.2",
@@ -130,6 +132,7 @@
     "globals": "^16.3.0",
     "prettier": "^3.6.2",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.39.0"
+    "typescript-eslint": "^8.39.0",
+    "vitest": "^2.1.9"
   }
 }

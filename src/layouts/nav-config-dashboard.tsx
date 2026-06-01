@@ -86,6 +86,15 @@ export const navData: NavSectionProps['data'] = [
           { title: 'Create', path: paths.dashboard.kennels.new },
         ],
       },
+      {
+        title: 'Litters',
+        path: paths.dashboard.litters.root,
+        icon: ICONS.course,
+        children: [
+          { title: 'List', path: paths.dashboard.litters.root },
+          { title: 'Create', path: paths.dashboard.litters.new },
+        ],
+      },
     ],
   },
   /**

@@ -109,6 +109,10 @@ export const endpoints = {
     list: '/kennels',
     details: (id: string) => `/kennels/${id}`,
   },
+  litter: {
+    list: '/litters',
+    details: (id: string) => `/litters/${id}`,
+  },
   reference: {
     breeds: '/references/breeds',
     kennels: '/kennels',

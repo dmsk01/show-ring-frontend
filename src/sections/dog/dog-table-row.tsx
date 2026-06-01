@@ -1,9 +1,8 @@
 import type { IDogItem } from 'src/types/dog';
 
-import { useBoolean, usePopover } from 'minimal-shared/hooks';
+import { usePopover } from 'minimal-shared/hooks';
 
 import Link from '@mui/material/Link';
-import Button from '@mui/material/Button';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
@@ -14,7 +13,6 @@ import { RouterLink } from 'src/routes/components';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
@@ -27,7 +25,6 @@ type Props = {
 
 export function DogTableRow({ row, detailsHref, editHref }: Props) {
   const menuActions = usePopover();
-  const confirmDialog = useBoolean();
 
   return (
     <>
@@ -73,18 +70,6 @@ export function DogTableRow({ row, detailsHref, editHref }: Props) {
           </li>
         </MenuList>
       </CustomPopover>
-
-      <ConfirmDialog
-        open={confirmDialog.value}
-        onClose={confirmDialog.onFalse}
-        title="Delete"
-        content="Delete is not supported by the API yet."
-        action={
-          <Button variant="contained" color="error" onClick={confirmDialog.onFalse}>
-            OK
-          </Button>
-        }
-      />
     </>
   );
 }

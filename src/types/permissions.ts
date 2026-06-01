@@ -1,7 +1,19 @@
-// Доменные константы — расширяем по мере развития продукта
-export type Role = 'admin' | 'user';
+// Доменные константы — расширяем по мере развития продукта.
+// Роли соответствуют RoleEnum бэкенда ShowTail.
+export type Role = 'admin' | 'organizer' | 'breeder' | 'judge' | 'buyer' | 'operator';
 
-export type Resource = 'dashboard' | 'management' | 'reports';
+export type Resource =
+  | 'dashboard'
+  | 'dogs'
+  | 'kennels'
+  | 'litters'
+  | 'classifieds'
+  | 'shows'
+  | 'results'
+  | 'references'
+  | 'ads'
+  | 'support'
+  | 'admin';
 
 export type Action = 'view' | 'create' | 'edit' | 'delete';
 

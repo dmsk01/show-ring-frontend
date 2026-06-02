@@ -133,6 +133,11 @@ export const navData: NavSectionProps['data'] = [
         icon: ICONS.params,
       },
       {
+        title: 'Notifications',
+        path: paths.dashboard.notifications,
+        icon: ICONS.label,
+      },
+      {
         title: 'My profile',
         path: paths.dashboard.profile,
         icon: ICONS.user,

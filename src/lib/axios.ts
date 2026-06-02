@@ -37,8 +37,33 @@ function redirectToSignIn(): void {
   window.location.href = `${paths.auth.jwt.signIn}?${queryString}`;
 }
 
-// On 401: try refresh once, then retry the original request.
-let refreshPromise: Promise<string | null> | null = null;
+// ----------------------------------------------------------------------
+// 401 handling: a single in-flight refresh guarded by `isRefreshing`. Any
+// request that fails with 401 while a refresh is running is parked in
+// `pendingQueue` instead of firing its own refresh. When the refresh settles
+// the queue is flushed — every parked request is replayed with the fresh token
+// (success) or rejected and the user is sent to sign-in (failure).
+
+type RetryableConfig = AxiosRequestConfig & { _retry?: boolean };
+
+type QueuedRequest = {
+  resolve: (token: string) => void;
+  reject: (reason: unknown) => void;
+};
+
+let isRefreshing = false;
+let pendingQueue: QueuedRequest[] = [];
+
+function flushQueue(error: unknown, token: string | null): void {
+  pendingQueue.forEach(({ resolve, reject }) => {
+    if (token) {
+      resolve(token);
+    } else {
+      reject(error);
+    }
+  });
+  pendingQueue = [];
+}
 
 async function refreshAccessToken(): Promise<string | null> {
   const refreshToken =
@@ -60,29 +85,46 @@ async function refreshAccessToken(): Promise<string | null> {
   }
 }
 
+// Replay a request with the refreshed bearer token.
+function retryWithToken(original: RetryableConfig, token: string) {
+  original.headers = { ...original.headers, Authorization: `Bearer ${token}` };
+  return axiosInstance(original);
+}
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const original = error.config as (AxiosRequestConfig & { _retry?: boolean }) | undefined;
+    const original = error.config as RetryableConfig | undefined;
     const status = error?.response?.status;
 
     const isAuthCall = original?.url?.includes('/auth/');
 
     if (status === 401 && original && !original._retry && !isAuthCall) {
       original._retry = true;
-      // Single-flight: concurrent 401s share one refresh; reset only once it settles.
-      refreshPromise = refreshPromise ?? refreshAccessToken().finally(() => {
-        refreshPromise = null;
-      });
-      const newToken = await refreshPromise;
 
-      if (newToken) {
-        original.headers = { ...original.headers, Authorization: `Bearer ${newToken}` };
-        return axiosInstance(original);
+      // A refresh is already in flight: park this request until it settles,
+      // then replay it (or reject it if the refresh failed).
+      if (isRefreshing) {
+        return new Promise<string>((resolve, reject) => {
+          pendingQueue.push({ resolve, reject });
+        }).then((token) => retryWithToken(original, token));
       }
 
-      // Refresh failed — the session is dead. Route to sign-in for re-auth.
-      redirectToSignIn();
+      // This request owns the refresh for the current wave of 401s.
+      isRefreshing = true;
+      try {
+        const newToken = await refreshAccessToken();
+        if (!newToken) {
+          // Refresh failed — release the queue with the error and re-auth.
+          flushQueue(error, null);
+          redirectToSignIn();
+        } else {
+          flushQueue(null, newToken);
+          return await retryWithToken(original, newToken);
+        }
+      } finally {
+        isRefreshing = false;
+      }
     }
 
     const message =

@@ -117,6 +117,11 @@ export const endpoints = {
     upload: '/files/upload',
     details: (id: string) => `/files/${id}`,
   },
+  classified: {
+    list: '/classifieds',
+    search: '/classifieds/search',
+    details: (id: string) => `/classifieds/${id}`,
+  },
   reference: {
     breeds: '/references/breeds',
     kennels: '/kennels',

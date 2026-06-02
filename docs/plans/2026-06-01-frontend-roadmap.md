@@ -57,6 +57,18 @@
 - **Тесты:** расширять vitest на чистую логику новых доменов; позже — рассмотреть e2e (Playwright) для ключевых флоу (логин, заявка на выставку).
 - **i18n:** при необходимости вынести лендинг/домены в общий словарь; сейчас RU/EN.
 
+### Доработки уведомлений (после привязки NotificationsDrawer к `/notifications`)
+- **Mark-as-read**: у бэкенда нет endpoint пометки уведомления прочитанным и поля `is_read` в `NotificationResponse`; «прочитано» сейчас выводится из `status==='pending'`. Когда появится `PATCH /notifications/{id}/read` — добавить реальную отметку и клик по элементу.
+- **Иконки по типу события**: все элементы drawer сейчас под иконкой `mail`; завести маппинг `event_type → иконка` (registration/results/litter/title) в `notifications-drawer/icons.tsx`.
+- **Deep-link уведомления**: клик ведёт на связанную сущность (show/litter/dog) — когда бэкенд добавит идентификатор/ссылку в payload.
+
+### Прогресс
+- **Phase 1 ✅** References · Dogs (breed/kennel/parents) · Kennels (+avatar/Files) · Litters · Profile.
+- **Phase 2 ✅** Classifieds.
+- **Phase 3 ✅** Shows · Results · Documents.
+- **Phase 4 ✅** Ads · Support · Notifications (+ NotificationsDrawer на реальных данных).
+- **Phase 5 (в работе)** Admin Users ✅ · Moderation ✅ · **Analytics — следующее** · чистка демо.
+
 ---
 
 ## Рекомендация по следующему шагу

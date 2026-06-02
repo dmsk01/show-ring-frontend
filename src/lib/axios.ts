@@ -149,6 +149,11 @@ export const endpoints = {
     messages: (id: string) => `/support/tickets/${id}/messages`,
     ticketStatus: (id: string) => `/support/tickets/${id}/status`,
   },
+  notification: {
+    list: '/notifications',
+    subscriptions: '/subscriptions',
+    subscription: (id: string) => `/subscriptions/${id}`,
+  },
   reference: {
     breeds: '/references/breeds',
     kennels: '/kennels',

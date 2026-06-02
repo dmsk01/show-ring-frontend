@@ -159,6 +159,7 @@ export const paths = {
     adminReferences: `${ROOTS.DASHBOARD}/admin/references`,
     adminUsers: `${ROOTS.DASHBOARD}/admin/users`,
     adminModeration: `${ROOTS.DASHBOARD}/admin/moderation`,
+    adminAnalytics: `${ROOTS.DASHBOARD}/admin/analytics`,
     profile: `${ROOTS.DASHBOARD}/profile`,
     product: {
       root: `${ROOTS.DASHBOARD}/product`,

@@ -24,7 +24,21 @@
       "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('rhf:', p.dependencies['react-hook-form']\\); console.log\\('zod:', p.dependencies['zod']\\); console.log\\('hookform-resolvers:', p.dependencies['@hookform/resolvers']\\);\")",
       "WebFetch(domain:github.com)",
       "Bash(ls \"G:/Work/show-ring-mobile/\"*.md)",
-      "Bash(ls G:/Work/show-ring/src/layouts/types*)"
+      "Bash(ls G:/Work/show-ring/src/layouts/types*)",
+      "Bash(curl -s http://localhost:8000/openapi.json -o openapi-tmp.json -w \"HTTP %{http_code}\\\\n\" --max-time 8)",
+      "Bash(python -c \"import json; d=json.load\\(open\\('openapi-tmp.json'\\)\\); print\\('TITLE:', d.get\\('info',{}\\).get\\('title'\\), d.get\\('info',{}\\).get\\('version'\\)\\); print\\('---PATHS---'\\); [print\\(m.upper\\(\\).ljust\\(7\\), p\\) for p,ms in sorted\\(d['paths'].items\\(\\)\\) for m in ms]\")",
+      "Bash(python -c \"import json; d=json.load\\(open\\('openapi-tmp.json',encoding='utf-8'\\)\\); print\\('TITLE:', d.get\\('info',{}\\).get\\('title'\\), d.get\\('info',{}\\).get\\('version'\\)\\); print\\('---PATHS---'\\); [print\\(m.upper\\(\\).ljust\\(7\\), p\\) for p,ms in sorted\\(d['paths'].items\\(\\)\\) for m in ms if m in \\('get','post','put','patch','delete'\\)]\")",
+      "Bash(python -c \"import json; d=json.load\\(open\\('openapi-tmp.json',encoding='utf-8'\\)\\); [print\\(m.upper\\(\\).ljust\\(7\\), p\\) for p,ms in sorted\\(d['paths'].items\\(\\)\\) for m in ms if m in \\('get','post','put','patch','delete'\\)]\")",
+      "Bash(python -c \"import json; d=json.load\\(open\\('openapi-tmp.json',encoding='utf-8'\\)\\); tags=set\\(\\); [tags.update\\(op.get\\('tags',[]\\)\\) for p,ms in d['paths'].items\\(\\) for m,op in ms.items\\(\\) if isinstance\\(op,dict\\)]; print\\(sorted\\(tags\\)\\)\")",
+      "Bash(python -c ' *)",
+      "Bash(curl -s http://localhost:8000/openapi.json -o ot.json --max-time 8)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit -m '@ *)",
+      "Bash(git commit --amend -m 'docs: add ShowTail frontend integration design \\(foundation + Dogs slice\\) *)",
+      "Bash(git commit -m 'docs: implementation plan for ShowTail frontend integration \\(foundation + Dogs\\) *)",
+      "Bash(npm i *)",
+      "Bash(npm test *)"
     ]
   }
 }

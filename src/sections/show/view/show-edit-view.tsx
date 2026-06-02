@@ -10,6 +10,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetShow, publishShow, setShowStatus } from 'src/actions/show';
@@ -88,6 +89,16 @@ export function ShowEditView({ id }: Props) {
             onClick={handlePublish}
           >
             Publish
+          </Button>
+
+          <Button
+            component={RouterLink}
+            href={paths.dashboard.shows.results(id)}
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:bill-list-bold" />}
+          >
+            Results
           </Button>
         </Box>
       </Card>

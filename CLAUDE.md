@@ -8,8 +8,14 @@
   - `npm test` → зелёно (vitest, юнит-тесты чистой логики)
 - Не коммить и не считай задачу готовой, пока гейты не зелёные. Проверяй фактическим запуском, не на словах.
 
-## Это ШАБЛОН — переиспользуй готовые UI-компоненты
-Проект построен на **Minimal Kit** (Next.js 16 App Router, MUI 7, TypeScript). В нём уже есть большой набор готовых компонентов и паттернов — **сначала ищи и переиспользуй существующее, не пиши своё с нуля**:
+## Это ШАБЛОН — переиспользуй готовые UI-компоненты (ОБЯЗАТЕЛЬНО)
+Проект построен на **Minimal Kit** (Next.js 16 App Router, MUI 7, TypeScript) — это **готовая админка из сотен компонентов и целых страниц**. Почти всё нужное уже есть.
+
+**ПРАВИЛО (жёсткое):** прежде чем писать ЛЮБОЙ компонент/страницу/секцию — сначала **исследуй шаблон** (`src/sections/**`, `src/sections/_examples/**`, `src/components/**`, демо в `src/app/**`) и **переиспользуй готовое**. Свой компонент пишем **только если после исследования ничего подходящего нет**, и тогда строим из примитивов шаблона, а не с нуля. Перед версткой потрать ход на поиск (Glob/Grep) и назови, что переиспользуешь. Не плоди аналоги существующему.
+
+**Ориентиры готовых страниц:** профиль пользователя `/dashboard/user` (`src/sections/user/view/user-profile-view.tsx`: `ProfileCover` — обложка+аватар, `ProfileHome` — About/social); управление пользователями `/dashboard/user/list`; аккаунт `/dashboard/user/account`; продукты/инвойсы/заказы — полные CRUD.
+
+Кирпичи для переиспользования:
 - Формы: `src/components/hook-form` — `Form`, `Field.*` (`Field.Text/Select/Autocomplete/UploadAvatar/Phone/CountrySelect` и т.д.) поверх `react-hook-form` + `zod`.
 - Таблицы: `src/components/table` — `useTable`, `TableHeadCustom`, `TableNoData`, `TablePaginationCustom`, `TableHeadCellProps`.
 - Загрузки: `src/components/upload` — `UploadAvatar`, `Upload`, `UploadBox` (drag&drop, превью). НЕ делай кастомные `<input type=file>`.

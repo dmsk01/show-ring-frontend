@@ -58,7 +58,7 @@
 - **i18n:** при необходимости вынести лендинг/домены в общий словарь; сейчас RU/EN.
 
 ### Доработки уведомлений (после привязки NotificationsDrawer к `/notifications`)
-- **Mark-as-read** ✅ Бэкенд отдаёт `is_read`/`read_at` и `PATCH /notifications/{id}/read` (идемпотентно); drawer и список читают `is_read`, клик по непрочитанному помечает прочитанным (оптимистично, с откатом). Опционально (ждёт согласования): `PATCH /notifications/read-all` для кнопки «прочитать всё» и `GET /notifications/unread-count` для бейджа независимо от пагинации.
+- **Mark-as-read** ✅ Бэкенд отдаёт `is_read`/`read_at` и `PATCH /notifications/{id}/read` (идемпотентно); drawer и список читают `is_read`, клик по непрочитанному помечает прочитанным (оптимистично, с откатом). Бейдж колокольчика — от `GET /notifications/unread-count` (поллинг 60с + revalidate-on-focus); кнопка «прочитать всё» — `PATCH /notifications/read-all` (в drawer и на странице). `POST /notifications/_dev/seed?count=N` — для наполнения в dev.
 - **Иконки по типу события**: все элементы drawer сейчас под иконкой `mail`; завести маппинг `event_type → иконка` (registration/results/litter/title) в `notifications-drawer/icons.tsx`.
 - **Deep-link уведомления**: клик ведёт на связанную сущность (show/litter/dog) — когда бэкенд добавит идентификатор/ссылку в payload.
 

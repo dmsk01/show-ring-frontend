@@ -150,6 +150,11 @@ export const paths = {
       new: `${ROOTS.DASHBOARD}/ads/new`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/ads/${id}/edit`,
     },
+    support: {
+      root: `${ROOTS.DASHBOARD}/support`,
+      new: `${ROOTS.DASHBOARD}/support/new`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/support/${id}`,
+    },
     adminReferences: `${ROOTS.DASHBOARD}/admin/references`,
     profile: `${ROOTS.DASHBOARD}/profile`,
     product: {

@@ -123,6 +123,11 @@ export const navData: NavSectionProps['data'] = [
         ],
       },
       {
+        title: 'Support',
+        path: paths.dashboard.support.root,
+        icon: ICONS.chat,
+      },
+      {
         title: 'References (admin)',
         path: paths.dashboard.adminReferences,
         icon: ICONS.params,

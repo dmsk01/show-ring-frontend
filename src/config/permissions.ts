@@ -12,6 +12,6 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
   organizer: ['dashboard:view', 'shows', 'results', 'references:view', 'ads', 'kennels:view', 'litters:view', 'classifieds:view'],
   breeder: ['dashboard:view', 'dogs', 'kennels', 'litters', 'classifieds', 'shows:view', 'references:view'],
   judge: ['dashboard:view', 'shows:view', 'results:create', 'results:edit', 'references:view', 'kennels:view', 'litters:view', 'classifieds:view'],
-  buyer: ['dashboard:view', 'classifieds:view', 'dogs:view', 'references:view', 'kennels:view', 'litters:view'],
-  operator: ['dashboard:view', 'support', 'classifieds:view', 'references:view', 'kennels:view', 'litters:view'],
+  buyer: ['dashboard:view', 'classifieds:view', 'dogs:view', 'references:view', 'kennels:view', 'litters:view', 'shows:view'],
+  operator: ['dashboard:view', 'support', 'classifieds:view', 'references:view', 'kennels:view', 'litters:view', 'shows:view'],
 };

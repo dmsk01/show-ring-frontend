@@ -96,6 +96,15 @@ export const navData: NavSectionProps['data'] = [
         ],
       },
       {
+        title: 'Shows',
+        path: paths.dashboard.shows.root,
+        icon: ICONS.booking,
+        children: [
+          { title: 'List', path: paths.dashboard.shows.root },
+          { title: 'Create', path: paths.dashboard.shows.new },
+        ],
+      },
+      {
         title: 'Classifieds',
         path: paths.dashboard.classifieds.root,
         icon: ICONS.blog,

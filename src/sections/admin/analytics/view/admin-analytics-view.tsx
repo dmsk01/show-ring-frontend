@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
@@ -32,21 +33,58 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 // ----------------------------------------------------------------------
 
-const KPIS: { key: keyof IDashboardStats; label: string; icon: string; color: string }[] = [
-  { key: 'total_users', label: 'Users', icon: 'solar:user-rounded-bold', color: 'primary.main' },
-  { key: 'total_kennels', label: 'Kennels', icon: 'solar:bill-list-bold', color: 'info.main' },
-  { key: 'verified_kennels', label: 'Verified kennels', icon: 'solar:shield-check-bold', color: 'success.main' },
-  { key: 'total_dogs', label: 'Dogs', icon: 'solar:heart-bold', color: 'error.main' },
-  { key: 'total_litters', label: 'Litters', icon: 'solar:gallery-add-bold', color: 'warning.main' },
-  { key: 'active_classifieds', label: 'Active classifieds', icon: 'solar:cart-plus-bold', color: 'secondary.main' },
-  { key: 'open_shows', label: 'Open shows', icon: 'solar:clock-circle-bold', color: 'info.main' },
-  { key: 'completed_shows', label: 'Completed shows', icon: 'solar:check-circle-bold', color: 'success.main' },
-  { key: 'active_campaigns', label: 'Active campaigns', icon: 'solar:wad-of-money-bold', color: 'primary.main' },
+const KPIS: {
+  key: keyof IDashboardStats;
+  label: string;
+  icon: string;
+  color: string;
+  href: string;
+}[] = [
+  { key: 'total_users', label: 'Users', icon: 'solar:user-rounded-bold', color: 'primary.main', href: paths.dashboard.adminUsers },
+  { key: 'total_kennels', label: 'Kennels', icon: 'solar:bill-list-bold', color: 'info.main', href: paths.dashboard.kennels.root },
+  { key: 'verified_kennels', label: 'Verified kennels', icon: 'solar:shield-check-bold', color: 'success.main', href: paths.dashboard.adminModeration },
+  { key: 'total_dogs', label: 'Dogs', icon: 'solar:heart-bold', color: 'error.main', href: paths.dashboard.dogs.root },
+  { key: 'total_litters', label: 'Litters', icon: 'solar:gallery-add-bold', color: 'warning.main', href: paths.dashboard.litters.root },
+  { key: 'active_classifieds', label: 'Active classifieds', icon: 'solar:cart-plus-bold', color: 'secondary.main', href: paths.dashboard.classifieds.root },
+  { key: 'open_shows', label: 'Open shows', icon: 'solar:clock-circle-bold', color: 'info.main', href: paths.dashboard.shows.root },
+  { key: 'completed_shows', label: 'Completed shows', icon: 'solar:check-circle-bold', color: 'success.main', href: paths.dashboard.shows.root },
+  { key: 'active_campaigns', label: 'Active campaigns', icon: 'solar:wad-of-money-bold', color: 'primary.main', href: paths.dashboard.ads.root },
 ];
 
-function StatCard({ label, value, icon, color }: { label: string; value: number; icon: string; color: string }) {
+function StatCard({
+  label,
+  value,
+  icon,
+  color,
+  href,
+}: {
+  label: string;
+  value: number;
+  icon: string;
+  color: string;
+  href: string;
+}) {
   return (
-    <Card sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
+    <Card
+      component={RouterLink}
+      href={href}
+      sx={{
+        p: 3,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        color: 'inherit',
+        textDecoration: 'none',
+        transition: (theme) =>
+          theme.transitions.create(['box-shadow', 'transform'], {
+            duration: theme.transitions.duration.shorter,
+          }),
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: (theme) => theme.customShadows.z16,
+        },
+      }}
+    >
       <Box
         sx={{
           width: 48,
@@ -102,6 +140,7 @@ export function AdminAnalyticsView() {
               value={stats?.[kpi.key] != null ? Number(stats[kpi.key]) : 0}
               icon={kpi.icon}
               color={kpi.color}
+              href={kpi.href}
             />
           </Grid>
         ))}

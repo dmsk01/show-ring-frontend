@@ -1,5 +1,12 @@
 import type { SWRConfiguration } from 'swr';
-import type { IDogPage, IDogItem, IDogTitle, IDogCreate, IDogUpdate } from 'src/types/dog';
+import type {
+  IDogPage,
+  IDogItem,
+  IDogTitle,
+  IDogCreate,
+  IDogUpdate,
+  IPedigreeNode,
+} from 'src/types/dog';
 
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -77,7 +84,7 @@ export function useGetDogTitles(dogId?: string) {
 export function useGetDogPedigree(dogId?: string) {
   const key = dogId ? endpoints.dog.pedigree(dogId) : null;
 
-  const { data, isLoading, error } = useSWR<unknown>(key, fetcher, swrOptions);
+  const { data, isLoading, error } = useSWR<IPedigreeNode>(key, fetcher, swrOptions);
 
   return useMemo(
     () => ({ pedigree: data, pedigreeLoading: isLoading, pedigreeError: error }),

@@ -1,7 +1,10 @@
 'use client';
 
+import type { IPedigreeNode } from 'src/types/dog';
+
 import { useState } from 'react';
 
+import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -14,11 +17,48 @@ import { RouterLink } from 'src/routes/components';
 
 import { useGetBreeds } from 'src/actions/reference';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { useGetDog, useGetDogTitles } from 'src/actions/dog';
+import { useGetDog, useGetDogTitles, useGetDogPedigree } from 'src/actions/dog';
 
 import { Iconify } from 'src/components/iconify';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+
+// ----------------------------------------------------------------------
+
+function PedigreeTree({ node, label }: { node: IPedigreeNode | null; label?: string }) {
+  if (!node) {
+    return (
+      <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+        {label}: —
+      </Typography>
+    );
+  }
+
+  return (
+    <Box>
+      <Typography variant="body2">
+        {label ? `${label}: ` : ''}
+        <strong>{node.name}</strong>
+        {node.rkf_number ? ` · ${node.rkf_number}` : ''}
+      </Typography>
+
+      {(node.father || node.mother) && (
+        <Stack
+          spacing={0.75}
+          sx={{
+            mt: 0.75,
+            ml: 1.5,
+            pl: 1.5,
+            borderLeft: (theme) => `2px solid ${theme.vars.palette.divider}`,
+          }}
+        >
+          <PedigreeTree node={node.father} label="Sire" />
+          <PedigreeTree node={node.mother} label="Dam" />
+        </Stack>
+      )}
+    </Box>
+  );
+}
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +70,7 @@ export function DogDetailView({ id }: Props) {
   const { dog, dogLoading } = useGetDog(id);
   const { titles } = useGetDogTitles(id);
   const { breeds } = useGetBreeds();
+  const { pedigree } = useGetDogPedigree(id);
 
   const breedName = breeds.find((breed) => breed.id === dog?.breed_id)?.name;
 
@@ -61,6 +102,7 @@ export function DogDetailView({ id }: Props) {
       <Tabs value={tab} onChange={(_e: React.SyntheticEvent, v: string) => setTab(v)} sx={{ mb: 3 }}>
         <Tab value="info" label="Info" />
         <Tab value="titles" label={`Titles (${titles.length})`} />
+        <Tab value="pedigree" label="Pedigree" />
       </Tabs>
 
       {tab === 'info' && (
@@ -91,6 +133,18 @@ export function DogDetailView({ id }: Props) {
                 </Typography>
               ))}
             </Stack>
+          )}
+        </Card>
+      )}
+
+      {tab === 'pedigree' && (
+        <Card sx={{ p: 3 }}>
+          {pedigree ? (
+            <PedigreeTree node={pedigree} />
+          ) : (
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              No pedigree data.
+            </Typography>
           )}
         </Card>
       )}

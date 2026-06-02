@@ -51,6 +51,17 @@ export type IDogTitle = {
   date_earned: string;
 };
 
+export type IPedigreeNode = {
+  id: string;
+  name: string;
+  sex: DogSex;
+  breed_id: string;
+  date_of_birth: string | null;
+  rkf_number: string | null;
+  father: IPedigreeNode | null;
+  mother: IPedigreeNode | null;
+};
+
 export type IDogTableFilters = {
   search: string;
   breed_id: string;

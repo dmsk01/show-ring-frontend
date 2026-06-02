@@ -127,6 +127,9 @@ export const endpoints = {
     details: (id: string) => `/shows/${id}`,
     status: (id: string) => `/shows/${id}/status`,
     publish: (id: string) => `/shows/${id}/publish`,
+    entries: (id: string) => `/shows/${id}/entries`,
+    results: (id: string) => `/shows/${id}/results`,
+    resultItem: (id: string, resultId: string) => `/shows/${id}/results/${resultId}`,
   },
   reference: {
     breeds: '/references/breeds',

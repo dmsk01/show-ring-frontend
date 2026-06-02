@@ -2,6 +2,8 @@ import type { AxiosRequestConfig } from 'axios';
 
 import axios from 'axios';
 
+import { paths } from 'src/routes/paths';
+
 import { CONFIG } from 'src/global-config';
 
 import { JWT_STORAGE_KEY, JWT_REFRESH_STORAGE_KEY } from 'src/auth/context/jwt/constant';
@@ -23,6 +25,17 @@ axiosInstance.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Refresh failed mid-session: tokens are already cleared — send the user to
+// sign-in (preserving returnTo) instead of leaving them stuck on a dead page.
+function redirectToSignIn(): void {
+  if (typeof window === 'undefined') return;
+  const { pathname, search } = window.location;
+  if (pathname.startsWith('/auth/')) return; // already on an auth page — avoid loop
+  const returnTo = `${pathname}${search}`;
+  const queryString = new URLSearchParams({ returnTo }).toString();
+  window.location.href = `${paths.auth.jwt.signIn}?${queryString}`;
+}
 
 // On 401: try refresh once, then retry the original request.
 let refreshPromise: Promise<string | null> | null = null;
@@ -67,6 +80,9 @@ axiosInstance.interceptors.response.use(
         original.headers = { ...original.headers, Authorization: `Bearer ${newToken}` };
         return axiosInstance(original);
       }
+
+      // Refresh failed — the session is dead. Route to sign-in for re-auth.
+      redirectToSignIn();
     }
 
     const message =

@@ -49,11 +49,7 @@ export function KennelEditView({ id }: Props) {
         <Typography variant="subtitle2" sx={{ mb: 2 }}>
           Kennel image
         </Typography>
-        <FileAvatarUploader
-          fileId={kennel.avatar_file_id}
-          alt={kennel.name}
-          onUploaded={handleAvatar}
-        />
+        <FileAvatarUploader fileId={kennel.avatar_file_id} onUploaded={handleAvatar} />
       </Card>
 
       <KennelCreateEditForm currentKennel={kennel} />

@@ -100,6 +100,11 @@ export const navData: NavSectionProps['data'] = [
         path: paths.dashboard.adminReferences,
         icon: ICONS.params,
       },
+      {
+        title: 'My profile',
+        path: paths.dashboard.profile,
+        icon: ICONS.user,
+      },
     ],
   },
   /**

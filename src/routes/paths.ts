@@ -134,6 +134,7 @@ export const paths = {
       edit: (id: string) => `${ROOTS.DASHBOARD}/litters/${id}/edit`,
     },
     adminReferences: `${ROOTS.DASHBOARD}/admin/references`,
+    profile: `${ROOTS.DASHBOARD}/profile`,
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
       new: `${ROOTS.DASHBOARD}/product/new`,

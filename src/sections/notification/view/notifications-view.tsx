@@ -25,6 +25,7 @@ import {
   useGetNotifications,
   useGetSubscriptions,
   markNotificationRead,
+  markAllNotificationsRead,
 } from 'src/actions/notification';
 
 import { Label } from 'src/components/label';
@@ -77,6 +78,16 @@ export function NotificationsView() {
       toast.success('Unsubscribed');
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to unsubscribe');
+    }
+  };
+
+  const hasUnread = notifications.some((n) => !n.is_read);
+
+  const handleMarkAllRead = async () => {
+    try {
+      await markAllNotificationsRead();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to mark all read');
     }
   };
 
@@ -176,7 +187,21 @@ export function NotificationsView() {
       </Card>
 
       <Card>
-        <CardHeader title="Recent notifications" />
+        <CardHeader
+          title="Recent notifications"
+          action={
+            hasUnread && (
+              <Button
+                size="small"
+                color="inherit"
+                startIcon={<Iconify icon="eva:done-all-fill" />}
+                onClick={handleMarkAllRead}
+              >
+                Mark all as read
+              </Button>
+            )
+          }
+        />
         <Box sx={{ p: 3 }}>
           {notifications.length === 0 ? (
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>

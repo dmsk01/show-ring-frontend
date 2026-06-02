@@ -14,13 +14,19 @@ import Tabs from '@mui/material/Tabs';
 import Badge from '@mui/material/Badge';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { useGetNotifications, markNotificationRead } from 'src/actions/notification';
+import {
+  useGetUnreadCount,
+  useGetNotifications,
+  markNotificationRead,
+  markAllNotificationsRead,
+} from 'src/actions/notification';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -56,6 +62,7 @@ export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) 
   const [currentTab, setCurrentTab] = useState('all');
 
   const { notifications } = useGetNotifications();
+  const { unreadCount } = useGetUnreadCount();
 
   const items = useMemo(() => notifications.map(toItem), [notifications]);
 
@@ -74,6 +81,10 @@ export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) 
     markNotificationRead(id).catch(() => {});
   }, []);
 
+  const handleMarkAllRead = useCallback(() => {
+    markAllNotificationsRead().catch(() => {});
+  }, []);
+
   const filtered = currentTab === 'unread' ? items.filter((i) => i.isUnRead) : items;
 
   const renderHead = () => (
@@ -81,6 +92,14 @@ export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) 
       <Typography variant="h6" sx={{ flexGrow: 1 }}>
         Notifications
       </Typography>
+
+      {unreadCount > 0 && (
+        <Tooltip title="Mark all as read">
+          <IconButton color="primary" onClick={handleMarkAllRead}>
+            <Iconify icon="eva:done-all-fill" />
+          </IconButton>
+        </Tooltip>
+      )}
 
       <IconButton onClick={onClose} sx={{ display: { xs: 'inline-flex', sm: 'none' } }}>
         <Iconify icon="mingcute:close-line" />
@@ -144,7 +163,7 @@ export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) 
         sx={sx}
         {...other}
       >
-        <Badge badgeContent={totalUnRead} color="error">
+        <Badge badgeContent={unreadCount} color="error">
           <Iconify width={24} icon="solar:bell-bing-bold-duotone" />
         </Badge>
       </IconButton>

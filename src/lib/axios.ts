@@ -209,7 +209,9 @@ export const endpoints = {
   },
   notification: {
     list: '/notifications',
+    unreadCount: '/notifications/unread-count',
     markRead: (id: string) => `/notifications/${id}/read`,
+    readAll: '/notifications/read-all',
     subscriptions: '/subscriptions',
     subscription: (id: string) => `/subscriptions/${id}`,
   },

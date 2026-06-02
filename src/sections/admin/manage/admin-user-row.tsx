@@ -30,7 +30,7 @@ type Props = { row: IAdminUser };
 export function AdminUserRow({ row }: Props) {
   const grantMenu = usePopover();
 
-  const heldRoles = row.roles.map((r) => r.role);
+  const heldRoles = row.roles;
 
   const handleBlock = async (isActive: boolean) => {
     try {
@@ -69,7 +69,7 @@ export function AdminUserRow({ row }: Props) {
                   key={role}
                   size="small"
                   label={role}
-                  onDelete={() => handleRole(role as Role, false)}
+                  onDelete={() => handleRole(role, false)}
                 />
               ))
             ) : (

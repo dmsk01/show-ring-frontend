@@ -162,6 +162,10 @@ export const endpoints = {
     moderationClassified: (id: string) => `/admin/moderation/classifieds/${id}`,
     moderationKennels: '/admin/moderation/kennels',
     kennelVerify: (id: string) => `/admin/moderation/kennels/${id}/verify`,
+    analyticsDashboard: '/admin/analytics/dashboard',
+    analyticsAds: '/admin/analytics/ads',
+    analyticsTopBreeds: '/admin/analytics/top-breeds',
+    analyticsTopCampaigns: '/admin/analytics/top-campaigns',
   },
   reference: {
     breeds: '/references/breeds',

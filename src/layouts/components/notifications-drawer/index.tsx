@@ -1,11 +1,12 @@
 'use client';
 
 import type { IconButtonProps } from '@mui/material/IconButton';
+import type { INotification } from 'src/types/notification';
 import type { NotificationItemProps } from './notification-item';
 
 import { m } from 'framer-motion';
-import { useState, useCallback } from 'react';
 import { useBoolean } from 'minimal-shared/hooks';
+import { useMemo, useState, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -13,9 +14,13 @@ import Tabs from '@mui/material/Tabs';
 import Badge from '@mui/material/Badge';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
+
+import { useGetNotifications } from 'src/actions/notification';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -26,71 +31,62 @@ import { NotificationItem } from './notification-item';
 
 // ----------------------------------------------------------------------
 
-const TABS = [
-  { value: 'all', label: 'All', count: 22 },
-  { value: 'unread', label: 'Unread', count: 12 },
-  { value: 'archived', label: 'Archived', count: 10 },
-];
+type DrawerNotification = NotificationItemProps['notification'];
+
+// Map a backend notification to the template's notification-item shape.
+function toItem(n: INotification): DrawerNotification {
+  return {
+    id: n.id,
+    type: 'mail',
+    title: `<p>${n.subject}</p>`,
+    category: n.event_type,
+    isUnRead: n.status === 'pending',
+    avatarUrl: null,
+    createdAt: n.created_at,
+  };
+}
 
 // ----------------------------------------------------------------------
 
-export type NotificationsDrawerProps = IconButtonProps & {
-  data?: NotificationItemProps['notification'][];
-};
+export type NotificationsDrawerProps = IconButtonProps;
 
-export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDrawerProps) {
+export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) {
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
   const [currentTab, setCurrentTab] = useState('all');
+
+  const { notifications } = useGetNotifications();
+
+  const items = useMemo(() => notifications.map(toItem), [notifications]);
+
+  const totalUnRead = items.filter((item) => item.isUnRead).length;
+
+  const tabs = [
+    { value: 'all', label: 'All', count: items.length },
+    { value: 'unread', label: 'Unread', count: totalUnRead },
+  ];
 
   const handleChangeTab = useCallback((event: React.SyntheticEvent, newValue: string) => {
     setCurrentTab(newValue);
   }, []);
 
-  const [notifications, setNotifications] = useState(data);
-
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
-
-  const handleMarkAllAsRead = () => {
-    setNotifications(notifications.map((notification) => ({ ...notification, isUnRead: false })));
-  };
+  const filtered = currentTab === 'unread' ? items.filter((i) => i.isUnRead) : items;
 
   const renderHead = () => (
-    <Box
-      sx={{
-        py: 2,
-        pr: 1,
-        pl: 2.5,
-        minHeight: 68,
-        display: 'flex',
-        alignItems: 'center',
-      }}
-    >
+    <Box sx={{ py: 2, pr: 1, pl: 2.5, minHeight: 68, display: 'flex', alignItems: 'center' }}>
       <Typography variant="h6" sx={{ flexGrow: 1 }}>
         Notifications
       </Typography>
 
-      {!!totalUnRead && (
-        <Tooltip title="Mark all as read">
-          <IconButton color="primary" onClick={handleMarkAllAsRead}>
-            <Iconify icon="eva:done-all-fill" />
-          </IconButton>
-        </Tooltip>
-      )}
-
       <IconButton onClick={onClose} sx={{ display: { xs: 'inline-flex', sm: 'none' } }}>
         <Iconify icon="mingcute:close-line" />
-      </IconButton>
-
-      <IconButton>
-        <Iconify icon="solar:settings-bold-duotone" />
       </IconButton>
     </Box>
   );
 
   const renderTabs = () => (
     <Tabs variant="fullWidth" value={currentTab} onChange={handleChangeTab} indicatorColor="custom">
-      {TABS.map((tab) => (
+      {tabs.map((tab) => (
         <Tab
           key={tab.value}
           iconPosition="end"
@@ -99,11 +95,7 @@ export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDr
           icon={
             <Label
               variant={((tab.value === 'all' || tab.value === currentTab) && 'filled') || 'soft'}
-              color={
-                (tab.value === 'unread' && 'info') ||
-                (tab.value === 'archived' && 'success') ||
-                'default'
-              }
+              color={(tab.value === 'unread' && 'info') || 'default'}
             >
               {tab.count}
             </Label>
@@ -115,13 +107,19 @@ export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDr
 
   const renderList = () => (
     <Scrollbar>
-      <Box component="ul">
-        {notifications?.map((notification) => (
-          <Box component="li" key={notification.id} sx={{ display: 'flex' }}>
-            <NotificationItem notification={notification} />
-          </Box>
-        ))}
-      </Box>
+      {filtered.length ? (
+        <Box component="ul">
+          {filtered.map((notification) => (
+            <Box component="li" key={notification.id} sx={{ display: 'flex' }}>
+              <NotificationItem notification={notification} />
+            </Box>
+          ))}
+        </Box>
+      ) : (
+        <Box sx={{ p: 5, textAlign: 'center', color: 'text.disabled', typography: 'body2' }}>
+          No notifications
+        </Box>
+      )}
     </Scrollbar>
   );
 
@@ -156,7 +154,13 @@ export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDr
         {renderList()}
 
         <Box sx={{ p: 1 }}>
-          <Button fullWidth size="large">
+          <Button
+            fullWidth
+            size="large"
+            component={RouterLink}
+            href={paths.dashboard.notifications}
+            onClick={onClose}
+          >
             View all
           </Button>
         </Box>

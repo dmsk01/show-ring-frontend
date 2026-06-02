@@ -122,6 +122,12 @@ export const endpoints = {
     search: '/classifieds/search',
     details: (id: string) => `/classifieds/${id}`,
   },
+  show: {
+    list: '/shows',
+    details: (id: string) => `/shows/${id}`,
+    status: (id: string) => `/shows/${id}/status`,
+    publish: (id: string) => `/shows/${id}/publish`,
+  },
   reference: {
     breeds: '/references/breeds',
     kennels: '/kennels',

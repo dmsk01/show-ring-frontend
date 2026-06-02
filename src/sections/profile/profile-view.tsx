@@ -89,13 +89,23 @@ export function ProfileView() {
 
       <Card sx={{ mb: 3, height: 290 }}>
         <ProfileCover name={displayName} role={primaryRole} avatarUrl="" coverUrl={COVER_URL} />
-      </Card>
 
-      <Card sx={{ p: 3 }}>
-        <Box sx={{ mb: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1 }}>
-          <Typography variant="body2">
-            Email: <strong>{me?.email}</strong>
-          </Typography>
+        <Box
+          sx={{
+            width: 1,
+            bottom: 0,
+            zIndex: 9,
+            gap: 1,
+            px: { md: 3 },
+            py: 2,
+            display: 'flex',
+            flexWrap: 'wrap',
+            position: 'absolute',
+            alignItems: 'center',
+            bgcolor: 'background.paper',
+            justifyContent: { xs: 'center', md: 'flex-end' },
+          }}
+        >
           <Label color={me?.is_email_verified ? 'success' : 'warning'}>
             {me?.is_email_verified ? 'Verified' : 'Not verified'}
           </Label>
@@ -105,6 +115,12 @@ export function ProfileView() {
             </Label>
           ))}
         </Box>
+      </Card>
+
+      <Card sx={{ p: 3 }}>
+        <Typography variant="body2" sx={{ mb: 3, color: 'text.secondary' }}>
+          {me?.email}
+        </Typography>
 
         <Form methods={methods} onSubmit={onSubmit}>
           <Box

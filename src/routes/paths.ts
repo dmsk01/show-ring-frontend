@@ -157,6 +157,8 @@ export const paths = {
     },
     notifications: `${ROOTS.DASHBOARD}/notifications`,
     adminReferences: `${ROOTS.DASHBOARD}/admin/references`,
+    adminUsers: `${ROOTS.DASHBOARD}/admin/users`,
+    adminModeration: `${ROOTS.DASHBOARD}/admin/moderation`,
     profile: `${ROOTS.DASHBOARD}/profile`,
     product: {
       root: `${ROOTS.DASHBOARD}/product`,

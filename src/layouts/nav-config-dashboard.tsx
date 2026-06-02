@@ -133,6 +133,16 @@ export const navData: NavSectionProps['data'] = [
         icon: ICONS.params,
       },
       {
+        title: 'Users (admin)',
+        path: paths.dashboard.adminUsers,
+        icon: ICONS.user,
+      },
+      {
+        title: 'Moderation (admin)',
+        path: paths.dashboard.adminModeration,
+        icon: ICONS.lock,
+      },
+      {
         title: 'Notifications',
         path: paths.dashboard.notifications,
         icon: ICONS.label,

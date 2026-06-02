@@ -154,6 +154,15 @@ export const endpoints = {
     subscriptions: '/subscriptions',
     subscription: (id: string) => `/subscriptions/${id}`,
   },
+  admin: {
+    users: '/admin/users',
+    userBlock: (id: string) => `/admin/users/${id}/block`,
+    userRole: (id: string) => `/admin/users/${id}/role`,
+    moderationClassifieds: '/admin/moderation/classifieds',
+    moderationClassified: (id: string) => `/admin/moderation/classifieds/${id}`,
+    moderationKennels: '/admin/moderation/kennels',
+    kennelVerify: (id: string) => `/admin/moderation/kennels/${id}/verify`,
+  },
   reference: {
     breeds: '/references/breeds',
     kennels: '/kennels',

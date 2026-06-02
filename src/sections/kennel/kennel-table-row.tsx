@@ -2,8 +2,10 @@ import type { IKennelItem } from 'src/types/kennel';
 
 import { useBoolean, usePopover } from 'minimal-shared/hooks';
 
+import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
@@ -11,6 +13,8 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 
 import { RouterLink } from 'src/routes/components';
+
+import { fileUrl } from 'src/actions/file';
 
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
@@ -32,9 +36,12 @@ export function KennelTableRow({ row, editHref, onDeleteRow }: Props) {
     <>
       <TableRow hover>
         <TableCell>
-          <Link component={RouterLink} href={editHref} color="inherit" sx={{ fontWeight: 600 }}>
-            {row.name}
-          </Link>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Avatar src={fileUrl(row.avatar_file_id)} alt={row.name} sx={{ width: 32, height: 32 }} />
+            <Link component={RouterLink} href={editHref} color="inherit" sx={{ fontWeight: 600 }}>
+              {row.name}
+            </Link>
+          </Box>
         </TableCell>
 
         <TableCell>{row.kennel_prefix ?? '—'}</TableCell>

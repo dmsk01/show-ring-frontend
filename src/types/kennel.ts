@@ -25,7 +25,7 @@ export type IKennelCreate = {
   website?: string | null;
 };
 
-export type IKennelUpdate = Partial<IKennelCreate>;
+export type IKennelUpdate = Partial<IKennelCreate> & { avatar_file_id?: string | null };
 
 export type IKennelPage = {
   items: IKennelItem[];

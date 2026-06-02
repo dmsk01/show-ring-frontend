@@ -113,6 +113,10 @@ export const endpoints = {
     list: '/litters',
     details: (id: string) => `/litters/${id}`,
   },
+  file: {
+    upload: '/files/upload',
+    details: (id: string) => `/files/${id}`,
+  },
   reference: {
     breeds: '/references/breeds',
     kennels: '/kennels',

@@ -1,7 +1,5 @@
 'use client';
 
-import type { IPostItem } from 'src/types/blog';
-
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
@@ -18,6 +16,8 @@ import { paths } from 'src/routes/paths';
 
 import { fShortenNumber } from 'src/utils/format-number';
 
+import { useGetPost, useGetLatestPosts } from 'src/actions/blog';
+
 import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
@@ -30,11 +30,13 @@ import { PostDetailsHero } from '../post-details-hero';
 // ----------------------------------------------------------------------
 
 type Props = {
-  post?: IPostItem;
-  latestPosts?: IPostItem[];
+  title: string;
 };
 
-export function PostDetailsHomeView({ post, latestPosts }: Props) {
+export function PostDetailsHomeView({ title }: Props) {
+  const { post } = useGetPost(title);
+  const { latestPosts } = useGetLatestPosts(title);
+
   return (
     <>
       <PostDetailsHero

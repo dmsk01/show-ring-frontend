@@ -241,11 +241,13 @@ export const endpoints = {
     details: '/api/mail/details',
     labels: '/api/mail/labels',
   },
+  // Blog — backed by ShowTail (see docs/specs). baseURL '/api' + these →
+  // proxied to the backend (e.g. /api/posts → :8000/posts).
   post: {
-    list: '/api/post/list',
-    details: '/api/post/details',
-    latest: '/api/post/latest',
-    search: '/api/post/search',
+    list: '/posts',
+    details: '/posts/detail',
+    latest: '/posts/latest',
+    search: '/posts/search',
   },
   product: {
     list: '/api/product/list',

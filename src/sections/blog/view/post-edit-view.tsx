@@ -1,9 +1,8 @@
 'use client';
 
-import type { IPostItem } from 'src/types/blog';
-
 import { paths } from 'src/routes/paths';
 
+import { useGetPost } from 'src/actions/blog';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
@@ -13,10 +12,12 @@ import { PostCreateEditForm } from '../post-create-edit-form';
 // ----------------------------------------------------------------------
 
 type Props = {
-  post?: IPostItem;
+  title: string;
 };
 
-export function PostEditView({ post }: Props) {
+export function PostEditView({ title }: Props) {
+  const { post } = useGetPost(title);
+
   return (
     <DashboardContent>
       <CustomBreadcrumbs

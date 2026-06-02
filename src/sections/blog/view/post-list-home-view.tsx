@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 
 import { POST_SORT_OPTIONS } from 'src/_mock';
+import { useGetPosts } from 'src/actions/blog';
 
 import { EmptyContent } from 'src/components/empty-content';
 
@@ -21,11 +22,9 @@ import { PostSearch } from '../post-search';
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  posts: IPostItem[];
-};
+export function PostListHomeView() {
+  const { posts } = useGetPosts();
 
-export function PostListHomeView({ posts }: Props) {
   const [sortBy, setSortBy] = useState('latest');
 
   const dataFiltered = applyFilter({ inputData: posts, sortBy });

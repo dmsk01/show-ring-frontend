@@ -1,7 +1,5 @@
 'use client';
 
-import type { IPostItem } from 'src/types/blog';
-
 import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -19,6 +17,7 @@ import { paths } from 'src/routes/paths';
 
 import { fShortenNumber } from 'src/utils/format-number';
 
+import { useGetPost } from 'src/actions/blog';
 import { POST_PUBLISH_OPTIONS } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -33,10 +32,12 @@ import { PostDetailsToolbar } from '../post-details-toolbar';
 // ----------------------------------------------------------------------
 
 type Props = {
-  post?: IPostItem;
+  title: string;
 };
 
-export function PostDetailsView({ post }: Props) {
+export function PostDetailsView({ title }: Props) {
+  const { post } = useGetPost(title);
+
   const [publish, setPublish] = useState('');
 
   const handleChangePublish = useCallback((newValue: string) => {

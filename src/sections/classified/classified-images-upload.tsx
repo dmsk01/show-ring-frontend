@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { fileUrl, uploadFile } from 'src/actions/file';
+import { uploadFile } from 'src/actions/file';
 
 import { Upload } from 'src/components/upload';
 import { toast } from 'src/components/snackbar';
@@ -10,20 +10,39 @@ import { toast } from 'src/components/snackbar';
 // ----------------------------------------------------------------------
 
 type Props = {
-  value: string[]; // file ids
   onChange: (ids: string[]) => void;
 };
 
-export function ClassifiedImagesUpload({ value, onChange }: Props) {
+// Keeps the dropped File objects as the Upload value so the real image preview
+// renders (like the single-file Upload), while reporting the uploaded file ids upward.
+export function ClassifiedImagesUpload({ onChange }: Props) {
+  const [files, setFiles] = useState<File[]>([]);
+  const [ids, setIds] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
-
-  const previews = value.map((id) => fileUrl(id));
 
   const handleDrop = async (acceptedFiles: File[]) => {
     setUploading(true);
     try {
-      const ids = await Promise.all(acceptedFiles.map((f) => uploadFile(f).then((r) => r.id)));
-      onChange([...value, ...ids]);
+      const results = await Promise.allSettled(acceptedFiles.map((f) => uploadFile(f)));
+
+      const okFiles: File[] = [];
+      const okIds: string[] = [];
+      results.forEach((res, i) => {
+        if (res.status === 'fulfilled') {
+          okFiles.push(acceptedFiles[i]);
+          okIds.push(res.value.id);
+        }
+      });
+
+      if (results.some((r) => r.status === 'rejected')) {
+        toast.error('Some images failed to upload');
+      }
+
+      const nextFiles = [...files, ...okFiles];
+      const nextIds = [...ids, ...okIds];
+      setFiles(nextFiles);
+      setIds(nextIds);
+      onChange(nextIds);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Upload failed');
     } finally {
@@ -32,19 +51,30 @@ export function ClassifiedImagesUpload({ value, onChange }: Props) {
   };
 
   const handleRemove = (target: File | string) => {
-    const index = previews.indexOf(target as string);
-    if (index >= 0) onChange(value.filter((_, i) => i !== index));
+    const index = files.indexOf(target as File);
+    if (index < 0) return;
+    const nextFiles = files.filter((_, i) => i !== index);
+    const nextIds = ids.filter((_, i) => i !== index);
+    setFiles(nextFiles);
+    setIds(nextIds);
+    onChange(nextIds);
+  };
+
+  const handleRemoveAll = () => {
+    setFiles([]);
+    setIds([]);
+    onChange([]);
   };
 
   return (
     <Upload
       multiple
-      value={previews}
+      value={files}
       loading={uploading}
       accept={{ 'image/*': [] }}
       onDrop={handleDrop}
       onRemove={handleRemove}
-      onRemoveAll={() => onChange([])}
+      onRemoveAll={handleRemoveAll}
     />
   );
 }

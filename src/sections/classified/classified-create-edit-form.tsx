@@ -190,7 +190,7 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
               )}
             </Box>
           ) : (
-            <ClassifiedImagesUpload value={imageIds} onChange={setImageIds} />
+            <ClassifiedImagesUpload onChange={setImageIds} />
           )}
         </Box>
 

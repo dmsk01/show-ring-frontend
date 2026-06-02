@@ -145,6 +145,11 @@ export const paths = {
       results: (id: string) => `${ROOTS.DASHBOARD}/shows/${id}/results`,
       documents: (id: string) => `${ROOTS.DASHBOARD}/shows/${id}/documents`,
     },
+    ads: {
+      root: `${ROOTS.DASHBOARD}/ads`,
+      new: `${ROOTS.DASHBOARD}/ads/new`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/ads/${id}/edit`,
+    },
     adminReferences: `${ROOTS.DASHBOARD}/admin/references`,
     profile: `${ROOTS.DASHBOARD}/profile`,
     product: {

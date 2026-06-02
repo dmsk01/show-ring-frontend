@@ -114,6 +114,15 @@ export const navData: NavSectionProps['data'] = [
         ],
       },
       {
+        title: 'Ads',
+        path: paths.dashboard.ads.root,
+        icon: ICONS.banking,
+        children: [
+          { title: 'Campaigns', path: paths.dashboard.ads.root },
+          { title: 'Create', path: paths.dashboard.ads.new },
+        ],
+      },
+      {
         title: 'References (admin)',
         path: paths.dashboard.adminReferences,
         icon: ICONS.params,

@@ -133,6 +133,11 @@ export const paths = {
       new: `${ROOTS.DASHBOARD}/litters/new`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/litters/${id}/edit`,
     },
+    classifieds: {
+      root: `${ROOTS.DASHBOARD}/classifieds`,
+      new: `${ROOTS.DASHBOARD}/classifieds/new`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/classifieds/${id}/edit`,
+    },
     adminReferences: `${ROOTS.DASHBOARD}/admin/references`,
     profile: `${ROOTS.DASHBOARD}/profile`,
     product: {

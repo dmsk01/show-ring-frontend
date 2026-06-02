@@ -95,6 +95,11 @@ export const navData: NavSectionProps['data'] = [
           { title: 'Create', path: paths.dashboard.litters.new },
         ],
       },
+      {
+        title: 'References (admin)',
+        path: paths.dashboard.adminReferences,
+        icon: ICONS.params,
+      },
     ],
   },
   /**

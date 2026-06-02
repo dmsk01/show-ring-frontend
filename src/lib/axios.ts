@@ -137,6 +137,12 @@ export const endpoints = {
     details: (id: string) => `/tasks/${id}`,
     download: (id: string) => `/tasks/${id}/download`,
   },
+  ad: {
+    campaigns: '/ads/campaigns',
+    campaign: (id: string) => `/ads/campaigns/${id}`,
+    campaignBanners: (id: string) => `/ads/campaigns/${id}/banners`,
+    campaignStats: (id: string) => `/ads/campaigns/${id}/stats`,
+  },
   reference: {
     breeds: '/references/breeds',
     kennels: '/kennels',

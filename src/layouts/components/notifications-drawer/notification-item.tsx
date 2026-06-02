@@ -25,6 +25,7 @@ export type NotificationItemProps = {
     avatarUrl: string | null;
     createdAt: string | number | null;
   };
+  onClick?: () => void;
 };
 
 const readerContent = (data: string) => (
@@ -46,7 +47,7 @@ const renderIcon = (type: string) =>
     delivery: notificationIcons.delivery,
   })[type];
 
-export function NotificationItem({ notification }: NotificationItemProps) {
+export function NotificationItem({ notification, onClick }: NotificationItemProps) {
   const renderAvatar = () => (
     <ListItemAvatar>
       {notification.avatarUrl ? (
@@ -220,6 +221,7 @@ export function NotificationItem({ notification }: NotificationItemProps) {
   return (
     <ListItemButton
       disableRipple
+      onClick={onClick}
       sx={[
         (theme) => ({
           p: 2.5,

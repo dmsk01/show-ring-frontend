@@ -24,6 +24,7 @@ import {
   deleteSubscription,
   useGetNotifications,
   useGetSubscriptions,
+  markNotificationRead,
 } from 'src/actions/notification';
 
 import { Label } from 'src/components/label';
@@ -184,9 +185,29 @@ export function NotificationsView() {
           ) : (
             <Stack divider={<Divider sx={{ borderStyle: 'dashed' }} />} spacing={1.5}>
               {notifications.map((n) => (
-                <Box key={n.id} sx={{ gap: 1, display: 'flex', alignItems: 'center' }}>
+                <Box
+                  key={n.id}
+                  onClick={n.is_read ? undefined : () => markNotificationRead(n.id)}
+                  sx={{
+                    gap: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    cursor: n.is_read ? 'default' : 'pointer',
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 8,
+                      height: 8,
+                      flexShrink: 0,
+                      borderRadius: '50%',
+                      bgcolor: n.is_read ? 'transparent' : 'info.main',
+                    }}
+                  />
                   <Stack sx={{ flex: 1 }}>
-                    <Typography variant="subtitle2">{n.subject}</Typography>
+                    <Typography variant="subtitle2" sx={{ fontWeight: n.is_read ? 400 : 600 }}>
+                      {n.subject}
+                    </Typography>
                     <Typography variant="caption" sx={{ color: 'text.disabled' }}>
                       {n.event_type} · {n.created_at?.slice(0, 16).replace('T', ' ')}
                     </Typography>

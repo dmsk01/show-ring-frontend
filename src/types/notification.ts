@@ -22,7 +22,11 @@ export type INotification = {
   event_type: string;
   channel: NotificationChannel;
   subject: string;
+  // `status` reflects email delivery only (pending/sent/failed) — NOT read state.
   status: NotificationStatus;
+  // Read state: single source of truth is `read_at`; `is_read` is derived from it.
+  is_read: boolean;
+  read_at: string | null;
   error: string | null;
   sent_at: string | null;
   created_at: string;

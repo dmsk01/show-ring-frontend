@@ -20,7 +20,7 @@ import IconButton from '@mui/material/IconButton';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { useGetNotifications } from 'src/actions/notification';
+import { useGetNotifications, markNotificationRead } from 'src/actions/notification';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -40,7 +40,7 @@ function toItem(n: INotification): DrawerNotification {
     type: 'mail',
     title: `<p>${n.subject}</p>`,
     category: n.event_type,
-    isUnRead: n.status === 'pending',
+    isUnRead: !n.is_read,
     avatarUrl: null,
     createdAt: n.created_at,
   };
@@ -68,6 +68,10 @@ export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) 
 
   const handleChangeTab = useCallback((event: React.SyntheticEvent, newValue: string) => {
     setCurrentTab(newValue);
+  }, []);
+
+  const handleMarkRead = useCallback((id: string) => {
+    markNotificationRead(id).catch(() => {});
   }, []);
 
   const filtered = currentTab === 'unread' ? items.filter((i) => i.isUnRead) : items;
@@ -111,7 +115,12 @@ export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) 
         <Box component="ul">
           {filtered.map((notification) => (
             <Box component="li" key={notification.id} sx={{ display: 'flex' }}>
-              <NotificationItem notification={notification} />
+              <NotificationItem
+                notification={notification}
+                onClick={
+                  notification.isUnRead ? () => handleMarkRead(notification.id) : undefined
+                }
+              />
             </Box>
           ))}
         </Box>

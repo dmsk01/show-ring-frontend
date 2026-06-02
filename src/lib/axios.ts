@@ -209,6 +209,7 @@ export const endpoints = {
   },
   notification: {
     list: '/notifications',
+    markRead: (id: string) => `/notifications/${id}/read`,
     subscriptions: '/subscriptions',
     subscription: (id: string) => `/subscriptions/${id}`,
   },

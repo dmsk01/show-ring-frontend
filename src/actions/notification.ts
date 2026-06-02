@@ -52,6 +52,30 @@ export function useGetSubscriptions() {
 
 // ----------------------------------------------------------------------
 
+const isNotificationsKey = (key: unknown) =>
+  Array.isArray(key) && key[0] === endpoints.notification.list;
+
+// Mark a single notification read. Optimistic: flip is_read/read_at in cache
+// immediately, then PATCH; on failure revalidate from the server to roll back.
+// The backend PATCH is idempotent, so a redundant call is harmless.
+export async function markNotificationRead(id: string): Promise<void> {
+  await mutate(
+    isNotificationsKey,
+    (current?: INotification[]) =>
+      current?.map((n) =>
+        n.id === id ? { ...n, is_read: true, read_at: n.read_at ?? new Date().toISOString() } : n
+      ),
+    { revalidate: false }
+  );
+
+  try {
+    await axios.patch(endpoints.notification.markRead(id));
+  } catch (error) {
+    await mutate(isNotificationsKey);
+    throw error;
+  }
+}
+
 export async function createSubscription(payload: ISubscriptionCreate): Promise<ISubscription> {
   const res = await axios.post<ISubscription>(endpoints.notification.subscriptions, payload);
   await mutate(endpoints.notification.subscriptions);

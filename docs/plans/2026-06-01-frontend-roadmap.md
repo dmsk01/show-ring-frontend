@@ -67,7 +67,7 @@
 - **Phase 2 ✅** Classifieds.
 - **Phase 3 ✅** Shows · Results · Documents.
 - **Phase 4 ✅** Ads · Support · Notifications (+ NotificationsDrawer на реальных данных).
-- **Phase 5 (в работе)** Admin Users ✅ · Moderation ✅ · **Analytics — следующее** · чистка демо.
+- **Phase 5 (в работе)** Admin Users ✅ · Moderation ✅ · Analytics ✅ · **чистка демо — следующее**.
 
 ---
 

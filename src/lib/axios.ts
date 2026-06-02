@@ -143,6 +143,12 @@ export const endpoints = {
     campaignBanners: (id: string) => `/ads/campaigns/${id}/banners`,
     campaignStats: (id: string) => `/ads/campaigns/${id}/stats`,
   },
+  support: {
+    tickets: '/support/tickets',
+    ticket: (id: string) => `/support/tickets/${id}`,
+    messages: (id: string) => `/support/tickets/${id}/messages`,
+    ticketStatus: (id: string) => `/support/tickets/${id}/status`,
+  },
   reference: {
     breeds: '/references/breeds',
     kennels: '/kennels',

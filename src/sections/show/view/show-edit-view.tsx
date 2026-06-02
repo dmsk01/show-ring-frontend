@@ -100,6 +100,16 @@ export function ShowEditView({ id }: Props) {
           >
             Results
           </Button>
+
+          <Button
+            component={RouterLink}
+            href={paths.dashboard.shows.documents(id)}
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:file-text-bold" />}
+          >
+            Documents
+          </Button>
         </Box>
       </Card>
 

@@ -143,6 +143,7 @@ export const paths = {
       new: `${ROOTS.DASHBOARD}/shows/new`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/shows/${id}/edit`,
       results: (id: string) => `${ROOTS.DASHBOARD}/shows/${id}/results`,
+      documents: (id: string) => `${ROOTS.DASHBOARD}/shows/${id}/documents`,
     },
     adminReferences: `${ROOTS.DASHBOARD}/admin/references`,
     profile: `${ROOTS.DASHBOARD}/profile`,

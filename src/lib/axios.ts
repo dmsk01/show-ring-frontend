@@ -130,6 +130,12 @@ export const endpoints = {
     entries: (id: string) => `/shows/${id}/entries`,
     results: (id: string) => `/shows/${id}/results`,
     resultItem: (id: string, resultId: string) => `/shows/${id}/results/${resultId}`,
+    catalogGenerate: (id: string) => `/shows/${id}/catalog/generate`,
+    diplomasGenerate: (id: string) => `/shows/${id}/diplomas/generate`,
+  },
+  task: {
+    details: (id: string) => `/tasks/${id}`,
+    download: (id: string) => `/tasks/${id}/download`,
   },
   reference: {
     breeds: '/references/breeds',

@@ -16,14 +16,9 @@ import { fCurrency } from 'src/utils/format-number';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 
-// ----------------------------------------------------------------------
+import { SHOW_STATUS_COLOR, SHOW_STATUS_LABEL } from './show-utils';
 
-const STATUS_LABEL: Record<string, string> = {
-  registration_open: 'Регистрация открыта',
-  registration_closed: 'Регистрация закрыта',
-  in_progress: 'Идёт',
-  completed: 'Завершена',
-};
+// ----------------------------------------------------------------------
 
 type Props = CardProps & { show: IShowItem };
 
@@ -46,8 +41,8 @@ export function ShowCard({ show, sx, ...other }: Props) {
         <Link component={RouterLink} href={detailsHref} color="inherit" variant="subtitle1">
           {show.name}
         </Link>
-        <Label color={show.status === 'completed' ? 'default' : 'success'}>
-          {STATUS_LABEL[show.status] ?? show.status}
+        <Label color={SHOW_STATUS_COLOR[show.status] ?? 'default'}>
+          {SHOW_STATUS_LABEL[show.status] ?? show.status}
         </Label>
       </Stack>
 
@@ -67,7 +62,7 @@ export function ShowCard({ show, sx, ...other }: Props) {
         </Box>
 
         <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center', typography: 'body2' }}>
-          <Iconify icon="solar:cup-star-bold" sx={{ color: 'text.secondary' }} />
+          <Iconify icon="mingcute:location-fill" sx={{ color: 'text.secondary' }} />
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             {show.venue ?? '—'}
           </Typography>

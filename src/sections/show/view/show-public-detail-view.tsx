@@ -22,28 +22,15 @@ import { fCurrency } from 'src/utils/format-number';
 
 import { useGetShow } from 'src/actions/show';
 import { fetcher, endpoints } from 'src/lib/axios';
+import { useReferenceList } from 'src/actions/admin-reference';
 
 import { Label } from 'src/components/label';
 import { Scrollbar } from 'src/components/scrollbar';
 import { LoadingScreen } from 'src/components/loading-screen';
 
+import { SHOW_AWARD_FLAGS, SHOW_STATUS_COLOR, SHOW_STATUS_LABEL } from '../show-utils';
+
 // ----------------------------------------------------------------------
-
-const STATUS_LABEL: Record<string, string> = {
-  registration_open: 'Регистрация открыта',
-  registration_closed: 'Регистрация закрыта',
-  in_progress: 'Идёт',
-  completed: 'Завершена',
-};
-
-const AWARD_FLAGS: { key: keyof IShowResult; label: string }[] = [
-  { key: 'is_class_winner', label: 'CW' },
-  { key: 'is_best_male', label: 'BM' },
-  { key: 'is_best_female', label: 'BF' },
-  { key: 'is_best_of_breed', label: 'BOB' },
-  { key: 'is_best_in_group', label: 'BIG' },
-  { key: 'is_best_in_show', label: 'BIS' },
-];
 
 type Props = { id: string };
 
@@ -55,6 +42,10 @@ export function ShowPublicDetailView({ id }: Props) {
     isCompleted ? endpoints.show.results(id) : null,
     fetcher
   );
+
+  const { items: grades } = useReferenceList('/references/grades');
+  const gradeName = (gradeId: string | null) =>
+    gradeId ? (grades.find((g) => g.id === gradeId)?.name ?? '—') : '—';
 
   if (showLoading) return <LoadingScreen />;
   if (!show) {
@@ -87,8 +78,8 @@ export function ShowPublicDetailView({ id }: Props) {
         <Typography variant="h4" sx={{ flexGrow: 1 }}>
           {show.name}
         </Typography>
-        <Label color={isCompleted ? 'default' : 'success'}>
-          {STATUS_LABEL[show.status] ?? show.status}
+        <Label color={SHOW_STATUS_COLOR[show.status] ?? 'default'}>
+          {SHOW_STATUS_LABEL[show.status] ?? show.status}
         </Label>
       </Stack>
 
@@ -141,10 +132,10 @@ export function ShowPublicDetailView({ id }: Props) {
                   {(results ?? []).map((r) => (
                     <TableRow key={r.id}>
                       <TableCell>{r.placement ?? '—'}</TableCell>
-                      <TableCell>{r.grade_id ?? '—'}</TableCell>
+                      <TableCell>{gradeName(r.grade_id)}</TableCell>
                       <TableCell>
                         <Box sx={{ gap: 0.5, display: 'flex', flexWrap: 'wrap' }}>
-                          {AWARD_FLAGS.filter((f) => r[f.key]).map((f) => (
+                          {SHOW_AWARD_FLAGS.filter((f) => r[f.key]).map((f) => (
                             <Label key={f.label} color="success">
                               {f.label}
                             </Label>

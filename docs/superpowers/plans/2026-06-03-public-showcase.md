@@ -4,13 +4,15 @@
 
 **Goal:** Build a public, login-free showcase (Kennels, Animals/classifieds, Shows) of card grids + detail pages on `MainLayout`, plus a tour-style public dog detail page, leaving the private `/dashboard/*` tables untouched.
 
-**Architecture:** New top-level App Router routes (`/kennels`, `/animals`, `/shows`, `/dogs/[id]`) each wrapped by a thin `layout.tsx` → `MainLayout` (header/footer, like `/post`). Each domain gets read-only showcase view + card + grid + detail view under `src/sections/<domain>`. Lists use existing SWR hooks with server pagination; sorting/active-filtering done client-side per page (documented limits). Pure logic (price/format/show-bucket/primary-image/placeholder) lives in tested `*-utils.ts` files.
+**Architecture:** New top-level App Router routes (`/kennels`, `/animals`, `/shows`, `/dogs/[id]`) each wrapped by a thin `layout.tsx` → `MainLayout` (header/footer, like `/post`). Each domain gets read-only showcase view + card + grid + detail view under `src/sections/<domain>`. Lists use existing SWR hooks with server pagination and server `sort_by`/`order` (see Addendum); only the classifieds `active` filter and the shows "upcoming" bucket remain client-side. Pure logic (price/format/show-bucket/primary-image/placeholder) lives in tested `*-utils.ts` files.
 
 **Tech Stack:** Next.js 16 App Router, MUI 7, TypeScript, SWR, vitest. Reuse template primitives: `Image`, `Iconify`, `Label`, `Lightbox`, `Markdown`, `EmptyContent`, `ProfileCover`, `Scrollbar`, `TableHeadCustom`, plus the `tour` section pattern.
 
 **Quality gates (run before every commit):** `npx tsc --noEmit` → 0, `npx eslint --fix <changed files>` then `npm run lint` → 0, `npm test` → green. Iconify names must exist in `src/components/iconify/icon-sets.ts` (add if missing).
 
 **Phasing:** Phase 0 (foundation) → Phase 1 (Kennels + Dog detail) → Phase 2 (Animals) → Phase 3 (Shows). Each phase is independently shippable.
+
+> **⚠️ READ THE ADDENDUM FIRST.** The backend shipped the requested contract changes on 2026-06-03 (dog photos, kennel `is_verified`/counts, litter `father`/`mother` objects, server `sort_by`/`order`). The **Addendum** at the bottom of this file overrides specific code in Tasks 1.2, 1.3, 1.4, 1.5, 1.6, 2.2, 3.2. Where the addendum and a task body disagree, the addendum wins. Types/actions were already updated to the new contract (committed separately) — do NOT re-edit `src/types/*` or `src/actions/*` for these fields.
 
 ---
 
@@ -2472,9 +2474,210 @@ If `docs/plans/2026-06-01-frontend-roadmap.md` tracks this work, mark the public
 
 ---
 
-## Notes / known limitations (documented in the spec)
+## Notes / known limitations (updated 2026-06-03 — backend contract landed)
 
-- **Sorting** is client-side within the current page; full sorting needs backend `sort_by/order` (backend requirements P2).
-- **Classifieds status filter** is client-side (`status==='active'`) until backend adds a `status` query param (P2) — pagination counts include non-active items until then.
-- **Dog photos** are placeholders until backend adds `avatar_file_id` to dogs (P1).
-- **Shows fetch** classifies a single page client-side; if a page contains few of the selected bucket, the grid may look sparse until backend supports bucket/status filtering for the public list.
+- **Sorting** is now **server-side** via `sort_by`/`order` (see Addendum). No client-side sort.
+- **Dog photos** are now real (`avatar_file_id` + `photo_file_ids`); `dogPlaceholderImage` remains only as a fallback when a dog has no photos.
+- **Classifieds status filter** is still client-side (`status==='active'`) — `GET /classifieds` did **not** gain a `status` param; pagination counts include non-active items until it does.
+- **Shows upcoming tab** still classifies client-side (the "upcoming" bucket spans 3 statuses and the backend `status` filter is single-value); the **past tab** filters `status='completed'` server-side (see Addendum).
+
+---
+
+## Addendum — 2026-06-03 backend contract integration
+
+The backend now returns/accepts:
+- `DogResponse`: `avatar_file_id: string|null`, `photo_file_ids: string[]`, `litter_id: string|null`; `GET /dogs` accepts `litter_id`, `sort_by` (`name|date_of_birth|created_at`), `order` (`asc|desc`).
+- `KennelResponse`: `is_verified: boolean`, `dogs_count: number`, `litters_count: number`; `GET /kennels` accepts `sort_by` (`name|created_at`), `order`.
+- `LitterResponse`: `father: IDogRef|null`, `mother: IDogRef|null` (`IDogRef = {id, name, avatar_file_id}`); new `GET /litters/{id}/puppies` → `IDogItem[]` (hook `useGetLitterPuppies`).
+- `GET /classifieds` accepts `sort_by` (`created_at|price|views_count`), `order`. `GET /shows` accepts `sort_by` (`date_start|created_at`), `order`, and `status`.
+
+Types/actions are already updated and committed. Apply these code deltas when doing the listed tasks:
+
+### Delta for Task 1.2 (DogCard) — real photo with placeholder fallback
+
+Add import `import { fileUrl } from 'src/actions/file';` and change the `<Image>` `src`:
+
+```tsx
+src={fileUrl(dog.avatar_file_id) || dogPlaceholderImage(dog.sex)}
+```
+
+### Delta for Task 1.3 (DogPublicDetailView) — gallery from real photos
+
+Add imports:
+
+```tsx
+import { fileUrl } from 'src/actions/file';
+import { Lightbox, useLightbox } from 'src/components/lightbox';
+```
+
+Replace the single placeholder hero `<Image .../>` with a gallery built from the dog's photos (avatar first, then `photo_file_ids`, de-duplicated), falling back to the sex placeholder when the dog has no photos. Insert this right after the `breedName`/`overview` setup but compute `slides`/`lightbox` at the top of the component (hooks must run unconditionally, before the early returns — place the two lines just after the `useGetBreeds()` hook call):
+
+```tsx
+  const photoIds = [dog?.avatar_file_id, ...(dog?.photo_file_ids ?? [])].filter(
+    (v, i, arr): v is string => !!v && arr.indexOf(v) === i
+  );
+  const slides = photoIds.map((fid) => ({ src: fileUrl(fid) }));
+  const lightbox = useLightbox(slides);
+```
+
+(Note: `dog` may be undefined on first render — the `dog?.` guards handle that; the early `if (!dog)` return stays *after* these hook calls.)
+
+Then the hero render block becomes:
+
+```tsx
+      {slides.length > 0 ? (
+        <>
+          <Box
+            sx={{
+              gap: 1,
+              display: 'grid',
+              mb: { xs: 3, md: 5 },
+              gridTemplateColumns: { xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' },
+            }}
+          >
+            {slides.slice(0, 4).map((slide) => (
+              <Image
+                key={slide.src}
+                alt={dog.name}
+                src={slide.src}
+                ratio="1/1"
+                onClick={() => lightbox.onOpen(slide.src)}
+                sx={{ borderRadius: 2, cursor: 'pointer', '&:hover': { opacity: 0.8 } }}
+              />
+            ))}
+          </Box>
+          <Lightbox
+            index={lightbox.selected}
+            slides={slides}
+            open={lightbox.open}
+            close={lightbox.onClose}
+          />
+        </>
+      ) : (
+        <Image
+          alt={dog.name}
+          src={dogPlaceholderImage(dog.sex)}
+          ratio="16/9"
+          sx={{ borderRadius: 2, mb: { xs: 3, md: 5 } }}
+        />
+      )}
+```
+
+Keep `dogPlaceholderImage` import (used in the fallback). Ensure `Box` is imported (it already is in the task body).
+
+### Delta for Task 1.4 (KennelCard) — verified badge + counts
+
+Add a verified `Label` overlay on the image and a counts row. Add imports `import { Label } from 'src/components/label';` (Iconify already imported). Wrap the image `<Box sx={{ p: 1 }}>` to be `position: 'relative'` and add inside it, before `<Image>`:
+
+```tsx
+        {kennel.is_verified && (
+          <Label
+            color="success"
+            startIcon={<Iconify icon="solar:verified-check-bold" />}
+            sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}
+          >
+            Проверен
+          </Label>
+        )}
+```
+
+And change the location `<Box>` footer to also show counts (replace the single location Box with):
+
+```tsx
+      <Box sx={{ p: 2.5, pt: 0, display: 'flex', flexDirection: 'column', gap: 0.75 }}>
+        <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center', typography: 'body2' }}>
+          <Iconify icon="mingcute:location-fill" sx={{ color: 'error.main' }} />
+          {location}
+        </Box>
+        <Box sx={{ typography: 'caption', color: 'text.disabled' }}>
+          Собак: {kennel.dogs_count} · Помётов: {kennel.litters_count}
+        </Box>
+      </Box>
+```
+
+(If `solar:verified-check-bold` is not registered in `icon-sets.ts`, add it or swap for a registered check icon like `solar:check-circle-bold`.)
+
+### Delta for Task 1.5 (KennelShowcaseView) — server sort control
+
+Add a sort `Select` (MUI `TextField select`) with options "Сначала новые" (`created_at`/`desc`) and "По названию" (`name`/`asc`), store `sortBy`/`order` in state, and pass them to the hook:
+
+```tsx
+  const { kennels, kennelsTotal, kennelsLoading, kennelsEmpty } = useGetKennelsList({
+    page: page + 1,
+    per_page: rowsPerPage,
+    search: currentFilters.search || undefined,
+    city: currentFilters.city || undefined,
+    sort_by: sortBy,
+    order,
+  });
+```
+
+Add to the filter row a `TextField select` bound to a single `sort` state of form `'created_at:desc' | 'name:asc'`, split into `sort_by`/`order` (`const [sort_by, order] = sort.split(':')`). Remove any client-side `orderBy` (the task body has none — lists were already server-paged). Keep it simple: one select, two options.
+
+### Delta for Task 1.6 (KennelLitterCard) — use embedded father/mother objects
+
+Replace the parents `<Stack>` (which linked by `father_id`/`mother_id` with the static label "Отец"/"Мать") with links that use the embedded objects' names, falling back to the id-based link:
+
+```tsx
+        <Stack direction="row" spacing={1.5}>
+          {litter.father && (
+            <Link component={RouterLink} href={paths.showcase.dog(litter.father.id)}>
+              ♂ {litter.father.name}
+            </Link>
+          )}
+          {litter.mother && (
+            <Link component={RouterLink} href={paths.showcase.dog(litter.mother.id)}>
+              ♀ {litter.mother.name}
+            </Link>
+          )}
+        </Stack>
+```
+
+### Delta for Task 1.7 (KennelDetailView) — verified badge in header
+
+After the `<ProfileCover .../>` card (or in the info `Card`), show the verified state. Add `import { Label } from 'src/components/label';` and render near the location line:
+
+```tsx
+          {kennel.is_verified && (
+            <Label color="success" startIcon={<Iconify icon="solar:verified-check-bold" />}>
+              Проверенный питомник
+            </Label>
+          )}
+```
+
+No per-litter puppies fetch is required (the "Собаки питомника" grid already lists the kennel's dogs). `useGetLitterPuppies` exists for future per-litter expansion but is out of scope here.
+
+### Delta for Task 2.2 (ClassifiedShowcaseView) — server sort
+
+Pass sort to the hook and add a sort `Select` (options: "Сначала новые" `created_at:desc`, "Дешевле" `price:asc`, "Дороже" `price:desc`, "Популярные" `views_count:desc`):
+
+```tsx
+  const { classifieds, classifiedsTotal, classifiedsLoading, classifiedsEmpty } =
+    useGetClassifieds({
+      page: page + 1,
+      per_page: rowsPerPage,
+      category: state.category === 'all' ? undefined : state.category,
+      city: state.city || undefined,
+      sort_by,
+      order,
+    });
+```
+
+Keep the client-side `status === 'active'` filter and client-side title search (backend `GET /classifieds` has no `status`/`search`; `/classifieds/search` is separate and out of scope).
+
+### Delta for Task 3.2 (ShowShowcaseView) — server status (past) + sort
+
+For the **past** tab, fetch with `status: 'completed'` and `sort_by: 'date_start', order: 'desc'`; for the **upcoming** tab, fetch without `status`, `sort_by: 'date_start', order: 'asc'`, and keep the client-side `classifyShow(...) === 'upcoming'` filter (the bucket spans 3 statuses):
+
+```tsx
+  const { shows, showsTotal, showsLoading, showsEmpty } = useGetShows({
+    page: page + 1,
+    per_page: rowsPerPage,
+    status: bucket === 'past' ? 'completed' : undefined,
+    sort_by: 'date_start',
+    order: bucket === 'past' ? 'desc' : 'asc',
+  });
+
+  const visible =
+    bucket === 'past' ? shows : shows.filter((s) => classifyShow(s.status) === 'upcoming');
+```

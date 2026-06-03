@@ -16,20 +16,15 @@ import { Label } from 'src/components/label';
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
 
-import { primaryImageFileId, formatClassifiedPrice } from './classified-utils';
+import {
+  primaryImageFileId,
+  formatClassifiedPrice,
+  CLASSIFIED_CATEGORY_LABEL,
+} from './classified-utils';
 
 // ----------------------------------------------------------------------
 
 const PLACEHOLDER = `${CONFIG.assetsDir}/assets/images/mock/cover/cover-9.webp`;
-
-const CATEGORY_LABEL: Record<string, string> = {
-  puppy_sale: 'Щенки',
-  adult_sale: 'Взрослые',
-  mating: 'Вязка',
-  handler: 'Хендлер',
-  grooming: 'Груминг',
-  other: 'Другое',
-};
 
 type Props = CardProps & { classified: IClassifiedItem };
 
@@ -44,7 +39,7 @@ export function ClassifiedCard({ classified, sx, ...other }: Props) {
           color="info"
           sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}
         >
-          {CATEGORY_LABEL[classified.category] ?? classified.category}
+          {CLASSIFIED_CATEGORY_LABEL[classified.category] ?? classified.category}
         </Label>
         <Image
           alt={classified.title}

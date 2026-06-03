@@ -20,17 +20,9 @@ import { ShowcaseShell } from 'src/sections/showcase';
 import { CLASSIFIED_CATEGORIES } from 'src/types/classified';
 
 import { ClassifiedCardGrid } from '../classified-card-grid';
+import { CLASSIFIED_CATEGORY_LABEL } from '../classified-utils';
 
 // ----------------------------------------------------------------------
-
-const CATEGORY_LABEL: Record<string, string> = {
-  puppy_sale: 'Щенки',
-  adult_sale: 'Взрослые',
-  mating: 'Вязка',
-  handler: 'Хендлер',
-  grooming: 'Груминг',
-  other: 'Другое',
-};
 
 const SORT_OPTIONS = [
   { value: 'created_at:desc', label: 'Сначала новые' },
@@ -109,7 +101,7 @@ export function ClassifiedShowcaseView() {
           <MenuItem value="all">Все категории</MenuItem>
           {CLASSIFIED_CATEGORIES.map((c) => (
             <MenuItem key={c} value={c}>
-              {CATEGORY_LABEL[c]}
+              {CLASSIFIED_CATEGORY_LABEL[c]}
             </MenuItem>
           ))}
         </TextField>

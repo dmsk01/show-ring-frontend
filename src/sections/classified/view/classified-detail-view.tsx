@@ -18,18 +18,9 @@ import { Markdown } from 'src/components/markdown';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { Lightbox, useLightbox } from 'src/components/lightbox';
 
-import { formatClassifiedPrice } from '../classified-utils';
+import { formatClassifiedPrice, CLASSIFIED_CATEGORY_LABEL } from '../classified-utils';
 
 // ----------------------------------------------------------------------
-
-const CATEGORY_LABEL: Record<string, string> = {
-  puppy_sale: 'Щенки',
-  adult_sale: 'Взрослые',
-  mating: 'Вязка',
-  handler: 'Хендлер',
-  grooming: 'Груминг',
-  other: 'Другое',
-};
 
 type Props = { id: string };
 
@@ -88,7 +79,9 @@ export function ClassifiedDetailView({ id }: Props) {
           <Typography variant="h4" sx={{ flexGrow: 1 }}>
             {classified.title}
           </Typography>
-          <Label color="info">{CATEGORY_LABEL[classified.category] ?? classified.category}</Label>
+          <Label color="info">
+            {CLASSIFIED_CATEGORY_LABEL[classified.category] ?? classified.category}
+          </Label>
         </Stack>
 
         <Typography variant="h5" sx={{ color: 'primary.main', mb: 2 }}>

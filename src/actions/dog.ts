@@ -27,7 +27,10 @@ export type DogsQuery = {
   search?: string;
   breed_id?: string;
   kennel_id?: string;
+  litter_id?: string;
   sex?: string;
+  sort_by?: 'name' | 'date_of_birth' | 'created_at';
+  order?: 'asc' | 'desc';
 };
 
 // ----------------------------------------------------------------------

@@ -27,6 +27,8 @@ export type ClassifiedsQuery = {
   city?: string;
   price_from?: number;
   price_to?: number;
+  sort_by?: 'created_at' | 'price' | 'views_count';
+  order?: 'asc' | 'desc';
 };
 
 // ----------------------------------------------------------------------

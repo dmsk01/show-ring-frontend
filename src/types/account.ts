@@ -15,12 +15,3 @@ export type IUserEmailUpdate = {
   email: string;
   current_password: string;
 };
-
-// Обращение в поддержку (POST /support/tickets)
-export type ITicketPriority = 'low' | 'normal' | 'high' | 'urgent';
-
-export type ITicketCreate = {
-  subject: string;
-  body: string;
-  priority?: ITicketPriority;
-};

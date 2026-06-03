@@ -18,6 +18,7 @@ const swrOptions: SWRConfiguration = {
 export type LittersQuery = {
   page?: number;
   per_page?: number;
+  kennel_id?: string;
   breed_id?: string;
   status?: string;
 };

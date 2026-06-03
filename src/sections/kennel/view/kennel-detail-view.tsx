@@ -1,6 +1,5 @@
 'use client';
 
-import type { LittersQuery } from 'src/actions/litter';
 import type { IconifyName } from 'src/components/iconify/register-icons';
 
 import Card from '@mui/material/Card';
@@ -31,9 +30,7 @@ type Props = { id: string };
 
 export function KennelDetailView({ id }: Props) {
   const { kennel, kennelLoading } = useGetKennel(id);
-  const { litters, littersLoading } = useGetLittersList(
-    { kennel_id: id } as LittersQuery & { kennel_id?: string }
-  );
+  const { litters, littersLoading } = useGetLittersList({ kennel_id: id });
   const { dogs, dogsLoading } = useGetDogs({ kennel_id: id });
   const { breeds } = useGetBreeds();
 

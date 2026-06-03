@@ -170,6 +170,7 @@ export const endpoints = {
   litter: {
     list: '/litters',
     details: (id: string) => `/litters/${id}`,
+    puppies: (id: string) => `/litters/${id}/puppies`,
   },
   file: {
     upload: '/files/upload',

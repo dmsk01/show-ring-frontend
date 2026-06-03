@@ -8,12 +8,18 @@ export const LITTER_STATUSES: LitterStatus[] = [
   'archived',
 ];
 
+import type { IDogRef } from './dog';
+
+// ----------------------------------------------------------------------
+
 export type ILitterItem = {
   id: string;
   kennel_id: string;
   breed_id: string;
   father_id: string | null;
   mother_id: string | null;
+  father: IDogRef | null;
+  mother: IDogRef | null;
   born_at: string | null;
   puppies_count: number | null;
   males_count: number | null;

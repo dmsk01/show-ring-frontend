@@ -1,4 +1,5 @@
 import type { SWRConfiguration } from 'swr';
+import type { IDogItem } from 'src/types/dog';
 import type { ILitterItem, ILitterPage, ILitterCreate, ILitterUpdate } from 'src/types/litter';
 
 import { useMemo } from 'react';
@@ -53,6 +54,23 @@ export function useGetLitter(litterId?: string) {
 
   return useMemo(
     () => ({ litter: data, litterLoading: isLoading, litterError: error }),
+    [data, error, isLoading]
+  );
+}
+
+// ----------------------------------------------------------------------
+
+export function useGetLitterPuppies(litterId?: string) {
+  const key = litterId ? endpoints.litter.puppies(litterId) : null;
+
+  const { data, isLoading, error } = useSWR<IDogItem[]>(key, fetcher, swrOptions);
+
+  return useMemo(
+    () => ({
+      puppies: data ?? [],
+      puppiesLoading: isLoading,
+      puppiesError: error,
+    }),
     [data, error, isLoading]
   );
 }

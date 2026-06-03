@@ -1,11 +1,19 @@
 export type DogSex = 'male' | 'female';
 
+/** Lightweight dog reference embedded in other responses (e.g. litter parents). */
+export type IDogRef = {
+  id: string;
+  name: string;
+  avatar_file_id: string | null;
+};
+
 export type IDogItem = {
   id: string;
   name: string;
   sex: DogSex;
   breed_id: string;
   kennel_id: string | null;
+  litter_id: string | null;
   date_of_birth: string | null;
   color: string | null;
   rkf_number: string | null;
@@ -14,6 +22,8 @@ export type IDogItem = {
   father_id: string | null;
   mother_id: string | null;
   description: string | null;
+  avatar_file_id: string | null;
+  photo_file_ids: string[];
   created_at: string;
   updated_at: string;
 };

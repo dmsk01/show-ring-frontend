@@ -19,6 +19,8 @@ export type KennelsQuery = {
   per_page?: number;
   search?: string;
   city?: string;
+  sort_by?: 'name' | 'created_at';
+  order?: 'asc' | 'desc';
 };
 
 // ----------------------------------------------------------------------

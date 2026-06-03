@@ -22,6 +22,8 @@ export type ShowsQuery = {
   status?: string;
   date_from?: string;
   date_to?: string;
+  sort_by?: 'date_start' | 'created_at';
+  order?: 'asc' | 'desc';
 };
 
 // ----------------------------------------------------------------------

@@ -10,6 +10,9 @@ export type IKennelItem = {
   contact_email: string | null;
   website: string | null;
   avatar_file_id: string | null;
+  is_verified: boolean;
+  dogs_count: number;
+  litters_count: number;
   created_at: string;
   updated_at: string;
 };

@@ -11,6 +11,21 @@ import { Iconify } from 'src/components/iconify';
 export const navData: NavMainProps['data'] = [
   { title: 'Home', path: '/', icon: <Iconify width={22} icon="solar:home-angle-bold-duotone" /> },
   {
+    title: 'Питомники',
+    path: paths.showcase.kennels,
+    icon: <Iconify width={22} icon="solar:home-2-bold-duotone" />,
+  },
+  {
+    title: 'Животные',
+    path: paths.showcase.animals,
+    icon: <Iconify width={22} icon="solar:bone-bold-duotone" />,
+  },
+  {
+    title: 'Выставки',
+    path: paths.showcase.shows,
+    icon: <Iconify width={22} icon="solar:cup-star-bold-duotone" />,
+  },
+  {
     title: 'Components',
     path: paths.components,
     icon: <Iconify width={22} icon="solar:atom-bold-duotone" />,

@@ -1,6 +1,4 @@
 import type { SWRConfiguration } from 'swr';
-import type { ITicketCreate } from 'src/types/support';
-import type { IUserProfile, IUserEmailUpdate, IUserProfileUpdate } from 'src/types/account';
 
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -15,36 +13,45 @@ const swrOptions: SWRConfiguration = {
   revalidateOnReconnect: false,
 };
 
+export type IUserRole = { role: string; granted_at?: string };
+
+export type IMe = {
+  id: string;
+  email: string;
+  is_active: boolean;
+  is_email_verified: boolean;
+  roles: IUserRole[];
+  created_at: string;
+};
+
+export type IUserProfile = {
+  first_name: string | null;
+  last_name: string | null;
+  patronymic: string | null;
+  country: string | null;
+};
+
 // ----------------------------------------------------------------------
 
-export function useMyProfile(enabled = true) {
-  const key = enabled ? endpoints.auth.profile : null;
+export function useGetMe() {
+  const { data, isLoading, error } = useSWR<IMe>(endpoints.auth.me, fetcher, swrOptions);
+  return useMemo(() => ({ me: data, meLoading: isLoading, meError: error }), [data, isLoading, error]);
+}
 
-  const { data, isLoading, error, isValidating } = useSWR<IUserProfile>(key, fetcher, swrOptions);
-
+export function useGetMyProfile() {
+  const { data, isLoading, error } = useSWR<IUserProfile>(
+    endpoints.auth.profile,
+    fetcher,
+    swrOptions
+  );
   return useMemo(
-    () => ({
-      profile: data,
-      profileLoading: isLoading,
-      profileError: error,
-      profileValidating: isValidating,
-    }),
-    [data, error, isLoading, isValidating]
+    () => ({ profile: data, profileLoading: isLoading, profileError: error }),
+    [data, isLoading, error]
   );
 }
 
-// ----------------------------------------------------------------------
-
-export async function updateMyProfile(payload: IUserProfileUpdate): Promise<IUserProfile> {
+export async function updateMyProfile(payload: Partial<IUserProfile>): Promise<IUserProfile> {
   const res = await axios.patch<IUserProfile>(endpoints.auth.profile, payload);
   await mutate(endpoints.auth.profile);
   return res.data;
-}
-
-export async function updateMyEmail(payload: IUserEmailUpdate): Promise<void> {
-  await axios.put(endpoints.auth.me, payload);
-}
-
-export async function createSupportTicket(payload: ITicketCreate): Promise<void> {
-  await axios.post(endpoints.support.tickets, payload);
 }

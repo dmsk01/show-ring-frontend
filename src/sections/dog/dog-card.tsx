@@ -30,11 +30,16 @@ export function DogCard({ dog, breedName, sx, ...other }: Props) {
 
   const info = [
     {
-      icon: <Iconify icon="solar:dna-bold" sx={{ color: 'info.main' }} />,
+      icon: <Iconify icon="solar:bone-bold-duotone" sx={{ color: 'info.main' }} />,
       label: breedName ?? '—',
     },
     {
-      icon: <Iconify icon="solar:men-bold" sx={{ color: 'primary.main' }} />,
+      icon: (
+        <Iconify
+          icon={dog.sex === 'female' ? 'solar:women-bold' : 'solar:men-bold'}
+          sx={{ color: 'primary.main' }}
+        />
+      ),
       label: dog.sex === 'female' ? 'Сука' : 'Кобель',
     },
     {

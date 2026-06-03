@@ -14,7 +14,7 @@ import { paths } from 'src/routes/paths';
 
 import { CONFIG } from 'src/global-config';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { useGetMe, updateMyProfile, useGetMyProfile } from 'src/actions/account';
+import { useMyProfile, updateMyProfile } from 'src/actions/account';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -23,6 +23,8 @@ import { LoadingScreen } from 'src/components/loading-screen';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { ProfileCover } from 'src/sections/user/profile-cover';
+
+import { useAuthContext } from 'src/auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -38,8 +40,8 @@ const ProfileSchema = z.object({
 const COVER_URL = `${CONFIG.assetsDir}/assets/background/background-6.webp`;
 
 export function ProfileView() {
-  const { me, meLoading } = useGetMe();
-  const { profile, profileLoading } = useGetMyProfile();
+  const { user: me, loading: meLoading } = useAuthContext();
+  const { profile, profileLoading } = useMyProfile();
 
   const methods = useForm<ProfileSchemaType>({
     resolver: zodResolver(ProfileSchema),
@@ -109,7 +111,7 @@ export function ProfileView() {
           <Label color={me?.is_email_verified ? 'success' : 'warning'}>
             {me?.is_email_verified ? 'Verified' : 'Not verified'}
           </Label>
-          {me?.roles?.map((r) => (
+          {(me?.roles as Array<{ role: string }> | undefined)?.map((r) => (
             <Label key={r.role} color="info">
               {r.role}
             </Label>

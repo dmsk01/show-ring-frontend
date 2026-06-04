@@ -10,6 +10,7 @@ export type Resource =
   | 'classifieds'
   | 'shows'
   | 'results'
+  | 'documents'
   | 'references'
   | 'ads'
   | 'support'

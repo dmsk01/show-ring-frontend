@@ -1,5 +1,6 @@
 import type { SWRConfiguration } from 'swr';
 import type {
+  IShowRing,
   IShowResult,
   IShowEntryPage,
   IShowResultCreate,
@@ -9,7 +10,12 @@ import type {
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 
+import { useGetDogs } from 'src/actions/dog';
+import { useGetKennelsList } from 'src/actions/kennel';
 import axios, { fetcher, endpoints } from 'src/lib/axios';
+import { useReferenceList } from 'src/actions/admin-reference';
+
+import { buildResultRows } from 'src/sections/show/show-results-utils';
 
 // ----------------------------------------------------------------------
 
@@ -66,4 +72,53 @@ export async function updateShowResult(
   const res = await axios.put<IShowResult>(endpoints.show.resultItem(showId, resultId), payload);
   await revalidateResults(showId);
   return res.data;
+}
+
+// ----------------------------------------------------------------------
+
+export function useGetShowRings(showId?: string) {
+  const key = showId ? endpoints.show.rings(showId) : null;
+  const { data, isLoading, error } = useSWR<IShowRing[]>(key, fetcher, swrOptions);
+
+  return useMemo(
+    () => ({ rings: data ?? [], ringsLoading: isLoading, ringsError: error }),
+    [data, error, isLoading]
+  );
+}
+
+// ----------------------------------------------------------------------
+
+/** Builds enriched, joinable result rows for a show (used by dashboard + public). */
+export function useShowResultRows(showId?: string) {
+  const { entries, entriesLoading } = useGetShowEntries(showId);
+  const { results, resultsLoading } = useGetShowResults(showId);
+  const { rings } = useGetShowRings(showId);
+  const { dogs, dogsLoading } = useGetDogs({ per_page: 500 });
+  const { kennels } = useGetKennelsList({ per_page: 500 });
+  const { items: breeds } = useReferenceList('/references/breeds');
+  const { items: breedGroups } = useReferenceList('/references/breed-groups');
+  const { items: classes } = useReferenceList('/references/show-classes');
+  const { items: grades } = useReferenceList('/references/grades');
+
+  const rows = useMemo(
+    () =>
+      buildResultRows({
+        entries,
+        results,
+        dogs,
+        kennels,
+        breeds: breeds as never,
+        breedGroups: breedGroups as never,
+        classes,
+        grades,
+        rings,
+      }),
+    [entries, results, dogs, kennels, breeds, breedGroups, classes, grades, rings]
+  );
+
+  return {
+    rows,
+    loading: entriesLoading || resultsLoading || dogsLoading,
+    isEmpty: !entriesLoading && entries.length === 0,
+  };
 }

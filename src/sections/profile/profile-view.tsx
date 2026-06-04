@@ -10,17 +10,13 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import { paths } from 'src/routes/paths';
-
 import { CONFIG } from 'src/global-config';
-import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetMe, updateMyProfile, useGetMyProfile } from 'src/actions/account';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
 import { LoadingScreen } from 'src/components/loading-screen';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { ProfileCover } from 'src/sections/user/profile-cover';
 
@@ -80,13 +76,7 @@ export function ProfileView() {
   const primaryRole = me?.roles?.[0]?.role ?? '';
 
   return (
-    <DashboardContent>
-      <CustomBreadcrumbs
-        heading="My profile"
-        links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'Profile' }]}
-        sx={{ mb: { xs: 3, md: 5 } }}
-      />
-
+    <>
       <Card sx={{ mb: 3, height: 290 }}>
         <ProfileCover name={displayName} role={primaryRole} avatarUrl="" coverUrl={COVER_URL} />
 
@@ -144,6 +134,6 @@ export function ProfileView() {
           </Stack>
         </Form>
       </Card>
-    </DashboardContent>
+    </>
   );
 }

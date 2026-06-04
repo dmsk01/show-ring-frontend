@@ -66,6 +66,7 @@ export type IUserEmailUpdate = {
 
 export async function updateMyEmail(payload: IUserEmailUpdate): Promise<void> {
   await axios.put(endpoints.auth.me, payload);
+  await mutate(endpoints.auth.me);
 }
 
 export async function createSupportTicket(payload: ITicketCreate): Promise<void> {

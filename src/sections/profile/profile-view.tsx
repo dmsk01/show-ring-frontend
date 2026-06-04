@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/global-config';
+import { getUserDisplay } from 'src/layouts/account/account-nav';
 import { useGetMe, updateMyProfile, useGetMyProfile } from 'src/actions/account';
 
 import { Label } from 'src/components/label';
@@ -63,16 +64,15 @@ export function ProfileView() {
         patronymic: data.patronymic || null,
         country: data.country || null,
       });
-      toast.success('Profile updated!');
+      toast.success('Профиль обновлён');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Update failed');
+      toast.error(error instanceof Error ? error.message : 'Не удалось сохранить');
     }
   });
 
   if (meLoading || profileLoading) return <LoadingScreen />;
 
-  const displayName =
-    [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || me?.email || '';
+  const { displayName } = getUserDisplay(me, profile);
   const primaryRole = me?.roles?.[0]?.role ?? '';
 
   return (

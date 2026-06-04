@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -12,15 +13,19 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { fileUrl } from 'src/actions/file';
 import { useGetBreeds } from 'src/actions/reference';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetDog, useGetDogTitles, useGetDogPedigree } from 'src/actions/dog';
 
+import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
 import { LoadingScreen } from 'src/components/loading-screen';
+import { Lightbox, useLightbox } from 'src/components/lightbox';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { PedigreeTree } from '../pedigree-tree';
+import { dogPlaceholderImage } from '../dog-utils';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +40,13 @@ export function DogDetailView({ id }: Props) {
   const { pedigree } = useGetDogPedigree(id);
 
   const breedName = breeds.find((breed) => breed.id === dog?.breed_id)?.name;
+
+  // Hooks must run unconditionally — guard with dog?. for the first (undefined) render.
+  const photoIds = [dog?.avatar_file_id, ...(dog?.photo_file_ids ?? [])].filter(
+    (v, i, arr): v is string => !!v && arr.indexOf(v) === i
+  );
+  const slides = photoIds.map((fid) => ({ src: fileUrl(fid) }));
+  const lightbox = useLightbox(slides);
 
   if (dogLoading) return <LoadingScreen />;
   if (!dog) return <DashboardContent>Dog not found.</DashboardContent>;
@@ -69,14 +81,64 @@ export function DogDetailView({ id }: Props) {
 
       {tab === 'info' && (
         <Card sx={{ p: 3 }}>
-          <Stack spacing={1.5}>
-            <Typography variant="body2">Breed: {breedName ?? '—'}</Typography>
-            <Typography variant="body2">Sex: {dog.sex}</Typography>
-            <Typography variant="body2">RKF #: {dog.rkf_number ?? '—'}</Typography>
-            <Typography variant="body2">Born: {dog.date_of_birth ?? '—'}</Typography>
-            <Typography variant="body2">Color: {dog.color ?? '—'}</Typography>
-            <Typography variant="body2">Microchip: {dog.microchip ?? '—'}</Typography>
-            <Typography variant="body2">Description: {dog.description ?? '—'}</Typography>
+          <Stack spacing={3}>
+            {slides.length > 0 ? (
+              <>
+                <Box
+                  sx={{
+                    gap: 1.5,
+                    display: 'grid',
+                    gridTemplateColumns: {
+                      xs: 'repeat(2, 1fr)',
+                      sm: 'repeat(3, 1fr)',
+                      md: 'repeat(4, 1fr)',
+                    },
+                  }}
+                >
+                  {slides.map((slide) => (
+                    <Image
+                      key={slide.src}
+                      alt={dog.name}
+                      src={slide.src}
+                      ratio="1/1"
+                      onClick={() => lightbox.onOpen(slide.src)}
+                      sx={[
+                        (theme) => ({
+                          borderRadius: 1.5,
+                          cursor: 'pointer',
+                          transition: theme.transitions.create('opacity'),
+                          '&:hover': { opacity: 0.8 },
+                        }),
+                      ]}
+                    />
+                  ))}
+                </Box>
+
+                <Lightbox
+                  index={lightbox.selected}
+                  slides={slides}
+                  open={lightbox.open}
+                  close={lightbox.onClose}
+                />
+              </>
+            ) : (
+              <Image
+                alt={dog.name}
+                src={dogPlaceholderImage(dog.sex)}
+                ratio="1/1"
+                sx={{ borderRadius: 1.5, maxWidth: 320 }}
+              />
+            )}
+
+            <Stack spacing={1.5}>
+              <Typography variant="body2">Breed: {breedName ?? '—'}</Typography>
+              <Typography variant="body2">Sex: {dog.sex}</Typography>
+              <Typography variant="body2">RKF #: {dog.rkf_number ?? '—'}</Typography>
+              <Typography variant="body2">Born: {dog.date_of_birth ?? '—'}</Typography>
+              <Typography variant="body2">Color: {dog.color ?? '—'}</Typography>
+              <Typography variant="body2">Microchip: {dog.microchip ?? '—'}</Typography>
+              <Typography variant="body2">Description: {dog.description ?? '—'}</Typography>
+            </Stack>
           </Stack>
         </Card>
       )}

@@ -22,7 +22,9 @@
     "tsc:watch": "tsc --noEmit --watch",
     "tsc:print": "npx tsc --showConfig",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "engines": {
     "node": ">=20"
@@ -113,6 +115,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
+    "@playwright/test": "^1.60.0",
     "@svgr/webpack": "^8.1.0",
     "@types/autosuggest-highlight": "^3.2.3",
     "@types/node": "^24.2.0",

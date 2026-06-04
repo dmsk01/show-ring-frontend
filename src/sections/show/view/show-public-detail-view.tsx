@@ -1,19 +1,14 @@
 'use client';
 
-import type { IShowResult } from 'src/types/show-result';
+import type { GroupBy } from '../show-results-utils';
 
-import useSWR from 'swr';
+import { useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
-import TableRow from '@mui/material/TableRow';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import Container from '@mui/material/Container';
-import TableHead from '@mui/material/TableHead';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 
@@ -21,14 +16,13 @@ import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 
 import { useGetShow } from 'src/actions/show';
-import { fetcher, endpoints } from 'src/lib/axios';
-import { useReferenceList } from 'src/actions/admin-reference';
+import { useShowResultRows } from 'src/actions/show-result';
 
 import { Label } from 'src/components/label';
-import { Scrollbar } from 'src/components/scrollbar';
 import { LoadingScreen } from 'src/components/loading-screen';
 
-import { SHOW_AWARD_FLAGS, SHOW_STATUS_COLOR, SHOW_STATUS_LABEL } from '../show-utils';
+import { ShowResultsTable } from '../show-results-table';
+import { SHOW_STATUS_COLOR, SHOW_STATUS_LABEL } from '../show-utils';
 
 // ----------------------------------------------------------------------
 
@@ -38,14 +32,8 @@ export function ShowPublicDetailView({ id }: Props) {
   const { show, showLoading } = useGetShow(id);
 
   const isCompleted = show?.status === 'completed';
-  const { data: results } = useSWR<IShowResult[]>(
-    isCompleted ? endpoints.show.results(id) : null,
-    fetcher
-  );
-
-  const { items: grades } = useReferenceList('/references/grades');
-  const gradeName = (gradeId: string | null) =>
-    gradeId ? (grades.find((g) => g.id === gradeId)?.name ?? '—') : '—';
+  const [groupBy, setGroupBy] = useState<GroupBy>('class');
+  const { rows, loading: rowsLoading } = useShowResultRows(isCompleted ? id : undefined);
 
   if (showLoading) return <LoadingScreen />;
   if (!show) {
@@ -117,45 +105,12 @@ export function ShowPublicDetailView({ id }: Props) {
           <Typography variant="h5" sx={{ mb: 2 }}>
             Результаты
           </Typography>
-          <Card>
-            <Scrollbar>
-              <Table sx={{ minWidth: 480 }}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Место</TableCell>
-                    <TableCell>Оценка</TableCell>
-                    <TableCell>Награды</TableCell>
-                    <TableCell>Замечания</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {(results ?? []).map((r) => (
-                    <TableRow key={r.id}>
-                      <TableCell>{r.placement ?? '—'}</TableCell>
-                      <TableCell>{gradeName(r.grade_id)}</TableCell>
-                      <TableCell>
-                        <Box sx={{ gap: 0.5, display: 'flex', flexWrap: 'wrap' }}>
-                          {SHOW_AWARD_FLAGS.filter((f) => r[f.key]).map((f) => (
-                            <Label key={f.label} color="success">
-                              {f.label}
-                            </Label>
-                          ))}
-                        </Box>
-                      </TableCell>
-                      <TableCell>{r.critique ?? '—'}</TableCell>
-                    </TableRow>
-                  ))}
-                  {(!results || results.length === 0) && (
-                    <TableRow>
-                      <TableCell colSpan={4} align="center" sx={{ color: 'text.secondary' }}>
-                        Результаты пока не опубликованы.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </Card>
+          <ShowResultsTable
+            rows={rows}
+            loading={rowsLoading}
+            groupBy={groupBy}
+            onGroupByChange={setGroupBy}
+          />
         </>
       )}
     </Container>

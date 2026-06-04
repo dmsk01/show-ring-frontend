@@ -24,6 +24,9 @@ function normalizeStatus(data?: RawTask): TaskStatus | undefined {
 
 // ----------------------------------------------------------------------
 
+export type OfficialKind = 'catalog' | 'diplomas' | 'certificates' | 'ring-sheets';
+export type EntryDocKind = 'diploma' | 'certificates';
+
 /** Trigger generation; returns the created task ({ id, status }). */
 export async function generateCatalog(showId: string): Promise<{ id: string; status: TaskStatus }> {
   const res = await axios.post(endpoints.show.catalogGenerate(showId));
@@ -34,6 +37,28 @@ export async function generateDiplomas(
   showId: string
 ): Promise<{ id: string; status: TaskStatus }> {
   const res = await axios.post(endpoints.show.diplomasGenerate(showId));
+  return { id: res.data.id ?? res.data.task_id, status: res.data.status };
+}
+
+export async function generateOfficial(
+  showId: string,
+  kind: OfficialKind,
+  ringId?: string
+): Promise<{ id: string; status: TaskStatus }> {
+  const res = await axios.post(
+    endpoints.show.officialDoc(showId, kind),
+    null,
+    ringId ? { params: { ring_id: ringId } } : undefined
+  );
+  return { id: res.data.id ?? res.data.task_id, status: res.data.status };
+}
+
+export async function generateEntryDocument(
+  showId: string,
+  entryId: string,
+  kind: EntryDocKind
+): Promise<{ id: string; status: TaskStatus }> {
+  const res = await axios.post(endpoints.show.entryOfficialDoc(showId, entryId, kind));
   return { id: res.data.id ?? res.data.task_id, status: res.data.status };
 }
 
@@ -63,13 +88,50 @@ export function useGetTask(taskId?: string) {
 
 // ----------------------------------------------------------------------
 
+export function useDocumentsReadiness(showId?: string) {
+  const { data, isLoading } = useSWR<Record<string, unknown>>(
+    showId ? endpoints.show.documentsReadiness(showId) : null,
+    fetcher,
+    { revalidateOnFocus: false }
+  );
+  return { readiness: data ?? {}, readinessLoading: isLoading };
+}
+
+export async function pollTask(
+  taskId: string,
+  { intervalMs = 1500, timeoutMs = 120000 }: { intervalMs?: number; timeoutMs?: number } = {}
+): Promise<TaskStatus> {
+  const deadline = Date.now() + timeoutMs;
+   
+  while (Date.now() < deadline) {
+     
+    const res = await axios.get<RawTask>(endpoints.task.details(taskId));
+    const status = res.data.status;
+    if (status === 'done' || status === 'failed') return status;
+     
+    await new Promise<void>((resolve) => { setTimeout(resolve, intervalMs); });
+  }
+  return 'processing';
+}
+
+// ----------------------------------------------------------------------
+
+function parseFilename(disposition?: string): string | null {
+  if (!disposition) return null;
+  const star = /filename\*=(?:UTF-8'')?([^;]+)/i.exec(disposition);
+  if (star) return decodeURIComponent(star[1].replace(/["']/g, ''));
+  const plain = /filename="?([^";]+)"?/i.exec(disposition);
+  return plain ? plain[1] : null;
+}
+
 /** Authenticated download of a finished task's file. */
-export async function downloadTask(taskId: string, filename: string): Promise<void> {
+export async function downloadTask(taskId: string, fallbackName: string): Promise<void> {
   const res = await axios.get(endpoints.task.download(taskId), { responseType: 'blob' });
+  const name = parseFilename(res.headers['content-disposition'] as string | undefined) ?? fallbackName;
   const url = URL.createObjectURL(res.data as Blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = filename;
+  link.download = name;
   document.body.appendChild(link);
   link.click();
   link.remove();

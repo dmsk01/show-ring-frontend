@@ -1,4 +1,5 @@
 import type { SWRConfiguration } from 'swr';
+import type { ITicketCreate } from 'src/types/support';
 
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -54,4 +55,19 @@ export async function updateMyProfile(payload: Partial<IUserProfile>): Promise<I
   const res = await axios.patch<IUserProfile>(endpoints.auth.profile, payload);
   await mutate(endpoints.auth.profile);
   return res.data;
+}
+
+// ----------------------------------------------------------------------
+
+export type IUserEmailUpdate = {
+  email: string;
+  current_password: string;
+};
+
+export async function updateMyEmail(payload: IUserEmailUpdate): Promise<void> {
+  await axios.put(endpoints.auth.me, payload);
+}
+
+export async function createSupportTicket(payload: ITicketCreate): Promise<void> {
+  await axios.post(endpoints.support.tickets, payload);
 }

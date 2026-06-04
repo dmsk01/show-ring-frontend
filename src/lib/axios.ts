@@ -152,14 +152,17 @@ export const endpoints = {
   auth: {
     me: '/users/me',
     profile: '/users/me/profile',
+    password: '/users/me/password',
     signIn: '/auth/login',
     signUp: '/auth/register',
     refresh: '/auth/refresh',
     logout: '/auth/logout',
+    confirmEmailChange: '/auth/confirm-email-change',
   },
   dog: {
     list: '/dogs',
     details: (id: string) => `/dogs/${id}`,
+    images: (id: string) => `/dogs/${id}/images`,
     pedigree: (id: string) => `/dogs/${id}/pedigree`,
     titles: (id: string) => `/dogs/${id}/titles`,
   },

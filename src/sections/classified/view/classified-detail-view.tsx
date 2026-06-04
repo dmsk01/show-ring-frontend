@@ -25,13 +25,27 @@ import { formatClassifiedPrice, CLASSIFIED_CATEGORY_LABEL } from '../classified-
 type Props = { id: string };
 
 export function ClassifiedDetailView({ id }: Props) {
-  const { classified, classifiedLoading } = useGetClassified(id);
+  const { classified, classifiedLoading, classifiedError } = useGetClassified(id);
   const { breeds } = useGetBreeds();
 
   const slides = (classified?.images ?? []).map((img) => ({ src: fileUrl(img.file_id) }));
   const lightbox = useLightbox(slides);
 
   if (classifiedLoading) return <LoadingScreen />;
+  if (classifiedError) {
+    // Реальная ошибка загрузки (5xx/сеть) — не путаем с «объявление
+    // удалено». fetcher пробрасывает AxiosError → статус в response.status.
+    const notFound = classifiedError?.response?.status === 404;
+    return (
+      <Container sx={{ pt: { xs: 8, md: 12 }, pb: 10 }}>
+        <Typography>
+          {notFound
+            ? 'Объявление не найдено.'
+            : 'Не удалось загрузить объявление. Попробуйте позже.'}
+        </Typography>
+      </Container>
+    );
+  }
   if (!classified) {
     return (
       <Container sx={{ pt: { xs: 8, md: 12 }, pb: 10 }}>

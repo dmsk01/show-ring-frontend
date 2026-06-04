@@ -27,19 +27,6 @@ function normalizeStatus(data?: RawTask): TaskStatus | undefined {
 export type OfficialKind = 'catalog' | 'diplomas' | 'certificates' | 'ring-sheets';
 export type EntryDocKind = 'diploma' | 'certificates';
 
-/** Trigger generation; returns the created task ({ id, status }). */
-export async function generateCatalog(showId: string): Promise<{ id: string; status: TaskStatus }> {
-  const res = await axios.post(endpoints.show.catalogGenerate(showId));
-  return { id: res.data.id ?? res.data.task_id, status: res.data.status };
-}
-
-export async function generateDiplomas(
-  showId: string
-): Promise<{ id: string; status: TaskStatus }> {
-  const res = await axios.post(endpoints.show.diplomasGenerate(showId));
-  return { id: res.data.id ?? res.data.task_id, status: res.data.status };
-}
-
 export async function generateOfficial(
   showId: string,
   kind: OfficialKind,

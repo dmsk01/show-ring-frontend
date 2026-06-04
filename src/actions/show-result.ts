@@ -90,6 +90,10 @@ export function useGetShowRings(showId?: string) {
 
 /** Builds enriched, joinable result rows for a show (used by dashboard + public). */
 export function useShowResultRows(showId?: string) {
+  // Known limitation: dogs/kennels/reference lists are fetched as a single large
+  // page. Shows whose dogs/kennels exceed these caps will render "—" for the
+  // overflow rows. The planned backend enrichment (embed dog/breed/kennel into
+  // /results) removes these client-side joins; see the spec's future-work appendix.
   const { entries, entriesLoading } = useGetShowEntries(showId);
   const { results, resultsLoading } = useGetShowResults(showId);
   const { rings } = useGetShowRings(showId);

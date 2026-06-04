@@ -77,13 +77,26 @@ export function buildResultRows(input: BuildResultRowsInput): IShowResultRow[] {
   const gradeMap = byId(input.grades);
   const resultByEntry = new Map(input.results.map((r) => [r.show_entry_id, r]));
 
-  const findRing = (classId: string, breedId: string | null, groupId: string | null) =>
-    input.rings.find(
-      (ring) =>
-        ring.show_class_id === classId &&
-        ((breedId != null && ring.breed_id === breedId) ||
-          (groupId != null && ring.breed_group_id === groupId))
-    ) ?? null;
+  // A breed-specific ring takes priority over a group-level ring for the same class.
+  const findRing = (
+    classId: string,
+    breedId: string | null,
+    groupId: string | null
+  ): RingLite | null => {
+    if (breedId != null) {
+      const byBreed = input.rings.find(
+        (ring) => ring.show_class_id === classId && ring.breed_id === breedId
+      );
+      if (byBreed) return byBreed;
+    }
+    if (groupId != null) {
+      const byGroup = input.rings.find(
+        (ring) => ring.show_class_id === classId && ring.breed_group_id === groupId
+      );
+      if (byGroup) return byGroup;
+    }
+    return null;
+  };
 
   return input.entries.map((entry) => {
     const dog = dogMap.get(entry.dog_id);

@@ -154,6 +154,53 @@ function rowSorter(a: IShowResultRow, b: IShowResultRow): number {
   return (a.catalogNumber ?? Infinity) - (b.catalogNumber ?? Infinity);
 }
 
+// ----------------------------------------------------------------------
+
+export type SortField =
+  | 'catalog'
+  | 'dog'
+  | 'breed'
+  | 'kennel'
+  | 'class'
+  | 'grade'
+  | 'placement'
+  | 'ring';
+
+export type SortOrder = 'asc' | 'desc';
+
+const SORT_ACCESSORS: Record<SortField, (row: IShowResultRow) => string | number> = {
+  catalog: (r) => r.catalogNumber ?? Number.POSITIVE_INFINITY,
+  dog: (r) => r.dogName,
+  breed: (r) => r.breedName,
+  kennel: (r) => r.kennelName,
+  class: (r) => r.className,
+  grade: (r) => r.gradeName,
+  placement: (r) => r.placement ?? Number.POSITIVE_INFINITY,
+  ring: (r) => r.ringNumber ?? Number.POSITIVE_INFINITY,
+};
+
+export const SORT_FIELDS = Object.keys(SORT_ACCESSORS) as SortField[];
+
+/** Returns a new array sorted by the given column; unknown columns leave order unchanged. */
+export function sortRows(
+  rows: IShowResultRow[],
+  orderBy: string,
+  order: SortOrder
+): IShowResultRow[] {
+  const accessor = SORT_ACCESSORS[orderBy as SortField];
+  if (!accessor) return rows;
+
+  return [...rows].sort((a, b) => {
+    const va = accessor(a);
+    const vb = accessor(b);
+    const cmp =
+      typeof va === 'number' && typeof vb === 'number'
+        ? va - vb
+        : String(va).localeCompare(String(vb), 'ru');
+    return order === 'desc' ? -cmp : cmp;
+  });
+}
+
 export function groupRows(rows: IShowResultRow[], groupBy: GroupBy): ResultGroup[] {
   const buckets = new Map<string, ResultGroup>();
   const order = new Map<string, number>();

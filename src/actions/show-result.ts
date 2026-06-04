@@ -11,7 +11,6 @@ import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 
 import { useGetDogs } from 'src/actions/dog';
-import { useGetKennelsList } from 'src/actions/kennel';
 import axios, { fetcher, endpoints } from 'src/lib/axios';
 import { useReferenceList } from 'src/actions/admin-reference';
 
@@ -90,15 +89,17 @@ export function useGetShowRings(showId?: string) {
 
 /** Builds enriched, joinable result rows for a show (used by dashboard + public). */
 export function useShowResultRows(showId?: string) {
-  // Known limitation: dogs/kennels/reference lists are fetched as a single large
-  // page. Shows whose dogs/kennels exceed these caps will render "—" for the
-  // overflow rows. The planned backend enrichment (embed dog/breed/kennel into
-  // /results) removes these client-side joins; see the spec's future-work appendix.
+  // Lists are fetched at the backend's max page size (200; per_page > 200 → 422).
+  // Shows with more than 200 dogs/kennels would render "—" for the overflow rows;
+  // the planned backend enrichment (embed dog/breed/kennel into /results) removes
+  // these client-side joins — see the spec's future-work appendix.
+  // NB: /kennels returns a bare array (not {items}), so it goes through
+  // useReferenceList, which handles both array and {items} shapes.
   const { entries, entriesLoading } = useGetShowEntries(showId);
   const { results, resultsLoading } = useGetShowResults(showId);
   const { rings } = useGetShowRings(showId);
-  const { dogs, dogsLoading } = useGetDogs({ per_page: 500 });
-  const { kennels } = useGetKennelsList({ per_page: 500 });
+  const { dogs, dogsLoading } = useGetDogs({ per_page: 200 });
+  const { items: kennels } = useReferenceList('/kennels');
   const { items: breeds } = useReferenceList('/references/breeds');
   const { items: breedGroups } = useReferenceList('/references/breed-groups');
   const { items: classes } = useReferenceList('/references/show-classes');
@@ -110,7 +111,7 @@ export function useShowResultRows(showId?: string) {
         entries,
         results,
         dogs,
-        kennels,
+        kennels: kennels as never,
         breeds: breeds as never,
         breedGroups: breedGroups as never,
         classes,

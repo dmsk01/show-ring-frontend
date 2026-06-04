@@ -21,7 +21,7 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { useTable, TableNoData, TableHeadCustom } from 'src/components/table';
 
 import { SHOW_AWARD_FLAGS } from './show-utils';
-import { groupRows, GROUP_BY_OPTIONS } from './show-results-utils';
+import { sortRows, groupRows, GROUP_BY_OPTIONS } from './show-results-utils';
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +40,8 @@ export function ShowResultsTable({
   onGroupByChange,
   renderRowActions,
 }: Props) {
-  const table = useTable();
+  const table = useTable({ defaultOrderBy: '' });
+  const { order, orderBy, onSort } = table;
   const groups = groupRows(rows, groupBy);
 
   const head: TableHeadCellProps[] = [
@@ -51,6 +52,7 @@ export function ShowResultsTable({
     { id: 'class', label: 'Класс', width: 140 },
     { id: 'grade', label: 'Оценка', width: 120 },
     { id: 'placement', label: 'Место', width: 72 },
+    { id: 'ring', label: 'Ринг', width: 80 },
     { id: 'titles', label: 'Титулы' },
     { id: 'awards', label: 'Награды' },
     ...(renderRowActions ? [{ id: 'actions', label: '', width: 120 }] : []),
@@ -78,8 +80,8 @@ export function ShowResultsTable({
       </Box>
 
       <Scrollbar>
-        <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 1080 }}>
-          <TableHeadCustom headCells={head} />
+        <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 1180 }}>
+          <TableHeadCustom headCells={head} order={order} orderBy={orderBy} onSort={onSort} />
           <TableBody>
             {groups.map((group) => (
               <Fragment key={group.key}>
@@ -89,7 +91,7 @@ export function ShowResultsTable({
                   </TableCell>
                 </TableRow>
 
-                {group.rows.map((row) => (
+                {sortRows(group.rows, orderBy, order).map((row) => (
                   <TableRow key={row.entryId} hover>
                     <TableCell>{row.catalogNumber ?? '—'}</TableCell>
                     <TableCell sx={{ fontWeight: 600 }}>{row.dogName}</TableCell>
@@ -98,6 +100,7 @@ export function ShowResultsTable({
                     <TableCell>{row.className}</TableCell>
                     <TableCell>{row.gradeName}</TableCell>
                     <TableCell>{row.placement ?? '—'}</TableCell>
+                    <TableCell>{row.ringNumber ?? '—'}</TableCell>
                     <TableCell>
                       <Box sx={{ gap: 0.5, display: 'flex', flexWrap: 'wrap' }}>
                         {row.titles.map((t) => (

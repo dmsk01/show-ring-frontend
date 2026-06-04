@@ -1,6 +1,6 @@
 import { it, expect, describe } from 'vitest';
 
-import { groupRows, buildResultRows } from '../show-results-utils';
+import { sortRows, groupRows, buildResultRows } from '../show-results-utils';
 
 const base = {
   entries: [
@@ -81,5 +81,27 @@ describe('groupRows', () => {
   it('groups by breed', () => {
     const groups = groupRows(rows, 'breed');
     expect(groups.map((g) => g.label).sort()).toEqual(['Boxer', 'Poodle']);
+  });
+});
+
+describe('sortRows', () => {
+  const rows = buildResultRows(base);
+
+  it('sorts by dog name asc and desc', () => {
+    expect(sortRows(rows, 'dog', 'asc').map((r) => r.dogName)).toEqual(['Bella', 'Max', 'Rex']);
+    expect(sortRows(rows, 'dog', 'desc').map((r) => r.dogName)).toEqual(['Rex', 'Max', 'Bella']);
+  });
+
+  it('sorts by catalog number numerically', () => {
+    expect(sortRows(rows, 'catalog', 'asc').map((r) => r.catalogNumber)).toEqual([1, 2, 3]);
+  });
+
+  it('sorts by placement with missing values last (asc)', () => {
+    // e3 has no result → placement null → sorts last
+    expect(sortRows(rows, 'placement', 'asc').map((r) => r.entryId)).toEqual(['e2', 'e1', 'e3']);
+  });
+
+  it('returns the same order for an unknown/non-sortable column', () => {
+    expect(sortRows(rows, 'awards', 'asc')).toEqual(rows);
   });
 });

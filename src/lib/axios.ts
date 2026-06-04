@@ -191,6 +191,12 @@ export const endpoints = {
     resultItem: (id: string, resultId: string) => `/shows/${id}/results/${resultId}`,
     catalogGenerate: (id: string) => `/shows/${id}/catalog/generate`,
     diplomasGenerate: (id: string) => `/shows/${id}/diplomas/generate`,
+    rings: (id: string) => `/shows/${id}/rings`,
+    documentsReadiness: (id: string) => `/shows/${id}/documents/readiness`,
+    officialDoc: (id: string, kind: string) => `/shows/${id}/official/${kind}`,
+    officialContext: (id: string, kind: string) => `/shows/${id}/official/${kind}/context`,
+    entryOfficialDoc: (id: string, entryId: string, kind: string) =>
+      `/shows/${id}/entries/${entryId}/official/${kind}`,
   },
   task: {
     details: (id: string) => `/tasks/${id}`,

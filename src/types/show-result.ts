@@ -1,3 +1,19 @@
+export type TitleCacheItem = { code: string; name: string };
+
+export type IShowRing = {
+  id: string;
+  show_id: string;
+  ring_number: number;
+  breed_id: string | null;
+  breed_group_id: string | null;
+  show_class_id: string | null;
+  judge_id: string | null;
+  ring_date: string | null;
+  time_start: string | null;
+  time_end: string | null;
+  location: string | null;
+};
+
 export type IShowEntry = {
   id: string;
   show_id: string;
@@ -32,7 +48,7 @@ export type IShowResult = {
   is_best_veteran: boolean;
   is_best_in_group: boolean;
   is_best_in_show: boolean;
-  titles_cache: string | null;
+  titles_cache: TitleCacheItem[] | null;
   created_at: string;
   updated_at: string;
 };

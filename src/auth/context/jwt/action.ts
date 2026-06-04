@@ -14,7 +14,7 @@ function storeTokens(data: { access_token?: string; refresh_token?: string }) {
   const { access_token, refresh_token } = data;
   if (!access_token) throw new Error('Access token not found in response');
   setSession(access_token);
-  if (refresh_token) sessionStorage.setItem(JWT_REFRESH_STORAGE_KEY, refresh_token);
+  if (refresh_token) localStorage.setItem(JWT_REFRESH_STORAGE_KEY, refresh_token);
 }
 
 /** Sign in — POST /auth/login → { access_token, refresh_token, token_type } */
@@ -32,7 +32,7 @@ export const signUp = async ({ email, password }: SignUpParams): Promise<void> =
 /** Sign out — best-effort backend logout (revokes the refresh token), then clear local session */
 export const signOut = async (): Promise<void> => {
   try {
-    const refreshToken = sessionStorage.getItem(JWT_REFRESH_STORAGE_KEY);
+    const refreshToken = localStorage.getItem(JWT_REFRESH_STORAGE_KEY);
     // Backend requires { refresh_token } to revoke it; skip the call if we don't have one.
     if (refreshToken) {
       await axios.post(endpoints.auth.logout, { refresh_token: refreshToken });
@@ -41,6 +41,6 @@ export const signOut = async (): Promise<void> => {
     // ignore network/401 on logout
   } finally {
     setSession(null);
-    sessionStorage.removeItem(JWT_REFRESH_STORAGE_KEY);
+    localStorage.removeItem(JWT_REFRESH_STORAGE_KEY);
   }
 };

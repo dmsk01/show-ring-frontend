@@ -18,7 +18,7 @@ const axiosInstance = axios.create({
 // Attach bearer on every request (survives token refresh, unlike axios.defaults).
 axiosInstance.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
-    const token = sessionStorage.getItem(JWT_STORAGE_KEY);
+    const token = localStorage.getItem(JWT_STORAGE_KEY);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -67,7 +67,7 @@ function flushQueue(error: unknown, token: string | null): void {
 
 async function refreshAccessToken(): Promise<string | null> {
   const refreshToken =
-    typeof window !== 'undefined' ? sessionStorage.getItem(JWT_REFRESH_STORAGE_KEY) : null;
+    typeof window !== 'undefined' ? localStorage.getItem(JWT_REFRESH_STORAGE_KEY) : null;
   if (!refreshToken) return null;
 
   try {
@@ -75,12 +75,12 @@ async function refreshAccessToken(): Promise<string | null> {
       refresh_token: refreshToken,
     });
     const { access_token, refresh_token } = res.data;
-    sessionStorage.setItem(JWT_STORAGE_KEY, access_token);
-    if (refresh_token) sessionStorage.setItem(JWT_REFRESH_STORAGE_KEY, refresh_token);
+    localStorage.setItem(JWT_STORAGE_KEY, access_token);
+    if (refresh_token) localStorage.setItem(JWT_REFRESH_STORAGE_KEY, refresh_token);
     return access_token;
   } catch {
-    sessionStorage.removeItem(JWT_STORAGE_KEY);
-    sessionStorage.removeItem(JWT_REFRESH_STORAGE_KEY);
+    localStorage.removeItem(JWT_STORAGE_KEY);
+    localStorage.removeItem(JWT_REFRESH_STORAGE_KEY);
     return null;
   }
 }

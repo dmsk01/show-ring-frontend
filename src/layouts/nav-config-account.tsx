@@ -41,11 +41,3 @@ export function getAccountNavData(can: (perm: string) => boolean): AccountNavDat
   return [...base, ...myObjects];
 }
 
-// ----------------------------------------------------------------------
-// Демо-конфиг Minimal (потребитель переключается позже, затем удалится).
-
-export const _account: AccountDrawerProps['data'] = [
-  { label: 'Home', href: '/', icon: <Iconify icon="solar:home-angle-bold-duotone" /> },
-  { label: 'Profile', href: '#', icon: <Iconify icon="custom:profile-duotone" /> },
-  { label: 'Account settings', href: '#', icon: <Iconify icon="solar:settings-bold-duotone" /> },
-];

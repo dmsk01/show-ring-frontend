@@ -9,5 +9,5 @@ import { ProfilePlaceholder } from 'src/sections/profile/profile-placeholder';
 export const metadata: Metadata = { title: `Соцсети | ${CONFIG.appName}` };
 
 export default function Page() {
-  return <ProfilePlaceholder variant="socials" />;
+  return <ProfilePlaceholder />;
 }

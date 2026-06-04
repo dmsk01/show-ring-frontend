@@ -21,9 +21,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 const NAV_ITEMS = [
   { label: 'Профиль', icon: <Iconify width={24} icon="solar:user-id-bold" />, href: paths.dashboard.profile },
   { label: 'Безопасность', icon: <Iconify width={24} icon="ic:round-vpn-key" />, href: `${paths.dashboard.profile}/security` },
-  { label: 'Уведомления', icon: <Iconify width={24} icon="solar:bell-bing-bold" />, href: `${paths.dashboard.profile}/notifications` },
   { label: 'Соцсети', icon: <Iconify width={24} icon="solar:share-bold" />, href: `${paths.dashboard.profile}/socials` },
-  { label: 'Обратная связь', icon: <Iconify width={24} icon="solar:chat-round-dots-bold" />, href: `${paths.dashboard.profile}/feedback` },
 ];
 
 // ----------------------------------------------------------------------

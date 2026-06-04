@@ -10,17 +10,14 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import { paths } from 'src/routes/paths';
-
 import { CONFIG } from 'src/global-config';
-import { DashboardContent } from 'src/layouts/dashboard';
+import { getUserDisplay } from 'src/layouts/account/account-nav';
 import { useGetMe, updateMyProfile, useGetMyProfile } from 'src/actions/account';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
 import { LoadingScreen } from 'src/components/loading-screen';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { ProfileCover } from 'src/sections/user/profile-cover';
 
@@ -67,26 +64,19 @@ export function ProfileView() {
         patronymic: data.patronymic || null,
         country: data.country || null,
       });
-      toast.success('Profile updated!');
+      toast.success('Профиль обновлён');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Update failed');
+      toast.error(error instanceof Error ? error.message : 'Не удалось сохранить');
     }
   });
 
   if (meLoading || profileLoading) return <LoadingScreen />;
 
-  const displayName =
-    [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || me?.email || '';
+  const { displayName } = getUserDisplay(me, profile);
   const primaryRole = me?.roles?.[0]?.role ?? '';
 
   return (
-    <DashboardContent>
-      <CustomBreadcrumbs
-        heading="My profile"
-        links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'Profile' }]}
-        sx={{ mb: { xs: 3, md: 5 } }}
-      />
-
+    <>
       <Card sx={{ mb: 3, height: 290 }}>
         <ProfileCover name={displayName} role={primaryRole} avatarUrl="" coverUrl={COVER_URL} />
 
@@ -144,6 +134,6 @@ export function ProfileView() {
           </Stack>
         </Form>
       </Card>
-    </DashboardContent>
+    </>
   );
 }

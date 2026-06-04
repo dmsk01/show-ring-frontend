@@ -10,6 +10,46 @@
 
 ---
 
+## РЕВИЗИЯ (2026-06-04, по ходу исполнения)
+
+При исполнении обнаружено, что на ветке **уже есть** рабочая страница профиля и actions —
+план переориентирован на **переиспользование** (решение пользователя):
+
+- Существует `src/sections/profile/profile-view.tsx` (роут `/dashboard/profile`,
+  `paths.dashboard.profile`, пункт в навигации дашборда): обложка `ProfileCover` (имя,
+  роль, verified), email и редактируемая форма профиля (имя/фамилия/отчество/страна) →
+  `updateMyProfile`.
+- Существует `src/actions/account.ts` с `useGetMe`, `useGetMyProfile`, `updateMyProfile` и
+  типами `IMe`, `IUserProfile`.
+
+**Изменения к плану:**
+- **Task 1 откатывается частично:** удаляем `src/types/account.ts` (дублировал `IUserProfile`)
+  и блок `paths.dashboard.account` (не нужен). `IUserEmailUpdate` переносится в `account.ts`.
+- **Task 2** (`account-nav.ts`, чистые хелперы) — без изменений, оставлен.
+- **Task 3 → «extend account.ts»:** существующие хуки НЕ трогаем; ДОБАВЛЯЕМ `IUserEmailUpdate`,
+  `updateMyEmail` (PUT /users/me) и `createSupportTicket` (POST /support/tickets, тип
+  `ITicketCreate` из `src/types/support`). Плюс выполняем откат Task 1 (см. выше).
+- **Task 4:** «Настройки профиля» в drawer ведёт на `paths.dashboard.profile` (не на новый
+  `/dashboard/account`).
+- **Tasks 5, 6, 7** — без изменений.
+- **Tasks 8–12 → табы на `/dashboard/profile`** (а не новый `/dashboard/account`):
+  - `src/app/dashboard/profile/layout.tsx` оборачивает контент в `ProfileSettingsLayout`
+    (`DashboardContent` + breadcrumbs + `Tabs`: Профиль / Безопасность / Уведомления /
+    Соцсети / Обратная связь; href’ы = `paths.dashboard.profile` и `${...}/security` и т.д.).
+  - Существующий `ProfileView` рефакторится в **контент таба «Профиль»** (убираем из него
+    собственные `DashboardContent`+`CustomBreadcrumbs`, т.к. их даёт layout; обложка+форма
+    остаются). Роут `/dashboard/profile/page.tsx` рендерит этот таб.
+  - Новые роуты `/dashboard/profile/{security,notifications,socials,feedback}/page.tsx`.
+  - Секции кладём в `src/sections/profile/` (рядом с существующим), НЕ в `account-settings`.
+  - «Безопасность» = смена email (форма из исходного Task 10). «Обратная связь» = support-
+    тикет (форма из исходного Task 10). «Уведомления»/«Соцсети» = заглушки (исходный Task 11).
+  - Файлы `src/sections/account-settings/*` из исходного плана НЕ создаём.
+
+Ниже исходные формулировки задач сохранены для истории; при расхождении — приоритет у этой
+ревизии.
+
+---
+
 ## Реальность бэкенда (проверено по `:8000/openapi.json`)
 
 - `GET /users/me/profile` → `UserProfileResponse {first_name,last_name,patronymic,country}` (все nullable).

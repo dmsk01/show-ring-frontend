@@ -26,11 +26,10 @@ import { VerticalDivider } from './content';
 import { NavVertical } from './nav-vertical';
 import { filterNavItems } from '../nav-filter';
 import { NavHorizontal } from './nav-horizontal';
-import { _account } from '../nav-config-account';
 import { Searchbar } from '../components/searchbar';
 import { _workspaces } from '../nav-config-workspace';
 import { MenuButton } from '../components/menu-button';
-import { AccountDrawer } from '../components/account-drawer';
+import { AccountControl } from '../components/account-control';
 import { SettingsButton } from '../components/settings-button';
 import { LanguagePopover } from '../components/language-popover';
 import { ContactsPopover } from '../components/contacts-popover';
@@ -173,8 +172,8 @@ export function DashboardLayout({
           {/** @slot Settings button */}
           <SettingsButton />
 
-          {/** @slot Account drawer */}
-          <AccountDrawer data={_account} />
+          {/** @slot Account control */}
+          <AccountControl />
         </Box>
       ),
     };

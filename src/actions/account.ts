@@ -63,7 +63,32 @@ export type IUserEmailUpdate = {
   current_password: string;
 };
 
-export async function updateMyEmail(payload: IUserEmailUpdate): Promise<void> {
-  await axios.put(endpoints.auth.me, payload);
-  await mutate(endpoints.auth.me);
+export type IUserPasswordUpdate = {
+  current_password: string;
+  new_password: string;
+};
+
+export type IMessageResponse = { message: string };
+
+// PUT /users/me — запрос смены email. Email НЕ меняется сразу: бэкенд пишет
+// pending_email и шлёт письмо. Поэтому me НЕ мутируем — текущий email прежний.
+export async function updateMyEmail(payload: IUserEmailUpdate): Promise<IMessageResponse> {
+  const res = await axios.put<IMessageResponse>(endpoints.auth.me, payload);
+  return res.data;
+}
+
+// PUT /users/me/password — смена пароля (re-auth текущим паролем). Бэкенд
+// отзывает все refresh-токены.
+export async function updateMyPassword(
+  payload: IUserPasswordUpdate
+): Promise<IMessageResponse> {
+  const res = await axios.put<IMessageResponse>(endpoints.auth.password, payload);
+  return res.data;
+}
+
+// POST /auth/confirm-email-change — подтверждение смены email по токену из
+// письма: pending_email → email, отзыв refresh-токенов.
+export async function confirmEmailChange(token: string): Promise<IMessageResponse> {
+  const res = await axios.post<IMessageResponse>(endpoints.auth.confirmEmailChange, { token });
+  return res.data;
 }

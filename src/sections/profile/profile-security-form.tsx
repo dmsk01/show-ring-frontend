@@ -20,20 +20,19 @@ import { updateMyEmail, updateMyPassword } from 'src/actions/account';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
-import { Form, Field } from 'src/components/hook-form';
+import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
-import { signOut } from 'src/auth/context/jwt';
 import { useAuthContext } from 'src/auth/hooks';
+import { resetRevokedSession } from 'src/auth/context/jwt';
 
 // ----------------------------------------------------------------------
 
 export type EmailSchemaType = z.infer<typeof EmailSchema>;
 
 export const EmailSchema = z.object({
-  email: z
-    .string()
-    .min(1, { error: 'Введите email' })
-    .refine((v) => /.+@.+\..+/.test(v), { error: 'Некорректный email' }),
+  email: schemaUtils.email({
+    error: { required: 'Введите email', invalid: 'Некорректный email' },
+  }),
   current_password: z.string().min(1, { error: 'Введите текущий пароль' }),
 });
 
@@ -147,12 +146,13 @@ function PasswordCard() {
         new_password: data.new_password,
       });
       reset();
-      // Бэкенд отозвал все refresh-токены (включая текущий) — оставшийся в
-      // localStorage токен уже недействителен. Чистим сессию, синхронизируем
-      // React-контекст и уводим на вход, иначе пользователя молча выкинет при
-      // ближайшем refresh access-токена.
-      await signOut();
-      await checkUserSession?.();
+      // Бэкенд отозвал все refresh-токены (включая текущий) — локальные токены
+      // мертвы. Сносим сессию и синхронизируем контекст ДО навигации: GuestGuard
+      // на /auth/* редиректит ещё-«авторизованного» юзера обратно в дашборд,
+      // поэтому порядок (сначала очистка, потом router.replace) обязателен.
+      // AuthGuard защищённой страницы может успеть добавить свой returnTo на
+      // неё же — это приемлемо: после повторного входа вернёмся сюда.
+      await resetRevokedSession(checkUserSession);
       toast.success(res.message || 'Пароль изменён. Войдите заново.');
       router.replace(paths.auth.jwt.signIn);
     } catch (error) {

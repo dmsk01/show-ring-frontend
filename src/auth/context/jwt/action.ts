@@ -44,3 +44,16 @@ export const signOut = async (): Promise<void> => {
     localStorage.removeItem(JWT_REFRESH_STORAGE_KEY);
   }
 };
+
+/**
+ * Сценарий «бэкенд отозвал все refresh-токены» (смена пароля / подтверждение
+ * смены email): локальные токены уже мертвы. Чистим сессию И синхронизируем
+ * React-контекст, иначе state.user останется «авторизованным» до перезагрузки
+ * страницы и пользователя молча выкинет при ближайшем refresh access-токена.
+ */
+export const resetRevokedSession = async (
+  checkUserSession?: () => Promise<void>
+): Promise<void> => {
+  await signOut();
+  await checkUserSession?.();
+};

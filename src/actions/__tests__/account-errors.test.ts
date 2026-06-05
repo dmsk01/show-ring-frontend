@@ -16,7 +16,18 @@ describe('accountErrorMessage', () => {
     );
   });
 
-  it('falls back to the raw message for unknown codes', () => {
+  it('falls back to the raw message for human-readable text', () => {
     expect(accountErrorMessage(new Error('Сервис недоступен'))).toBe('Сервис недоступен');
+    // Сетевой fallback axios-интерсептора содержит пробелы → показываем как есть.
+    expect(accountErrorMessage(new Error('Something went wrong!'))).toBe('Something went wrong!');
+  });
+
+  it('hides unknown machine codes behind a generic RU message', () => {
+    expect(accountErrorMessage(new Error('some_future_code'))).toBe(
+      'Не удалось выполнить операцию. Попробуйте позже.'
+    );
+    expect(accountErrorMessage(new Error('rate_limited'))).toBe(
+      'Не удалось выполнить операцию. Попробуйте позже.'
+    );
   });
 });

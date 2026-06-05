@@ -14,8 +14,8 @@ import { SentIcon, EmailInboxIcon } from 'src/assets/icons';
 import { accountErrorMessage } from 'src/actions/account-errors';
 
 import { useAuthContext } from '../hooks';
-import { signOut } from '../context/jwt/action';
 import { FormHead } from '../components/form-head';
+import { resetRevokedSession } from '../context/jwt/action';
 import { FormReturnLink } from '../components/form-return-link';
 
 // ----------------------------------------------------------------------
@@ -42,11 +42,9 @@ export function ConfirmEmailChangeView() {
 
     try {
       await confirmEmailChange(token);
-      // Бэкенд отозвал все refresh-токены — чистим локальную сессию и
-      // синхронизируем React-контекст, иначе state.user останется
-      // «авторизованным» до перезагрузки страницы.
-      await signOut();
-      await checkUserSession?.();
+      // Бэкенд отозвал все refresh-токены — сносим локальную сессию и
+      // синхронизируем React-контекст (детали — в resetRevokedSession).
+      await resetRevokedSession(checkUserSession);
       setSuccess(true);
     } catch (error) {
       console.error(error);

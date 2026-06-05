@@ -13,6 +13,7 @@ import { confirmEmailChange } from 'src/actions/account';
 import { SentIcon, EmailInboxIcon } from 'src/assets/icons';
 import { accountErrorMessage } from 'src/actions/account-errors';
 
+import { useAuthContext } from '../hooks';
 import { signOut } from '../context/jwt/action';
 import { FormHead } from '../components/form-head';
 import { FormReturnLink } from '../components/form-return-link';
@@ -23,6 +24,8 @@ export function ConfirmEmailChangeView() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
+
+  const { checkUserSession } = useAuthContext();
 
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -39,8 +42,11 @@ export function ConfirmEmailChangeView() {
 
     try {
       await confirmEmailChange(token);
-      // Бэкенд отозвал все refresh-токены — чистим локальную сессию.
+      // Бэкенд отозвал все refresh-токены — чистим локальную сессию и
+      // синхронизируем React-контекст, иначе state.user останется
+      // «авторизованным» до перезагрузки страницы.
       await signOut();
+      await checkUserSession?.();
       setSuccess(true);
     } catch (error) {
       console.error(error);

@@ -12,12 +12,18 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { accountErrorMessage } from 'src/actions/account-errors';
 import { updateMyEmail, updateMyPassword } from 'src/actions/account';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
+
+import { signOut } from 'src/auth/context/jwt';
+import { useAuthContext } from 'src/auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -115,7 +121,12 @@ function EmailCard() {
 // ----------------------------------------------------------------------
 
 function PasswordCard() {
-  const showPassword = useBoolean();
+  const router = useRouter();
+  const { checkUserSession } = useAuthContext();
+
+  const showCurrent = useBoolean();
+  const showNew = useBoolean();
+  const showConfirm = useBoolean();
 
   const methods = useForm({
     mode: 'onSubmit',
@@ -135,18 +146,25 @@ function PasswordCard() {
         current_password: data.current_password,
         new_password: data.new_password,
       });
-      toast.success(res.message || 'Пароль изменён');
       reset();
+      // Бэкенд отозвал все refresh-токены (включая текущий) — оставшийся в
+      // localStorage токен уже недействителен. Чистим сессию, синхронизируем
+      // React-контекст и уводим на вход, иначе пользователя молча выкинет при
+      // ближайшем refresh access-токена.
+      await signOut();
+      await checkUserSession?.();
+      toast.success(res.message || 'Пароль изменён. Войдите заново.');
+      router.replace(paths.auth.jwt.signIn);
     } catch (error) {
       console.error(error);
       toast.error(accountErrorMessage(error));
     }
   });
 
-  const passwordToggle = (
+  const renderToggle = (field: ReturnType<typeof useBoolean>) => (
     <InputAdornment position="end">
-      <IconButton onClick={showPassword.onToggle} edge="end">
-        <Iconify icon={showPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+      <IconButton onClick={field.onToggle} edge="end">
+        <Iconify icon={field.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
       </IconButton>
     </InputAdornment>
   );
@@ -160,21 +178,21 @@ function PasswordCard() {
           <Field.Text
             name="current_password"
             label="Текущий пароль"
-            type={showPassword.value ? 'text' : 'password'}
-            slotProps={{ input: { endAdornment: passwordToggle } }}
+            type={showCurrent.value ? 'text' : 'password'}
+            slotProps={{ input: { endAdornment: renderToggle(showCurrent) } }}
           />
           <Field.Text
             name="new_password"
             label="Новый пароль"
-            type={showPassword.value ? 'text' : 'password'}
+            type={showNew.value ? 'text' : 'password'}
             helperText="От 8 до 128 символов"
-            slotProps={{ input: { endAdornment: passwordToggle } }}
+            slotProps={{ input: { endAdornment: renderToggle(showNew) } }}
           />
           <Field.Text
             name="confirm_password"
             label="Подтвердите новый пароль"
-            type={showPassword.value ? 'text' : 'password'}
-            slotProps={{ input: { endAdornment: passwordToggle } }}
+            type={showConfirm.value ? 'text' : 'password'}
+            slotProps={{ input: { endAdornment: renderToggle(showConfirm) } }}
           />
 
           <Button type="submit" variant="contained" loading={isSubmitting} sx={{ ml: 'auto' }}>

@@ -162,7 +162,6 @@ export const endpoints = {
   dog: {
     list: '/dogs',
     details: (id: string) => `/dogs/${id}`,
-    images: (id: string) => `/dogs/${id}/images`,
     pedigree: (id: string) => `/dogs/${id}/pedigree`,
     titles: (id: string) => `/dogs/${id}/titles`,
   },

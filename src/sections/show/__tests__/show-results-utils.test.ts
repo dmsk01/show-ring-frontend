@@ -1,6 +1,12 @@
 import { it, expect, describe } from 'vitest';
 
-import { sortRows, groupRows, buildResultRows } from '../show-results-utils';
+import {
+  sortRows,
+  groupRows,
+  buildResultRows,
+  GROUP_LABEL_NO_GROUP,
+  RING_LABEL_UNASSIGNED,
+} from '../show-results-utils';
 
 const base = {
   entries: [
@@ -35,12 +41,14 @@ describe('buildResultRows', () => {
     const r = rows.find((x) => x.entryId === 'e1')!;
     expect(r.dogName).toBe('Rex');
     expect(r.breedName).toBe('Poodle');
+    // groupLabel for a group row contains the group number and name separated by pipe
     expect(r.groupLabel).toContain('9');
+    expect(r.groupLabel).toContain('Companion');
     expect(r.kennelName).toBe('Star (iz Star)');
     expect(r.className).toBe('Open');
     expect(r.gradeName).toBe('Excellent');
     expect(r.placement).toBe(2);
-    expect(r.titles.map((t) => t.code)).toEqual(['CW']);
+    expect(r.titles.map((tt) => tt.code)).toEqual(['CW']);
   });
 
   it('falls back to placeholders for missing data', () => {
@@ -48,13 +56,16 @@ describe('buildResultRows', () => {
     expect(r.kennelName).toBe('—'); // dog has no kennel
     const noRes = rows.find((x) => x.entryId === 'e3')!;
     expect(noRes.gradeName).toBe('—'); // entry has no result
-    expect(noRes.groupLabel).toBe('Без группы'); // breed b2 has no group
+    // breed b2 has no group → sentinel key returned
+    expect(noRes.groupLabel).toBe(GROUP_LABEL_NO_GROUP);
     expect(noRes.titles).toEqual([]);
   });
 
-  it('matches ring by class + breed, else "Не назначено"', () => {
-    expect(rows.find((x) => x.entryId === 'e1')!.ringLabel).toBe('Ринг 5');
-    expect(rows.find((x) => x.entryId === 'e3')!.ringLabel).toBe('Не назначено');
+  it('matches ring by class + breed, else sentinel key for unassigned', () => {
+    // e1: ring matched → ringLabel is the ring number as a string
+    expect(rows.find((x) => x.entryId === 'e1')!.ringLabel).toBe('5');
+    // e3: no ring matched → sentinel key
+    expect(rows.find((x) => x.entryId === 'e3')!.ringLabel).toBe(RING_LABEL_UNASSIGNED);
   });
 });
 
@@ -68,14 +79,14 @@ describe('groupRows', () => {
     expect(open.rows.map((r) => r.entryId)).toEqual(['e2', 'e1']); // placement 1 then 2
   });
 
-  it('groups by FCI group with "Без группы" bucket last', () => {
+  it('groups by FCI group with GROUP_LABEL_NO_GROUP sentinel last', () => {
     const groups = groupRows(rows, 'group');
-    expect(groups[groups.length - 1].label).toBe('Без группы');
+    expect(groups[groups.length - 1].label).toBe(GROUP_LABEL_NO_GROUP);
   });
 
-  it('groups by ring with "Не назначено" bucket last', () => {
+  it('groups by ring with RING_LABEL_UNASSIGNED sentinel last', () => {
     const groups = groupRows(rows, 'ring');
-    expect(groups[groups.length - 1].label).toBe('Не назначено');
+    expect(groups[groups.length - 1].label).toBe(RING_LABEL_UNASSIGNED);
   });
 
   it('groups by breed', () => {

@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 
 import { usePermissions } from 'src/hooks/use-permissions';
 
+import { useTranslate } from 'src/locales';
 import { useGetShowRings } from 'src/actions/show-result';
 import { useGetTask, downloadTask, generateOfficial } from 'src/actions/document';
 
@@ -33,16 +34,23 @@ const STATUS_COLOR = {
   failed: 'error',
 } as const;
 
-function TaskItem({ task }: { task: GeneratedTask }) {
+type TaskItemProps = { task: GeneratedTask };
+
+function TaskItem({ task }: TaskItemProps) {
+  const { t } = useTranslate('show');
   const { status } = useGetTask(task.id);
 
   const handleDownload = async () => {
     try {
       await downloadTask(task.id, task.filename);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Не удалось скачать');
+      toast.error(error instanceof Error ? error.message : t('toast.downloadFailed'));
     }
   };
+
+  const statusLabel = status
+    ? (t(`documents.taskStatus.${status}`) ?? status)
+    : t('documents.taskStatus.pending');
 
   return (
     <Box
@@ -59,7 +67,7 @@ function TaskItem({ task }: { task: GeneratedTask }) {
       <Typography variant="subtitle2" sx={{ flex: 1 }}>
         {task.label}
       </Typography>
-      <Label color={status ? STATUS_COLOR[status] : 'default'}>{status ?? 'pending'}</Label>
+      <Label color={status ? STATUS_COLOR[status] : 'default'}>{statusLabel}</Label>
       <Button
         size="small"
         variant="outlined"
@@ -68,21 +76,26 @@ function TaskItem({ task }: { task: GeneratedTask }) {
         startIcon={<Iconify icon="solar:download-bold" />}
         onClick={handleDownload}
       >
-        Скачать
+        {t('documents.download')}
       </Button>
     </Box>
   );
 }
 
-const OFFICIAL_BUTTONS: { kind: OfficialKind; label: string; icon: IconifyName }[] = [
-  { kind: 'catalog', label: 'Каталог', icon: 'solar:bill-list-bold' },
-  { kind: 'diplomas', label: 'Дипломы', icon: 'solar:cup-star-bold' },
-  { kind: 'certificates', label: 'Сертификаты', icon: 'solar:file-check-bold-duotone' },
+const OFFICIAL_BUTTON_DEFS: { kind: OfficialKind; labelKey: string; icon: IconifyName }[] = [
+  { kind: 'catalog', labelKey: 'documents.buttons.catalog', icon: 'solar:bill-list-bold' },
+  { kind: 'diplomas', labelKey: 'documents.buttons.diplomas', icon: 'solar:cup-star-bold' },
+  {
+    kind: 'certificates',
+    labelKey: 'documents.buttons.certificates',
+    icon: 'solar:file-check-bold-duotone',
+  },
 ];
 
 type Props = { showId: string };
 
 export function ShowDocumentsPanel({ showId }: Props) {
+  const { t } = useTranslate('show');
   const { can } = usePermissions();
   const canGenerate = can('documents:create');
   const { rings } = useGetShowRings(showId);
@@ -96,9 +109,9 @@ export function ShowDocumentsPanel({ showId }: Props) {
     try {
       const task = await generateOfficial(showId, kind, ring);
       setTasks((prev) => [{ id: task.id, label, filename: `${kind}-${showId}.docx` }, ...prev]);
-      toast.success('Генерация запущена');
+      toast.success(t('toast.generationStarted'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Не удалось запустить генерацию');
+      toast.error(error instanceof Error ? error.message : t('toast.generationFailed'));
     } finally {
       setBusy(false);
     }
@@ -109,29 +122,32 @@ export function ShowDocumentsPanel({ showId }: Props) {
   return (
     <Card sx={{ p: 3 }}>
       <Typography variant="h6" sx={{ mb: 2 }}>
-        Документы выставки
+        {t('documents.panelTitle')}
       </Typography>
 
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 2, flexWrap: 'wrap' }}>
-        {OFFICIAL_BUTTONS.map((b) => (
-          <Button
-            key={b.kind}
-            variant="contained"
-            color="inherit"
-            loading={busy}
-            startIcon={<Iconify icon={b.icon} />}
-            onClick={() => run(b.kind, b.label)}
-          >
-            {b.label}
-          </Button>
-        ))}
+        {OFFICIAL_BUTTON_DEFS.map((b) => {
+          const label = t(b.labelKey);
+          return (
+            <Button
+              key={b.kind}
+              variant="contained"
+              color="inherit"
+              loading={busy}
+              startIcon={<Iconify icon={b.icon} />}
+              onClick={() => run(b.kind, label)}
+            >
+              {label}
+            </Button>
+          );
+        })}
       </Stack>
 
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 3 }}>
         <TextField
           select
           size="small"
-          label="Ринг"
+          label={t('documents.ring')}
           value={ringId}
           onChange={(e) => setRingId(e.target.value)}
           sx={{ minWidth: 200 }}
@@ -139,7 +155,7 @@ export function ShowDocumentsPanel({ showId }: Props) {
           <MenuItem value="">—</MenuItem>
           {rings.map((r) => (
             <MenuItem key={r.id} value={r.id}>
-              Ринг {r.ring_number}
+              {t('documents.ringItem', { number: r.ring_number })}
             </MenuItem>
           ))}
         </TextField>
@@ -149,9 +165,11 @@ export function ShowDocumentsPanel({ showId }: Props) {
           loading={busy}
           disabled={!ringId}
           startIcon={<Iconify icon="solar:notebook-bold-duotone" />}
-          onClick={() => run('ring-sheets', `Ринг-лист (ринг ${ringId})`, ringId)}
+          onClick={() =>
+            run('ring-sheets', t('documents.ringSheetsLabel', { number: ringId }), ringId)
+          }
         >
-          Ринг-листы
+          {t('documents.ringSheets')}
         </Button>
       </Stack>
 
@@ -163,7 +181,7 @@ export function ShowDocumentsPanel({ showId }: Props) {
         </Stack>
       ) : (
         <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-          Документы ещё не сгенерированы. Используйте кнопки выше.
+          {t('documents.empty')}
         </Typography>
       )}
     </Card>

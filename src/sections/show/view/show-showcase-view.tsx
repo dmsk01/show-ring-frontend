@@ -6,6 +6,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import TablePagination from '@mui/material/TablePagination';
 
+import { useTranslate } from 'src/locales';
 import { useGetShows } from 'src/actions/show';
 
 import { EmptyContent } from 'src/components/empty-content';
@@ -21,6 +22,7 @@ import { ShowCardGrid } from '../show-card-grid';
 type Bucket = 'upcoming' | 'past';
 
 export function ShowShowcaseView() {
+  const { t } = useTranslate('show');
   const [bucket, setBucket] = useState<Bucket>('upcoming');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(12);
@@ -44,16 +46,16 @@ export function ShowShowcaseView() {
   };
 
   return (
-    <ShowcaseShell title="Выставки">
+    <ShowcaseShell title={t('showcase.title')}>
       <Tabs value={bucket} onChange={handleBucket} sx={{ mb: { xs: 3, md: 5 } }}>
-        <Tab value="upcoming" label="Планируемые" />
-        <Tab value="past" label="Прошедшие" />
+        <Tab value="upcoming" label={t('showcase.upcoming')} />
+        <Tab value="past" label={t('showcase.past')} />
       </Tabs>
 
       {showsLoading ? (
         <LoadingScreen />
       ) : showsEmpty || visible.length === 0 ? (
-        <EmptyContent filled title="Выставок не найдено" sx={{ py: 10 }} />
+        <EmptyContent filled title={t('showcase.empty')} sx={{ py: 10 }} />
       ) : (
         <>
           <ShowCardGrid shows={visible} />

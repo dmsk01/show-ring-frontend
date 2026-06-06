@@ -1,3 +1,5 @@
+'use client';
+
 import type { LabelColor } from 'src/components/label';
 import type { IShowItem, ShowStatus } from 'src/types/show';
 
@@ -7,7 +9,11 @@ import TableCell from '@mui/material/TableCell';
 
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
+
 import { Label } from 'src/components/label';
+
+import { showStatusI18nKey } from './show-utils';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +33,8 @@ type Props = {
 };
 
 export function ShowTableRow({ row, rankName, editHref }: Props) {
+  const { t } = useTranslate('show');
+
   return (
     <TableRow hover>
       <TableCell>
@@ -39,7 +47,7 @@ export function ShowTableRow({ row, rankName, editHref }: Props) {
       <TableCell>{row.date_start?.slice(0, 10) ?? '—'}</TableCell>
       <TableCell>{row.city ?? '—'}</TableCell>
       <TableCell>
-        <Label color={STATUS_COLOR[row.status]}>{row.status.replace('_', ' ')}</Label>
+        <Label color={STATUS_COLOR[row.status]}>{t(showStatusI18nKey(row.status))}</Label>
       </TableCell>
     </TableRow>
   );

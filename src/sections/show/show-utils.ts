@@ -20,15 +20,16 @@ export function classifyShow(status: ShowStatus): ShowBucket | null {
 
 // ----------------------------------------------------------------------
 
-export const SHOW_STATUS_LABEL: Record<string, string> = {
-  registration_open: 'Регистрация открыта',
-  registration_closed: 'Регистрация закрыта',
-  in_progress: 'Идёт',
-  completed: 'Завершена',
-  cancelled: 'Отменена',
-};
+/**
+ * Returns the i18n key for a show status label.
+ * Translate at component call site: t(`enums.status.${code}`)
+ */
+export function showStatusI18nKey(status: string): string {
+  return `enums.status.${status}`;
+}
 
 export const SHOW_STATUS_COLOR: Record<string, LabelColor> = {
+  draft: 'default',
   registration_open: 'success',
   registration_closed: 'info',
   in_progress: 'info',

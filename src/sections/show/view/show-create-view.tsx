@@ -2,6 +2,7 @@
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
@@ -11,14 +12,16 @@ import { ShowCreateEditForm } from '../show-create-edit-form';
 // ----------------------------------------------------------------------
 
 export function ShowCreateView() {
+  const { t } = useTranslate(['show', 'common']);
+
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Create a new show"
+        heading={t('form.headingNew')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Shows', href: paths.dashboard.shows.root },
-          { name: 'New' },
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('list.title'), href: paths.dashboard.shows.root },
+          { name: t('form.headingNew') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />

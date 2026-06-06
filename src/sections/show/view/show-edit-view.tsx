@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetShow, publishShow, setShowStatus } from 'src/actions/show';
 
@@ -22,6 +23,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { SHOW_STATUSES } from 'src/types/show';
 
+import { showStatusI18nKey } from '../show-utils';
 import { ShowCreateEditForm } from '../show-create-edit-form';
 
 // ----------------------------------------------------------------------
@@ -29,36 +31,37 @@ import { ShowCreateEditForm } from '../show-create-edit-form';
 type Props = { id: string };
 
 export function ShowEditView({ id }: Props) {
+  const { t } = useTranslate(['show', 'common']);
   const { show, showLoading } = useGetShow(id);
 
   if (showLoading) return <LoadingScreen />;
-  if (!show) return <DashboardContent>Show not found.</DashboardContent>;
+  if (!show) return <DashboardContent>{t('detail.notFound')}</DashboardContent>;
 
   const handleStatus = async (status: ShowStatus) => {
     try {
       await setShowStatus(id, status);
-      toast.success('Status updated!');
+      toast.success(t('toast.statusUpdated'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to update status');
+      toast.error(error instanceof Error ? error.message : t('toast.statusFailed'));
     }
   };
 
   const handlePublish = async () => {
     try {
       await publishShow(id);
-      toast.success('Show published!');
+      toast.success(t('toast.published'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Publish failed');
+      toast.error(error instanceof Error ? error.message : t('toast.publishFailed'));
     }
   };
 
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Edit show"
+        heading={t('form.headingEdit')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Shows', href: paths.dashboard.shows.root },
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('list.title'), href: paths.dashboard.shows.root },
           { name: show.name },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -66,19 +69,19 @@ export function ShowEditView({ id }: Props) {
 
       <Card sx={{ p: 3, mb: 3 }}>
         <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-          <Typography variant="subtitle2">Status & publishing</Typography>
+          <Typography variant="subtitle2">{t('form.statusPanel')}</Typography>
 
           <TextField
             select
             size="small"
-            label="Status"
+            label={t('form.fields.status')}
             value={show.status}
             onChange={(e) => handleStatus(e.target.value as ShowStatus)}
             sx={{ width: 220, ml: { sm: 'auto' } }}
           >
             {SHOW_STATUSES.map((s) => (
               <MenuItem key={s} value={s}>
-                {s.replace('_', ' ')}
+                {t(showStatusI18nKey(s))}
               </MenuItem>
             ))}
           </TextField>
@@ -88,7 +91,7 @@ export function ShowEditView({ id }: Props) {
             startIcon={<Iconify icon="solar:cup-star-bold" />}
             onClick={handlePublish}
           >
-            Publish
+            {t('form.actions.publish')}
           </Button>
 
           <Button
@@ -98,7 +101,7 @@ export function ShowEditView({ id }: Props) {
             color="inherit"
             startIcon={<Iconify icon="solar:bill-list-bold" />}
           >
-            Results
+            {t('form.actions.results')}
           </Button>
 
           <Button
@@ -108,7 +111,7 @@ export function ShowEditView({ id }: Props) {
             color="inherit"
             startIcon={<Iconify icon="solar:file-text-bold" />}
           >
-            Documents
+            {t('form.actions.documents')}
           </Button>
         </Box>
       </Card>

@@ -1,0 +1,66 @@
+{
+  "list": {
+    "title": "Dogs",
+    "new": "Add dog",
+    "search": "Search dog...",
+    "columns": {
+      "name": "Name",
+      "breed": "Breed",
+      "sex": "Sex",
+      "rkfNumber": "RKF #",
+      "born": "Born",
+      "color": "Color"
+    },
+    "filters": { "breed": "Breed", "sex": "Sex", "all": "All" }
+  },
+  "form": {
+    "headingNew": "Create a new dog",
+    "headingEdit": "Edit dog",
+    "fields": {
+      "name": "Name",
+      "sex": "Sex",
+      "breed": "Breed",
+      "kennel": "Kennel",
+      "father": "Father",
+      "mother": "Mother",
+      "dateOfBirth": "Date of birth",
+      "color": "Color",
+      "rkfNumber": "RKF number",
+      "tattoo": "Tattoo",
+      "microchip": "Microchip",
+      "description": "Description"
+    },
+    "validation": {
+      "nameRequired": "Name is required!",
+      "breedRequired": "Breed is required!"
+    },
+    "submitCreate": "Create dog",
+    "submitUpdate": "Save changes"
+  },
+  "detail": {
+    "pedigree": "Pedigree",
+    "info": "Info",
+    "titles": "Titles",
+    "notFound": "Dog not found.",
+    "noTitles": "No titles yet.",
+    "noPedigree": "No pedigree data.",
+    "breed": "Breed",
+    "sex": "Sex",
+    "rkfNumber": "RKF #",
+    "born": "Born",
+    "color": "Color",
+    "microchip": "Microchip",
+    "description": "Description",
+    "edit": "Edit",
+    "earned": "earned",
+    "kennel": "Kennel",
+    "father": "Father",
+    "mother": "Mother"
+  },
+  "pedigree": {
+    "sire": "Sire",
+    "dam": "Dam"
+  },
+  "enums": { "sex": { "male": "Male", "female": "Female" } },
+  "toast": { "created": "Create success!", "updated": "Update success!" }
+}

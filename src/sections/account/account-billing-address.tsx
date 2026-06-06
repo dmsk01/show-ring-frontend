@@ -1,3 +1,5 @@
+'use client';
+
 import type { CardProps } from '@mui/material/Card';
 import type { IAddressItem } from 'src/types/common';
 
@@ -12,6 +14,8 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import CardHeader from '@mui/material/CardHeader';
 
+import { useTranslate } from 'src/locales';
+
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
 
@@ -24,6 +28,7 @@ type Props = CardProps & {
 };
 
 export function AccountBillingAddress({ addressBook, sx, ...other }: Props) {
+  const { t } = useTranslate('account');
   const menuActions = usePopover();
   const newAddressForm = useBoolean();
 
@@ -56,7 +61,7 @@ export function AccountBillingAddress({ addressBook, sx, ...other }: Props) {
           }}
         >
           <Iconify icon="eva:star-fill" />
-          Set as primary
+          {t('billing.address.menu.setAsPrimary')}
         </MenuItem>
 
         <MenuItem
@@ -66,7 +71,7 @@ export function AccountBillingAddress({ addressBook, sx, ...other }: Props) {
           }}
         >
           <Iconify icon="solar:pen-bold" />
-          Edit
+          {t('billing.address.menu.edit')}
         </MenuItem>
 
         <MenuItem
@@ -77,7 +82,7 @@ export function AccountBillingAddress({ addressBook, sx, ...other }: Props) {
           sx={{ color: 'error.main' }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
+          {t('billing.address.menu.delete')}
         </MenuItem>
       </MenuList>
     </CustomPopover>
@@ -95,7 +100,7 @@ export function AccountBillingAddress({ addressBook, sx, ...other }: Props) {
     <>
       <Card sx={sx} {...other}>
         <CardHeader
-          title="Address book"
+          title={t('billing.address.title')}
           action={
             <Button
               size="small"
@@ -103,7 +108,7 @@ export function AccountBillingAddress({ addressBook, sx, ...other }: Props) {
               startIcon={<Iconify icon="mingcute:add-line" />}
               onClick={newAddressForm.onTrue}
             >
-              Add address
+              {t('billing.address.addAddress')}
             </Button>
           }
         />

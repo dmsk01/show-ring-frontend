@@ -1,0 +1,74 @@
+{
+  "list": {
+    "title": "Питомники",
+    "new": "Добавить питомник",
+    "search": "Поиск питомников...",
+    "columns": {
+      "name": "Название",
+      "prefix": "Префикс",
+      "city": "Город",
+      "country": "Страна",
+      "email": "Email"
+    }
+  },
+  "form": {
+    "headingNew": "Новый питомник",
+    "headingEdit": "Редактирование питомника",
+    "image": "Фото питомника",
+    "fields": {
+      "name": "Название",
+      "prefix": "Префикс питомника",
+      "city": "Город",
+      "country": "Страна",
+      "phone": "Контактный телефон",
+      "email": "Контактный email",
+      "website": "Сайт",
+      "description": "Описание"
+    },
+    "validation": {
+      "nameRequired": "Укажите название!"
+    },
+    "submitCreate": "Создать питомник",
+    "submitUpdate": "Сохранить изменения",
+    "filterCity": "Город"
+  },
+  "detail": {
+    "notFound": "Питомник не найден.",
+    "verified": "Проверенный питомник",
+    "litters": "Помёты (объявления)",
+    "littersEmpty": "Помётов пока нет",
+    "dogs": "Собаки питомника",
+    "dogsEmpty": "Собак пока нет",
+    "litter": {
+      "fallback": "Помёт",
+      "born": "Рождён",
+      "puppies": "Щенки",
+      "price": "Цена"
+    }
+  },
+  "showcase": {
+    "title": "Питомники",
+    "searchPlaceholder": "Поиск по названию...",
+    "cityPlaceholder": "Город",
+    "empty": "Питомники не найдены",
+    "sort": {
+      "newest": "Сначала новые",
+      "name": "По названию"
+    }
+  },
+  "card": {
+    "verified": "Проверен",
+    "prefix": "Префикс",
+    "stats": "Собак: {{dogs}} · Помётов: {{litters}}"
+  },
+  "delete": {
+    "content": "Удалить питомник"
+  },
+  "toast": {
+    "created": "Создано!",
+    "updated": "Сохранено!",
+    "deleted": "Удалено!",
+    "deleteFailed": "Ошибка удаления",
+    "avatarFailed": "Не удалось обновить фото"
+  }
+}

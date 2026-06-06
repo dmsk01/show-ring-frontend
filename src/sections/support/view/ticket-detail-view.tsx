@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { postMessage, useGetTicket, setTicketStatus, useGetTicketMessages } from 'src/actions/support';
 
@@ -32,19 +33,20 @@ type Props = { id: string };
 export function TicketDetailView({ id }: Props) {
   const { ticket, ticketLoading } = useGetTicket(id);
   const { messages } = useGetTicketMessages(id);
+  const { t } = useTranslate(['support', 'common']);
 
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
 
   if (ticketLoading) return <LoadingScreen />;
-  if (!ticket) return <DashboardContent>Ticket not found.</DashboardContent>;
+  if (!ticket) return <DashboardContent>{t('detail.notFound')}</DashboardContent>;
 
   const handleStatus = async (status: TicketStatus) => {
     try {
       await setTicketStatus(id, status);
-      toast.success('Status updated!');
+      toast.success(t('toast.statusUpdated'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to update status');
+      toast.error(error instanceof Error ? error.message : t('common:state.error'));
     }
   };
 
@@ -55,7 +57,7 @@ export function TicketDetailView({ id }: Props) {
       await postMessage(id, text.trim());
       setText('');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to send');
+      toast.error(error instanceof Error ? error.message : t('common:state.error'));
     } finally {
       setSending(false);
     }
@@ -66,8 +68,8 @@ export function TicketDetailView({ id }: Props) {
       <CustomBreadcrumbs
         heading={ticket.subject}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Support', href: paths.dashboard.support.root },
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('list.title'), href: paths.dashboard.support.root },
           { name: ticket.subject },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -75,18 +77,18 @@ export function TicketDetailView({ id }: Props) {
 
       <Card sx={{ p: 3, mb: 3 }}>
         <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-          <Label color="info">{ticket.priority}</Label>
+          <Label color="info">{t(`enums.priority.${ticket.priority}`)}</Label>
           <TextField
             select
             size="small"
-            label="Status"
+            label={t('detail.statusLabel')}
             value={ticket.status}
             onChange={(e) => handleStatus(e.target.value as TicketStatus)}
             sx={{ width: 200, ml: { sm: 'auto' } }}
           >
-            {TICKET_STATUSES.map((s) => (
-              <MenuItem key={s} value={s}>
-                {s.replace('_', ' ')}
+            {TICKET_STATUSES.map((status) => (
+              <MenuItem key={status} value={status}>
+                {t(`enums.status.${status}`)}
               </MenuItem>
             ))}
           </TextField>
@@ -97,29 +99,29 @@ export function TicketDetailView({ id }: Props) {
         <Stack spacing={2} sx={{ mb: 3 }}>
           {messages.length === 0 ? (
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              No messages yet.
+              {t('detail.noMessages')}
             </Typography>
           ) : (
-            messages.map((m) => (
+            messages.map((msg) => (
               <Box
-                key={m.id}
+                key={msg.id}
                 sx={{
                   maxWidth: '80%',
-                  alignSelf: m.is_from_operator ? 'flex-start' : 'flex-end',
+                  alignSelf: msg.is_from_operator ? 'flex-start' : 'flex-end',
                 }}
               >
                 <Box
                   sx={(theme) => ({
                     p: 1.5,
                     borderRadius: 1.5,
-                    color: m.is_from_operator ? 'text.primary' : 'primary.contrastText',
-                    bgcolor: m.is_from_operator ? theme.vars.palette.background.neutral : 'primary.main',
+                    color: msg.is_from_operator ? 'text.primary' : 'primary.contrastText',
+                    bgcolor: msg.is_from_operator ? theme.vars.palette.background.neutral : 'primary.main',
                   })}
                 >
-                  <Typography variant="body2">{m.body}</Typography>
+                  <Typography variant="body2">{msg.body}</Typography>
                 </Box>
                 <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                  {m.is_from_operator ? 'Support' : 'You'} · {m.created_at?.slice(0, 16).replace('T', ' ')}
+                  {msg.is_from_operator ? t('detail.senderSupport') : t('detail.senderYou')} · {msg.created_at?.slice(0, 16).replace('T', ' ')}
                 </Typography>
               </Box>
             ))
@@ -133,7 +135,7 @@ export function TicketDetailView({ id }: Props) {
             maxRows={4}
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Write a message..."
+            placeholder={t('detail.messagePlaceholder')}
           />
           <Button
             variant="contained"
@@ -141,7 +143,7 @@ export function TicketDetailView({ id }: Props) {
             onClick={handleSend}
             startIcon={<Iconify icon="solar:letter-bold" />}
           >
-            Send
+            {t('detail.send')}
           </Button>
         </Stack>
       </Card>

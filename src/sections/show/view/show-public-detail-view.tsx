@@ -15,6 +15,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 
+import { useTranslate } from 'src/locales';
 import { useGetShow } from 'src/actions/show';
 import { useShowResultRows } from 'src/actions/show-result';
 
@@ -22,13 +23,14 @@ import { Label } from 'src/components/label';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import { ShowResultsTable } from '../show-results-table';
-import { SHOW_STATUS_COLOR, SHOW_STATUS_LABEL } from '../show-utils';
+import { SHOW_STATUS_COLOR, showStatusI18nKey } from '../show-utils';
 
 // ----------------------------------------------------------------------
 
 type Props = { id: string };
 
 export function ShowPublicDetailView({ id }: Props) {
+  const { t } = useTranslate(['show', 'common']);
   const { show, showLoading } = useGetShow(id);
 
   const isCompleted = show?.status === 'completed';
@@ -39,23 +41,23 @@ export function ShowPublicDetailView({ id }: Props) {
   if (!show) {
     return (
       <Container sx={{ pt: { xs: 8, md: 12 }, pb: 10 }}>
-        <Typography>Выставка не найдена.</Typography>
+        <Typography>{t('detail.notFound')}</Typography>
       </Container>
     );
   }
 
   const overview = [
     {
-      label: 'Даты',
+      label: t('detail.overview.dates'),
       value: show.date_end
         ? `${fDate(show.date_start)} – ${fDate(show.date_end)}`
         : fDate(show.date_start),
     },
-    { label: 'Город', value: [show.city, show.country].filter(Boolean).join(', ') || '—' },
-    { label: 'Площадка', value: show.venue ?? '—' },
-    { label: 'Взнос', value: show.entry_fee != null ? fCurrency(show.entry_fee) : '—' },
+    { label: t('detail.overview.city'), value: [show.city, show.country].filter(Boolean).join(', ') || '—' },
+    { label: t('detail.overview.venue'), value: show.venue ?? '—' },
+    { label: t('detail.overview.entryFee'), value: show.entry_fee != null ? fCurrency(show.entry_fee) : '—' },
     {
-      label: 'Дедлайн регистрации',
+      label: t('detail.overview.registrationDeadline'),
       value: show.registration_deadline ? fDate(show.registration_deadline) : '—',
     },
   ];
@@ -67,7 +69,7 @@ export function ShowPublicDetailView({ id }: Props) {
           {show.name}
         </Typography>
         <Label color={SHOW_STATUS_COLOR[show.status] ?? 'default'}>
-          {SHOW_STATUS_LABEL[show.status] ?? show.status}
+          {t(showStatusI18nKey(show.status))}
         </Label>
       </Stack>
 
@@ -103,7 +105,7 @@ export function ShowPublicDetailView({ id }: Props) {
       {isCompleted && (
         <>
           <Typography variant="h5" sx={{ mb: 2 }}>
-            Результаты
+            {t('detail.results')}
           </Typography>
           <ShowResultsTable
             rows={rows}

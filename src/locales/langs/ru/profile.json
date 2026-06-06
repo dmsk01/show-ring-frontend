@@ -1,0 +1,62 @@
+{
+  "tabs": {
+    "profile": "Профиль",
+    "security": "Безопасность",
+    "socials": "Соцсети"
+  },
+  "breadcrumb": {
+    "heading": "Личный кабинет",
+    "current": "Профиль"
+  },
+  "view": {
+    "fields": {
+      "firstName": "Имя",
+      "lastName": "Фамилия",
+      "patronymic": "Отчество",
+      "country": "Страна"
+    },
+    "verified": "Подтверждён",
+    "notVerified": "Не подтверждён",
+    "saveChanges": "Сохранить изменения"
+  },
+  "security": {
+    "email": {
+      "heading": "Смена email",
+      "description": "На новый адрес придёт письмо со ссылкой для подтверждения. Email изменится только после перехода по ней.",
+      "fields": {
+        "newEmail": "Новый email",
+        "currentPassword": "Текущий пароль"
+      },
+      "submit": "Сохранить"
+    },
+    "password": {
+      "heading": "Смена пароля",
+      "fields": {
+        "currentPassword": "Текущий пароль",
+        "newPassword": "Новый пароль",
+        "newPasswordHelper": "От 8 до 128 символов",
+        "confirmPassword": "Подтвердите новый пароль"
+      },
+      "submit": "Сменить пароль"
+    }
+  },
+  "validation": {
+    "emailRequired": "Введите email",
+    "emailInvalid": "Некорректный email",
+    "currentPasswordRequired": "Введите текущий пароль",
+    "passwordMin": "Минимум 8 символов",
+    "passwordMax": "Максимум 128 символов",
+    "confirmPasswordRequired": "Подтвердите новый пароль",
+    "passwordMismatch": "Пароли не совпадают",
+    "passwordSameAsCurrent": "Новый пароль совпадает с текущим"
+  },
+  "toast": {
+    "profileUpdated": "Профиль обновлён",
+    "profileUpdateFailed": "Не удалось сохранить",
+    "passwordChanged": "Пароль изменён. Войдите заново.",
+    "emailChangeFallback": "Проверьте новый email для подтверждения смены"
+  },
+  "placeholder": {
+    "comingSoon": "Раздел появится после поддержки на сервере."
+  }
+}

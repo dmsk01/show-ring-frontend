@@ -1,0 +1,120 @@
+{
+  "breadcrumb": {
+    "heading": "Аккаунт",
+    "user": "Пользователь",
+    "account": "Аккаунт"
+  },
+  "tabs": {
+    "general": "Основное",
+    "billing": "Оплата",
+    "notifications": "Уведомления",
+    "socialLinks": "Соцсети",
+    "security": "Безопасность"
+  },
+  "general": {
+    "allowedFormats": "Допустимые форматы: *.jpeg, *.jpg, *.png, *.gif",
+    "maxSize": "максимальный размер {{size}}",
+    "publicProfile": "Публичный профиль",
+    "deleteUser": "Удалить пользователя",
+    "fields": {
+      "name": "Имя",
+      "email": "Email",
+      "phone": "Телефон",
+      "address": "Адрес",
+      "country": "Страна",
+      "countryPlaceholder": "Выберите страну",
+      "state": "Область/регион",
+      "city": "Город",
+      "zipCode": "Почтовый индекс",
+      "about": "О себе"
+    }
+  },
+  "changePassword": {
+    "fields": {
+      "oldPassword": "Старый пароль",
+      "newPassword": "Новый пароль",
+      "newPasswordHelper": "Пароль должен содержать минимум 6 символов",
+      "confirmNewPassword": "Подтвердите новый пароль"
+    }
+  },
+  "notifications": {
+    "groups": {
+      "activity": {
+        "subheader": "Активность",
+        "caption": "Donec mi odio, faucibus at, scelerisque quis",
+        "items": {
+          "activity_comments": "Уведомлять, когда кто-то комментирует мою статью",
+          "activity_answers": "Уведомлять, когда кто-то отвечает на мою форму",
+          "activityFollows": "Уведомлять, когда кто-то подписывается на меня"
+        }
+      },
+      "application": {
+        "subheader": "Приложение",
+        "caption": "Donec mi odio, faucibus at, scelerisque quis",
+        "items": {
+          "application_news": "Новости и объявления",
+          "application_product": "Еженедельные обновления продукта",
+          "application_blog": "Еженедельный дайджест блога"
+        }
+      }
+    }
+  },
+  "billing": {
+    "plan": {
+      "title": "Тариф",
+      "current": "Текущий",
+      "free": "Бесплатно",
+      "perMonth": "/мес",
+      "details": {
+        "plan": "Тариф",
+        "billingName": "Имя плательщика",
+        "billingAddress": "Адрес выставления счёта",
+        "billingPhone": "Телефон плательщика",
+        "paymentMethod": "Способ оплаты"
+      },
+      "cancelPlan": "Отменить тариф",
+      "upgradePlan": "Улучшить тариф"
+    },
+    "payment": {
+      "title": "Способ оплаты",
+      "addCard": "Добавить карту",
+      "dialog": {
+        "title": "Добавить карту",
+        "add": "Добавить"
+      }
+    },
+    "address": {
+      "title": "Адресная книга",
+      "addAddress": "Добавить адрес",
+      "menu": {
+        "setAsPrimary": "Сделать основным",
+        "edit": "Редактировать",
+        "delete": "Удалить"
+      }
+    },
+    "history": {
+      "title": "История счетов",
+      "showMore": "Показать больше",
+      "showLess": "Показать меньше"
+    }
+  },
+  "validation": {
+    "nameRequired": "Укажите имя!",
+    "avatarRequired": "Выберите аватар!",
+    "countryRequired": "Укажите страну!",
+    "addressRequired": "Укажите адрес!",
+    "stateRequired": "Укажите регион!",
+    "cityRequired": "Укажите город!",
+    "zipCodeRequired": "Укажите почтовый индекс!",
+    "aboutRequired": "Заполните поле «О себе»!",
+    "oldPasswordRequired": "Введите пароль!",
+    "oldPasswordMin": "Пароль должен содержать минимум 6 символов!",
+    "newPasswordRequired": "Введите новый пароль!",
+    "confirmPasswordRequired": "Подтвердите пароль!",
+    "passwordSameAsOld": "Новый пароль должен отличаться от старого",
+    "passwordMismatch": "Пароли не совпадают!"
+  },
+  "toast": {
+    "updated": "Изменения сохранены!"
+  }
+}

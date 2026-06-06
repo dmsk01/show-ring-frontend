@@ -1,8 +1,11 @@
+'use client';
+
+import type { TFunction } from 'i18next';
 import type { IPostItem } from 'src/types/blog';
 
 import * as z from 'zod';
-import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { useMemo, useCallback } from 'react';
 import { useBoolean } from 'minimal-shared/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -22,6 +25,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { _tags } from 'src/_mock';
+import { useTranslate } from 'src/locales';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
@@ -31,19 +35,20 @@ import { PostDetailsPreview } from './post-details-preview';
 
 // ----------------------------------------------------------------------
 
-export type PostCreateSchemaType = z.infer<typeof PostCreateSchema>;
+export const getPostSchema = (t: TFunction) =>
+  z.object({
+    title: z.string().min(1, { error: t('form.validation.titleRequired') }),
+    description: z.string().min(1, { error: t('form.validation.descriptionRequired') }),
+    content: schemaUtils.editor().min(100, { error: t('form.validation.contentMin') }),
+    coverUrl: schemaUtils.file({ error: t('form.validation.coverRequired') }),
+    tags: z.string().array().min(2, { error: t('form.validation.tagsMin') }),
+    metaKeywords: z.string().array().min(1, { error: t('form.validation.metaKeywordsRequired') }),
+    // Not required
+    metaTitle: z.string(),
+    metaDescription: z.string(),
+  });
 
-export const PostCreateSchema = z.object({
-  title: z.string().min(1, { error: 'Title is required!' }),
-  description: z.string().min(1, { error: 'Description is required!' }),
-  content: schemaUtils.editor().min(100, { error: 'Content must be at least 100 characters' }),
-  coverUrl: schemaUtils.file({ error: 'Cover is required!' }),
-  tags: z.string().array().min(2, { error: 'Must have at least 2 items!' }),
-  metaKeywords: z.string().array().min(1, { error: 'Meta keywords is required!' }),
-  // Not required
-  metaTitle: z.string(),
-  metaDescription: z.string(),
-});
+export type PostCreateSchemaType = z.infer<ReturnType<typeof getPostSchema>>;
 
 // ----------------------------------------------------------------------
 
@@ -53,10 +58,13 @@ type Props = {
 
 export function PostCreateEditForm({ currentPost }: Props) {
   const router = useRouter();
+  const { t } = useTranslate(['blog', 'common']);
 
   const showPreview = useBoolean();
   const openDetails = useBoolean(true);
   const openProperties = useBoolean(true);
+
+  const schema = useMemo(() => getPostSchema(t), [t]);
 
   const defaultValues: PostCreateSchemaType = {
     title: '',
@@ -71,7 +79,7 @@ export function PostCreateEditForm({ currentPost }: Props) {
 
   const methods = useForm({
     mode: 'all',
-    resolver: zodResolver(PostCreateSchema),
+    resolver: zodResolver(schema),
     defaultValues,
     values: currentPost,
   });
@@ -91,7 +99,7 @@ export function PostCreateEditForm({ currentPost }: Props) {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       showPreview.onFalse();
-      toast.success(currentPost ? 'Update success!' : 'Create success!');
+      toast.success(currentPost ? t('toast.updated') : t('toast.created'));
       router.push(paths.dashboard.post.root);
       console.info('DATA', data);
     } catch (error) {
@@ -112,8 +120,8 @@ export function PostCreateEditForm({ currentPost }: Props) {
   const renderDetails = () => (
     <Card>
       <CardHeader
-        title="Details"
-        subheader="Title, short description, image..."
+        title={t('form.details.title')}
+        subheader={t('form.details.subheader')}
         action={renderCollapseButton(openDetails.value, openDetails.onToggle)}
         sx={{ mb: 3 }}
       />
@@ -122,17 +130,17 @@ export function PostCreateEditForm({ currentPost }: Props) {
         <Divider />
 
         <Stack spacing={3} sx={{ p: 3 }}>
-          <Field.Text name="title" label="Post title" />
+          <Field.Text name="title" label={t('form.details.postTitle')} />
 
-          <Field.Text name="description" label="Description" multiline rows={3} />
+          <Field.Text name="description" label={t('form.details.description')} multiline rows={3} />
 
           <Stack spacing={1.5}>
-            <Typography variant="subtitle2">Content</Typography>
+            <Typography variant="subtitle2">{t('form.details.content')}</Typography>
             <Field.Editor name="content" sx={{ maxHeight: 480 }} />
           </Stack>
 
           <Stack spacing={1.5}>
-            <Typography variant="subtitle2">Cover</Typography>
+            <Typography variant="subtitle2">{t('form.details.cover')}</Typography>
             <Field.Upload name="coverUrl" maxSize={3145728} onDelete={handleRemoveFile} />
           </Stack>
         </Stack>
@@ -143,8 +151,8 @@ export function PostCreateEditForm({ currentPost }: Props) {
   const renderProperties = () => (
     <Card>
       <CardHeader
-        title="Properties"
-        subheader="Additional functions and attributes..."
+        title={t('form.properties.title')}
+        subheader={t('form.properties.subheader')}
         action={renderCollapseButton(openProperties.value, openProperties.onToggle)}
         sx={{ mb: 3 }}
       />
@@ -155,8 +163,8 @@ export function PostCreateEditForm({ currentPost }: Props) {
         <Stack spacing={3} sx={{ p: 3 }}>
           <Field.Autocomplete
             name="tags"
-            label="Tags"
-            placeholder="+ Tags"
+            label={t('form.properties.tags')}
+            placeholder={t('form.properties.tagsPlaceholder')}
             multiple
             freeSolo
             disableCloseOnSelect
@@ -167,11 +175,11 @@ export function PostCreateEditForm({ currentPost }: Props) {
             }}
           />
 
-          <Field.Text name="metaTitle" label="Meta title" />
+          <Field.Text name="metaTitle" label={t('form.properties.metaTitle')} />
 
           <Field.Text
             name="metaDescription"
-            label="Meta description"
+            label={t('form.properties.metaDescription')}
             fullWidth
             multiline
             rows={3}
@@ -179,8 +187,8 @@ export function PostCreateEditForm({ currentPost }: Props) {
 
           <Field.Autocomplete
             name="metaKeywords"
-            label="Meta keywords"
-            placeholder="+ Keywords"
+            label={t('form.properties.metaKeywords')}
+            placeholder={t('form.properties.metaKeywordsPlaceholder')}
             multiple
             freeSolo
             disableCloseOnSelect
@@ -192,7 +200,7 @@ export function PostCreateEditForm({ currentPost }: Props) {
           />
 
           <FormControlLabel
-            label="Enable comments"
+            label={t('form.properties.enableComments')}
             control={<Switch defaultChecked slotProps={{ input: { id: 'comments-switch' } }} />}
           />
         </Stack>
@@ -210,14 +218,14 @@ export function PostCreateEditForm({ currentPost }: Props) {
       }}
     >
       <FormControlLabel
-        label="Publish"
+        label={t('form.properties.publish')}
         control={<Switch defaultChecked slotProps={{ input: { id: 'publish-switch' } }} />}
         sx={{ pl: 3, flexGrow: 1 }}
       />
 
       <div>
         <Button color="inherit" variant="outlined" size="large" onClick={showPreview.onTrue}>
-          Preview
+          {t('form.preview')}
         </Button>
 
         <Button
@@ -227,7 +235,7 @@ export function PostCreateEditForm({ currentPost }: Props) {
           loading={isSubmitting}
           sx={{ ml: 2 }}
         >
-          {!currentPost ? 'Create post' : 'Save changes'}
+          {!currentPost ? t('form.submitCreate') : t('form.submitUpdate')}
         </Button>
       </div>
     </Box>

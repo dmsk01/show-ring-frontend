@@ -1,3 +1,5 @@
+'use client';
+
 import type { ILitterItem } from 'src/types/litter';
 
 import Box from '@mui/material/Box';
@@ -12,17 +14,11 @@ import { RouterLink } from 'src/routes/components';
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 
+import { useTranslate } from 'src/locales';
+
 import { Label } from 'src/components/label';
 
 // ----------------------------------------------------------------------
-
-const STATUS_LABEL: Record<string, string> = {
-  planned: 'Планируется',
-  born: 'Родился',
-  available: 'Доступен',
-  sold_out: 'Распродан',
-  archived: 'Архив',
-};
 
 type Props = {
   litter: ILitterItem;
@@ -30,6 +26,8 @@ type Props = {
 };
 
 export function KennelLitterCard({ litter, breedName }: Props) {
+  const { t } = useTranslate(['kennel', 'common']);
+
   const price =
     litter.price_from != null || litter.price_to != null
       ? [litter.price_from, litter.price_to]
@@ -41,8 +39,10 @@ export function KennelLitterCard({ litter, breedName }: Props) {
   return (
     <Card sx={{ p: 2.5 }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1.5 }}>
-        <Typography variant="subtitle1">{breedName ?? 'Помёт'}</Typography>
-        <Label color="info">{STATUS_LABEL[litter.status] ?? litter.status}</Label>
+        <Typography variant="subtitle1">{breedName ?? t('detail.litter.fallback')}</Typography>
+        <Label color="info">
+          {t(`common:enums.litterStatus.${litter.status}`, { defaultValue: litter.status })}
+        </Label>
       </Stack>
 
       <Box
@@ -54,12 +54,12 @@ export function KennelLitterCard({ litter, breedName }: Props) {
           color: 'text.secondary',
         }}
       >
-        <Box>Рождён: {litter.born_at ? fDate(litter.born_at) : '—'}</Box>
+        <Box>{t('detail.litter.born')}: {litter.born_at ? fDate(litter.born_at) : '—'}</Box>
         <Box>
-          Щенки: {litter.puppies_count ?? '—'} (♂{litter.males_count ?? '—'} / ♀
+          {t('detail.litter.puppies')}: {litter.puppies_count ?? '—'} (♂{litter.males_count ?? '—'} / ♀
           {litter.females_count ?? '—'})
         </Box>
-        <Box>Цена: {price}</Box>
+        <Box>{t('detail.litter.price')}: {price}</Box>
         <Stack direction="row" spacing={1.5}>
           {litter.father && (
             <Link component={RouterLink} href={paths.showcase.dog(litter.father.id)}>

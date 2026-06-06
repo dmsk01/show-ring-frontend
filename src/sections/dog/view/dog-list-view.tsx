@@ -14,6 +14,7 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { useGetDogs } from 'src/actions/dog';
 import { useGetBreeds } from 'src/actions/reference';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -34,17 +35,19 @@ import { DogTableFiltersResult } from '../dog-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'name', label: 'Name' },
-  { id: 'breed', label: 'Breed', width: 200 },
-  { id: 'sex', label: 'Sex', width: 120 },
-  { id: 'rkf_number', label: 'RKF #', width: 160 },
-  { id: 'date_of_birth', label: 'Born', width: 140 },
-  { id: 'color', label: 'Color', width: 160 },
-  { id: '', width: 88 },
-];
-
 export function DogListView() {
+  const { t } = useTranslate(['dog', 'common']);
+
+  const TABLE_HEAD: TableHeadCellProps[] = [
+    { id: 'name', label: t('list.columns.name') },
+    { id: 'breed', label: t('list.columns.breed'), width: 200 },
+    { id: 'sex', label: t('list.columns.sex'), width: 120 },
+    { id: 'rkf_number', label: t('list.columns.rkfNumber'), width: 160 },
+    { id: 'date_of_birth', label: t('list.columns.born'), width: 140 },
+    { id: 'color', label: t('list.columns.color'), width: 160 },
+    { id: '', width: 88 },
+  ];
+
   const table = useTable({ defaultRowsPerPage: 25 });
 
   const filters = useSetState<IDogTableFilters>({ search: '', breed_id: '', kennel_id: '', sex: 'all' });
@@ -65,8 +68,8 @@ export function DogListView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Dogs"
-        links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'Dogs' }]}
+        heading={t('list.title')}
+        links={[{ name: t('common:dashboard'), href: paths.dashboard.root }, { name: t('list.title') }]}
         action={
           <Button
             component={RouterLink}
@@ -74,7 +77,7 @@ export function DogListView() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            Add dog
+            {t('list.new')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}

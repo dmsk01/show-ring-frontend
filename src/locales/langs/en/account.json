@@ -1,0 +1,120 @@
+{
+  "breadcrumb": {
+    "heading": "Account",
+    "user": "User",
+    "account": "Account"
+  },
+  "tabs": {
+    "general": "General",
+    "billing": "Billing",
+    "notifications": "Notifications",
+    "socialLinks": "Social links",
+    "security": "Security"
+  },
+  "general": {
+    "allowedFormats": "Allowed *.jpeg, *.jpg, *.png, *.gif",
+    "maxSize": "max size of {{size}}",
+    "publicProfile": "Public profile",
+    "deleteUser": "Delete user",
+    "fields": {
+      "name": "Name",
+      "email": "Email address",
+      "phone": "Phone number",
+      "address": "Address",
+      "country": "Country",
+      "countryPlaceholder": "Choose a country",
+      "state": "State/region",
+      "city": "City",
+      "zipCode": "Zip/code",
+      "about": "About"
+    }
+  },
+  "changePassword": {
+    "fields": {
+      "oldPassword": "Old password",
+      "newPassword": "New password",
+      "newPasswordHelper": "Password must be minimum 6+",
+      "confirmNewPassword": "Confirm new password"
+    }
+  },
+  "notifications": {
+    "groups": {
+      "activity": {
+        "subheader": "Activity",
+        "caption": "Donec mi odio, faucibus at, scelerisque quis",
+        "items": {
+          "activity_comments": "Email me when someone comments on my article",
+          "activity_answers": "Email me when someone answers on my form",
+          "activityFollows": "Email me when someone follows me"
+        }
+      },
+      "application": {
+        "subheader": "Application",
+        "caption": "Donec mi odio, faucibus at, scelerisque quis",
+        "items": {
+          "application_news": "News and announcements",
+          "application_product": "Weekly product updates",
+          "application_blog": "Weekly blog digest"
+        }
+      }
+    }
+  },
+  "billing": {
+    "plan": {
+      "title": "Plan",
+      "current": "Current",
+      "free": "Free",
+      "perMonth": "/mo",
+      "details": {
+        "plan": "Plan",
+        "billingName": "Billing name",
+        "billingAddress": "Billing address",
+        "billingPhone": "Billing phone number",
+        "paymentMethod": "Payment method"
+      },
+      "cancelPlan": "Cancel plan",
+      "upgradePlan": "Upgrade plan"
+    },
+    "payment": {
+      "title": "Payment method",
+      "addCard": "Add card",
+      "dialog": {
+        "title": "Add card",
+        "add": "Add"
+      }
+    },
+    "address": {
+      "title": "Address book",
+      "addAddress": "Add address",
+      "menu": {
+        "setAsPrimary": "Set as primary",
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "history": {
+      "title": "Invoice history",
+      "showMore": "Show more",
+      "showLess": "Show less"
+    }
+  },
+  "validation": {
+    "nameRequired": "Name is required!",
+    "avatarRequired": "Avatar is required!",
+    "countryRequired": "Country is required!",
+    "addressRequired": "Address is required!",
+    "stateRequired": "State is required!",
+    "cityRequired": "City is required!",
+    "zipCodeRequired": "Zip code is required!",
+    "aboutRequired": "About is required!",
+    "oldPasswordRequired": "Password is required!",
+    "oldPasswordMin": "Password must be at least 6 characters!",
+    "newPasswordRequired": "New password is required!",
+    "confirmPasswordRequired": "Confirm password is required!",
+    "passwordSameAsOld": "New password must be different than old password",
+    "passwordMismatch": "Passwords do not match!"
+  },
+  "toast": {
+    "updated": "Update success!"
+  }
+}

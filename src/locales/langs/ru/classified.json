@@ -1,0 +1,89 @@
+{
+  "list": {
+    "title": "Объявления",
+    "new": "Добавить объявление",
+    "columns": {
+      "title": "Заголовок",
+      "category": "Категория",
+      "price": "Цена",
+      "city": "Город",
+      "status": "Статус"
+    },
+    "filters": {
+      "category": "Категория",
+      "city": "Город",
+      "all": "Все"
+    }
+  },
+  "form": {
+    "headingNew": "Создать объявление",
+    "headingEdit": "Редактирование объявления",
+    "notFound": "Объявление не найдено.",
+    "fields": {
+      "category": "Категория",
+      "breed": "Порода",
+      "title": "Заголовок",
+      "city": "Город",
+      "priceKind": "Тип цены",
+      "price": "Цена",
+      "contactPhone": "Телефон",
+      "contactEmail": "E-mail",
+      "description": "Описание",
+      "images": "Фотографии",
+      "noImages": "Нет фотографий."
+    },
+    "validation": {
+      "titleRequired": "Укажите заголовок!",
+      "descriptionRequired": "Укажите описание!"
+    },
+    "submitCreate": "Создать объявление",
+    "submitUpdate": "Сохранить изменения"
+  },
+  "detail": {
+    "notFound": "Объявление не найдено.",
+    "loadError": "Не удалось загрузить объявление. Попробуйте позже.",
+    "contacts": "Контакты"
+  },
+  "showcase": {
+    "title": "Животные — объявления",
+    "searchPlaceholder": "Поиск по заголовку...",
+    "allCategories": "Все категории",
+    "city": "Город",
+    "empty": "Объявления не найдены",
+    "sort": {
+      "newestFirst": "Сначала новые",
+      "cheapest": "Дешевле",
+      "mostExpensive": "Дороже",
+      "popular": "Популярные"
+    }
+  },
+  "enums": {
+    "category": {
+      "puppy_sale": "Щенки",
+      "adult_sale": "Взрослые",
+      "mating": "Вязка",
+      "handler": "Хендлер",
+      "grooming": "Груминг",
+      "other": "Другое"
+    },
+    "priceKind": {
+      "fixed": "Фиксированная",
+      "free": "Бесплатно",
+      "negotiable": "Договорная"
+    },
+    "status": {
+      "active": "Активно",
+      "moderation": "На модерации",
+      "closed": "Закрыто",
+      "archived": "В архиве"
+    }
+  },
+  "toast": {
+    "created": "Создано!",
+    "updated": "Сохранено!",
+    "deleted": "Удалено!",
+    "deleteFailed": "Не удалось удалить",
+    "uploadPartialFail": "Часть изображений не загружена",
+    "uploadFailed": "Ошибка загрузки"
+  }
+}

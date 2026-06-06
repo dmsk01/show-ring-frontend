@@ -11,6 +11,7 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import TablePagination from '@mui/material/TablePagination';
 
+import { useTranslate } from 'src/locales';
 import { useGetKennelsList } from 'src/actions/kennel';
 
 import { Iconify } from 'src/components/iconify';
@@ -25,12 +26,14 @@ import { KennelCardGrid } from '../kennel-card-grid';
 
 type SortOption = 'created_at:desc' | 'name:asc';
 
-const SORT_OPTIONS: { value: SortOption; label: string }[] = [
-  { value: 'created_at:desc', label: 'Сначала новые' },
-  { value: 'name:asc', label: 'По названию' },
-];
-
 export function KennelShowcaseView() {
+  const { t } = useTranslate(['kennel', 'common']);
+
+  const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+    { value: 'created_at:desc', label: t('showcase.sort.newest') },
+    { value: 'name:asc', label: t('showcase.sort.name') },
+  ];
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(12);
   const [sort, setSort] = useState<SortOption>('created_at:desc');
@@ -58,7 +61,7 @@ export function KennelShowcaseView() {
   );
 
   return (
-    <ShowcaseShell title="Питомники">
+    <ShowcaseShell title={t('showcase.title')}>
       <Stack
         direction={{ xs: 'column', sm: 'row' }}
         spacing={2}
@@ -68,7 +71,7 @@ export function KennelShowcaseView() {
           fullWidth
           value={currentFilters.search}
           onChange={(e) => handleSearch(e.target.value)}
-          placeholder="Поиск по названию..."
+          placeholder={t('showcase.searchPlaceholder')}
           slotProps={{
             input: {
               startAdornment: (
@@ -85,7 +88,7 @@ export function KennelShowcaseView() {
             setPage(0);
             setState({ city: e.target.value });
           }}
-          placeholder="Город"
+          placeholder={t('showcase.cityPlaceholder')}
           sx={{ width: { xs: 1, sm: 240 } }}
         />
         <TextField
@@ -108,7 +111,7 @@ export function KennelShowcaseView() {
       {kennelsLoading ? (
         <LoadingScreen />
       ) : kennelsEmpty ? (
-        <EmptyContent filled title="Питомники не найдены" sx={{ py: 10 }} />
+        <EmptyContent filled title={t('showcase.empty')} sx={{ py: 10 }} />
       ) : (
         <>
           <KennelCardGrid kennels={kennels} />

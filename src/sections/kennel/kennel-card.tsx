@@ -1,3 +1,5 @@
+'use client';
+
 import type { CardProps } from '@mui/material/Card';
 import type { IKennelItem } from 'src/types/kennel';
 
@@ -11,6 +13,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { CONFIG } from 'src/global-config';
 import { fileUrl } from 'src/actions/file';
+import { useTranslate } from 'src/locales';
 
 import { Image } from 'src/components/image';
 import { Label } from 'src/components/label';
@@ -25,6 +28,7 @@ type Props = CardProps & {
 };
 
 export function KennelCard({ kennel, sx, ...other }: Props) {
+  const { t } = useTranslate(['kennel', 'common']);
   const detailsHref = paths.showcase.kennel(kennel.id);
   const location = [kennel.city, kennel.country].filter(Boolean).join(', ') || '—';
 
@@ -37,7 +41,7 @@ export function KennelCard({ kennel, sx, ...other }: Props) {
             startIcon={<Iconify icon="solar:verified-check-bold" />}
             sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}
           >
-            Проверен
+            {t('card.verified')}
           </Label>
         )}
         <Image
@@ -55,7 +59,9 @@ export function KennelCard({ kennel, sx, ...other }: Props) {
             {kennel.name}
           </Link>
         }
-        secondary={kennel.kennel_prefix ? `Префикс: ${kennel.kennel_prefix}` : ' '}
+        secondary={
+          kennel.kennel_prefix ? `${t('card.prefix')}: ${kennel.kennel_prefix}` : ' '
+        }
         slotProps={{
           primary: { noWrap: true, sx: { typography: 'subtitle1' } },
           secondary: { sx: { mt: 0.5, typography: 'caption', color: 'text.disabled' } },
@@ -68,7 +74,7 @@ export function KennelCard({ kennel, sx, ...other }: Props) {
           {location}
         </Box>
         <Box sx={{ typography: 'caption', color: 'text.disabled' }}>
-          Собак: {kennel.dogs_count} · Помётов: {kennel.litters_count}
+          {t('card.stats', { dogs: kennel.dogs_count, litters: kennel.litters_count })}
         </Box>
       </Box>
     </Card>

@@ -16,12 +16,22 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 
+import { useTranslate } from 'src/locales';
+
 import { Label } from 'src/components/label';
 import { Scrollbar } from 'src/components/scrollbar';
 import { useTable, TableNoData, TableHeadCustom } from 'src/components/table';
 
-import { SHOW_AWARD_FLAGS } from './show-utils';
-import { sortRows, groupRows, GROUP_BY_OPTIONS } from './show-results-utils';
+import {
+  SHOW_AWARD_FLAGS,
+} from './show-utils';
+import {
+  sortRows,
+  groupRows,
+  GROUP_BY_VALUES,
+  GROUP_LABEL_NO_GROUP,
+  RING_LABEL_UNASSIGNED,
+} from './show-results-utils';
 
 // ----------------------------------------------------------------------
 
@@ -40,25 +50,39 @@ export function ShowResultsTable({
   onGroupByChange,
   renderRowActions,
 }: Props) {
+  const { t } = useTranslate('show');
   const table = useTable({ defaultOrderBy: '' });
   const { order, orderBy, onSort } = table;
   const groups = groupRows(rows, groupBy);
 
   const head: TableHeadCellProps[] = [
-    { id: 'catalog', label: '№', width: 64 },
-    { id: 'dog', label: 'Кличка' },
-    { id: 'breed', label: 'Порода' },
-    { id: 'kennel', label: 'Заводчик' },
-    { id: 'class', label: 'Класс', width: 140 },
-    { id: 'grade', label: 'Оценка', width: 120 },
-    { id: 'placement', label: 'Место', width: 72 },
-    { id: 'ring', label: 'Ринг', width: 80 },
-    { id: 'titles', label: 'Титулы' },
-    { id: 'awards', label: 'Награды' },
+    { id: 'catalog', label: t('results.columns.catalog'), width: 64 },
+    { id: 'dog', label: t('results.columns.dog') },
+    { id: 'breed', label: t('results.columns.breed') },
+    { id: 'kennel', label: t('results.columns.kennel') },
+    { id: 'class', label: t('results.columns.class'), width: 140 },
+    { id: 'grade', label: t('results.columns.grade'), width: 120 },
+    { id: 'placement', label: t('results.columns.placement'), width: 72 },
+    { id: 'ring', label: t('results.columns.ring'), width: 80 },
+    { id: 'titles', label: t('results.columns.titles') },
+    { id: 'awards', label: t('results.columns.awards') },
     ...(renderRowActions ? [{ id: 'actions', label: '', width: 120 }] : []),
   ];
 
   const colSpan = head.length;
+
+  /** Translate a groupLabel that may be a sentinel i18n key */
+  const resolveGroupLabel = (label: string): string => {
+    if (label === GROUP_LABEL_NO_GROUP) return t('results.groupLabels.noGroup');
+    if (label === RING_LABEL_UNASSIGNED) return t('results.groupLabels.unassigned');
+    return label;
+  };
+
+  /** ringLabel is stored as the ring number string; display as "Ring N" */
+  const resolveRingLabel = (ringLabel: string, ringNumber: number | null): string => {
+    if (ringLabel === RING_LABEL_UNASSIGNED) return t('results.groupLabels.unassigned');
+    return t('results.groupLabels.ring', { number: ringNumber ?? ringLabel });
+  };
 
   return (
     <Card>
@@ -66,14 +90,14 @@ export function ShowResultsTable({
         <TextField
           select
           size="small"
-          label="Группировка"
+          label={t('results.groupBy')}
           value={groupBy}
           onChange={(e) => onGroupByChange(e.target.value as GroupBy)}
           sx={{ minWidth: 200 }}
         >
-          {GROUP_BY_OPTIONS.map((o) => (
-            <MenuItem key={o.value} value={o.value}>
-              {o.label}
+          {GROUP_BY_VALUES.map((val) => (
+            <MenuItem key={val} value={val}>
+              {t(`results.groupOptions.${val}`)}
             </MenuItem>
           ))}
         </TextField>
@@ -87,7 +111,7 @@ export function ShowResultsTable({
               <Fragment key={group.key}>
                 <TableRow>
                   <TableCell colSpan={colSpan} sx={{ bgcolor: 'background.neutral' }}>
-                    <Typography variant="subtitle2">{group.label}</Typography>
+                    <Typography variant="subtitle2">{resolveGroupLabel(group.label)}</Typography>
                   </TableCell>
                 </TableRow>
 
@@ -100,12 +124,12 @@ export function ShowResultsTable({
                     <TableCell>{row.className}</TableCell>
                     <TableCell>{row.gradeName}</TableCell>
                     <TableCell>{row.placement ?? '—'}</TableCell>
-                    <TableCell>{row.ringNumber ?? '—'}</TableCell>
+                    <TableCell>{resolveRingLabel(row.ringLabel, row.ringNumber)}</TableCell>
                     <TableCell>
                       <Box sx={{ gap: 0.5, display: 'flex', flexWrap: 'wrap' }}>
-                        {row.titles.map((t) => (
-                          <Label key={t.code} color="info">
-                            {t.code}
+                        {row.titles.map((tt) => (
+                          <Label key={tt.code} color="info">
+                            {tt.code}
                           </Label>
                         ))}
                       </Box>

@@ -1,12 +1,28 @@
 {
-  "app": "App",
-  "job": "Job",
-  "user": "User",
-  "travel": "Travel",
-  "invoice": "Invoice",
-  "blog": {
-    "title": "Blog",
-    "caption": "Custom keyboard shortcuts."
-  },
-  "subheader": "Sub header"
+  "app": "Приложение",
+  "job": "Вакансии",
+  "user": "Пользователь",
+  "travel": "Путешествия",
+  "invoice": "Счета",
+  "blog": { "title": "Блог", "caption": "Пользовательские горячие клавиши." },
+  "subheader": "Подзаголовок",
+  "showtail": {
+    "subheader": "ShowTail",
+    "list": "Список",
+    "create": "Создать",
+    "dogs": "Собаки",
+    "kennels": "Питомники",
+    "litters": "Помёты",
+    "shows": "Выставки",
+    "classifieds": "Объявления",
+    "ads": "Реклама",
+    "campaigns": "Кампании",
+    "support": "Поддержка",
+    "references": "Справочники (админ)",
+    "users": "Пользователи (админ)",
+    "moderation": "Модерация (админ)",
+    "analytics": "Аналитика (админ)",
+    "notifications": "Уведомления",
+    "profile": "Мой профиль"
+  }
 }

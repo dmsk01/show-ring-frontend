@@ -1,3 +1,5 @@
+'use client';
+
 import type { FileUploadType } from 'src/components/upload';
 
 import Box from '@mui/material/Box';
@@ -7,6 +9,8 @@ import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import DialogActions from '@mui/material/DialogActions';
+
+import { useTranslate } from 'src/locales';
 
 import { Markdown } from 'src/components/markdown';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -39,6 +43,8 @@ export function PostDetailsPreview({
   description,
   isSubmitting,
 }: Props) {
+  const { t } = useTranslate(['blog', 'common']);
+
   const hasHero = title || coverUrl;
   const hasContent = title || description || content || coverUrl;
 
@@ -46,11 +52,11 @@ export function PostDetailsPreview({
     <Dialog fullScreen open={open} aria-hidden={!open} onClose={onClose}>
       <DialogActions sx={{ py: 2, px: 3 }}>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          Preview
+          {t('form.previewDialog.title')}
         </Typography>
 
         <Button variant="outlined" color="inherit" onClick={onClose}>
-          Cancel
+          {t('form.previewDialog.cancel')}
         </Button>
 
         <Button
@@ -60,7 +66,7 @@ export function PostDetailsPreview({
           loading={isSubmitting}
           onClick={onSubmit}
         >
-          Post
+          {t('form.previewDialog.post')}
         </Button>
       </DialogActions>
 
@@ -78,7 +84,7 @@ export function PostDetailsPreview({
           </Container>
         </Scrollbar>
       ) : (
-        <EmptyContent filled title="Empty content!" />
+        <EmptyContent filled title={t('form.previewDialog.emptyContent')} />
       )}
     </Dialog>
   );

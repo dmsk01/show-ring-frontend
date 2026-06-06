@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
 import { useGetBreeds } from 'src/actions/reference';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -32,6 +33,7 @@ import { dogPlaceholderImage } from '../dog-utils';
 type Props = { id: string };
 
 export function DogDetailView({ id }: Props) {
+  const { t } = useTranslate(['dog', 'common']);
   const [tab, setTab] = useState('info');
 
   const { dog, dogLoading } = useGetDog(id);
@@ -49,15 +51,15 @@ export function DogDetailView({ id }: Props) {
   const lightbox = useLightbox(slides);
 
   if (dogLoading) return <LoadingScreen />;
-  if (!dog) return <DashboardContent>Dog not found.</DashboardContent>;
+  if (!dog) return <DashboardContent>{t('detail.notFound')}</DashboardContent>;
 
   return (
     <DashboardContent>
       <CustomBreadcrumbs
         heading={dog.name}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Dogs', href: paths.dashboard.dogs.root },
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('list.title'), href: paths.dashboard.dogs.root },
           { name: dog.name },
         ]}
         action={
@@ -67,16 +69,16 @@ export function DogDetailView({ id }: Props) {
             variant="contained"
             startIcon={<Iconify icon="solar:pen-bold" />}
           >
-            Edit
+            {t('detail.edit')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
       <Tabs value={tab} onChange={(_e: React.SyntheticEvent, v: string) => setTab(v)} sx={{ mb: 3 }}>
-        <Tab value="info" label="Info" />
-        <Tab value="titles" label={`Titles (${titles.length})`} />
-        <Tab value="pedigree" label="Pedigree" />
+        <Tab value="info" label={t('detail.info')} />
+        <Tab value="titles" label={`${t('detail.titles')} (${titles.length})`} />
+        <Tab value="pedigree" label={t('detail.pedigree')} />
       </Tabs>
 
       {tab === 'info' && (
@@ -131,13 +133,13 @@ export function DogDetailView({ id }: Props) {
             )}
 
             <Stack spacing={1.5}>
-              <Typography variant="body2">Breed: {breedName ?? '—'}</Typography>
-              <Typography variant="body2">Sex: {dog.sex}</Typography>
-              <Typography variant="body2">RKF #: {dog.rkf_number ?? '—'}</Typography>
-              <Typography variant="body2">Born: {dog.date_of_birth ?? '—'}</Typography>
-              <Typography variant="body2">Color: {dog.color ?? '—'}</Typography>
-              <Typography variant="body2">Microchip: {dog.microchip ?? '—'}</Typography>
-              <Typography variant="body2">Description: {dog.description ?? '—'}</Typography>
+              <Typography variant="body2">{t('detail.breed')}: {breedName ?? '—'}</Typography>
+              <Typography variant="body2">{t('detail.sex')}: {dog.sex === 'female' ? t('enums.sex.female') : t('enums.sex.male')}</Typography>
+              <Typography variant="body2">{t('detail.rkfNumber')}: {dog.rkf_number ?? '—'}</Typography>
+              <Typography variant="body2">{t('detail.born')}: {dog.date_of_birth ?? '—'}</Typography>
+              <Typography variant="body2">{t('detail.color')}: {dog.color ?? '—'}</Typography>
+              <Typography variant="body2">{t('detail.microchip')}: {dog.microchip ?? '—'}</Typography>
+              <Typography variant="body2">{t('detail.description')}: {dog.description ?? '—'}</Typography>
             </Stack>
           </Stack>
         </Card>
@@ -147,13 +149,13 @@ export function DogDetailView({ id }: Props) {
         <Card sx={{ p: 3 }}>
           {titles.length === 0 ? (
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              No titles yet.
+              {t('detail.noTitles')}
             </Typography>
           ) : (
             <Stack spacing={1.5}>
-              {titles.map((t) => (
-                <Typography key={t.id} variant="body2">
-                  {t.title_id} — earned {t.date_earned}
+              {titles.map((title) => (
+                <Typography key={title.id} variant="body2">
+                  {title.title_id} — {t('detail.earned')} {title.date_earned}
                 </Typography>
               ))}
             </Stack>
@@ -167,7 +169,7 @@ export function DogDetailView({ id }: Props) {
             <PedigreeTree node={pedigree} />
           ) : (
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              No pedigree data.
+              {t('detail.noPedigree')}
             </Typography>
           )}
         </Card>

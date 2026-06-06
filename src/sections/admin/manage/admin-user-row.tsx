@@ -14,6 +14,7 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 
+import { useTranslate } from 'src/locales';
 import { setUserRole, setUserBlock } from 'src/actions/admin';
 
 import { Label } from 'src/components/label';
@@ -28,6 +29,7 @@ import { ADMIN_ROLES } from 'src/types/admin';
 type Props = { row: IAdminUser };
 
 export function AdminUserRow({ row }: Props) {
+  const { t } = useTranslate(['admin', 'common']);
   const grantMenu = usePopover();
 
   const heldRoles = row.roles;
@@ -35,18 +37,18 @@ export function AdminUserRow({ row }: Props) {
   const handleBlock = async (isActive: boolean) => {
     try {
       await setUserBlock(row.id, isActive);
-      toast.success(isActive ? 'User unblocked' : 'User blocked');
+      toast.success(isActive ? t('users.toast.unblocked') : t('users.toast.blocked'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to update user');
+      toast.error(error instanceof Error ? error.message : t('users.toast.updateFailed'));
     }
   };
 
   const handleRole = async (role: Role, grant: boolean) => {
     try {
       await setUserRole(row.id, role, grant);
-      toast.success(grant ? 'Role granted' : 'Role revoked');
+      toast.success(grant ? t('users.toast.roleGranted') : t('users.toast.roleRevoked'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to update role');
+      toast.error(error instanceof Error ? error.message : t('users.toast.roleFailed'));
     }
   };
 
@@ -57,7 +59,9 @@ export function AdminUserRow({ row }: Props) {
 
         <TableCell>
           <Label color={row.is_email_verified ? 'success' : 'warning'}>
-            {row.is_email_verified ? 'Verified' : 'Unverified'}
+            {row.is_email_verified
+              ? t('users.enums.emailVerified.verified')
+              : t('users.enums.emailVerified.unverified')}
           </Label>
         </TableCell>
 
@@ -68,7 +72,7 @@ export function AdminUserRow({ row }: Props) {
                 <Chip
                   key={role}
                   size="small"
-                  label={role}
+                  label={t(`users.enums.roles.${role}`)}
                   onDelete={() => handleRole(role, false)}
                 />
               ))
@@ -99,7 +103,7 @@ export function AdminUserRow({ row }: Props) {
               }}
             >
               <Iconify icon="mingcute:add-line" />
-              {role}
+              {t(`users.enums.roles.${role}`)}
             </MenuItem>
           ))}
         </MenuList>

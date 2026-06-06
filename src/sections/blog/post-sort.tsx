@@ -1,9 +1,13 @@
+'use client';
+
 import { usePopover } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
+
+import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
@@ -18,6 +22,7 @@ type Props = {
 
 export function PostSort({ sort, sortOptions, onSort }: Props) {
   const menuActions = usePopover();
+  const { t } = useTranslate(['blog', 'common']);
 
   const renderMenuActions = () => (
     <CustomPopover
@@ -35,7 +40,7 @@ export function PostSort({ sort, sortOptions, onSort }: Props) {
               onSort(option.value);
             }}
           >
-            {option.label}
+            {t(`list.sort.${option.value}`)}
           </MenuItem>
         ))}
       </MenuList>
@@ -55,9 +60,9 @@ export function PostSort({ sort, sortOptions, onSort }: Props) {
         }
         sx={{ fontWeight: 'fontWeightSemiBold', textTransform: 'capitalize' }}
       >
-        Sort by:
+        {t('list.sortBy')}
         <Box component="span" sx={{ ml: 0.5, fontWeight: 'fontWeightBold' }}>
-          {sort}
+          {t(`list.sort.${sort}`)}
         </Box>
       </Button>
 

@@ -1,0 +1,73 @@
+{
+  "list": {
+    "title": "Рекламные кампании",
+    "new": "Добавить кампанию",
+    "columns": {
+      "name": "Название",
+      "status": "Статус",
+      "budget": "Бюджет",
+      "spent": "Потрачено",
+      "dates": "Период"
+    }
+  },
+  "form": {
+    "headingNew": "Создать кампанию",
+    "headingEdit": "Редактирование кампании",
+    "notFound": "Кампания не найдена.",
+    "fields": {
+      "name": "Название",
+      "status": "Статус",
+      "budget": "Бюджет",
+      "costPerImpression": "Стоимость показа",
+      "dateStart": "Дата начала",
+      "dateEnd": "Дата окончания",
+      "description": "Описание"
+    },
+    "validation": {
+      "nameRequired": "Укажите название!",
+      "budgetRequired": "Укажите бюджет!",
+      "dateStartRequired": "Укажите дату начала!",
+      "dateEndRequired": "Укажите дату окончания!",
+      "targetUrlRequired": "Укажите целевой URL!"
+    },
+    "submitCreate": "Создать кампанию",
+    "submitUpdate": "Сохранить изменения"
+  },
+  "stats": {
+    "impressions": "Показы",
+    "clicks": "Клики",
+    "ctr": "CTR",
+    "spent": "Потрачено",
+    "remaining": "Остаток"
+  },
+  "banner": {
+    "title": "Добавить баннер",
+    "submit": "Добавить баннер",
+    "fields": {
+      "targetUrl": "Целевой URL",
+      "placement": "Размещение",
+      "title": "Заголовок",
+      "isActive": "Активен"
+    }
+  },
+  "enums": {
+    "status": {
+      "draft": "Черновик",
+      "active": "Активна",
+      "paused": "Приостановлена",
+      "completed": "Завершена",
+      "cancelled": "Отменена"
+    },
+    "placement": {
+      "sidebar": "Боковая панель",
+      "top": "Верхний баннер",
+      "inline": "Встроенный",
+      "footer": "Подвал"
+    }
+  },
+  "toast": {
+    "created": "Создано!",
+    "updated": "Сохранено!",
+    "bannerAdded": "Баннер добавлен!"
+  }
+}

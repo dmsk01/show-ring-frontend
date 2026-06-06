@@ -1,3 +1,5 @@
+'use client';
+
 import type { IPostItem } from 'src/types/blog';
 
 import Box from '@mui/material/Box';
@@ -7,6 +9,8 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { paths } from 'src/routes/paths';
+
+import { useTranslate } from 'src/locales';
 
 import { PostItemSkeleton } from './post-skeleton';
 import { PostItem, PostItemLatest } from './post-item';
@@ -19,6 +23,8 @@ type Props = {
 };
 
 export function PostList({ posts, loading }: Props) {
+  const { t } = useTranslate(['blog', 'common']);
+
   const renderLoading = () => (
     <Box
       sx={{
@@ -90,7 +96,7 @@ export function PostList({ posts, loading }: Props) {
             variant="outlined"
             startIcon={<CircularProgress size={18} color="inherit" />}
           >
-            Load more
+            {t('list.loadMore')}
           </Button>
         </Stack>
       )}

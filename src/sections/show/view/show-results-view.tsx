@@ -13,6 +13,7 @@ import { paths } from 'src/routes/paths';
 
 import { usePermissions } from 'src/hooks/use-permissions';
 
+import { useTranslate } from 'src/locales';
 import { useGetShow } from 'src/actions/show';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useReferenceList } from 'src/actions/admin-reference';
@@ -34,6 +35,7 @@ import { ShowDocumentsPanel } from '../show-documents-panel';
 type Props = { id: string };
 
 export function ShowResultsView({ id }: Props) {
+  const { t } = useTranslate(['show', 'common']);
   const { can } = usePermissions();
   const { user } = useAuthContext();
   const canEdit = can('results:create') || can('results:edit');
@@ -63,10 +65,10 @@ export function ShowResultsView({ id }: Props) {
     try {
       const task = await generateEntryDocument(id, row.entryId, 'diploma');
       const status = await pollTask(task.id);
-      if (status !== 'done') throw new Error('Документ не готов');
+      if (status !== 'done') throw new Error(t('toast.documentNotReady'));
       await downloadTask(task.id, `diploma-${row.entryId}.docx`);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Не удалось получить документ');
+      toast.error(error instanceof Error ? error.message : t('common:state.error'));
     } finally {
       setDownloadingId(null);
     }
@@ -83,7 +85,7 @@ export function ShowResultsView({ id }: Props) {
             startIcon={<Iconify icon="solar:pen-bold" />}
             onClick={() => handleEdit(row.entryId)}
           >
-            {row.result ? 'Изм.' : 'Оценка'}
+            {row.result ? t('results.actions.edit') : t('results.actions.grade')}
           </Button>
         )}
         {(canGenerate || isOwner) && (
@@ -94,7 +96,7 @@ export function ShowResultsView({ id }: Props) {
             startIcon={<Iconify icon="solar:download-bold" />}
             onClick={() => handleDownloadDiploma(row)}
           >
-            Диплом
+            {t('results.actions.diploma')}
           </Button>
         )}
       </Stack>
@@ -104,11 +106,11 @@ export function ShowResultsView({ id }: Props) {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading={show ? `Результаты — ${show.name}` : 'Результаты'}
+        heading={show ? t('results.heading', { name: show.name }) : t('results.headingFallback')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Выставки', href: paths.dashboard.shows.root },
-          { name: 'Результаты' },
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('list.title'), href: paths.dashboard.shows.root },
+          { name: t('results.headingFallback') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />

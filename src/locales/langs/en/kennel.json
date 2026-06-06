@@ -1,0 +1,74 @@
+{
+  "list": {
+    "title": "Kennels",
+    "new": "Add kennel",
+    "search": "Search kennels...",
+    "columns": {
+      "name": "Name",
+      "prefix": "Prefix",
+      "city": "City",
+      "country": "Country",
+      "email": "Email"
+    }
+  },
+  "form": {
+    "headingNew": "Create a new kennel",
+    "headingEdit": "Edit kennel",
+    "image": "Kennel image",
+    "fields": {
+      "name": "Name",
+      "prefix": "Kennel prefix",
+      "city": "City",
+      "country": "Country",
+      "phone": "Contact phone",
+      "email": "Contact email",
+      "website": "Website",
+      "description": "Description"
+    },
+    "validation": {
+      "nameRequired": "Name is required!"
+    },
+    "submitCreate": "Create kennel",
+    "submitUpdate": "Save changes",
+    "filterCity": "City"
+  },
+  "detail": {
+    "notFound": "Kennel not found.",
+    "verified": "Verified kennel",
+    "litters": "Litters",
+    "littersEmpty": "No litters yet",
+    "dogs": "Kennel dogs",
+    "dogsEmpty": "No dogs yet",
+    "litter": {
+      "fallback": "Litter",
+      "born": "Born",
+      "puppies": "Puppies",
+      "price": "Price"
+    }
+  },
+  "showcase": {
+    "title": "Kennels",
+    "searchPlaceholder": "Search by name...",
+    "cityPlaceholder": "City",
+    "empty": "No kennels found",
+    "sort": {
+      "newest": "Newest first",
+      "name": "By name"
+    }
+  },
+  "card": {
+    "verified": "Verified",
+    "prefix": "Prefix",
+    "stats": "Dogs: {{dogs}} · Litters: {{litters}}"
+  },
+  "delete": {
+    "content": "Delete kennel"
+  },
+  "toast": {
+    "created": "Create success!",
+    "updated": "Update success!",
+    "deleted": "Delete success!",
+    "deleteFailed": "Delete failed",
+    "avatarFailed": "Failed to update avatar"
+  }
+}

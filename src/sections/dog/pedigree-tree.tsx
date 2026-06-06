@@ -1,12 +1,18 @@
+'use client';
+
 import type { IPedigreeNode } from 'src/types/dog';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+import { useTranslate } from 'src/locales';
+
 // ----------------------------------------------------------------------
 
 export function PedigreeTree({ node, label }: { node: IPedigreeNode | null; label?: string }) {
+  const { t } = useTranslate(['dog', 'common']);
+
   if (!node) {
     return (
       <Typography variant="body2" sx={{ color: 'text.disabled' }}>
@@ -33,8 +39,8 @@ export function PedigreeTree({ node, label }: { node: IPedigreeNode | null; labe
             borderLeft: (theme) => `2px solid ${theme.vars.palette.divider}`,
           }}
         >
-          <PedigreeTree node={node.father} label="Sire" />
-          <PedigreeTree node={node.mother} label="Dam" />
+          <PedigreeTree node={node.father} label={t('pedigree.sire')} />
+          <PedigreeTree node={node.mother} label={t('pedigree.dam')} />
         </Stack>
       )}
     </Box>

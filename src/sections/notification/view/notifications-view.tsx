@@ -17,6 +17,7 @@ import CardHeader from '@mui/material/CardHeader';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { useGetBreeds } from 'src/actions/reference';
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
@@ -40,6 +41,8 @@ import { EVENT_TYPES, NOTIFICATION_CHANNELS } from 'src/types/notification';
 const STATUS_COLOR = { pending: 'warning', sent: 'success', failed: 'error' } as const;
 
 export function NotificationsView() {
+  const { t } = useTranslate(['notification', 'common']);
+
   const { breeds } = useGetBreeds();
   const { subscriptions } = useGetSubscriptions();
   const { notifications } = useGetNotifications();
@@ -62,11 +65,11 @@ export function NotificationsView() {
         filter_breed_id: breedId || null,
         filter_region: region || null,
       });
-      toast.success('Subscribed!');
+      toast.success(t('notification:toast.subscribed'));
       setBreedId('');
       setRegion('');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to subscribe');
+      toast.error(error instanceof Error ? error.message : t('notification:toast.subscribeFailed'));
     } finally {
       setBusy(false);
     }
@@ -75,9 +78,11 @@ export function NotificationsView() {
   const handleUnsubscribe = async (id: string) => {
     try {
       await deleteSubscription(id);
-      toast.success('Unsubscribed');
+      toast.success(t('notification:toast.unsubscribed'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to unsubscribe');
+      toast.error(
+        error instanceof Error ? error.message : t('notification:toast.unsubscribeFailed')
+      );
     }
   };
 
@@ -87,20 +92,28 @@ export function NotificationsView() {
     try {
       await markAllNotificationsRead();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to mark all read');
+      toast.error(
+        error instanceof Error ? error.message : t('notification:toast.markAllReadFailed')
+      );
     }
   };
 
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Notifications"
-        links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'Notifications' }]}
+        heading={t('notification:heading')}
+        links={[
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('notification:heading') },
+        ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
       <Card sx={{ mb: 3 }}>
-        <CardHeader title="Subscriptions" subheader="Get notified about platform events" />
+        <CardHeader
+          title={t('notification:subscriptions.title')}
+          subheader={t('notification:subscriptions.subheader')}
+        />
         <Box sx={{ p: 3 }}>
           <Box
             sx={{
@@ -113,35 +126,35 @@ export function NotificationsView() {
           >
             <TextField
               select
-              label="Event"
+              label={t('notification:subscriptions.fieldEvent')}
               value={eventType}
               onChange={(e) => setEventType(e.target.value as EventType)}
             >
-              {EVENT_TYPES.map((t) => (
-                <MenuItem key={t} value={t}>
-                  {t}
+              {EVENT_TYPES.map((ev) => (
+                <MenuItem key={ev} value={ev}>
+                  {t(`notification:enums.eventType.${ev}`)}
                 </MenuItem>
               ))}
             </TextField>
             <TextField
               select
-              label="Channel"
+              label={t('notification:subscriptions.fieldChannel')}
               value={channel}
               onChange={(e) => setChannel(e.target.value as NotificationChannel)}
             >
-              {NOTIFICATION_CHANNELS.map((c) => (
-                <MenuItem key={c} value={c}>
-                  {c}
+              {NOTIFICATION_CHANNELS.map((ch) => (
+                <MenuItem key={ch} value={ch}>
+                  {t(`notification:enums.channel.${ch}`)}
                 </MenuItem>
               ))}
             </TextField>
             <TextField
               select
-              label="Breed (optional)"
+              label={t('notification:subscriptions.fieldBreed')}
               value={breedId}
               onChange={(e) => setBreedId(e.target.value)}
             >
-              <MenuItem value="">Any</MenuItem>
+              <MenuItem value="">{t('notification:subscriptions.breedAny')}</MenuItem>
               {breeds.map((b) => (
                 <MenuItem key={b.id} value={b.id}>
                   {b.name}
@@ -149,7 +162,7 @@ export function NotificationsView() {
               ))}
             </TextField>
             <TextField
-              label="Region (optional)"
+              label={t('notification:subscriptions.fieldRegion')}
               value={region}
               onChange={(e) => setRegion(e.target.value)}
             />
@@ -162,7 +175,7 @@ export function NotificationsView() {
               startIcon={<Iconify icon="mingcute:add-line" />}
               onClick={handleSubscribe}
             >
-              Subscribe
+              {t('notification:subscriptions.subscribe')}
             </Button>
           </Stack>
 
@@ -171,9 +184,9 @@ export function NotificationsView() {
               {subscriptions.map((s) => (
                 <Box key={s.id} sx={{ gap: 1, display: 'flex', alignItems: 'center' }}>
                   <Typography variant="subtitle2" sx={{ flex: 1 }}>
-                    {s.event_type}
+                    {t(`notification:enums.eventType.${s.event_type}`)}
                   </Typography>
-                  <Label color="info">{s.channel}</Label>
+                  <Label color="info">{t(`notification:enums.channel.${s.channel}`)}</Label>
                   {breedName(s.filter_breed_id) && <Label>{breedName(s.filter_breed_id)}</Label>}
                   {s.filter_region && <Label>{s.filter_region}</Label>}
                   <IconButton color="error" onClick={() => handleUnsubscribe(s.id)}>
@@ -188,7 +201,7 @@ export function NotificationsView() {
 
       <Card>
         <CardHeader
-          title="Recent notifications"
+          title={t('notification:recent.title')}
           action={
             hasUnread && (
               <Button
@@ -197,7 +210,7 @@ export function NotificationsView() {
                 startIcon={<Iconify icon="eva:done-all-fill" />}
                 onClick={handleMarkAllRead}
               >
-                Mark all as read
+                {t('notification:recent.markAllRead')}
               </Button>
             )
           }
@@ -205,7 +218,7 @@ export function NotificationsView() {
         <Box sx={{ p: 3 }}>
           {notifications.length === 0 ? (
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              No notifications yet.
+              {t('notification:recent.empty')}
             </Typography>
           ) : (
             <Stack divider={<Divider sx={{ borderStyle: 'dashed' }} />} spacing={1.5}>
@@ -234,11 +247,13 @@ export function NotificationsView() {
                       {n.subject}
                     </Typography>
                     <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                      {n.event_type} · {n.created_at?.slice(0, 16).replace('T', ' ')}
+                      {t(`notification:enums.eventType.${n.event_type}`)} · {n.created_at?.slice(0, 16).replace('T', ' ')}
                     </Typography>
                   </Stack>
-                  <Label color="default">{n.channel}</Label>
-                  <Label color={STATUS_COLOR[n.status]}>{n.status}</Label>
+                  <Label color="default">{t(`notification:enums.channel.${n.channel}`)}</Label>
+                  <Label color={STATUS_COLOR[n.status]}>
+                    {t(`notification:enums.status.${n.status}`)}
+                  </Label>
                 </Box>
               ))}
             </Stack>

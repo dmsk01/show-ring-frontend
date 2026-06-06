@@ -18,6 +18,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 
+import { useTranslate } from 'src/locales';
 import { deleteReference, useReferenceList } from 'src/actions/admin-reference';
 
 import { Label } from 'src/components/label';
@@ -32,23 +33,40 @@ import { ReferenceFormDialog } from './reference-form-dialog';
 
 // ----------------------------------------------------------------------
 
-function renderValue(field: ReferenceTypeConfig['fields'][number], value: unknown) {
-  if (field?.kind === 'switch') {
-    return <Label color={value ? 'success' : 'default'}>{value ? 'Yes' : 'No'}</Label>;
-  }
-  return value == null || value === '' ? '—' : String(value);
-}
-
 type RowProps = {
   config: ReferenceTypeConfig;
   row: ReferenceRecord;
   onEdit: () => void;
   onDelete: () => void;
+  boolYes: string;
+  boolNo: string;
+  labelEdit: string;
+  labelDelete: string;
+  confirmTitle: string;
+  confirmAction: string;
 };
 
-function ReferenceRow({ config, row, onEdit, onDelete }: RowProps) {
+function ReferenceRow({
+  config,
+  row,
+  onEdit,
+  onDelete,
+  boolYes,
+  boolNo,
+  labelEdit,
+  labelDelete,
+  confirmTitle,
+  confirmAction,
+}: RowProps) {
   const menu = usePopover();
   const confirm = useBoolean();
+
+  const renderValue = (field: ReferenceTypeConfig['fields'][number], value: unknown) => {
+    if (field?.kind === 'switch') {
+      return <Label color={value ? 'success' : 'default'}>{value ? boolYes : boolNo}</Label>;
+    }
+    return value == null || value === '' ? '—' : String(value);
+  };
 
   return (
     <>
@@ -73,7 +91,7 @@ function ReferenceRow({ config, row, onEdit, onDelete }: RowProps) {
             }}
           >
             <Iconify icon="solar:pen-bold" />
-            Edit
+            {labelEdit}
           </MenuItem>
           <MenuItem
             onClick={() => {
@@ -83,7 +101,7 @@ function ReferenceRow({ config, row, onEdit, onDelete }: RowProps) {
             sx={{ color: 'error.main' }}
           >
             <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete
+            {labelDelete}
           </MenuItem>
         </MenuList>
       </CustomPopover>
@@ -91,10 +109,10 @@ function ReferenceRow({ config, row, onEdit, onDelete }: RowProps) {
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
-        title="Delete"
+        title={confirmTitle}
         content={
           <>
-            Delete <strong>{row.name}</strong>?
+            {confirmTitle} <strong>{row.name}</strong>?
           </>
         }
         action={
@@ -106,7 +124,7 @@ function ReferenceRow({ config, row, onEdit, onDelete }: RowProps) {
               confirm.onFalse();
             }}
           >
-            Delete
+            {confirmAction}
           </Button>
         }
       />
@@ -119,6 +137,7 @@ function ReferenceRow({ config, row, onEdit, onDelete }: RowProps) {
 type Props = { config: ReferenceTypeConfig };
 
 export function ReferenceCrud({ config }: Props) {
+  const { t } = useTranslate(['admin', 'common']);
   const { items, loading } = useReferenceList(config.listUrl);
 
   const formOpen = useBoolean();
@@ -127,7 +146,7 @@ export function ReferenceCrud({ config }: Props) {
   const head: TableHeadCellProps[] = [
     ...config.columns.map((col) => ({
       id: col,
-      label: config.fields.find((f) => f.name === col)?.label ?? col,
+      label: t(`reference.types.${config.key}.fields.${col}`),
     })),
     { id: '', width: 64 },
   ];
@@ -145,9 +164,9 @@ export function ReferenceCrud({ config }: Props) {
   const handleDelete = async (id: string) => {
     try {
       await deleteReference(config.adminUrl, config.listUrl, id);
-      toast.success('Delete success!');
+      toast.success(t('reference.toast.deleted'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Delete failed');
+      toast.error(error instanceof Error ? error.message : t('reference.toast.deleteFailed'));
     }
   };
 
@@ -159,7 +178,7 @@ export function ReferenceCrud({ config }: Props) {
           startIcon={<Iconify icon="mingcute:add-line" />}
           onClick={handleCreate}
         >
-          Add
+          {t('reference.actions.add')}
         </Button>
       </Box>
 
@@ -174,6 +193,12 @@ export function ReferenceCrud({ config }: Props) {
                 row={row}
                 onEdit={() => handleEdit(row)}
                 onDelete={() => handleDelete(row.id)}
+                boolYes={t('reference.form.boolYes')}
+                boolNo={t('reference.form.boolNo')}
+                labelEdit={t('common:actions.edit')}
+                labelDelete={t('common:actions.delete')}
+                confirmTitle={t('common:confirm.title')}
+                confirmAction={t('common:confirm.deleteAction')}
               />
             ))}
             <TableNoData notFound={!loading && items.length === 0} />

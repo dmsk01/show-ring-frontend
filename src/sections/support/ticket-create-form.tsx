@@ -1,6 +1,9 @@
 'use client';
 
+import type { TFunction } from 'i18next';
+
 import * as z from 'zod';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -13,6 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useTranslate } from 'src/locales';
 import { createTicket } from 'src/actions/support';
 
 import { toast } from 'src/components/snackbar';
@@ -22,19 +26,23 @@ import { TICKET_PRIORITIES } from 'src/types/support';
 
 // ----------------------------------------------------------------------
 
-const TicketSchema = z.object({
-  subject: z.string().min(1, { error: 'Subject is required!' }),
-  body: z.string().min(1, { error: 'Message is required!' }),
-  priority: z.enum(['low', 'normal', 'high', 'urgent']),
-});
+export const getTicketSchema = (t: TFunction) =>
+  z.object({
+    subject: z.string().min(1, { error: t('form.validation.subjectRequired') }),
+    body: z.string().min(1, { error: t('form.validation.messageRequired') }),
+    priority: z.enum(['low', 'normal', 'high', 'urgent']),
+  });
 
-type TicketSchemaType = z.infer<typeof TicketSchema>;
+export type TicketSchemaType = z.infer<ReturnType<typeof getTicketSchema>>;
 
 export function TicketCreateForm() {
   const router = useRouter();
+  const { t } = useTranslate(['support', 'common']);
+
+  const schema = useMemo(() => getTicketSchema(t), [t]);
 
   const methods = useForm<TicketSchemaType>({
-    resolver: zodResolver(TicketSchema),
+    resolver: zodResolver(schema),
     defaultValues: { subject: '', body: '', priority: 'normal' },
   });
 
@@ -46,10 +54,10 @@ export function TicketCreateForm() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await createTicket(data);
-      toast.success('Ticket created!');
+      toast.success(t('toast.created'));
       router.push(paths.dashboard.support.root);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to create ticket');
+      toast.error(error instanceof Error ? error.message : t('common:state.error'));
     }
   });
 
@@ -57,20 +65,20 @@ export function TicketCreateForm() {
     <Form methods={methods} onSubmit={onSubmit}>
       <Card sx={{ p: 3 }}>
         <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-          <Field.Text name="subject" label="Subject" />
-          <Field.Select name="priority" label="Priority">
-            {TICKET_PRIORITIES.map((p) => (
-              <MenuItem key={p} value={p}>
-                {p}
+          <Field.Text name="subject" label={t('form.fields.subject')} />
+          <Field.Select name="priority" label={t('form.fields.priority')}>
+            {TICKET_PRIORITIES.map((priority) => (
+              <MenuItem key={priority} value={priority}>
+                {t(`enums.priority.${priority}`)}
               </MenuItem>
             ))}
           </Field.Select>
-          <Field.Text name="body" label="Message" multiline rows={5} />
+          <Field.Text name="body" label={t('form.fields.message')} multiline rows={5} />
         </Box>
 
         <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
           <Button type="submit" variant="contained" loading={isSubmitting}>
-            Create ticket
+            {t('form.submit')}
           </Button>
         </Stack>
       </Card>

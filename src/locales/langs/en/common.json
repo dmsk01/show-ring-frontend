@@ -2,5 +2,52 @@
   "demo": {
     "lang": "English",
     "description": "The starting point for your next project is based on MUI. Easy customization helps you build apps faster and better."
+  },
+  "dashboard": "Dashboard",
+  "keyword": "Keyword",
+  "actions": {
+    "save": "Save",
+    "create": "Create",
+    "update": "Update",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "back": "Back",
+    "search": "Search...",
+    "filters": "Filters",
+    "clear": "Clear",
+    "apply": "Apply",
+    "view": "View",
+    "more": "More"
+  },
+  "table": {
+    "name": "Name",
+    "status": "Status",
+    "actions": "Actions",
+    "createdAt": "Created",
+    "results": "results",
+    "dense": "Dense",
+    "rowsPerPage": "Rows per page",
+    "selected": "selected"
+  },
+  "state": {
+    "loading": "Loading...",
+    "noData": "No data",
+    "empty": "Nothing here yet",
+    "error": "Something went wrong"
+  },
+  "confirm": {
+    "title": "Delete",
+    "content": "Are you sure you want to delete?",
+    "deleteAction": "Delete"
+  },
+  "enums": {
+    "litterStatus": {
+      "planned": "Planned",
+      "born": "Born",
+      "available": "Available",
+      "sold_out": "Sold out",
+      "archived": "Archived"
+    }
   }
 }

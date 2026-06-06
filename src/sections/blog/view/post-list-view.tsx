@@ -14,6 +14,7 @@ import Button from '@mui/material/Button';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { POST_SORT_OPTIONS } from 'src/_mock';
 import { useGetPosts } from 'src/actions/blog';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -34,6 +35,7 @@ const PUBLISH_OPTIONS = ['all', 'published', 'draft'] as const;
 
 export function PostListView() {
   const { posts, postsLoading } = useGetPosts();
+  const { t } = useTranslate(['blog', 'common']);
 
   const [sortBy, setSortBy] = useState('latest');
 
@@ -51,11 +53,11 @@ export function PostListView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="List"
+        heading={t('list.heading')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Blog', href: paths.dashboard.post.root },
-          { name: 'List' },
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('list.title'), href: paths.dashboard.post.root },
+          { name: t('list.heading') },
         ]}
         action={
           <Button
@@ -64,7 +66,7 @@ export function PostListView() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            Add post
+            {t('list.addPost')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -80,7 +82,7 @@ export function PostListView() {
           alignItems: { xs: 'flex-end', sm: 'center' },
         }}
       >
-        <PostSearch redirectPath={(title: string) => paths.dashboard.post.details(title)} />
+        <PostSearch redirectPath={(slug: string) => paths.dashboard.post.details(slug)} />
 
         <PostSort
           sort={sortBy}
@@ -95,7 +97,7 @@ export function PostListView() {
             key={tab}
             iconPosition="end"
             value={tab}
-            label={tab}
+            label={t(`list.tabs.${tab}`)}
             icon={
               <Label
                 variant={((tab === 'all' || tab === state.publish) && 'filled') || 'soft'}

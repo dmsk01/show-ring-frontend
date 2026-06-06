@@ -1,23 +1,34 @@
-import type { IClassifiedImage, ClassifiedPriceKind } from 'src/types/classified';
+import type { IClassifiedImage } from 'src/types/classified';
 
 import { fCurrency } from 'src/utils/format-number';
 
-// Russian display labels for classified categories (shared across showcase card/grid/detail).
-export const CLASSIFIED_CATEGORY_LABEL: Record<string, string> = {
-  puppy_sale: 'Щенки',
-  adult_sale: 'Взрослые',
-  mating: 'Вязка',
-  handler: 'Хендлер',
-  grooming: 'Груминг',
-  other: 'Другое',
-};
+// Returns the i18n key for a category label.
+// Translate at component call site: t(`enums.category.${code}`)
+export function classifiedCategoryI18nKey(category: string): string {
+  return `enums.category.${category}`;
+}
 
-export function formatClassifiedPrice(
-  price: number | null,
-  kind: ClassifiedPriceKind
-): string {
-  if (kind === 'free') return 'Бесплатно';
-  if (kind === 'negotiable') return 'Договорная';
+// Returns the i18n key for a price kind label.
+// Translate at component call site: t(`enums.priceKind.${kind}`)
+export function classifiedPriceKindI18nKey(kind: string): string {
+  return `enums.priceKind.${kind}`;
+}
+
+// Returns the i18n key for a status label.
+// Translate at component call site: t(`enums.status.${status}`)
+export function classifiedStatusI18nKey(status: string): string {
+  return `enums.status.${status}`;
+}
+
+/**
+ * Formats a numeric price for display.
+ * Always returns a displayable string — never an i18n key.
+ * For free/negotiable kinds use `classifiedPriceKindI18nKey` + `t()` at the call site.
+ *
+ * Returns the formatted currency string when `price` is a number,
+ * or an em dash when `price` is null/undefined.
+ */
+export function formatClassifiedPrice(price: number | null): string {
   return price != null ? fCurrency(price) : '—';
 }
 

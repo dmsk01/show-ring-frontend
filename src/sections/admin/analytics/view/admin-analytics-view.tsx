@@ -17,6 +17,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
   useAdsDaily,
@@ -35,20 +36,19 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 const KPIS: {
   key: keyof IDashboardStats;
-  label: string;
   icon: string;
   color: string;
   href: string;
 }[] = [
-  { key: 'total_users', label: 'Users', icon: 'solar:user-rounded-bold', color: 'primary.main', href: paths.dashboard.adminUsers },
-  { key: 'total_kennels', label: 'Kennels', icon: 'solar:bill-list-bold', color: 'info.main', href: paths.dashboard.kennels.root },
-  { key: 'verified_kennels', label: 'Verified kennels', icon: 'solar:shield-check-bold', color: 'success.main', href: paths.dashboard.adminModeration },
-  { key: 'total_dogs', label: 'Dogs', icon: 'solar:heart-bold', color: 'error.main', href: paths.dashboard.dogs.root },
-  { key: 'total_litters', label: 'Litters', icon: 'solar:gallery-add-bold', color: 'warning.main', href: paths.dashboard.litters.root },
-  { key: 'active_classifieds', label: 'Active classifieds', icon: 'solar:cart-plus-bold', color: 'secondary.main', href: paths.dashboard.classifieds.root },
-  { key: 'open_shows', label: 'Open shows', icon: 'solar:clock-circle-bold', color: 'info.main', href: paths.dashboard.shows.root },
-  { key: 'completed_shows', label: 'Completed shows', icon: 'solar:check-circle-bold', color: 'success.main', href: paths.dashboard.shows.root },
-  { key: 'active_campaigns', label: 'Active campaigns', icon: 'solar:wad-of-money-bold', color: 'primary.main', href: paths.dashboard.ads.root },
+  { key: 'total_users', icon: 'solar:user-rounded-bold', color: 'primary.main', href: paths.dashboard.adminUsers },
+  { key: 'total_kennels', icon: 'solar:bill-list-bold', color: 'info.main', href: paths.dashboard.kennels.root },
+  { key: 'verified_kennels', icon: 'solar:shield-check-bold', color: 'success.main', href: paths.dashboard.adminModeration },
+  { key: 'total_dogs', icon: 'solar:heart-bold', color: 'error.main', href: paths.dashboard.dogs.root },
+  { key: 'total_litters', icon: 'solar:gallery-add-bold', color: 'warning.main', href: paths.dashboard.litters.root },
+  { key: 'active_classifieds', icon: 'solar:cart-plus-bold', color: 'secondary.main', href: paths.dashboard.classifieds.root },
+  { key: 'open_shows', icon: 'solar:clock-circle-bold', color: 'info.main', href: paths.dashboard.shows.root },
+  { key: 'completed_shows', icon: 'solar:check-circle-bold', color: 'success.main', href: paths.dashboard.shows.root },
+  { key: 'active_campaigns', icon: 'solar:wad-of-money-bold', color: 'primary.main', href: paths.dashboard.ads.root },
 ];
 
 function StatCard({
@@ -111,6 +111,8 @@ function StatCard({
 }
 
 export function AdminAnalyticsView() {
+  const { t } = useTranslate(['admin', 'common']);
+
   const { stats } = useDashboardStats();
   const { topBreeds } = useTopBreeds();
   const { topCampaigns } = useTopCampaigns();
@@ -123,11 +125,11 @@ export function AdminAnalyticsView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Analytics"
+        heading={t('analytics.list.title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Admin' },
-          { name: 'Analytics' },
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('breadcrumb.admin') },
+          { name: t('analytics.list.breadcrumb') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
@@ -136,7 +138,7 @@ export function AdminAnalyticsView() {
         {KPIS.map((kpi) => (
           <Grid key={kpi.key} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
             <StatCard
-              label={kpi.label}
+              label={t(`analytics.kpi.${kpi.key}`)}
               value={stats?.[kpi.key] != null ? Number(stats[kpi.key]) : 0}
               icon={kpi.icon}
               color={kpi.color}
@@ -147,13 +149,16 @@ export function AdminAnalyticsView() {
 
         <Grid size={{ xs: 12, md: 8 }}>
           <Card>
-            <CardHeader title="Ad performance" subheader="Impressions & clicks per day" />
+            <CardHeader
+              title={t('analytics.adPerformance.title')}
+              subheader={t('analytics.adPerformance.subheader')}
+            />
             <Box sx={{ p: 3 }}>
               <Chart
                 type="line"
                 series={[
-                  { name: 'Impressions', data: adsDaily.map((d) => d.impressions) },
-                  { name: 'Clicks', data: adsDaily.map((d) => d.clicks) },
+                  { name: t('analytics.adPerformance.impressions'), data: adsDaily.map((d) => d.impressions) },
+                  { name: t('analytics.adPerformance.clicks'), data: adsDaily.map((d) => d.clicks) },
                 ]}
                 options={adsChartOptions}
                 sx={{ height: 320 }}
@@ -164,13 +169,16 @@ export function AdminAnalyticsView() {
 
         <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ height: 1 }}>
-            <CardHeader title="Top breeds" subheader="By entries" />
+            <CardHeader
+              title={t('analytics.topBreeds.title')}
+              subheader={t('analytics.topBreeds.subheader')}
+            />
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 280 }}>
                 <TableHeadCustom
                   headCells={[
-                    { id: 'breed', label: 'Breed' },
-                    { id: 'entries', label: 'Entries', align: 'right' },
+                    { id: 'breed', label: t('analytics.topBreeds.columns.breed') },
+                    { id: 'entries', label: t('analytics.topBreeds.columns.entries'), align: 'right' },
                   ]}
                 />
                 <TableBody>
@@ -188,12 +196,15 @@ export function AdminAnalyticsView() {
 
         <Grid size={{ xs: 12 }}>
           <Card>
-            <CardHeader title="Top campaigns" subheader="By spend" />
+            <CardHeader
+              title={t('analytics.topCampaigns.title')}
+              subheader={t('analytics.topCampaigns.subheader')}
+            />
             <Box sx={{ p: 3 }}>
               <Stack spacing={2}>
                 {topCampaigns.length === 0 && (
                   <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-                    No campaign data.
+                    {t('analytics.topCampaigns.empty')}
                   </Typography>
                 )}
                 {topCampaigns.map((c) => (

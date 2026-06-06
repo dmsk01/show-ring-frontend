@@ -1,3 +1,5 @@
+'use client';
+
 import type { CardProps } from '@mui/material/Card';
 import type { IShowItem } from 'src/types/show';
 
@@ -13,16 +15,19 @@ import { RouterLink } from 'src/routes/components';
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 
+import { useTranslate } from 'src/locales';
+
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 
-import { SHOW_STATUS_COLOR, SHOW_STATUS_LABEL } from './show-utils';
+import { SHOW_STATUS_COLOR, showStatusI18nKey } from './show-utils';
 
 // ----------------------------------------------------------------------
 
 type Props = CardProps & { show: IShowItem };
 
 export function ShowCard({ show, sx, ...other }: Props) {
+  const { t } = useTranslate('show');
   const detailsHref = paths.showcase.show(show.id);
   const dates = show.date_end
     ? `${fDate(show.date_start)} – ${fDate(show.date_end)}`
@@ -42,7 +47,7 @@ export function ShowCard({ show, sx, ...other }: Props) {
           {show.name}
         </Link>
         <Label color={SHOW_STATUS_COLOR[show.status] ?? 'default'}>
-          {SHOW_STATUS_LABEL[show.status] ?? show.status}
+          {t(showStatusI18nKey(show.status))}
         </Label>
       </Stack>
 

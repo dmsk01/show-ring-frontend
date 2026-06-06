@@ -14,6 +14,7 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { useGetShows } from 'src/actions/show';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useReferenceList } from 'src/actions/admin-reference';
@@ -28,15 +29,17 @@ import { ShowTableToolbar } from '../show-table-toolbar';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'name', label: 'Name' },
-  { id: 'rank', label: 'Rank', width: 160 },
-  { id: 'date_start', label: 'Start', width: 140 },
-  { id: 'city', label: 'City', width: 160 },
-  { id: 'status', label: 'Status', width: 160 },
-];
-
 export function ShowListView() {
+  const { t } = useTranslate(['show', 'common']);
+
+  const TABLE_HEAD: TableHeadCellProps[] = [
+    { id: 'name', label: t('list.columns.name') },
+    { id: 'rank', label: t('list.columns.rank'), width: 160 },
+    { id: 'date_start', label: t('list.columns.dateStart'), width: 140 },
+    { id: 'city', label: t('list.columns.city'), width: 160 },
+    { id: 'status', label: t('list.columns.status'), width: 160 },
+  ];
+
   const table = useTable({ defaultRowsPerPage: 25 });
 
   const filters = useSetState<IShowFilters>({ status: 'all', city: '' });
@@ -54,8 +57,8 @@ export function ShowListView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Shows"
-        links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'Shows' }]}
+        heading={t('list.title')}
+        links={[{ name: t('common:dashboard'), href: paths.dashboard.root }, { name: t('list.title') }]}
         action={
           <Button
             component={RouterLink}
@@ -63,7 +66,7 @@ export function ShowListView() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            Add show
+            {t('list.new')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}

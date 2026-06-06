@@ -1,0 +1,73 @@
+{
+  "list": {
+    "title": "Ad campaigns",
+    "new": "Add campaign",
+    "columns": {
+      "name": "Name",
+      "status": "Status",
+      "budget": "Budget",
+      "spent": "Spent",
+      "dates": "Period"
+    }
+  },
+  "form": {
+    "headingNew": "Create a new campaign",
+    "headingEdit": "Edit campaign",
+    "notFound": "Campaign not found.",
+    "fields": {
+      "name": "Name",
+      "status": "Status",
+      "budget": "Budget",
+      "costPerImpression": "Cost per impression",
+      "dateStart": "Start date",
+      "dateEnd": "End date",
+      "description": "Description"
+    },
+    "validation": {
+      "nameRequired": "Name is required!",
+      "budgetRequired": "Budget is required!",
+      "dateStartRequired": "Start date is required!",
+      "dateEndRequired": "End date is required!",
+      "targetUrlRequired": "Target URL is required!"
+    },
+    "submitCreate": "Create campaign",
+    "submitUpdate": "Save changes"
+  },
+  "stats": {
+    "impressions": "Impressions",
+    "clicks": "Clicks",
+    "ctr": "CTR",
+    "spent": "Spent",
+    "remaining": "Remaining"
+  },
+  "banner": {
+    "title": "Add banner",
+    "submit": "Add banner",
+    "fields": {
+      "targetUrl": "Target URL",
+      "placement": "Placement",
+      "title": "Title",
+      "isActive": "Active"
+    }
+  },
+  "enums": {
+    "status": {
+      "draft": "Draft",
+      "active": "Active",
+      "paused": "Paused",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "placement": {
+      "sidebar": "Sidebar",
+      "top": "Top",
+      "inline": "Inline",
+      "footer": "Footer"
+    }
+  },
+  "toast": {
+    "created": "Create success!",
+    "updated": "Update success!",
+    "bannerAdded": "Banner added!"
+  }
+}

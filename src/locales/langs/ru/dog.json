@@ -1,0 +1,66 @@
+{
+  "list": {
+    "title": "Собаки",
+    "new": "Добавить собаку",
+    "search": "Поиск собаки...",
+    "columns": {
+      "name": "Кличка",
+      "breed": "Порода",
+      "sex": "Пол",
+      "rkfNumber": "№ РКФ",
+      "born": "Дата рождения",
+      "color": "Окрас"
+    },
+    "filters": { "breed": "Порода", "sex": "Пол", "all": "Все" }
+  },
+  "form": {
+    "headingNew": "Новая собака",
+    "headingEdit": "Редактирование собаки",
+    "fields": {
+      "name": "Кличка",
+      "sex": "Пол",
+      "breed": "Порода",
+      "kennel": "Питомник",
+      "father": "Отец",
+      "mother": "Мать",
+      "dateOfBirth": "Дата рождения",
+      "color": "Окрас",
+      "rkfNumber": "Номер РКФ",
+      "tattoo": "Клеймо",
+      "microchip": "Микрочип",
+      "description": "Описание"
+    },
+    "validation": {
+      "nameRequired": "Укажите кличку!",
+      "breedRequired": "Укажите породу!"
+    },
+    "submitCreate": "Создать собаку",
+    "submitUpdate": "Сохранить изменения"
+  },
+  "detail": {
+    "pedigree": "Родословная",
+    "info": "Информация",
+    "titles": "Титулы",
+    "notFound": "Собака не найдена.",
+    "noTitles": "Титулов пока нет.",
+    "noPedigree": "Нет данных о родословной.",
+    "breed": "Порода",
+    "sex": "Пол",
+    "rkfNumber": "№ РКФ",
+    "born": "Дата рождения",
+    "color": "Окрас",
+    "microchip": "Микрочип",
+    "description": "Описание",
+    "edit": "Редактировать",
+    "earned": "получен",
+    "kennel": "Питомник",
+    "father": "Отец",
+    "mother": "Мать"
+  },
+  "pedigree": {
+    "sire": "Отец",
+    "dam": "Мать"
+  },
+  "enums": { "sex": { "male": "Кобель", "female": "Сука" } },
+  "toast": { "created": "Создано!", "updated": "Сохранено!" }
+}

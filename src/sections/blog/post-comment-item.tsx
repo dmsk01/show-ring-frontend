@@ -1,3 +1,5 @@
+'use client';
+
 import type { IDateValue } from 'src/types/common';
 
 import { useBoolean } from 'minimal-shared/hooks';
@@ -9,6 +11,8 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { fDate } from 'src/utils/format-time';
+
+import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -25,6 +29,7 @@ type Props = {
 
 export function PostCommentItem({ name, avatarUrl, message, tagUser, postedAt, hasReply }: Props) {
   const reply = useBoolean();
+  const { t } = useTranslate(['blog', 'common']);
 
   return (
     <Box
@@ -67,7 +72,12 @@ export function PostCommentItem({ name, avatarUrl, message, tagUser, postedAt, h
         </Typography>
 
         {reply.value && (
-          <TextField fullWidth autoFocus placeholder="Write comment..." sx={{ mt: 2 }} />
+          <TextField
+            fullWidth
+            autoFocus
+            placeholder={t('comments.replyPlaceholder')}
+            sx={{ mt: 2 }}
+          />
         )}
       </Box>
 
@@ -79,7 +89,7 @@ export function PostCommentItem({ name, avatarUrl, message, tagUser, postedAt, h
           onClick={reply.onToggle}
           sx={{ right: 0, position: 'absolute' }}
         >
-          Reply
+          {t('comments.reply')}
         </Button>
       )}
     </Box>

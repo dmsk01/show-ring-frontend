@@ -1,3 +1,5 @@
+'use client';
+
 import type { LabelColor } from 'src/components/label';
 import type { ILitterItem, LitterStatus } from 'src/types/litter';
 
@@ -6,6 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 
 import { RouterLink } from 'src/routes/components';
+
+import { useTranslate } from 'src/locales';
 
 import { Label } from 'src/components/label';
 
@@ -27,6 +31,8 @@ type Props = {
 };
 
 export function LitterTableRow({ row, breedName, kennelName, editHref }: Props) {
+  const { t } = useTranslate('common');
+
   const price =
     row.price_from || row.price_to
       ? [row.price_from, row.price_to].filter(Boolean).join('–')
@@ -43,7 +49,9 @@ export function LitterTableRow({ row, breedName, kennelName, editHref }: Props) 
       <TableCell>{kennelName ?? '—'}</TableCell>
 
       <TableCell>
-        <Label color={STATUS_COLOR[row.status]}>{row.status}</Label>
+        <Label color={STATUS_COLOR[row.status]}>
+          {t(`enums.litterStatus.${row.status}`)}
+        </Label>
       </TableCell>
 
       <TableCell>{row.born_at ?? '—'}</TableCell>

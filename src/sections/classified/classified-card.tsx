@@ -1,3 +1,5 @@
+'use client';
+
 import type { CardProps } from '@mui/material/Card';
 import type { IClassifiedItem } from 'src/types/classified';
 
@@ -9,6 +11,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { CONFIG } from 'src/global-config';
 import { fileUrl } from 'src/actions/file';
 
@@ -19,7 +22,8 @@ import { Iconify } from 'src/components/iconify';
 import {
   primaryImageFileId,
   formatClassifiedPrice,
-  CLASSIFIED_CATEGORY_LABEL,
+  classifiedCategoryI18nKey,
+  classifiedPriceKindI18nKey,
 } from './classified-utils';
 
 // ----------------------------------------------------------------------
@@ -29,8 +33,14 @@ const PLACEHOLDER = `${CONFIG.assetsDir}/assets/images/mock/cover/cover-9.webp`;
 type Props = CardProps & { classified: IClassifiedItem };
 
 export function ClassifiedCard({ classified, sx, ...other }: Props) {
+  const { t } = useTranslate(['classified', 'common']);
   const detailsHref = paths.showcase.classified(classified.id);
   const imageId = primaryImageFileId(classified.images);
+
+  const priceDisplay =
+    classified.price_kind === 'fixed'
+      ? formatClassifiedPrice(classified.price)
+      : t(classifiedPriceKindI18nKey(classified.price_kind));
 
   return (
     <Card sx={sx} {...other}>
@@ -39,7 +49,7 @@ export function ClassifiedCard({ classified, sx, ...other }: Props) {
           color="info"
           sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}
         >
-          {CLASSIFIED_CATEGORY_LABEL[classified.category] ?? classified.category}
+          {t(classifiedCategoryI18nKey(classified.category))}
         </Label>
         <Image
           alt={classified.title}
@@ -56,7 +66,7 @@ export function ClassifiedCard({ classified, sx, ...other }: Props) {
             {classified.title}
           </Link>
         }
-        secondary={formatClassifiedPrice(classified.price, classified.price_kind)}
+        secondary={priceDisplay}
         slotProps={{
           primary: { noWrap: true, sx: { typography: 'subtitle1' } },
           secondary: { sx: { mt: 0.5, typography: 'subtitle2', color: 'primary.main' } },

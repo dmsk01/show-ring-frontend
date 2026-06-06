@@ -1,0 +1,202 @@
+{
+  "breadcrumb": {
+    "admin": "Admin"
+  },
+  "reference": {
+    "list": {
+      "title": "References",
+      "breadcrumb": "References"
+    },
+    "types": {
+      "animal-types": {
+        "label": "Animal types",
+        "fields": {
+          "code": "Code",
+          "name": "Name"
+        }
+      },
+      "show-ranks": {
+        "label": "Show ranks",
+        "fields": {
+          "code": "Code",
+          "name": "Name",
+          "description": "Description"
+        }
+      },
+      "titles": {
+        "label": "Titles",
+        "fields": {
+          "animal_type_id": "Animal type",
+          "code": "Code",
+          "name": "Name",
+          "is_reserve": "Reserve",
+          "description": "Description"
+        }
+      },
+      "grades": {
+        "label": "Grades",
+        "fields": {
+          "animal_type_id": "Animal type",
+          "code": "Code",
+          "name": "Name",
+          "is_disqualifying": "Disqualifying",
+          "is_puppy_grade": "Puppy grade",
+          "description": "Description"
+        }
+      },
+      "show-classes": {
+        "label": "Show classes",
+        "fields": {
+          "animal_type_id": "Animal type",
+          "code": "Code",
+          "name": "Name",
+          "age_from_months": "Age from (months)",
+          "age_to_months": "Age to (months)",
+          "can_receive_cac": "Can receive CAC",
+          "description": "Description"
+        }
+      }
+    },
+    "form": {
+      "titleCreate": "Create",
+      "titleEdit": "Edit",
+      "validation": {
+        "required": "{{field}} is required!"
+      },
+      "boolYes": "Yes",
+      "boolNo": "No"
+    },
+    "actions": {
+      "add": "Add"
+    },
+    "toast": {
+      "created": "Create success!",
+      "updated": "Update success!",
+      "deleted": "Delete success!",
+      "deleteFailed": "Delete failed",
+      "saveFailed": "Save failed"
+    }
+  },
+  "users": {
+    "list": {
+      "title": "Users",
+      "breadcrumb": "Users"
+    },
+    "columns": {
+      "email": "Email",
+      "verified": "Verified",
+      "roles": "Roles",
+      "active": "Active"
+    },
+    "enums": {
+      "emailVerified": {
+        "verified": "Verified",
+        "unverified": "Unverified"
+      },
+      "roles": {
+        "admin": "Admin",
+        "organizer": "Organizer",
+        "breeder": "Breeder",
+        "judge": "Judge",
+        "buyer": "Buyer",
+        "operator": "Operator"
+      }
+    },
+    "toast": {
+      "blocked": "User blocked",
+      "unblocked": "User unblocked",
+      "roleGranted": "Role granted",
+      "roleRevoked": "Role revoked",
+      "updateFailed": "Failed to update user",
+      "roleFailed": "Failed to update role"
+    }
+  },
+  "moderation": {
+    "list": {
+      "title": "Moderation",
+      "breadcrumb": "Moderation"
+    },
+    "tabs": {
+      "classifieds": "Classifieds",
+      "kennels": "Kennels"
+    },
+    "classifieds": {
+      "columns": {
+        "title": "Title",
+        "category": "Category",
+        "status": "Status",
+        "decision": "Decision"
+      },
+      "actions": {
+        "approve": "Approve",
+        "reject": "Reject"
+      }
+    },
+    "kennels": {
+      "columns": {
+        "name": "Kennel",
+        "prefix": "Prefix",
+        "verified": "Verified"
+      }
+    },
+    "enums": {
+      "status": {
+        "active": "Active",
+        "moderation": "Moderation",
+        "closed": "Closed",
+        "archived": "Archived"
+      },
+      "category": {
+        "puppy_sale": "Puppies",
+        "adult_sale": "Adults",
+        "mating": "Mating",
+        "handler": "Handler",
+        "grooming": "Grooming",
+        "other": "Other"
+      }
+    },
+    "toast": {
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "failed": "Failed"
+    }
+  },
+  "analytics": {
+    "list": {
+      "title": "Analytics",
+      "breadcrumb": "Analytics"
+    },
+    "kpi": {
+      "total_users": "Users",
+      "total_kennels": "Kennels",
+      "verified_kennels": "Verified kennels",
+      "total_dogs": "Dogs",
+      "total_litters": "Litters",
+      "active_classifieds": "Active classifieds",
+      "open_shows": "Open shows",
+      "completed_shows": "Completed shows",
+      "active_campaigns": "Active campaigns"
+    },
+    "adPerformance": {
+      "title": "Ad performance",
+      "subheader": "Impressions & clicks per day",
+      "impressions": "Impressions",
+      "clicks": "Clicks"
+    },
+    "topBreeds": {
+      "title": "Top breeds",
+      "subheader": "By entries",
+      "columns": {
+        "breed": "Breed",
+        "entries": "Entries"
+      }
+    },
+    "topCampaigns": {
+      "title": "Top campaigns",
+      "subheader": "By spend",
+      "empty": "No campaign data."
+    }
+  }
+}

@@ -4,12 +4,7 @@ import type { IShowEntry, IShowResult, TitleCacheItem } from 'src/types/show-res
 
 export type GroupBy = 'class' | 'breed' | 'group' | 'ring';
 
-export const GROUP_BY_OPTIONS: { value: GroupBy; label: string }[] = [
-  { value: 'class', label: 'По классам' },
-  { value: 'breed', label: 'По породам' },
-  { value: 'group', label: 'По группам' },
-  { value: 'ring', label: 'По рингам' },
-];
+export const GROUP_BY_VALUES: GroupBy[] = ['class', 'breed', 'group', 'ring'];
 
 export type IShowResultRow = {
   entryId: string;
@@ -21,6 +16,7 @@ export type IShowResultRow = {
   breedName: string;
   groupId: string | null;
   groupNumber: number | null;
+  /** i18n-ready: either a raw group label or the sentinel key 'show:results.groupLabels.noGroup' */
   groupLabel: string;
   kennelName: string;
   classId: string | null;
@@ -30,6 +26,7 @@ export type IShowResultRow = {
   titles: TitleCacheItem[];
   ringId: string | null;
   ringNumber: number | null;
+  /** i18n-ready: either a raw ring label or the sentinel key 'show:results.groupLabels.unassigned' */
   ringLabel: string;
   result?: IShowResult;
 };
@@ -63,6 +60,13 @@ export type BuildResultRowsInput = {
 };
 
 const PLACEHOLDER = '—';
+
+/**
+ * Sentinel values returned for missing group/ring — components translate them
+ * by checking for these keys and calling t(key).
+ */
+export const GROUP_LABEL_NO_GROUP = 'show:results.groupLabels.noGroup';
+export const RING_LABEL_UNASSIGNED = 'show:results.groupLabels.unassigned';
 
 function byId<T extends { id: string }>(list: T[]): Map<string, T> {
   return new Map(list.map((x) => [x.id, x]));
@@ -127,7 +131,7 @@ export function buildResultRows(input: BuildResultRowsInput): IShowResultRow[] {
       breedName: breed?.name ?? PLACEHOLDER,
       groupId: group?.id ?? null,
       groupNumber: group?.number ?? null,
-      groupLabel: group ? `Группа ${group.number} — ${group.name}` : 'Без группы',
+      groupLabel: group ? `${group.number}|${group.name}` : GROUP_LABEL_NO_GROUP,
       kennelName,
       classId: entry.show_class_id,
       className: classMap.get(entry.show_class_id)?.name ?? PLACEHOLDER,
@@ -137,7 +141,7 @@ export function buildResultRows(input: BuildResultRowsInput): IShowResultRow[] {
       titles: result?.titles_cache ?? [],
       ringId: ring?.id ?? null,
       ringNumber: ring?.ring_number ?? null,
-      ringLabel: ring ? `Ринг ${ring.ring_number}` : 'Не назначено',
+      ringLabel: ring ? `${ring.ring_number}` : RING_LABEL_UNASSIGNED,
       result,
     };
   });

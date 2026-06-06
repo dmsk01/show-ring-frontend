@@ -1,8 +1,10 @@
 'use client';
 
+import type { TFunction } from 'i18next';
 import type { IShowItem } from 'src/types/show';
 
 import * as z from 'zod';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -15,6 +17,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useTranslate } from 'src/locales';
 import { createShow, updateShow } from 'src/actions/show';
 import { useReferenceList } from 'src/actions/admin-reference';
 
@@ -23,26 +26,31 @@ import { Form, Field } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
-export type ShowSchemaType = z.infer<typeof ShowSchema>;
+export function getShowSchema(t: TFunction<['show', 'common']>) {
+  return z.object({
+    name: z.string().min(1, { error: t('show:form.validation.nameRequired') }),
+    rank_id: z.string().min(1, { error: t('show:form.validation.rankRequired') }),
+    date_start: z.string().min(1, { error: t('show:form.validation.dateStartRequired') }),
+    date_end: z.string().nullable(),
+    registration_deadline: z.string().nullable(),
+    city: z.string().nullable(),
+    country: z.string().nullable(),
+    venue: z.string().nullable(),
+    entry_fee: z.string().nullable(),
+    description: z.string().nullable(),
+  });
+}
 
-export const ShowSchema = z.object({
-  name: z.string().min(1, { error: 'Name is required!' }),
-  rank_id: z.string().min(1, { error: 'Rank is required!' }),
-  date_start: z.string().min(1, { error: 'Start date is required!' }),
-  date_end: z.string().nullable(),
-  registration_deadline: z.string().nullable(),
-  city: z.string().nullable(),
-  country: z.string().nullable(),
-  venue: z.string().nullable(),
-  entry_fee: z.string().nullable(),
-  description: z.string().nullable(),
-});
+export type ShowSchemaType = z.infer<ReturnType<typeof getShowSchema>>;
 
 type Props = { currentShow?: IShowItem };
 
 export function ShowCreateEditForm({ currentShow }: Props) {
+  const { t } = useTranslate(['show', 'common']);
   const router = useRouter();
   const { items: ranks } = useReferenceList('/references/show-ranks');
+
+  const ShowSchema = useMemo(() => getShowSchema(t), [t]);
 
   const defaultValues: ShowSchemaType = {
     name: '',
@@ -98,15 +106,15 @@ export function ShowCreateEditForm({ currentShow }: Props) {
 
       if (currentShow) {
         await updateShow(currentShow.id, common);
-        toast.success('Update success!');
+        toast.success(t('toast.updated'));
       } else {
         await createShow({ ...common, rank_id: data.rank_id });
-        toast.success('Create success!');
+        toast.success(t('toast.created'));
       }
       router.push(paths.dashboard.shows.root);
     } catch (error) {
       console.error(error);
-      toast.error(error instanceof Error ? error.message : 'Save failed');
+      toast.error(error instanceof Error ? error.message : t('toast.saveFailed'));
     }
   });
 
@@ -121,8 +129,8 @@ export function ShowCreateEditForm({ currentShow }: Props) {
             gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
           }}
         >
-          <Field.Text name="name" label="Name" />
-          <Field.Select name="rank_id" label="Rank" disabled={!!currentShow}>
+          <Field.Text name="name" label={t('form.fields.name')} />
+          <Field.Select name="rank_id" label={t('form.fields.rank')} disabled={!!currentShow}>
             <MenuItem value="">—</MenuItem>
             {ranks.map((rank) => (
               <MenuItem key={rank.id} value={rank.id}>
@@ -131,27 +139,27 @@ export function ShowCreateEditForm({ currentShow }: Props) {
             ))}
           </Field.Select>
 
-          <Field.Text name="date_start" label="Start date" placeholder="YYYY-MM-DD" />
-          <Field.Text name="date_end" label="End date" placeholder="YYYY-MM-DD" />
+          <Field.Text name="date_start" label={t('form.fields.dateStart')} placeholder={t('form.placeholders.date')} />
+          <Field.Text name="date_end" label={t('form.fields.dateEnd')} placeholder={t('form.placeholders.date')} />
           <Field.Text
             name="registration_deadline"
-            label="Registration deadline"
-            placeholder="YYYY-MM-DD"
+            label={t('form.fields.registrationDeadline')}
+            placeholder={t('form.placeholders.date')}
           />
-          <Field.Text name="entry_fee" label="Entry fee" type="number" />
+          <Field.Text name="entry_fee" label={t('form.fields.entryFee')} type="number" />
 
-          <Field.Text name="city" label="City" />
-          <Field.Text name="country" label="Country" />
-          <Field.Text name="venue" label="Venue" />
+          <Field.Text name="city" label={t('form.fields.city')} />
+          <Field.Text name="country" label={t('form.fields.country')} />
+          <Field.Text name="venue" label={t('form.fields.venue')} />
         </Box>
 
         <Box sx={{ mt: 3 }}>
-          <Field.Text name="description" label="Description" multiline rows={3} />
+          <Field.Text name="description" label={t('form.fields.description')} multiline rows={3} />
         </Box>
 
         <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
           <Button type="submit" variant="contained" loading={isSubmitting}>
-            {currentShow ? 'Save changes' : 'Create show'}
+            {currentShow ? t('form.submitUpdate') : t('form.submitCreate')}
           </Button>
         </Stack>
       </Card>

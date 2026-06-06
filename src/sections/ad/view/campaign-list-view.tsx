@@ -11,6 +11,7 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { useGetCampaigns } from 'src/actions/ad';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -23,23 +24,27 @@ import { CampaignTableRow } from '../campaign-table-row';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'name', label: 'Name' },
-  { id: 'status', label: 'Status', width: 120 },
-  { id: 'budget', label: 'Budget', width: 120 },
-  { id: 'spent', label: 'Spent', width: 120 },
-  { id: 'dates', label: 'Period', width: 220 },
-];
-
 export function CampaignListView() {
+  const { t } = useTranslate(['ad', 'common']);
   const table = useTable();
   const { campaigns, campaignsLoading, campaignsEmpty } = useGetCampaigns();
+
+  const TABLE_HEAD: TableHeadCellProps[] = [
+    { id: 'name', label: t('list.columns.name') },
+    { id: 'status', label: t('list.columns.status'), width: 120 },
+    { id: 'budget', label: t('list.columns.budget'), width: 120 },
+    { id: 'spent', label: t('list.columns.spent'), width: 120 },
+    { id: 'dates', label: t('list.columns.dates'), width: 220 },
+  ];
 
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Ad campaigns"
-        links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'Ads' }]}
+        heading={t('list.title')}
+        links={[
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('list.title') },
+        ]}
         action={
           <Button
             component={RouterLink}
@@ -47,7 +52,7 @@ export function CampaignListView() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            Add campaign
+            {t('list.new')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}

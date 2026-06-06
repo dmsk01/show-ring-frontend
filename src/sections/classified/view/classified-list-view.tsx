@@ -15,6 +15,7 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { deleteClassified, useGetClassifieds } from 'src/actions/classified';
 
@@ -29,16 +30,18 @@ import { ClassifiedTableToolbar } from '../classified-table-toolbar';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'title', label: 'Title' },
-  { id: 'category', label: 'Category', width: 160 },
-  { id: 'price', label: 'Price', width: 120 },
-  { id: 'city', label: 'City', width: 140 },
-  { id: 'status', label: 'Status', width: 120 },
-  { id: '', width: 88 },
-];
-
 export function ClassifiedListView() {
+  const { t } = useTranslate(['classified', 'common']);
+
+  const TABLE_HEAD: TableHeadCellProps[] = [
+    { id: 'title', label: t('list.columns.title') },
+    { id: 'category', label: t('list.columns.category'), width: 160 },
+    { id: 'price', label: t('list.columns.price'), width: 120 },
+    { id: 'city', label: t('list.columns.city'), width: 140 },
+    { id: 'status', label: t('list.columns.status'), width: 120 },
+    { id: '', width: 88 },
+  ];
+
   const table = useTable({ defaultRowsPerPage: 25 });
 
   const filters = useSetState<IClassifiedFilters>({ search: '', category: 'all', city: '' });
@@ -54,17 +57,17 @@ export function ClassifiedListView() {
   const handleDelete = useCallback(async (id: string) => {
     try {
       await deleteClassified(id);
-      toast.success('Delete success!');
+      toast.success(t('toast.deleted'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Delete failed');
+      toast.error(error instanceof Error ? error.message : t('toast.deleteFailed'));
     }
-  }, []);
+  }, [t]);
 
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Classifieds"
-        links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'Classifieds' }]}
+        heading={t('list.title')}
+        links={[{ name: t('common:dashboard'), href: paths.dashboard.root }, { name: t('list.title') }]}
         action={
           <Button
             component={RouterLink}
@@ -72,7 +75,7 @@ export function ClassifiedListView() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            Add classified
+            {t('list.new')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}

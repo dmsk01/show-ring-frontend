@@ -1,0 +1,52 @@
+{
+  "list": {
+    "title": "Помёты",
+    "new": "Добавить помёт",
+    "columns": {
+      "breed": "Порода",
+      "kennel": "Питомник",
+      "status": "Статус",
+      "born": "Дата рождения",
+      "puppies": "Щенки",
+      "price": "Цена"
+    },
+    "filters": {
+      "status": "Статус",
+      "breed": "Порода",
+      "all": "Все"
+    }
+  },
+  "form": {
+    "headingNew": "Новый помёт",
+    "headingEdit": "Редактирование помёта",
+    "breadcrumb": {
+      "new": "Новый",
+      "edit": "Редактирование"
+    },
+    "fields": {
+      "kennel": "Питомник",
+      "breed": "Порода",
+      "father": "Отец",
+      "mother": "Мать",
+      "status": "Статус",
+      "bornAt": "Дата рождения",
+      "puppiesCount": "Количество щенков",
+      "priceFrom": "Цена от",
+      "priceTo": "Цена до",
+      "description": "Описание"
+    },
+    "validation": {
+      "kennelRequired": "Укажите питомник!",
+      "breedRequired": "Укажите породу!"
+    },
+    "submitCreate": "Создать помёт",
+    "submitUpdate": "Сохранить изменения"
+  },
+  "detail": {
+    "notFound": "Помёт не найден."
+  },
+  "toast": {
+    "created": "Создано!",
+    "updated": "Сохранено!"
+  }
+}

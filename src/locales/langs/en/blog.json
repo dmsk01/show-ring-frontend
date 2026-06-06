@@ -1,0 +1,88 @@
+{
+  "list": {
+    "title": "Blog",
+    "heading": "List",
+    "addPost": "Add post",
+    "loadMore": "Load more",
+    "sortBy": "Sort by:",
+    "sort": {
+      "latest": "Latest",
+      "popular": "Popular",
+      "oldest": "Oldest"
+    },
+    "tabs": {
+      "all": "All",
+      "published": "Published",
+      "draft": "Draft"
+    },
+    "search": "Search..."
+  },
+  "detail": {
+    "comments": "Comments",
+    "recentPosts": "Recent Posts",
+    "sharePost": "Share post",
+    "home": "Home"
+  },
+  "form": {
+    "headingCreate": "Create a new post",
+    "headingEdit": "Edit",
+    "details": {
+      "title": "Details",
+      "subheader": "Title, short description, image...",
+      "postTitle": "Post title",
+      "description": "Description",
+      "content": "Content",
+      "cover": "Cover"
+    },
+    "properties": {
+      "title": "Properties",
+      "subheader": "Additional functions and attributes...",
+      "tags": "Tags",
+      "tagsPlaceholder": "+ Tags",
+      "metaTitle": "Meta title",
+      "metaDescription": "Meta description",
+      "metaKeywords": "Meta keywords",
+      "metaKeywordsPlaceholder": "+ Keywords",
+      "enableComments": "Enable comments",
+      "publish": "Publish"
+    },
+    "validation": {
+      "titleRequired": "Title is required!",
+      "descriptionRequired": "Description is required!",
+      "contentMin": "Content must be at least 100 characters",
+      "coverRequired": "Cover is required!",
+      "tagsMin": "Must have at least 2 items!",
+      "metaKeywordsRequired": "Meta keywords is required!",
+      "commentRequired": "Comment is required!"
+    },
+    "preview": "Preview",
+    "submitCreate": "Create post",
+    "submitUpdate": "Save changes",
+    "previewDialog": {
+      "title": "Preview",
+      "cancel": "Cancel",
+      "post": "Post",
+      "emptyContent": "Empty content!"
+    }
+  },
+  "comments": {
+    "placeholder": "Write some of your comments...",
+    "postComment": "Post comment",
+    "replyPlaceholder": "Write comment...",
+    "reply": "Reply"
+  },
+  "toolbar": {
+    "back": "Back",
+    "goLive": "Go live",
+    "edit": "Edit",
+    "loadingIndicator": "Loading…",
+    "publish": {
+      "published": "Published",
+      "draft": "Draft"
+    }
+  },
+  "toast": {
+    "created": "Create success!",
+    "updated": "Update success!"
+  }
+}

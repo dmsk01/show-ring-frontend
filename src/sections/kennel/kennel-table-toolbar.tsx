@@ -1,3 +1,5 @@
+'use client';
+
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 import type { IKennelTableFilters } from 'src/types/kennel';
 
@@ -6,6 +8,8 @@ import { useCallback } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
+
+import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -17,6 +21,7 @@ type Props = {
 };
 
 export function KennelTableToolbar({ filters, onResetPage }: Props) {
+  const { t } = useTranslate(['kennel', 'common']);
   const { state: currentFilters, setState: updateFilters } = filters;
 
   const handleSearch = useCallback(
@@ -40,7 +45,7 @@ export function KennelTableToolbar({ filters, onResetPage }: Props) {
       <TextField
         value={currentFilters.city}
         onChange={handleCity}
-        placeholder="City"
+        placeholder={t('form.filterCity')}
         sx={{ width: { xs: 1, md: 200 } }}
       />
 
@@ -48,7 +53,7 @@ export function KennelTableToolbar({ filters, onResetPage }: Props) {
         fullWidth
         value={currentFilters.search}
         onChange={handleSearch}
-        placeholder="Search kennels..."
+        placeholder={t('list.search')}
         slotProps={{
           input: {
             startAdornment: (

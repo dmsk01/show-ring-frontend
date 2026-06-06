@@ -4,9 +4,9 @@ import type { Theme, Components } from '@mui/material/styles';
 import resourcesToBackend from 'i18next-resources-to-backend';
 
 // MUI Date Pickers Locales
-import { enUS as enUSDate } from '@mui/x-date-pickers/locales';
+import { ruRU as ruRUDate, enUS as enUSDate } from '@mui/x-date-pickers/locales';
 // MUI Data Grid Locales
-import { enUS as enUSDataGrid } from '@mui/x-data-grid/locales';
+import { ruRU as ruRUDataGrid, enUS as enUSDataGrid } from '@mui/x-data-grid/locales';
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ export const supportedLngs = ['en', 'ru'] as const;
 export type LangCode = (typeof supportedLngs)[number];
 
 // Fallback and default namespace
-export const fallbackLng: LangCode = 'en';
+export const fallbackLng: LangCode = 'ru';
 export const defaultNS = 'common';
 
 // Storage config
@@ -58,6 +58,9 @@ export const allLangs: LangOption[] = [
     countryCode: 'RU',
     adapterLocale: 'ru',
     numberFormat: { code: 'ru-RU', currency: 'RUB' },
+    systemValue: {
+      components: { ...ruRUDate.components, ...ruRUDataGrid.components },
+    },
   },
 ];
 

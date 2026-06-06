@@ -1,0 +1,52 @@
+{
+  "list": {
+    "title": "Поддержка",
+    "new": "Новый тикет",
+    "columns": {
+      "subject": "Тема",
+      "status": "Статус",
+      "priority": "Приоритет",
+      "created": "Создан"
+    }
+  },
+  "form": {
+    "headingNew": "Новый запрос в поддержку",
+    "fields": {
+      "subject": "Тема",
+      "priority": "Приоритет",
+      "message": "Сообщение"
+    },
+    "validation": {
+      "subjectRequired": "Укажите тему!",
+      "messageRequired": "Введите сообщение!"
+    },
+    "submit": "Создать тикет"
+  },
+  "detail": {
+    "notFound": "Тикет не найден.",
+    "statusLabel": "Статус",
+    "noMessages": "Сообщений пока нет.",
+    "senderSupport": "Поддержка",
+    "senderYou": "Вы",
+    "messagePlaceholder": "Написать сообщение...",
+    "send": "Отправить"
+  },
+  "enums": {
+    "status": {
+      "open": "Открыт",
+      "in_progress": "В работе",
+      "resolved": "Решён",
+      "closed": "Закрыт"
+    },
+    "priority": {
+      "low": "Низкий",
+      "normal": "Обычный",
+      "high": "Высокий",
+      "urgent": "Срочный"
+    }
+  },
+  "toast": {
+    "created": "Тикет создан!",
+    "statusUpdated": "Статус обновлён!"
+  }
+}

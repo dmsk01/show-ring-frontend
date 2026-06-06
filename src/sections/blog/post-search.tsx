@@ -1,3 +1,5 @@
+'use client';
+
 import type { Theme, SxProps } from '@mui/material/styles';
 import type { IPostItem } from 'src/types/blog';
 
@@ -17,6 +19,7 @@ import Autocomplete, { autocompleteClasses, createFilterOptions } from '@mui/mat
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { useSearchPosts } from 'src/actions/blog';
 
 import { Iconify } from 'src/components/iconify';
@@ -31,6 +34,7 @@ type Props = {
 
 export function PostSearch({ redirectPath, sx }: Props) {
   const router = useRouter();
+  const { t } = useTranslate(['blog', 'common']);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItem, setSelectedItem] = useState<IPostItem | null>(null);
@@ -87,7 +91,7 @@ export function PostSearch({ redirectPath, sx }: Props) {
       renderInput={(params) => (
         <TextField
           {...params}
-          placeholder="Search..."
+          placeholder={t('list.search')}
           slotProps={{
             input: {
               ...params.InputProps,

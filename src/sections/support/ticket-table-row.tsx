@@ -1,3 +1,5 @@
+'use client';
+
 import type { LabelColor } from 'src/components/label';
 import type { ITicket, TicketStatus, TicketPriority } from 'src/types/support';
 
@@ -6,6 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 
 import { RouterLink } from 'src/routes/components';
+
+import { useTranslate } from 'src/locales';
 
 import { Label } from 'src/components/label';
 
@@ -31,6 +35,8 @@ type Props = {
 };
 
 export function TicketTableRow({ row, detailsHref }: Props) {
+  const { t } = useTranslate('support');
+
   return (
     <TableRow hover>
       <TableCell>
@@ -40,10 +46,10 @@ export function TicketTableRow({ row, detailsHref }: Props) {
       </TableCell>
 
       <TableCell>
-        <Label color={STATUS_COLOR[row.status]}>{row.status.replace('_', ' ')}</Label>
+        <Label color={STATUS_COLOR[row.status]}>{t(`enums.status.${row.status}`)}</Label>
       </TableCell>
       <TableCell>
-        <Label color={PRIORITY_COLOR[row.priority]}>{row.priority}</Label>
+        <Label color={PRIORITY_COLOR[row.priority]}>{t(`enums.priority.${row.priority}`)}</Label>
       </TableCell>
       <TableCell>{row.created_at?.slice(0, 10)}</TableCell>
     </TableRow>

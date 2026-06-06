@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { POST_SORT_OPTIONS } from 'src/_mock';
 import { useGetPosts } from 'src/actions/blog';
 
@@ -24,6 +25,7 @@ import { PostSearch } from '../post-search';
 
 export function PostListHomeView() {
   const { posts } = useGetPosts();
+  const { t } = useTranslate(['blog', 'common']);
 
   const [sortBy, setSortBy] = useState('latest');
 
@@ -36,7 +38,7 @@ export function PostListHomeView() {
   return (
     <Container sx={{ mb: 10 }}>
       <Typography variant="h4" sx={[{ mb: 3, mt: { xs: 1, md: 3 } }]}>
-        Blog
+        {t('list.title')}
       </Typography>
 
       <Box
@@ -51,7 +53,7 @@ export function PostListHomeView() {
           },
         ]}
       >
-        <PostSearch redirectPath={(title: string) => paths.post.details(title)} />
+        <PostSearch redirectPath={(slug: string) => paths.post.details(slug)} />
 
         <PostSort
           sort={sortBy}

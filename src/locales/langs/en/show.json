@@ -1,0 +1,156 @@
+{
+  "list": {
+    "title": "Shows",
+    "new": "Add show",
+    "columns": {
+      "name": "Name",
+      "rank": "Rank",
+      "dateStart": "Start",
+      "city": "City",
+      "status": "Status"
+    },
+    "filters": {
+      "status": "Status",
+      "all": "All",
+      "city": "City"
+    }
+  },
+  "form": {
+    "headingNew": "Create a new show",
+    "headingEdit": "Edit show",
+    "statusPanel": "Status & publishing",
+    "fields": {
+      "name": "Name",
+      "rank": "Rank",
+      "dateStart": "Start date",
+      "dateEnd": "End date",
+      "registrationDeadline": "Registration deadline",
+      "entryFee": "Entry fee",
+      "city": "City",
+      "country": "Country",
+      "venue": "Venue",
+      "description": "Description",
+      "status": "Status"
+    },
+    "placeholders": {
+      "date": "YYYY-MM-DD"
+    },
+    "validation": {
+      "nameRequired": "Name is required!",
+      "rankRequired": "Rank is required!",
+      "dateStartRequired": "Start date is required!"
+    },
+    "submitCreate": "Create show",
+    "submitUpdate": "Save changes",
+    "actions": {
+      "publish": "Publish",
+      "results": "Results",
+      "documents": "Documents"
+    }
+  },
+  "detail": {
+    "notFound": "Show not found.",
+    "overview": {
+      "dates": "Dates",
+      "city": "City",
+      "venue": "Venue",
+      "entryFee": "Entry fee",
+      "registrationDeadline": "Registration deadline"
+    },
+    "results": "Results"
+  },
+  "showcase": {
+    "title": "Shows",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "empty": "No shows found"
+  },
+  "results": {
+    "heading": "Results — {{name}}",
+    "headingFallback": "Results",
+    "groupBy": "Group by",
+    "columns": {
+      "catalog": "#",
+      "dog": "Dog",
+      "breed": "Breed",
+      "kennel": "Kennel",
+      "class": "Class",
+      "grade": "Grade",
+      "placement": "Place",
+      "ring": "Ring",
+      "titles": "Titles",
+      "awards": "Awards"
+    },
+    "groupOptions": {
+      "class": "By class",
+      "breed": "By breed",
+      "group": "By group",
+      "ring": "By ring"
+    },
+    "actions": {
+      "edit": "Edit",
+      "grade": "Grade",
+      "diploma": "Diploma"
+    },
+    "groupLabels": {
+      "noGroup": "No group",
+      "unassigned": "Unassigned",
+      "ring": "Ring {{number}}",
+      "group": "Group {{number}} — {{name}}"
+    }
+  },
+  "documents": {
+    "heading": "Documents — {{name}}",
+    "headingFallback": "Documents",
+    "panelTitle": "Show documents",
+    "empty": "No documents generated yet. Use the buttons above.",
+    "download": "Download",
+    "ring": "Ring",
+    "ringItem": "Ring {{number}}",
+    "ringSheets": "Ring sheets",
+    "ringSheetsLabel": "Ring sheet (ring {{number}})",
+    "buttons": {
+      "catalog": "Catalog",
+      "diplomas": "Diplomas",
+      "certificates": "Certificates"
+    },
+    "taskStatus": {
+      "pending": "pending",
+      "processing": "processing",
+      "done": "done",
+      "failed": "failed"
+    }
+  },
+  "resultDialog": {
+    "title": "Result — catalog #{{number}}",
+    "fields": {
+      "grade": "Grade",
+      "placement": "Placement",
+      "critique": "Critique"
+    }
+  },
+  "enums": {
+    "status": {
+      "draft": "Draft",
+      "registration_open": "Registration open",
+      "registration_closed": "Registration closed",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "toast": {
+    "created": "Create success!",
+    "updated": "Update success!",
+    "statusUpdated": "Status updated!",
+    "published": "Show published!",
+    "publishFailed": "Publish failed",
+    "statusFailed": "Failed to update status",
+    "saveFailed": "Save failed",
+    "generationStarted": "Generation started",
+    "generationFailed": "Failed to start generation",
+    "downloadFailed": "Failed to download",
+    "documentFailed": "Failed to get document",
+    "documentNotReady": "Document not ready"
+  }
+}

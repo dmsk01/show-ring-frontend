@@ -1,4 +1,9 @@
+'use client';
+
+import type { TFunction } from 'i18next';
+
 import * as z from 'zod';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -6,26 +11,33 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 
+import { useTranslate } from 'src/locales';
+
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
-export type CommentSchemaType = z.infer<typeof CommentSchema>;
+export const getCommentSchema = (t: TFunction) =>
+  z.object({
+    comment: z.string().min(1, { error: t('form.validation.commentRequired') }),
+  });
 
-export const CommentSchema = z.object({
-  comment: z.string().min(1, { error: 'Comment is required!' }),
-});
+export type CommentSchemaType = z.infer<ReturnType<typeof getCommentSchema>>;
 
 // ----------------------------------------------------------------------
 
 export function PostCommentForm() {
+  const { t } = useTranslate(['blog', 'common']);
+
+  const schema = useMemo(() => getCommentSchema(t), [t]);
+
   const defaultValues: CommentSchemaType = {
     comment: '',
   };
 
   const methods = useForm({
-    resolver: zodResolver(CommentSchema),
+    resolver: zodResolver(schema),
     defaultValues,
   });
 
@@ -50,7 +62,7 @@ export function PostCommentForm() {
       <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
         <Field.Text
           name="comment"
-          placeholder="Write some of your comments..."
+          placeholder={t('comments.placeholder')}
           multiline
           rows={4}
         />
@@ -71,7 +83,7 @@ export function PostCommentForm() {
           </Box>
 
           <Button type="submit" variant="contained" loading={isSubmitting}>
-            Post comment
+            {t('comments.postComment')}
           </Button>
         </Box>
       </Box>

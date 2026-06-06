@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/global-config';
+import { useTranslate } from 'src/locales';
 import { getUserDisplay } from 'src/layouts/account/account-nav';
 import { useGetMe, updateMyProfile, useGetMyProfile } from 'src/actions/account';
 
@@ -35,6 +36,8 @@ const ProfileSchema = z.object({
 const COVER_URL = `${CONFIG.assetsDir}/assets/background/background-6.webp`;
 
 export function ProfileView() {
+  const { t } = useTranslate(['profile', 'common']);
+
   const { me, meLoading } = useGetMe();
   const { profile, profileLoading } = useGetMyProfile();
 
@@ -64,9 +67,9 @@ export function ProfileView() {
         patronymic: data.patronymic || null,
         country: data.country || null,
       });
-      toast.success('Профиль обновлён');
+      toast.success(t('profile:toast.profileUpdated'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Не удалось сохранить');
+      toast.error(error instanceof Error ? error.message : t('profile:toast.profileUpdateFailed'));
     }
   });
 
@@ -97,7 +100,7 @@ export function ProfileView() {
           }}
         >
           <Label color={me?.is_email_verified ? 'success' : 'warning'}>
-            {me?.is_email_verified ? 'Verified' : 'Not verified'}
+            {me?.is_email_verified ? t('profile:view.verified') : t('profile:view.notVerified')}
           </Label>
           {me?.roles?.map((r) => (
             <Label key={r.role} color="info">
@@ -121,15 +124,15 @@ export function ProfileView() {
               gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
             }}
           >
-            <Field.Text name="first_name" label="First name" />
-            <Field.Text name="last_name" label="Last name" />
-            <Field.Text name="patronymic" label="Patronymic" />
-            <Field.Text name="country" label="Country" />
+            <Field.Text name="first_name" label={t('profile:view.fields.firstName')} />
+            <Field.Text name="last_name" label={t('profile:view.fields.lastName')} />
+            <Field.Text name="patronymic" label={t('profile:view.fields.patronymic')} />
+            <Field.Text name="country" label={t('profile:view.fields.country')} />
           </Box>
 
           <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
             <Button type="submit" variant="contained" loading={isSubmitting}>
-              Save changes
+              {t('profile:view.saveChanges')}
             </Button>
           </Stack>
         </Form>

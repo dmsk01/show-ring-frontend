@@ -2,6 +2,7 @@
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { useGetLitter } from 'src/actions/litter';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -15,19 +16,20 @@ import { LitterCreateEditForm } from '../litter-create-edit-form';
 type Props = { id: string };
 
 export function LitterEditView({ id }: Props) {
+  const { t } = useTranslate(['litter', 'common']);
   const { litter, litterLoading } = useGetLitter(id);
 
   if (litterLoading) return <LoadingScreen />;
-  if (!litter) return <DashboardContent>Litter not found.</DashboardContent>;
+  if (!litter) return <DashboardContent>{t('detail.notFound')}</DashboardContent>;
 
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Edit litter"
+        heading={t('form.headingEdit')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Litters', href: paths.dashboard.litters.root },
-          { name: 'Edit' },
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('list.title'), href: paths.dashboard.litters.root },
+          { name: t('form.breadcrumb.edit') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />

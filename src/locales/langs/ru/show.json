@@ -1,0 +1,156 @@
+{
+  "list": {
+    "title": "Выставки",
+    "new": "Добавить выставку",
+    "columns": {
+      "name": "Название",
+      "rank": "Ранг",
+      "dateStart": "Начало",
+      "city": "Город",
+      "status": "Статус"
+    },
+    "filters": {
+      "status": "Статус",
+      "all": "Все",
+      "city": "Город"
+    }
+  },
+  "form": {
+    "headingNew": "Новая выставка",
+    "headingEdit": "Редактирование выставки",
+    "statusPanel": "Статус и публикация",
+    "fields": {
+      "name": "Название",
+      "rank": "Ранг",
+      "dateStart": "Дата начала",
+      "dateEnd": "Дата окончания",
+      "registrationDeadline": "Дедлайн регистрации",
+      "entryFee": "Взнос",
+      "city": "Город",
+      "country": "Страна",
+      "venue": "Площадка",
+      "description": "Описание",
+      "status": "Статус"
+    },
+    "placeholders": {
+      "date": "ГГГГ-ММ-ДД"
+    },
+    "validation": {
+      "nameRequired": "Укажите название!",
+      "rankRequired": "Укажите ранг!",
+      "dateStartRequired": "Укажите дату начала!"
+    },
+    "submitCreate": "Создать выставку",
+    "submitUpdate": "Сохранить изменения",
+    "actions": {
+      "publish": "Опубликовать",
+      "results": "Результаты",
+      "documents": "Документы"
+    }
+  },
+  "detail": {
+    "notFound": "Выставка не найдена.",
+    "overview": {
+      "dates": "Даты",
+      "city": "Город",
+      "venue": "Площадка",
+      "entryFee": "Взнос",
+      "registrationDeadline": "Дедлайн регистрации"
+    },
+    "results": "Результаты"
+  },
+  "showcase": {
+    "title": "Выставки",
+    "upcoming": "Планируемые",
+    "past": "Прошедшие",
+    "empty": "Выставок не найдено"
+  },
+  "results": {
+    "heading": "Результаты — {{name}}",
+    "headingFallback": "Результаты",
+    "groupBy": "Группировка",
+    "columns": {
+      "catalog": "№",
+      "dog": "Кличка",
+      "breed": "Порода",
+      "kennel": "Заводчик",
+      "class": "Класс",
+      "grade": "Оценка",
+      "placement": "Место",
+      "ring": "Ринг",
+      "titles": "Титулы",
+      "awards": "Награды"
+    },
+    "groupOptions": {
+      "class": "По классам",
+      "breed": "По породам",
+      "group": "По группам",
+      "ring": "По рингам"
+    },
+    "actions": {
+      "edit": "Изм.",
+      "grade": "Оценка",
+      "diploma": "Диплом"
+    },
+    "groupLabels": {
+      "noGroup": "Без группы",
+      "unassigned": "Не назначено",
+      "ring": "Ринг {{number}}",
+      "group": "Группа {{number}} — {{name}}"
+    }
+  },
+  "documents": {
+    "heading": "Документы — {{name}}",
+    "headingFallback": "Документы",
+    "panelTitle": "Документы выставки",
+    "empty": "Документы ещё не сгенерированы. Используйте кнопки выше.",
+    "download": "Скачать",
+    "ring": "Ринг",
+    "ringItem": "Ринг {{number}}",
+    "ringSheets": "Ринг-листы",
+    "ringSheetsLabel": "Ринг-лист (ринг {{number}})",
+    "buttons": {
+      "catalog": "Каталог",
+      "diplomas": "Дипломы",
+      "certificates": "Сертификаты"
+    },
+    "taskStatus": {
+      "pending": "ожидание",
+      "processing": "обработка",
+      "done": "готово",
+      "failed": "ошибка"
+    }
+  },
+  "resultDialog": {
+    "title": "Результат — каталог #{{number}}",
+    "fields": {
+      "grade": "Оценка",
+      "placement": "Место",
+      "critique": "Описание"
+    }
+  },
+  "enums": {
+    "status": {
+      "draft": "Черновик",
+      "registration_open": "Регистрация открыта",
+      "registration_closed": "Регистрация закрыта",
+      "in_progress": "Идёт",
+      "completed": "Завершена",
+      "cancelled": "Отменена"
+    }
+  },
+  "toast": {
+    "created": "Создано!",
+    "updated": "Сохранено!",
+    "statusUpdated": "Статус обновлён!",
+    "published": "Выставка опубликована!",
+    "publishFailed": "Ошибка публикации",
+    "statusFailed": "Не удалось обновить статус",
+    "saveFailed": "Ошибка сохранения",
+    "generationStarted": "Генерация запущена",
+    "generationFailed": "Не удалось запустить генерацию",
+    "downloadFailed": "Не удалось скачать",
+    "documentFailed": "Не удалось получить документ",
+    "documentNotReady": "Документ не готов"
+  }
+}

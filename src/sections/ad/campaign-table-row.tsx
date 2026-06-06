@@ -1,3 +1,5 @@
+'use client';
+
 import type { LabelColor } from 'src/components/label';
 import type { ICampaign, CampaignStatus } from 'src/types/ad';
 
@@ -6,6 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 
 import { RouterLink } from 'src/routes/components';
+
+import { useTranslate } from 'src/locales';
 
 import { Label } from 'src/components/label';
 
@@ -25,6 +29,8 @@ type Props = {
 };
 
 export function CampaignTableRow({ row, editHref }: Props) {
+  const { t } = useTranslate('ad');
+
   return (
     <TableRow hover>
       <TableCell>
@@ -34,7 +40,7 @@ export function CampaignTableRow({ row, editHref }: Props) {
       </TableCell>
 
       <TableCell>
-        <Label color={STATUS_COLOR[row.status]}>{row.status}</Label>
+        <Label color={STATUS_COLOR[row.status]}>{t(`enums.status.${row.status}`)}</Label>
       </TableCell>
 
       <TableCell>{row.budget}</TableCell>

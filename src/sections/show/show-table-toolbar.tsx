@@ -1,3 +1,5 @@
+'use client';
+
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 import type { IShowFilters } from 'src/types/show';
 
@@ -7,7 +9,11 @@ import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 
+import { useTranslate } from 'src/locales';
+
 import { SHOW_STATUSES } from 'src/types/show';
+
+import { showStatusI18nKey } from './show-utils';
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +23,7 @@ type Props = {
 };
 
 export function ShowTableToolbar({ filters, onResetPage }: Props) {
+  const { t } = useTranslate('show');
   const { state: currentFilters, setState: updateFilters } = filters;
 
   const handleStatus = useCallback(
@@ -39,15 +46,15 @@ export function ShowTableToolbar({ filters, onResetPage }: Props) {
     <Box sx={{ p: 2.5, gap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
       <TextField
         select
-        label="Status"
+        label={t('list.filters.status')}
         value={currentFilters.status}
         onChange={handleStatus}
         sx={{ width: { xs: 1, md: 220 } }}
       >
-        <MenuItem value="all">All</MenuItem>
+        <MenuItem value="all">{t('list.filters.all')}</MenuItem>
         {SHOW_STATUSES.map((s) => (
           <MenuItem key={s} value={s}>
-            {s.replace('_', ' ')}
+            {t(showStatusI18nKey(s))}
           </MenuItem>
         ))}
       </TextField>
@@ -55,7 +62,7 @@ export function ShowTableToolbar({ filters, onResetPage }: Props) {
       <TextField
         value={currentFilters.city}
         onChange={handleCity}
-        placeholder="City"
+        placeholder={t('list.filters.city')}
         sx={{ width: { xs: 1, md: 200 } }}
       />
     </Box>

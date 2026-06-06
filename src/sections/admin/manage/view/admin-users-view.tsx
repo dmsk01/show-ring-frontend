@@ -9,6 +9,7 @@ import TableBody from '@mui/material/TableBody';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { useGetAdminUsers } from 'src/actions/admin';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -20,25 +21,26 @@ import { AdminUserRow } from '../admin-user-row';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'email', label: 'Email' },
-  { id: 'verified', label: 'Verified', width: 140 },
-  { id: 'roles', label: 'Roles' },
-  { id: 'active', label: 'Active', width: 100, align: 'right' },
-];
-
 export function AdminUsersView() {
+  const { t } = useTranslate(['admin', 'common']);
   const table = useTable();
   const { users, usersLoading } = useGetAdminUsers();
+
+  const TABLE_HEAD: TableHeadCellProps[] = [
+    { id: 'email', label: t('users.columns.email') },
+    { id: 'verified', label: t('users.columns.verified'), width: 140 },
+    { id: 'roles', label: t('users.columns.roles') },
+    { id: 'active', label: t('users.columns.active'), width: 100, align: 'right' },
+  ];
 
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Users"
+        heading={t('users.list.title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Admin' },
-          { name: 'Users' },
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('breadcrumb.admin') },
+          { name: t('users.list.breadcrumb') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />

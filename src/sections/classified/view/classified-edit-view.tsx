@@ -2,6 +2,7 @@
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetClassified } from 'src/actions/classified';
 
@@ -15,18 +16,19 @@ import { ClassifiedCreateEditForm } from '../classified-create-edit-form';
 type Props = { id: string };
 
 export function ClassifiedEditView({ id }: Props) {
+  const { t } = useTranslate(['classified', 'common']);
   const { classified, classifiedLoading } = useGetClassified(id);
 
   if (classifiedLoading) return <LoadingScreen />;
-  if (!classified) return <DashboardContent>Classified not found.</DashboardContent>;
+  if (!classified) return <DashboardContent>{t('form.notFound')}</DashboardContent>;
 
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Edit classified"
+        heading={t('form.headingEdit')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Classifieds', href: paths.dashboard.classifieds.root },
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('list.title'), href: paths.dashboard.classifieds.root },
           { name: classified.title },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}

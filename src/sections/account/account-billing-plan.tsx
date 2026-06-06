@@ -1,3 +1,5 @@
+'use client';
+
 import type { IPaymentCard, IAddressItem } from 'src/types/common';
 
 import { useState, useCallback } from 'react';
@@ -11,6 +13,7 @@ import Button from '@mui/material/Button';
 import CardHeader from '@mui/material/CardHeader';
 import ButtonBase from '@mui/material/ButtonBase';
 
+import { useTranslate } from 'src/locales';
 import { PlanFreeIcon, PlanStarterIcon, PlanPremiumIcon } from 'src/assets/icons';
 
 import { Label } from 'src/components/label';
@@ -32,6 +35,7 @@ type Props = {
 };
 
 export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
+  const { t } = useTranslate('account');
   const openAddress = useBoolean();
 
   const openCards = useBoolean();
@@ -86,7 +90,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
               startIcon={<Iconify icon="eva:star-fill" />}
               sx={{ position: 'absolute', top: 8, right: 8 }}
             >
-              Current
+              {t('billing.plan.current')}
             </Label>
           )}
 
@@ -106,11 +110,11 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
           </Box>
 
           <Box sx={{ display: 'flex', typography: 'h4', alignItems: 'center' }}>
-            {plan.price || 'Free'}
+            {plan.price || t('billing.plan.free')}
 
             {!!plan.price && (
               <Box component="span" sx={{ typography: 'body2', color: 'text.disabled', ml: 0.5 }}>
-                /mo
+                {t('billing.plan.perMonth')}
               </Box>
             )}
           </Box>
@@ -131,7 +135,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
     >
       {[
         {
-          name: 'Plan',
+          name: t('billing.plan.details.plan'),
           content: (
             <Box component="span" sx={{ textTransform: 'capitalize' }}>
               {selectedPlan}
@@ -139,7 +143,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
           ),
         },
         {
-          name: 'Billing name',
+          name: t('billing.plan.details.billingName'),
           content: (
             <ButtonBase
               disableRipple
@@ -151,10 +155,10 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
             </ButtonBase>
           ),
         },
-        { name: 'Billing address', content: selectedAddress?.fullAddress },
-        { name: 'Billing phone number', content: selectedAddress?.phoneNumber },
+        { name: t('billing.plan.details.billingAddress'), content: selectedAddress?.fullAddress },
+        { name: t('billing.plan.details.billingPhone'), content: selectedAddress?.phoneNumber },
         {
-          name: 'Payment method',
+          name: t('billing.plan.details.paymentMethod'),
           content: (
             <ButtonBase
               disableRipple
@@ -187,8 +191,8 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
         borderTop: `dashed 1px ${theme.vars.palette.divider}`,
       })}
     >
-      <Button variant="outlined">Cancel plan</Button>
-      <Button variant="contained">Upgrade plan</Button>
+      <Button variant="outlined">{t('billing.plan.cancelPlan')}</Button>
+      <Button variant="contained">{t('billing.plan.upgradePlan')}</Button>
     </Box>
   );
 
@@ -201,7 +205,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
       onSelect={handleSelectCard}
       action={
         <Button size="small" startIcon={<Iconify icon="mingcute:add-line" />}>
-          Add
+          {t('billing.payment.addCard')}
         </Button>
       }
     />
@@ -216,7 +220,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
       onSelect={handleSelectAddress}
       action={
         <Button size="small" startIcon={<Iconify icon="mingcute:add-line" />}>
-          Add
+          {t('billing.address.addAddress')}
         </Button>
       }
     />
@@ -225,7 +229,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
   return (
     <>
       <Card>
-        <CardHeader title="Plan" />
+        <CardHeader title={t('billing.plan.title')} />
         <Grid container spacing={2} sx={{ p: 3 }}>
           {renderPlans()}
         </Grid>

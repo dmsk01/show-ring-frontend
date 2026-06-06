@@ -1,3 +1,5 @@
+'use client';
+
 import type { CardProps } from '@mui/material/Card';
 import type { IUserAccountBillingHistory } from 'src/types/user';
 
@@ -15,6 +17,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 
+import { useTranslate } from 'src/locales';
+
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -24,11 +28,12 @@ type Props = CardProps & {
 };
 
 export function AccountBillingHistory({ invoices, sx, ...other }: Props) {
+  const { t } = useTranslate('account');
   const showMore = useBoolean();
 
   return (
     <Card sx={sx} {...other}>
-      <CardHeader title="Invoice history" />
+      <CardHeader title={t('billing.history.title')} />
 
       <Box
         sx={{
@@ -78,7 +83,7 @@ export function AccountBillingHistory({ invoices, sx, ...other }: Props) {
           }
           onClick={showMore.onToggle}
         >
-          Show {showMore.value ? `less` : `more`}
+          {showMore.value ? t('billing.history.showLess') : t('billing.history.showMore')}
         </Button>
       </Box>
     </Card>

@@ -118,7 +118,7 @@ export function DogCreateEditForm({ currentDog }: Props) {
       router.push(paths.dashboard.dogs.root);
     } catch (error) {
       console.error(error);
-      toast.error(error instanceof Error ? error.message : 'Save failed');
+      toast.error(error instanceof Error ? error.message : t('common:state.error'));
     }
   });
 

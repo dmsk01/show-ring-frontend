@@ -73,7 +73,10 @@ export function DashboardLayout({
 
   const { t } = useTranslate('navbar');
 
-  const rawNavData = slotProps?.nav?.data ?? dashboardNavData(t);
+  const rawNavData = useMemo(
+    () => slotProps?.nav?.data ?? dashboardNavData(t),
+    [t, slotProps?.nav?.data]
+  );
 
   const navData = useMemo(
     () =>

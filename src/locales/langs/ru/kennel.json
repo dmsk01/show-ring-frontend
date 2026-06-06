@@ -62,7 +62,6 @@
     "stats": "Собак: {{dogs}} · Помётов: {{litters}}"
   },
   "delete": {
-    "title": "Удалить",
     "content": "Удалить питомник"
   },
   "toast": {
@@ -71,14 +70,5 @@
     "deleted": "Удалено!",
     "deleteFailed": "Ошибка удаления",
     "avatarFailed": "Не удалось обновить фото"
-  },
-  "enums": {
-    "litterStatus": {
-      "planned": "Планируется",
-      "born": "Родился",
-      "available": "Доступен",
-      "sold_out": "Распродан",
-      "archived": "Архив"
-    }
   }
 }

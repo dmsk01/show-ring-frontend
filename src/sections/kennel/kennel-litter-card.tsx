@@ -1,3 +1,5 @@
+'use client';
+
 import type { ILitterItem } from 'src/types/litter';
 
 import Box from '@mui/material/Box';
@@ -39,7 +41,7 @@ export function KennelLitterCard({ litter, breedName }: Props) {
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1.5 }}>
         <Typography variant="subtitle1">{breedName ?? t('detail.litter.fallback')}</Typography>
         <Label color="info">
-          {t(`enums.litterStatus.${litter.status}`, { defaultValue: litter.status })}
+          {t(`common:enums.litterStatus.${litter.status}`, { defaultValue: litter.status })}
         </Label>
       </Stack>
 

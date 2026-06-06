@@ -40,5 +40,14 @@
     "title": "Удаление",
     "content": "Вы уверены, что хотите удалить?",
     "deleteAction": "Удалить"
+  },
+  "enums": {
+    "litterStatus": {
+      "planned": "Планируется",
+      "born": "Родился",
+      "available": "Доступен",
+      "sold_out": "Распродан",
+      "archived": "Архив"
+    }
   }
 }

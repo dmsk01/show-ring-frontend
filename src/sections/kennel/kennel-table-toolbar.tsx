@@ -1,3 +1,5 @@
+'use client';
+
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 import type { IKennelTableFilters } from 'src/types/kennel';
 

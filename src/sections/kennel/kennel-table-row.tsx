@@ -1,3 +1,5 @@
+'use client';
+
 import type { IKennelItem } from 'src/types/kennel';
 
 import { useBoolean, usePopover } from 'minimal-shared/hooks';
@@ -82,7 +84,7 @@ export function KennelTableRow({ row, editHref, onDeleteRow }: Props) {
       <ConfirmDialog
         open={confirmDialog.value}
         onClose={confirmDialog.onFalse}
-        title={t('delete.title')}
+        title={t('common:confirm.title')}
         content={
           <>
             {t('delete.content')} <strong>{row.name}</strong>?

@@ -62,7 +62,6 @@
     "stats": "Dogs: {{dogs}} · Litters: {{litters}}"
   },
   "delete": {
-    "title": "Delete",
     "content": "Delete kennel"
   },
   "toast": {
@@ -71,14 +70,5 @@
     "deleted": "Delete success!",
     "deleteFailed": "Delete failed",
     "avatarFailed": "Failed to update avatar"
-  },
-  "enums": {
-    "litterStatus": {
-      "planned": "Planned",
-      "born": "Born",
-      "available": "Available",
-      "sold_out": "Sold out",
-      "archived": "Archived"
-    }
   }
 }

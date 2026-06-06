@@ -11,6 +11,7 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { useGetTickets } from 'src/actions/support';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -23,22 +24,26 @@ import { TicketTableRow } from '../ticket-table-row';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'subject', label: 'Subject' },
-  { id: 'status', label: 'Status', width: 140 },
-  { id: 'priority', label: 'Priority', width: 120 },
-  { id: 'created', label: 'Created', width: 140 },
-];
-
 export function TicketListView() {
   const table = useTable();
   const { tickets, ticketsLoading, ticketsEmpty } = useGetTickets();
+  const { t } = useTranslate(['support', 'common']);
+
+  const TABLE_HEAD: TableHeadCellProps[] = [
+    { id: 'subject', label: t('list.columns.subject') },
+    { id: 'status', label: t('list.columns.status'), width: 140 },
+    { id: 'priority', label: t('list.columns.priority'), width: 120 },
+    { id: 'created', label: t('list.columns.created'), width: 140 },
+  ];
 
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Support"
-        links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'Support' }]}
+        heading={t('list.title')}
+        links={[
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('list.title') },
+        ]}
         action={
           <Button
             component={RouterLink}
@@ -46,7 +51,7 @@ export function TicketListView() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            New ticket
+            {t('list.new')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}

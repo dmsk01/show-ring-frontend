@@ -1,0 +1,52 @@
+{
+  "list": {
+    "title": "Support",
+    "new": "New ticket",
+    "columns": {
+      "subject": "Subject",
+      "status": "Status",
+      "priority": "Priority",
+      "created": "Created"
+    }
+  },
+  "form": {
+    "headingNew": "New support ticket",
+    "fields": {
+      "subject": "Subject",
+      "priority": "Priority",
+      "message": "Message"
+    },
+    "validation": {
+      "subjectRequired": "Subject is required!",
+      "messageRequired": "Message is required!"
+    },
+    "submit": "Create ticket"
+  },
+  "detail": {
+    "notFound": "Ticket not found.",
+    "statusLabel": "Status",
+    "noMessages": "No messages yet.",
+    "senderSupport": "Support",
+    "senderYou": "You",
+    "messagePlaceholder": "Write a message...",
+    "send": "Send"
+  },
+  "enums": {
+    "status": {
+      "open": "Open",
+      "in_progress": "In progress",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "priority": {
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High",
+      "urgent": "Urgent"
+    }
+  },
+  "toast": {
+    "created": "Ticket created!",
+    "statusUpdated": "Status updated!"
+  }
+}

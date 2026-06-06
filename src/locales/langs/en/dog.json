@@ -38,9 +38,7 @@
     "submitUpdate": "Save changes"
   },
   "detail": {
-    "about": "About",
     "pedigree": "Pedigree",
-    "litters": "Litters",
     "info": "Info",
     "titles": "Titles",
     "notFound": "Dog not found.",
@@ -64,5 +62,5 @@
     "dam": "Dam"
   },
   "enums": { "sex": { "male": "Male", "female": "Female" } },
-  "toast": { "created": "Create success!", "updated": "Update success!", "deleted": "Delete success!" }
+  "toast": { "created": "Create success!", "updated": "Update success!" }
 }

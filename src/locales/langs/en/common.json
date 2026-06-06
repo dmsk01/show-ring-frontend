@@ -4,6 +4,7 @@
     "description": "The starting point for your next project is based on MUI. Easy customization helps you build apps faster and better."
   },
   "dashboard": "Dashboard",
+  "keyword": "Keyword",
   "actions": {
     "save": "Save",
     "create": "Create",

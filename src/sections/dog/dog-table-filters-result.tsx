@@ -40,7 +40,7 @@ export function DogTableFiltersResult({ filters, totalResults, sx }: Props) {
         />
       </FiltersBlock>
 
-      <FiltersBlock label={`${t('common:actions.search')}:`} isShow={!!currentFilters.search}>
+      <FiltersBlock label={`${t('common:keyword')}:`} isShow={!!currentFilters.search}>
         <Chip {...chipProps} label={currentFilters.search} onDelete={handleRemoveSearch} />
       </FiltersBlock>
     </FiltersResult>

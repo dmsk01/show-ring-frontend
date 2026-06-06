@@ -68,8 +68,6 @@
   "toast": {
     "created": "Создано!",
     "updated": "Сохранено!",
-    "saveFailed": "Ошибка сохранения",
-    "bannerAdded": "Баннер добавлен!",
-    "bannerFailed": "Не удалось добавить баннер"
+    "bannerAdded": "Баннер добавлен!"
   }
 }

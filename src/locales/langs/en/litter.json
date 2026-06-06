@@ -47,7 +47,6 @@
   },
   "toast": {
     "created": "Create success!",
-    "updated": "Update success!",
-    "saveFailed": "Save failed"
+    "updated": "Update success!"
   }
 }

@@ -31,7 +31,7 @@ type Props = {
 };
 
 export function LitterTableRow({ row, breedName, kennelName, editHref }: Props) {
-  const { t } = useTranslate(['litter', 'common']);
+  const { t } = useTranslate('common');
 
   const price =
     row.price_from || row.price_to
@@ -50,7 +50,7 @@ export function LitterTableRow({ row, breedName, kennelName, editHref }: Props) 
 
       <TableCell>
         <Label color={STATUS_COLOR[row.status]}>
-          {t(`common:enums.litterStatus.${row.status}`)}
+          {t(`enums.litterStatus.${row.status}`)}
         </Label>
       </TableCell>
 

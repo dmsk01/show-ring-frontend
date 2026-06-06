@@ -205,7 +205,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
       onSelect={handleSelectCard}
       action={
         <Button size="small" startIcon={<Iconify icon="mingcute:add-line" />}>
-          {t('common:actions.more')}
+          {t('billing.payment.addCard')}
         </Button>
       }
     />
@@ -220,7 +220,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
       onSelect={handleSelectAddress}
       action={
         <Button size="small" startIcon={<Iconify icon="mingcute:add-line" />}>
-          {t('common:actions.more')}
+          {t('billing.address.addAddress')}
         </Button>
       }
     />

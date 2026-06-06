@@ -1,6 +1,43 @@
 {
   "demo": {
-    "lang": "English",
-    "description": "The starting point for your next project is based on MUI. Easy customization helps you build apps faster and better."
+    "lang": "Русский",
+    "description": "Отправная точка для вашего следующего проекта на основе MUI."
+  },
+  "dashboard": "Панель",
+  "actions": {
+    "save": "Сохранить",
+    "create": "Создать",
+    "update": "Обновить",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "cancel": "Отмена",
+    "back": "Назад",
+    "search": "Поиск...",
+    "filters": "Фильтры",
+    "clear": "Сбросить",
+    "apply": "Применить",
+    "view": "Просмотр",
+    "more": "Ещё"
+  },
+  "table": {
+    "name": "Имя",
+    "status": "Статус",
+    "actions": "Действия",
+    "createdAt": "Создано",
+    "results": "результатов",
+    "dense": "Компактно",
+    "rowsPerPage": "Строк на странице",
+    "selected": "выбрано"
+  },
+  "state": {
+    "loading": "Загрузка...",
+    "noData": "Нет данных",
+    "empty": "Здесь пока пусто",
+    "error": "Что-то пошло не так"
+  },
+  "confirm": {
+    "title": "Удаление",
+    "content": "Вы уверены, что хотите удалить?",
+    "deleteAction": "Удалить"
   }
 }

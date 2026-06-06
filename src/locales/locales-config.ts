@@ -15,7 +15,7 @@ export const supportedLngs = ['en', 'ru'] as const;
 export type LangCode = (typeof supportedLngs)[number];
 
 // Fallback and default namespace
-export const fallbackLng: LangCode = 'en';
+export const fallbackLng: LangCode = 'ru';
 export const defaultNS = 'common';
 
 // Storage config

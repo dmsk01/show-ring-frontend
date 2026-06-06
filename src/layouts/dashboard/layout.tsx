@@ -16,7 +16,7 @@ import { iconButtonClasses } from '@mui/material/IconButton';
 import { usePermissions } from 'src/hooks/use-permissions';
 
 import { _contacts } from 'src/_mock';
-import { allLangs } from 'src/locales';
+import { allLangs, useTranslate } from 'src/locales';
 
 import { Logo } from 'src/components/logo';
 import { useSettingsContext } from 'src/components/settings';
@@ -71,7 +71,9 @@ export function DashboardLayout({
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
-  const rawNavData = slotProps?.nav?.data ?? dashboardNavData;
+  const { t } = useTranslate('navbar');
+
+  const rawNavData = slotProps?.nav?.data ?? dashboardNavData(t);
 
   const navData = useMemo(
     () =>

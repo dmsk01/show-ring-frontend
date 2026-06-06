@@ -16,6 +16,7 @@ import TableCell from '@mui/material/TableCell';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
   verifyKennel,
@@ -33,14 +34,15 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 // ----------------------------------------------------------------------
 
 function ClassifiedsModeration() {
+  const { t } = useTranslate(['admin', 'common']);
   const { items, loading } = useGetModerationClassifieds();
 
   const decide = async (id: string, approve: boolean) => {
     try {
       await decideClassified(id, approve);
-      toast.success(approve ? 'Approved' : 'Rejected');
+      toast.success(approve ? t('moderation.toast.approved') : t('moderation.toast.rejected'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed');
+      toast.error(error instanceof Error ? error.message : t('moderation.toast.failed'));
     }
   };
 
@@ -49,10 +51,10 @@ function ClassifiedsModeration() {
       <Table sx={{ minWidth: 720 }}>
         <TableHeadCustom
           headCells={[
-            { id: 'title', label: 'Title' },
-            { id: 'category', label: 'Category', width: 160 },
-            { id: 'status', label: 'Status', width: 140 },
-            { id: '', label: 'Decision', width: 200, align: 'right' },
+            { id: 'title', label: t('moderation.classifieds.columns.title') },
+            { id: 'category', label: t('moderation.classifieds.columns.category'), width: 160 },
+            { id: 'status', label: t('moderation.classifieds.columns.status'), width: 140 },
+            { id: '', label: t('moderation.classifieds.columns.decision'), width: 200, align: 'right' },
           ]}
         />
         <TableBody>
@@ -68,10 +70,10 @@ function ClassifiedsModeration() {
               <TableCell align="right">
                 <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
                   <Button size="small" color="success" variant="soft" onClick={() => decide(row.id, true)}>
-                    Approve
+                    {t('moderation.classifieds.actions.approve')}
                   </Button>
                   <Button size="small" color="error" variant="soft" onClick={() => decide(row.id, false)}>
-                    Reject
+                    {t('moderation.classifieds.actions.reject')}
                   </Button>
                 </Stack>
               </TableCell>
@@ -85,14 +87,15 @@ function ClassifiedsModeration() {
 }
 
 function KennelsModeration() {
+  const { t } = useTranslate(['admin', 'common']);
   const { items, loading } = useGetModerationKennels();
 
   const toggle = async (id: string, isVerified: boolean) => {
     try {
       await verifyKennel(id, isVerified);
-      toast.success(isVerified ? 'Verified' : 'Unverified');
+      toast.success(isVerified ? t('moderation.toast.verified') : t('moderation.toast.unverified'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed');
+      toast.error(error instanceof Error ? error.message : t('moderation.toast.failed'));
     }
   };
 
@@ -101,9 +104,9 @@ function KennelsModeration() {
       <Table sx={{ minWidth: 640 }}>
         <TableHeadCustom
           headCells={[
-            { id: 'name', label: 'Kennel' },
-            { id: 'prefix', label: 'Prefix', width: 200 },
-            { id: 'verified', label: 'Verified', width: 120, align: 'right' },
+            { id: 'name', label: t('moderation.kennels.columns.name') },
+            { id: 'prefix', label: t('moderation.kennels.columns.prefix'), width: 200 },
+            { id: 'verified', label: t('moderation.kennels.columns.verified'), width: 120, align: 'right' },
           ]}
         />
         <TableBody>
@@ -127,23 +130,24 @@ function KennelsModeration() {
 }
 
 export function ModerationView() {
+  const { t } = useTranslate(['admin', 'common']);
   const [tab, setTab] = useState('classifieds');
 
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Moderation"
+        heading={t('moderation.list.title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Admin' },
-          { name: 'Moderation' },
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('breadcrumb.admin') },
+          { name: t('moderation.list.breadcrumb') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
       <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 3 }}>
-        <Tab value="classifieds" label="Classifieds" />
-        <Tab value="kennels" label="Kennels" />
+        <Tab value="classifieds" label={t('moderation.tabs.classifieds')} />
+        <Tab value="kennels" label={t('moderation.tabs.kennels')} />
       </Tabs>
 
       <Card>

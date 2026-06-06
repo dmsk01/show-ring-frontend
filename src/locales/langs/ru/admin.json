@@ -1,0 +1,178 @@
+{
+  "breadcrumb": {
+    "admin": "Администрирование"
+  },
+  "reference": {
+    "list": {
+      "title": "Справочники",
+      "breadcrumb": "Справочники"
+    },
+    "types": {
+      "animal-types": {
+        "label": "Виды животных",
+        "fields": {
+          "code": "Код",
+          "name": "Название"
+        }
+      },
+      "show-ranks": {
+        "label": "Ранги выставок",
+        "fields": {
+          "code": "Код",
+          "name": "Название",
+          "description": "Описание"
+        }
+      },
+      "titles": {
+        "label": "Титулы",
+        "fields": {
+          "animal_type_id": "Вид животного",
+          "code": "Код",
+          "name": "Название",
+          "is_reserve": "Резервный",
+          "description": "Описание"
+        }
+      },
+      "grades": {
+        "label": "Оценки",
+        "fields": {
+          "animal_type_id": "Вид животного",
+          "code": "Код",
+          "name": "Название",
+          "is_disqualifying": "Дисквалифицирующий",
+          "is_puppy_grade": "Оценка щенка",
+          "description": "Описание"
+        }
+      },
+      "show-classes": {
+        "label": "Классы выставок",
+        "fields": {
+          "animal_type_id": "Вид животного",
+          "code": "Код",
+          "name": "Название",
+          "age_from_months": "Возраст от (мес.)",
+          "age_to_months": "Возраст до (мес.)",
+          "can_receive_cac": "Может получить CAC",
+          "description": "Описание"
+        }
+      }
+    },
+    "form": {
+      "titleCreate": "Создать",
+      "titleEdit": "Редактировать",
+      "validation": {
+        "required": "{{field}} обязателен!"
+      },
+      "boolYes": "Да",
+      "boolNo": "Нет"
+    },
+    "actions": {
+      "add": "Добавить"
+    },
+    "toast": {
+      "created": "Создано!",
+      "updated": "Сохранено!",
+      "deleted": "Удалено!",
+      "deleteFailed": "Ошибка удаления",
+      "saveFailed": "Ошибка сохранения"
+    }
+  },
+  "users": {
+    "list": {
+      "title": "Пользователи",
+      "breadcrumb": "Пользователи"
+    },
+    "columns": {
+      "email": "Email",
+      "verified": "Верификация",
+      "roles": "Роли",
+      "active": "Активен"
+    },
+    "enums": {
+      "emailVerified": {
+        "verified": "Подтверждён",
+        "unverified": "Не подтверждён"
+      }
+    },
+    "toast": {
+      "blocked": "Пользователь заблокирован",
+      "unblocked": "Пользователь разблокирован",
+      "roleGranted": "Роль выдана",
+      "roleRevoked": "Роль отозвана",
+      "updateFailed": "Не удалось обновить пользователя",
+      "roleFailed": "Не удалось обновить роль"
+    }
+  },
+  "moderation": {
+    "list": {
+      "title": "Модерация",
+      "breadcrumb": "Модерация"
+    },
+    "tabs": {
+      "classifieds": "Объявления",
+      "kennels": "Питомники"
+    },
+    "classifieds": {
+      "columns": {
+        "title": "Заголовок",
+        "category": "Категория",
+        "status": "Статус",
+        "decision": "Решение"
+      },
+      "actions": {
+        "approve": "Одобрить",
+        "reject": "Отклонить"
+      }
+    },
+    "kennels": {
+      "columns": {
+        "name": "Питомник",
+        "prefix": "Префикс",
+        "verified": "Верифицирован"
+      }
+    },
+    "toast": {
+      "approved": "Одобрено",
+      "rejected": "Отклонено",
+      "verified": "Верифицировано",
+      "unverified": "Верификация снята",
+      "failed": "Ошибка"
+    }
+  },
+  "analytics": {
+    "list": {
+      "title": "Аналитика",
+      "breadcrumb": "Аналитика"
+    },
+    "kpi": {
+      "total_users": "Пользователи",
+      "total_kennels": "Питомники",
+      "verified_kennels": "Верифицированных питомников",
+      "total_dogs": "Собаки",
+      "total_litters": "Пометы",
+      "active_classifieds": "Активных объявлений",
+      "open_shows": "Открытых выставок",
+      "completed_shows": "Завершённых выставок",
+      "active_campaigns": "Активных кампаний"
+    },
+    "adPerformance": {
+      "title": "Эффективность рекламы",
+      "subheader": "Показы и клики за день",
+      "impressions": "Показы",
+      "clicks": "Клики"
+    },
+    "topBreeds": {
+      "title": "Топ пород",
+      "subheader": "По участиям",
+      "columns": {
+        "breed": "Порода",
+        "entries": "Участия"
+      }
+    },
+    "topCampaigns": {
+      "title": "Топ кампаний",
+      "subheader": "По расходам",
+      "empty": "Нет данных по кампаниям."
+    }
+  }
+}

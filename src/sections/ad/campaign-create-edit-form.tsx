@@ -1,8 +1,10 @@
 'use client';
 
+import type { TFunction } from 'i18next';
 import type { ICampaign } from 'src/types/ad';
 
 import * as z from 'zod';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -15,6 +17,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useTranslate } from 'src/locales';
 import { createCampaign, updateCampaign } from 'src/actions/ad';
 
 import { toast } from 'src/components/snackbar';
@@ -24,22 +27,27 @@ import { CAMPAIGN_STATUSES } from 'src/types/ad';
 
 // ----------------------------------------------------------------------
 
-export type CampaignSchemaType = z.infer<typeof CampaignSchema>;
+export function getCampaignSchema(t: TFunction) {
+  return z.object({
+    name: z.string().min(1, { error: t('form.validation.nameRequired') }),
+    budget: z.string().min(1, { error: t('form.validation.budgetRequired') }),
+    date_start: z.string().min(1, { error: t('form.validation.dateStartRequired') }),
+    date_end: z.string().min(1, { error: t('form.validation.dateEndRequired') }),
+    cost_per_impression: z.string().nullable(),
+    description: z.string().nullable(),
+    status: z.enum(['draft', 'active', 'paused', 'completed', 'cancelled']),
+  });
+}
 
-export const CampaignSchema = z.object({
-  name: z.string().min(1, { error: 'Name is required!' }),
-  budget: z.string().min(1, { error: 'Budget is required!' }),
-  date_start: z.string().min(1, { error: 'Start date is required!' }),
-  date_end: z.string().min(1, { error: 'End date is required!' }),
-  cost_per_impression: z.string().nullable(),
-  description: z.string().nullable(),
-  status: z.enum(['draft', 'active', 'paused', 'completed', 'cancelled']),
-});
+export type CampaignSchemaType = z.infer<ReturnType<typeof getCampaignSchema>>;
 
 type Props = { currentCampaign?: ICampaign };
 
 export function CampaignCreateEditForm({ currentCampaign }: Props) {
   const router = useRouter();
+  const { t } = useTranslate(['ad', 'common']);
+
+  const CampaignSchema = useMemo(() => getCampaignSchema(t), [t]);
 
   const defaultValues: CampaignSchemaType = {
     name: '',
@@ -86,15 +94,15 @@ export function CampaignCreateEditForm({ currentCampaign }: Props) {
 
       if (currentCampaign) {
         await updateCampaign(currentCampaign.id, { ...common, status: data.status });
-        toast.success('Update success!');
+        toast.success(t('toast.updated'));
       } else {
         await createCampaign(common);
-        toast.success('Create success!');
+        toast.success(t('toast.created'));
       }
       router.push(paths.dashboard.ads.root);
     } catch (error) {
       console.error(error);
-      toast.error(error instanceof Error ? error.message : 'Save failed');
+      toast.error(error instanceof Error ? error.message : t('common:state.error'));
     }
   });
 
@@ -109,31 +117,43 @@ export function CampaignCreateEditForm({ currentCampaign }: Props) {
             gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
           }}
         >
-          <Field.Text name="name" label="Name" />
+          <Field.Text name="name" label={t('form.fields.name')} />
           {currentCampaign && (
-            <Field.Select name="status" label="Status">
+            <Field.Select name="status" label={t('form.fields.status')}>
               {CAMPAIGN_STATUSES.map((s) => (
                 <MenuItem key={s} value={s}>
-                  {s}
+                  {t(`enums.status.${s}`)}
                 </MenuItem>
               ))}
             </Field.Select>
           )}
 
-          <Field.Text name="budget" label="Budget" type="number" />
-          <Field.Text name="cost_per_impression" label="Cost per impression" type="number" />
+          <Field.Text name="budget" label={t('form.fields.budget')} type="number" />
+          <Field.Text
+            name="cost_per_impression"
+            label={t('form.fields.costPerImpression')}
+            type="number"
+          />
 
-          <Field.Text name="date_start" label="Start date" placeholder="YYYY-MM-DD" />
-          <Field.Text name="date_end" label="End date" placeholder="YYYY-MM-DD" />
+          <Field.Text
+            name="date_start"
+            label={t('form.fields.dateStart')}
+            placeholder="YYYY-MM-DD"
+          />
+          <Field.Text
+            name="date_end"
+            label={t('form.fields.dateEnd')}
+            placeholder="YYYY-MM-DD"
+          />
         </Box>
 
         <Box sx={{ mt: 3 }}>
-          <Field.Text name="description" label="Description" multiline rows={3} />
+          <Field.Text name="description" label={t('form.fields.description')} multiline rows={3} />
         </Box>
 
         <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
           <Button type="submit" variant="contained" loading={isSubmitting}>
-            {currentCampaign ? 'Save changes' : 'Create campaign'}
+            {currentCampaign ? t('form.submitUpdate') : t('form.submitCreate')}
           </Button>
         </Stack>
       </Card>

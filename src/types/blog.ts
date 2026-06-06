@@ -38,6 +38,7 @@ export type IPostComment = {
 
 export type IPostItem = {
   id: string;
+  slug: string;
   title: string;
   tags: string[];
   publish: string;

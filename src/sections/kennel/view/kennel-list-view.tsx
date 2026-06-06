@@ -15,6 +15,7 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { deleteKennel, useGetKennelsList } from 'src/actions/kennel';
 
@@ -29,16 +30,18 @@ import { KennelTableToolbar } from '../kennel-table-toolbar';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'name', label: 'Name' },
-  { id: 'kennel_prefix', label: 'Prefix', width: 160 },
-  { id: 'city', label: 'City', width: 160 },
-  { id: 'country', label: 'Country', width: 140 },
-  { id: 'contact_email', label: 'Email', width: 220 },
-  { id: '', width: 88 },
-];
-
 export function KennelListView() {
+  const { t } = useTranslate(['kennel', 'common']);
+
+  const TABLE_HEAD: TableHeadCellProps[] = [
+    { id: 'name', label: t('list.columns.name') },
+    { id: 'kennel_prefix', label: t('list.columns.prefix'), width: 160 },
+    { id: 'city', label: t('list.columns.city'), width: 160 },
+    { id: 'country', label: t('list.columns.country'), width: 140 },
+    { id: 'contact_email', label: t('list.columns.email'), width: 220 },
+    { id: '', width: 88 },
+  ];
+
   const table = useTable({ defaultRowsPerPage: 25 });
 
   const filters = useSetState<IKennelTableFilters>({ search: '', city: '' });
@@ -55,19 +58,19 @@ export function KennelListView() {
     async (id: string) => {
       try {
         await deleteKennel(id);
-        toast.success('Delete success!');
+        toast.success(t('toast.deleted'));
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : 'Delete failed');
+        toast.error(error instanceof Error ? error.message : t('toast.deleteFailed'));
       }
     },
-    []
+    [t]
   );
 
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Kennels"
-        links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'Kennels' }]}
+        heading={t('list.title')}
+        links={[{ name: t('common:dashboard'), href: paths.dashboard.root }, { name: t('list.title') }]}
         action={
           <Button
             component={RouterLink}
@@ -75,7 +78,7 @@ export function KennelListView() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            Add kennel
+            {t('list.new')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}

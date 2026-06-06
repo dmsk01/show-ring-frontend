@@ -15,6 +15,7 @@ import IconButton from '@mui/material/IconButton';
 import { RouterLink } from 'src/routes/components';
 
 import { fileUrl } from 'src/actions/file';
+import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
@@ -29,6 +30,7 @@ type Props = {
 };
 
 export function KennelTableRow({ row, editHref, onDeleteRow }: Props) {
+  const { t } = useTranslate(['kennel', 'common']);
   const menuActions = usePopover();
   const confirmDialog = useBoolean();
 
@@ -61,7 +63,7 @@ export function KennelTableRow({ row, editHref, onDeleteRow }: Props) {
           <li>
             <MenuItem component={RouterLink} href={editHref} onClick={menuActions.onClose}>
               <Iconify icon="solar:pen-bold" />
-              Edit
+              {t('common:actions.edit')}
             </MenuItem>
           </li>
           <MenuItem
@@ -72,7 +74,7 @@ export function KennelTableRow({ row, editHref, onDeleteRow }: Props) {
             sx={{ color: 'error.main' }}
           >
             <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete
+            {t('common:actions.delete')}
           </MenuItem>
         </MenuList>
       </CustomPopover>
@@ -80,10 +82,10 @@ export function KennelTableRow({ row, editHref, onDeleteRow }: Props) {
       <ConfirmDialog
         open={confirmDialog.value}
         onClose={confirmDialog.onFalse}
-        title="Delete"
+        title={t('delete.title')}
         content={
           <>
-            Delete kennel <strong>{row.name}</strong>?
+            {t('delete.content')} <strong>{row.name}</strong>?
           </>
         }
         action={
@@ -95,7 +97,7 @@ export function KennelTableRow({ row, editHref, onDeleteRow }: Props) {
               confirmDialog.onFalse();
             }}
           >
-            Delete
+            {t('common:actions.delete')}
           </Button>
         }
       />

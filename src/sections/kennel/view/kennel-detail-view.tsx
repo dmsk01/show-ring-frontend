@@ -9,6 +9,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 import { fileUrl } from 'src/actions/file';
+import { useTranslate } from 'src/locales';
 import { useGetDogs } from 'src/actions/dog';
 import { useGetKennel } from 'src/actions/kennel';
 import { useGetBreeds } from 'src/actions/reference';
@@ -29,6 +30,8 @@ import { KennelLitterCard } from '../kennel-litter-card';
 type Props = { id: string };
 
 export function KennelDetailView({ id }: Props) {
+  const { t } = useTranslate(['kennel', 'common']);
+
   const { kennel, kennelLoading } = useGetKennel(id);
   const { litters, littersLoading } = useGetLittersList({ kennel_id: id });
   const { dogs, dogsLoading } = useGetDogs({ kennel_id: id });
@@ -40,7 +43,7 @@ export function KennelDetailView({ id }: Props) {
   if (!kennel) {
     return (
       <Container sx={{ pt: { xs: 8, md: 12 }, pb: 10 }}>
-        <Typography>Питомник не найден.</Typography>
+        <Typography>{t('detail.notFound')}</Typography>
       </Container>
     );
   }
@@ -87,7 +90,7 @@ export function KennelDetailView({ id }: Props) {
           </Stack>
           {kennel.is_verified && (
             <Label color="success" startIcon={<Iconify icon="solar:verified-check-bold" />}>
-              Проверенный питомник
+              {t('detail.verified')}
             </Label>
           )}
           {contacts.map((c) => (
@@ -107,12 +110,12 @@ export function KennelDetailView({ id }: Props) {
       </Card>
 
       <Typography variant="h5" sx={{ mb: 2 }}>
-        Помёты (объявления)
+        {t('detail.litters')}
       </Typography>
       {littersLoading ? (
         <LoadingScreen />
       ) : litters.length === 0 ? (
-        <EmptyContent filled title="Помётов пока нет" sx={{ py: 6, mb: 5 }} />
+        <EmptyContent filled title={t('detail.littersEmpty')} sx={{ py: 6, mb: 5 }} />
       ) : (
         <Stack spacing={2} sx={{ mb: 5 }}>
           {litters.map((litter) => (
@@ -126,12 +129,12 @@ export function KennelDetailView({ id }: Props) {
       )}
 
       <Typography variant="h5" sx={{ mb: 2 }}>
-        Собаки питомника
+        {t('detail.dogs')}
       </Typography>
       {dogsLoading ? (
         <LoadingScreen />
       ) : dogs.length === 0 ? (
-        <EmptyContent filled title="Собак пока нет" sx={{ py: 6 }} />
+        <EmptyContent filled title={t('detail.dogsEmpty')} sx={{ py: 6 }} />
       ) : (
         <DogCardGrid dogs={dogs} breedNameById={breedNameById} />
       )}

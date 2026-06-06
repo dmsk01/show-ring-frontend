@@ -42,7 +42,7 @@ export function PostSearch({ redirectPath, sx }: Props) {
     (item: IPostItem | null) => {
       setSelectedItem(item);
       if (item) {
-        router.push(redirectPath(item.title));
+        router.push(redirectPath(item.slug));
       }
     },
     [redirectPath, router]
@@ -115,7 +115,7 @@ export function PostSearch({ redirectPath, sx }: Props) {
           <li key={key} {...otherProps}>
             <Link
               component={RouterLink}
-              href={redirectPath(option.title)}
+              href={redirectPath(option.slug)}
               color="inherit"
               underline="none"
             >

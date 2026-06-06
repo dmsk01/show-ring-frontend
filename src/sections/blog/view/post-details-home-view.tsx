@@ -153,7 +153,7 @@ export function PostDetailsHomeView({ title }: Props) {
                   lg: 3,
                 }}
               >
-                <PostItem post={latestPost} detailsHref={paths.post.details(latestPost.title)} />
+                <PostItem post={latestPost} detailsHref={paths.post.details(latestPost.slug)} />
               </Grid>
             ))}
           </Grid>

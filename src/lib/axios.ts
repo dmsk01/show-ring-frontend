@@ -251,12 +251,12 @@ export const endpoints = {
     labels: '/api/mail/labels',
   },
   // Blog — backed by ShowTail (see docs/specs). baseURL '/api' + these →
-  // proxied to the backend (e.g. /api/posts → :8000/posts).
+  // proxied to the backend (e.g. /api/posts → :8000/posts). Posts are keyed
+  // by `slug`; full-text search folds into the list endpoint via `?query=`.
   post: {
     list: '/posts',
-    details: '/posts/detail',
-    latest: '/posts/latest',
-    search: '/posts/search',
+    details: (slug: string) => `/posts/${slug}`,
+    related: (slug: string) => `/posts/${slug}/related`,
   },
   product: {
     list: '/api/product/list',

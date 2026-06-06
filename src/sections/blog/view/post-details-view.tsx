@@ -55,8 +55,8 @@ export function PostDetailsView({ title }: Props) {
       <Container maxWidth={false} sx={{ px: { sm: 5 } }}>
         <PostDetailsToolbar
           backHref={paths.dashboard.post.root}
-          editHref={paths.dashboard.post.edit(`${post?.title}`)}
-          liveHref={paths.post.details(`${post?.title}`)}
+          editHref={paths.dashboard.post.edit(`${post?.slug}`)}
+          liveHref={paths.post.details(`${post?.slug}`)}
           publish={`${publish}`}
           onChangePublish={handleChangePublish}
           publishOptions={POST_PUBLISH_OPTIONS}

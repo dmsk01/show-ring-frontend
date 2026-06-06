@@ -1,0 +1,42 @@
+{
+  "heading": "Уведомления",
+  "subscriptions": {
+    "title": "Подписки",
+    "subheader": "Получайте уведомления о событиях на платформе",
+    "fieldEvent": "Событие",
+    "fieldChannel": "Канал",
+    "fieldBreed": "Порода (необязательно)",
+    "fieldRegion": "Регион (необязательно)",
+    "breedAny": "Любая",
+    "subscribe": "Подписаться"
+  },
+  "recent": {
+    "title": "Последние уведомления",
+    "markAllRead": "Отметить все как прочитанные",
+    "empty": "Уведомлений пока нет."
+  },
+  "toast": {
+    "subscribed": "Подписка оформлена!",
+    "subscribeFailed": "Не удалось подписаться",
+    "unsubscribed": "Подписка отменена",
+    "unsubscribeFailed": "Не удалось отменить подписку",
+    "markAllReadFailed": "Не удалось отметить все как прочитанные"
+  },
+  "enums": {
+    "eventType": {
+      "show.registration_opened": "Регистрация на выставку открыта",
+      "show.results_published": "Результаты выставки опубликованы",
+      "litter.announced": "Помёт объявлен",
+      "dog.title_earned": "Собака получила титул"
+    },
+    "channel": {
+      "email": "Email",
+      "push": "Push"
+    },
+    "status": {
+      "pending": "Ожидает",
+      "sent": "Отправлено",
+      "failed": "Ошибка"
+    }
+  }
+}

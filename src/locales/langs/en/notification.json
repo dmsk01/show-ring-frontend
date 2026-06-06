@@ -1,0 +1,42 @@
+{
+  "heading": "Notifications",
+  "subscriptions": {
+    "title": "Subscriptions",
+    "subheader": "Get notified about platform events",
+    "fieldEvent": "Event",
+    "fieldChannel": "Channel",
+    "fieldBreed": "Breed (optional)",
+    "fieldRegion": "Region (optional)",
+    "breedAny": "Any",
+    "subscribe": "Subscribe"
+  },
+  "recent": {
+    "title": "Recent notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications yet."
+  },
+  "toast": {
+    "subscribed": "Subscribed!",
+    "subscribeFailed": "Failed to subscribe",
+    "unsubscribed": "Unsubscribed",
+    "unsubscribeFailed": "Failed to unsubscribe",
+    "markAllReadFailed": "Failed to mark all read"
+  },
+  "enums": {
+    "eventType": {
+      "show.registration_opened": "Show registration opened",
+      "show.results_published": "Show results published",
+      "litter.announced": "Litter announced",
+      "dog.title_earned": "Dog title earned"
+    },
+    "channel": {
+      "email": "Email",
+      "push": "Push"
+    },
+    "status": {
+      "pending": "Pending",
+      "sent": "Sent",
+      "failed": "Failed"
+    }
+  }
+}

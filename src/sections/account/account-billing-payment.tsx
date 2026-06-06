@@ -1,3 +1,5 @@
+'use client';
+
 import type { CardProps } from '@mui/material/Card';
 import type { IPaymentCard } from 'src/types/common';
 
@@ -11,6 +13,8 @@ import CardHeader from '@mui/material/CardHeader';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 
+import { useTranslate } from 'src/locales';
+
 import { Iconify } from 'src/components/iconify';
 
 import { PaymentCardItem } from '../payment/payment-card-item';
@@ -23,20 +27,21 @@ type Props = CardProps & {
 };
 
 export function AccountBillingPayment({ cards, sx, ...other }: Props) {
+  const { t } = useTranslate('account');
   const openForm = useBoolean();
 
   const renderCardCreateFormDialog = () => (
     <Dialog fullWidth maxWidth="xs" open={openForm.value} onClose={openForm.onFalse}>
-      <DialogTitle>Add card</DialogTitle>
+      <DialogTitle>{t('billing.payment.dialog.title')}</DialogTitle>
 
       <PaymentCardCreateForm sx={{ px: 3 }} />
 
       <DialogActions>
         <Button color="inherit" variant="outlined" onClick={openForm.onFalse}>
-          Cancel
+          {t('common:actions.cancel')}
         </Button>
         <Button color="inherit" variant="contained" onClick={openForm.onFalse}>
-          Add
+          {t('billing.payment.dialog.add')}
         </Button>
       </DialogActions>
     </Dialog>
@@ -46,7 +51,7 @@ export function AccountBillingPayment({ cards, sx, ...other }: Props) {
     <>
       <Card sx={[{ my: 3 }, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
         <CardHeader
-          title="Payment method"
+          title={t('billing.payment.title')}
           action={
             <Button
               size="small"
@@ -54,7 +59,7 @@ export function AccountBillingPayment({ cards, sx, ...other }: Props) {
               startIcon={<Iconify icon="mingcute:add-line" />}
               onClick={openForm.onTrue}
             >
-              Add card
+              {t('billing.payment.addCard')}
             </Button>
           }
         />

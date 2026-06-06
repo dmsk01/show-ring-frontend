@@ -1,3 +1,5 @@
+'use client';
+
 import type { CardProps } from '@mui/material/Card';
 
 import { useForm, Controller } from 'react-hook-form';
@@ -10,35 +12,25 @@ import Button from '@mui/material/Button';
 import ListItemText from '@mui/material/ListItemText';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import { useTranslate } from 'src/locales';
+
 import { toast } from 'src/components/snackbar';
 import { Form } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
-const NOTIFICATIONS = [
-  {
-    subheader: 'Activity',
-    caption: 'Donec mi odio, faucibus at, scelerisque quis',
-    items: [
-      { id: 'activity_comments', label: 'Email me when someone comments onmy article' },
-      { id: 'activity_answers', label: 'Email me when someone answers on my form' },
-      { id: 'activityFollows', label: 'Email me hen someone follows me' },
-    ],
-  },
-  {
-    subheader: 'Application',
-    caption: 'Donec mi odio, faucibus at, scelerisque quis',
-    items: [
-      { id: 'application_news', label: 'News and announcements' },
-      { id: 'application_product', label: 'Weekly product updates' },
-      { id: 'application_blog', label: 'Weekly blog digest' },
-    ],
-  },
-];
+const NOTIFICATION_GROUP_KEYS = ['activity', 'application'] as const;
+
+const NOTIFICATION_ITEM_KEYS: Record<string, string[]> = {
+  activity: ['activity_comments', 'activity_answers', 'activityFollows'],
+  application: ['application_news', 'application_product', 'application_blog'],
+};
 
 // ----------------------------------------------------------------------
 
 export function AccountNotifications({ sx, ...other }: CardProps) {
+  const { t } = useTranslate('account');
+
   const methods = useForm({
     defaultValues: { selected: ['activity_comments', 'application_product'] },
   });
@@ -55,7 +47,7 @@ export function AccountNotifications({ sx, ...other }: CardProps) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      toast.success('Update success!');
+      toast.success(t('toast.updated'));
       console.info('DATA', data);
     } catch (error) {
       console.error(error);
@@ -81,12 +73,12 @@ export function AccountNotifications({ sx, ...other }: CardProps) {
         ]}
         {...other}
       >
-        {NOTIFICATIONS.map((notification) => (
-          <Grid key={notification.subheader} container spacing={3}>
+        {NOTIFICATION_GROUP_KEYS.map((groupKey) => (
+          <Grid key={groupKey} container spacing={3}>
             <Grid size={{ xs: 12, md: 4 }}>
               <ListItemText
-                primary={notification.subheader}
-                secondary={notification.caption}
+                primary={t(`notifications.groups.${groupKey}.subheader`)}
+                secondary={t(`notifications.groups.${groupKey}.caption`)}
                 slotProps={{
                   primary: { sx: { typography: 'h6' } },
                   secondary: { sx: { mt: 0.5 } },
@@ -110,19 +102,21 @@ export function AccountNotifications({ sx, ...other }: CardProps) {
                   control={control}
                   render={({ field }) => (
                     <>
-                      {notification.items.map((item) => (
+                      {NOTIFICATION_ITEM_KEYS[groupKey].map((itemKey) => (
                         <FormControlLabel
-                          key={item.id}
-                          label={item.label}
+                          key={itemKey}
+                          label={t(`notifications.groups.${groupKey}.items.${itemKey}`)}
                           labelPlacement="start"
                           control={
                             <Switch
-                              checked={field.value.includes(item.id)}
-                              onChange={() => field.onChange(getSelected(values.selected, item.id))}
+                              checked={field.value.includes(itemKey)}
+                              onChange={() =>
+                                field.onChange(getSelected(values.selected, itemKey))
+                              }
                               slotProps={{
                                 input: {
-                                  id: `${item.label}-switch`,
-                                  'aria-label': `${item.label} switch`,
+                                  id: `${itemKey}-switch`,
+                                  'aria-label': `${t(`notifications.groups.${groupKey}.items.${itemKey}`)} switch`,
                                 },
                               }}
                             />
@@ -139,7 +133,7 @@ export function AccountNotifications({ sx, ...other }: CardProps) {
         ))}
 
         <Button type="submit" variant="contained" loading={isSubmitting} sx={{ ml: 'auto' }}>
-          Save changes
+          {t('common:actions.save')}
         </Button>
       </Card>
     </Form>

@@ -1,3 +1,5 @@
+'use client';
+
 import type { ISocialLink } from 'src/types/common';
 
 import { useForm } from 'react-hook-form';
@@ -5,6 +7,8 @@ import { useForm } from 'react-hook-form';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
+
+import { useTranslate } from 'src/locales';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
@@ -17,6 +21,8 @@ type Props = {
 };
 
 export function AccountSocials({ socialLinks }: Props) {
+  const { t } = useTranslate('account');
+
   const defaultValues: ISocialLink = {
     facebook: '',
     instagram: '',
@@ -37,7 +43,7 @@ export function AccountSocials({ socialLinks }: Props) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      toast.success('Update success!');
+      toast.success(t('toast.updated'));
       console.info('DATA', data);
     } catch (error) {
       console.error(error);
@@ -74,7 +80,7 @@ export function AccountSocials({ socialLinks }: Props) {
         ))}
 
         <Button type="submit" variant="contained" loading={isSubmitting} sx={{ ml: 'auto' }}>
-          Save changes
+          {t('common:actions.save')}
         </Button>
       </Card>
     </Form>

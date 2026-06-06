@@ -4,14 +4,6 @@ import type { IShowEntry, IShowResult, TitleCacheItem } from 'src/types/show-res
 
 export type GroupBy = 'class' | 'breed' | 'group' | 'ring';
 
-/** i18n key for each GroupBy option — translate at component call site with t(key) */
-export const GROUP_BY_I18N_KEYS: Record<GroupBy, string> = {
-  class: 'show:results.groupOptions.class',
-  breed: 'show:results.groupOptions.breed',
-  group: 'show:results.groupOptions.group',
-  ring: 'show:results.groupOptions.ring',
-};
-
 export const GROUP_BY_VALUES: GroupBy[] = ['class', 'breed', 'group', 'ring'];
 
 export type IShowResultRow = {

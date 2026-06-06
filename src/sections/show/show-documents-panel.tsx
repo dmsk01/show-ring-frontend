@@ -165,9 +165,11 @@ export function ShowDocumentsPanel({ showId }: Props) {
           loading={busy}
           disabled={!ringId}
           startIcon={<Iconify icon="solar:notebook-bold-duotone" />}
-          onClick={() =>
-            run('ring-sheets', t('documents.ringSheetsLabel', { number: ringId }), ringId)
-          }
+          onClick={() => {
+            const ring = rings.find((r) => r.id === ringId);
+            const ringLabel = ring?.ring_number ?? ringId;
+            run('ring-sheets', t('documents.ringSheetsLabel', { number: ringLabel }), ringId);
+          }}
         >
           {t('documents.ringSheets')}
         </Button>

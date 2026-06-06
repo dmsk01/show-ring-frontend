@@ -1,0 +1,90 @@
+{
+  "list": {
+    "title": "Classifieds",
+    "new": "Add classified",
+    "columns": {
+      "title": "Title",
+      "category": "Category",
+      "price": "Price",
+      "city": "City",
+      "status": "Status"
+    },
+    "filters": {
+      "category": "Category",
+      "city": "City",
+      "all": "All"
+    }
+  },
+  "form": {
+    "headingNew": "Create a new classified",
+    "headingEdit": "Edit classified",
+    "notFound": "Classified not found.",
+    "fields": {
+      "category": "Category",
+      "breed": "Breed",
+      "title": "Title",
+      "city": "City",
+      "priceKind": "Price kind",
+      "price": "Price",
+      "contactPhone": "Contact phone",
+      "contactEmail": "Contact email",
+      "description": "Description",
+      "images": "Images",
+      "noImages": "No images."
+    },
+    "validation": {
+      "titleRequired": "Title is required!",
+      "descriptionRequired": "Description is required!"
+    },
+    "submitCreate": "Create classified",
+    "submitUpdate": "Save changes"
+  },
+  "detail": {
+    "notFound": "Classified not found.",
+    "loadError": "Failed to load classified. Please try again later.",
+    "contacts": "Contacts"
+  },
+  "showcase": {
+    "title": "Pets — classifieds",
+    "searchPlaceholder": "Search by title...",
+    "allCategories": "All categories",
+    "city": "City",
+    "empty": "No classifieds found",
+    "sort": {
+      "newestFirst": "Newest first",
+      "cheapest": "Cheapest",
+      "mostExpensive": "Most expensive",
+      "popular": "Popular"
+    }
+  },
+  "enums": {
+    "category": {
+      "puppy_sale": "Puppies",
+      "adult_sale": "Adults",
+      "mating": "Mating",
+      "handler": "Handler",
+      "grooming": "Grooming",
+      "other": "Other"
+    },
+    "priceKind": {
+      "fixed": "Fixed",
+      "free": "Free",
+      "negotiable": "Negotiable"
+    },
+    "status": {
+      "active": "Active",
+      "moderation": "Moderation",
+      "closed": "Closed",
+      "archived": "Archived"
+    }
+  },
+  "toast": {
+    "created": "Create success!",
+    "updated": "Update success!",
+    "deleted": "Delete success!",
+    "deleteFailed": "Delete failed",
+    "saveFailed": "Save failed",
+    "uploadPartialFail": "Some images failed to upload",
+    "uploadFailed": "Upload failed"
+  }
+}

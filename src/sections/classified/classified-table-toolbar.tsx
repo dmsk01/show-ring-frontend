@@ -1,3 +1,5 @@
+'use client';
+
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 import type { IClassifiedFilters } from 'src/types/classified';
 
@@ -7,7 +9,11 @@ import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 
+import { useTranslate } from 'src/locales';
+
 import { CLASSIFIED_CATEGORIES } from 'src/types/classified';
+
+import { classifiedCategoryI18nKey } from './classified-utils';
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +23,7 @@ type Props = {
 };
 
 export function ClassifiedTableToolbar({ filters, onResetPage }: Props) {
+  const { t } = useTranslate(['classified', 'common']);
   const { state: currentFilters, setState: updateFilters } = filters;
 
   const handleCategory = useCallback(
@@ -39,15 +46,15 @@ export function ClassifiedTableToolbar({ filters, onResetPage }: Props) {
     <Box sx={{ p: 2.5, gap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
       <TextField
         select
-        label="Category"
+        label={t('list.filters.category')}
         value={currentFilters.category}
         onChange={handleCategory}
         sx={{ width: { xs: 1, md: 220 } }}
       >
-        <MenuItem value="all">All</MenuItem>
-        {CLASSIFIED_CATEGORIES.map((c) => (
-          <MenuItem key={c} value={c}>
-            {c.replace('_', ' ')}
+        <MenuItem value="all">{t('list.filters.all')}</MenuItem>
+        {CLASSIFIED_CATEGORIES.map((cat) => (
+          <MenuItem key={cat} value={cat}>
+            {t(classifiedCategoryI18nKey(cat))}
           </MenuItem>
         ))}
       </TextField>
@@ -55,7 +62,7 @@ export function ClassifiedTableToolbar({ filters, onResetPage }: Props) {
       <TextField
         value={currentFilters.city}
         onChange={handleCity}
-        placeholder="City"
+        placeholder={t('list.filters.city')}
         sx={{ width: { xs: 1, md: 200 } }}
       />
     </Box>

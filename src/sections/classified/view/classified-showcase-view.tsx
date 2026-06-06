@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import TablePagination from '@mui/material/TablePagination';
 
+import { useTranslate } from 'src/locales';
 import { useGetClassifieds } from 'src/actions/classified';
 
 import { Iconify } from 'src/components/iconify';
@@ -20,18 +21,20 @@ import { ShowcaseShell } from 'src/sections/showcase';
 import { CLASSIFIED_CATEGORIES } from 'src/types/classified';
 
 import { ClassifiedCardGrid } from '../classified-card-grid';
-import { CLASSIFIED_CATEGORY_LABEL } from '../classified-utils';
+import { classifiedCategoryI18nKey } from '../classified-utils';
 
 // ----------------------------------------------------------------------
 
-const SORT_OPTIONS = [
-  { value: 'created_at:desc', label: 'Сначала новые' },
-  { value: 'price:asc', label: 'Дешевле' },
-  { value: 'price:desc', label: 'Дороже' },
-  { value: 'views_count:desc', label: 'Популярные' },
-];
-
 export function ClassifiedShowcaseView() {
+  const { t } = useTranslate(['classified', 'common']);
+
+  const SORT_OPTIONS = [
+    { value: 'created_at:desc', label: t('showcase.sort.newestFirst') },
+    { value: 'price:asc', label: t('showcase.sort.cheapest') },
+    { value: 'price:desc', label: t('showcase.sort.mostExpensive') },
+    { value: 'views_count:desc', label: t('showcase.sort.popular') },
+  ];
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(12);
   const [sort, setSort] = useState('created_at:desc');
@@ -75,13 +78,13 @@ export function ClassifiedShowcaseView() {
   );
 
   return (
-    <ShowcaseShell title="Животные — объявления">
+    <ShowcaseShell title={t('showcase.title')}>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: { xs: 3, md: 5 } }}>
         <TextField
           fullWidth
           value={state.search}
           onChange={(e) => handleField('search', e.target.value)}
-          placeholder="Поиск по заголовку..."
+          placeholder={t('showcase.searchPlaceholder')}
           slotProps={{
             input: {
               startAdornment: (
@@ -98,17 +101,17 @@ export function ClassifiedShowcaseView() {
           onChange={(e) => handleField('category', e.target.value)}
           sx={{ width: { xs: 1, sm: 200 } }}
         >
-          <MenuItem value="all">Все категории</MenuItem>
-          {CLASSIFIED_CATEGORIES.map((c) => (
-            <MenuItem key={c} value={c}>
-              {CLASSIFIED_CATEGORY_LABEL[c]}
+          <MenuItem value="all">{t('showcase.allCategories')}</MenuItem>
+          {CLASSIFIED_CATEGORIES.map((cat) => (
+            <MenuItem key={cat} value={cat}>
+              {t(classifiedCategoryI18nKey(cat))}
             </MenuItem>
           ))}
         </TextField>
         <TextField
           value={state.city}
           onChange={(e) => handleField('city', e.target.value)}
-          placeholder="Город"
+          placeholder={t('showcase.city')}
           sx={{ width: { xs: 1, sm: 200 } }}
         />
         <TextField
@@ -131,7 +134,7 @@ export function ClassifiedShowcaseView() {
       {classifiedsLoading ? (
         <LoadingScreen />
       ) : classifiedsEmpty || filtered.length === 0 ? (
-        <EmptyContent filled title="Объявления не найдены" sx={{ py: 10 }} />
+        <EmptyContent filled title={t('showcase.empty')} sx={{ py: 10 }} />
       ) : (
         <>
           <ClassifiedCardGrid classifieds={filtered} />

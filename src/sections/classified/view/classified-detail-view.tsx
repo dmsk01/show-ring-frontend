@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
+import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
 import { useGetBreeds } from 'src/actions/reference';
 import { useGetClassified } from 'src/actions/classified';
@@ -18,13 +19,14 @@ import { Markdown } from 'src/components/markdown';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { Lightbox, useLightbox } from 'src/components/lightbox';
 
-import { formatClassifiedPrice, CLASSIFIED_CATEGORY_LABEL } from '../classified-utils';
+import { formatClassifiedPrice, classifiedCategoryI18nKey } from '../classified-utils';
 
 // ----------------------------------------------------------------------
 
 type Props = { id: string };
 
 export function ClassifiedDetailView({ id }: Props) {
+  const { t } = useTranslate(['classified', 'common']);
   const { classified, classifiedLoading, classifiedError } = useGetClassified(id);
   const { breeds } = useGetBreeds();
 
@@ -33,15 +35,11 @@ export function ClassifiedDetailView({ id }: Props) {
 
   if (classifiedLoading) return <LoadingScreen />;
   if (classifiedError) {
-    // Реальная ошибка загрузки (5xx/сеть) — не путаем с «объявление
-    // удалено». fetcher пробрасывает AxiosError → статус в response.status.
     const notFound = classifiedError?.response?.status === 404;
     return (
       <Container sx={{ pt: { xs: 8, md: 12 }, pb: 10 }}>
         <Typography>
-          {notFound
-            ? 'Объявление не найдено.'
-            : 'Не удалось загрузить объявление. Попробуйте позже.'}
+          {notFound ? t('detail.notFound') : t('detail.loadError')}
         </Typography>
       </Container>
     );
@@ -49,12 +47,17 @@ export function ClassifiedDetailView({ id }: Props) {
   if (!classified) {
     return (
       <Container sx={{ pt: { xs: 8, md: 12 }, pb: 10 }}>
-        <Typography>Объявление не найдено.</Typography>
+        <Typography>{t('detail.notFound')}</Typography>
       </Container>
     );
   }
 
   const breedName = breeds.find((b) => b.id === classified.breed_id)?.name;
+  const priceRaw = formatClassifiedPrice(classified.price, classified.price_kind);
+  const priceDisplay =
+    classified.price_kind === 'free' || classified.price_kind === 'negotiable'
+      ? t(priceRaw)
+      : priceRaw;
 
   return (
     <Container sx={{ pt: { xs: 8, md: 12 }, pb: { xs: 8, md: 12 } }}>
@@ -94,12 +97,12 @@ export function ClassifiedDetailView({ id }: Props) {
             {classified.title}
           </Typography>
           <Label color="info">
-            {CLASSIFIED_CATEGORY_LABEL[classified.category] ?? classified.category}
+            {t(classifiedCategoryI18nKey(classified.category))}
           </Label>
         </Stack>
 
         <Typography variant="h5" sx={{ color: 'primary.main', mb: 2 }}>
-          {formatClassifiedPrice(classified.price, classified.price_kind)}
+          {priceDisplay}
         </Typography>
 
         <Stack direction="row" flexWrap="wrap" spacing={3} sx={{ typography: 'body2' }}>
@@ -123,7 +126,7 @@ export function ClassifiedDetailView({ id }: Props) {
           <>
             <Divider sx={{ borderStyle: 'dashed', my: 4 }} />
             <Typography variant="h6" sx={{ mb: 1.5 }}>
-              Контакты
+              {t('detail.contacts')}
             </Typography>
             <Stack spacing={1}>
               {classified.contact_phone && (

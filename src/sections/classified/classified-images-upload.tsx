@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { useTranslate } from 'src/locales';
 import { uploadFile } from 'src/actions/file';
 
 import { Upload } from 'src/components/upload';
@@ -16,6 +17,7 @@ type Props = {
 // Keeps the dropped File objects as the Upload value so the real image preview
 // renders (like the single-file Upload), while reporting the uploaded file ids upward.
 export function ClassifiedImagesUpload({ onChange }: Props) {
+  const { t } = useTranslate('classified');
   const [files, setFiles] = useState<File[]>([]);
   const [ids, setIds] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -35,7 +37,7 @@ export function ClassifiedImagesUpload({ onChange }: Props) {
       });
 
       if (results.some((r) => r.status === 'rejected')) {
-        toast.error('Some images failed to upload');
+        toast.error(t('toast.uploadPartialFail'));
       }
 
       const nextFiles = [...files, ...okFiles];
@@ -44,7 +46,7 @@ export function ClassifiedImagesUpload({ onChange }: Props) {
       setIds(nextIds);
       onChange(nextIds);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Upload failed');
+      toast.error(error instanceof Error ? error.message : t('toast.uploadFailed'));
     } finally {
       setUploading(false);
     }

@@ -2,6 +2,7 @@
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
@@ -11,14 +12,16 @@ import { ClassifiedCreateEditForm } from '../classified-create-edit-form';
 // ----------------------------------------------------------------------
 
 export function ClassifiedCreateView() {
+  const { t } = useTranslate(['classified', 'common']);
+
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Create a new classified"
+        heading={t('form.headingNew')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Classifieds', href: paths.dashboard.classifieds.root },
-          { name: 'New' },
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('list.title'), href: paths.dashboard.classifieds.root },
+          { name: t('form.headingNew') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />

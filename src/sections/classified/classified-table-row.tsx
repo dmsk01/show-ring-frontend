@@ -1,3 +1,5 @@
+'use client';
+
 import type { LabelColor } from 'src/components/label';
 import type { IClassifiedItem, ClassifiedStatus } from 'src/types/classified';
 
@@ -15,12 +17,15 @@ import IconButton from '@mui/material/IconButton';
 
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomPopover } from 'src/components/custom-popover';
+
+import { formatClassifiedPrice, classifiedStatusI18nKey, classifiedCategoryI18nKey } from './classified-utils';
 
 // ----------------------------------------------------------------------
 
@@ -38,12 +43,13 @@ type Props = {
 };
 
 export function ClassifiedTableRow({ row, editHref, onDeleteRow }: Props) {
+  const { t } = useTranslate(['classified', 'common']);
   const menuActions = usePopover();
   const confirmDialog = useBoolean();
 
-  const primary = row.images?.find((i) => i.is_primary) ?? row.images?.[0];
+  const priceRaw = formatClassifiedPrice(row.price, row.price_kind);
   const price =
-    row.price_kind === 'free' ? 'Free' : row.price != null ? String(row.price) : row.price_kind;
+    row.price_kind === 'free' || row.price_kind === 'negotiable' ? t(priceRaw) : priceRaw;
 
   return (
     <>
@@ -52,7 +58,7 @@ export function ClassifiedTableRow({ row, editHref, onDeleteRow }: Props) {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <Avatar
               variant="rounded"
-              src={primary ? fileUrl(primary.file_id) : undefined}
+              src={row.images?.find((i) => i.is_primary) ? fileUrl(row.images.find((i) => i.is_primary)!.file_id) : row.images?.[0] ? fileUrl(row.images[0].file_id) : undefined}
               alt={row.title}
               sx={{ width: 48, height: 48 }}
             />
@@ -62,11 +68,11 @@ export function ClassifiedTableRow({ row, editHref, onDeleteRow }: Props) {
           </Box>
         </TableCell>
 
-        <TableCell sx={{ textTransform: 'capitalize' }}>{row.category.replace('_', ' ')}</TableCell>
+        <TableCell>{t(classifiedCategoryI18nKey(row.category))}</TableCell>
         <TableCell>{price}</TableCell>
         <TableCell>{row.city ?? '—'}</TableCell>
         <TableCell>
-          <Label color={STATUS_COLOR[row.status]}>{row.status}</Label>
+          <Label color={STATUS_COLOR[row.status]}>{t(classifiedStatusI18nKey(row.status))}</Label>
         </TableCell>
 
         <TableCell align="right">
@@ -81,7 +87,7 @@ export function ClassifiedTableRow({ row, editHref, onDeleteRow }: Props) {
           <li>
             <MenuItem component={RouterLink} href={editHref} onClick={menuActions.onClose}>
               <Iconify icon="solar:pen-bold" />
-              Edit
+              {t('common:actions.edit')}
             </MenuItem>
           </li>
           <MenuItem
@@ -92,7 +98,7 @@ export function ClassifiedTableRow({ row, editHref, onDeleteRow }: Props) {
             sx={{ color: 'error.main' }}
           >
             <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete
+            {t('common:actions.delete')}
           </MenuItem>
         </MenuList>
       </CustomPopover>
@@ -100,10 +106,10 @@ export function ClassifiedTableRow({ row, editHref, onDeleteRow }: Props) {
       <ConfirmDialog
         open={confirmDialog.value}
         onClose={confirmDialog.onFalse}
-        title="Delete"
+        title={t('common:confirm.title')}
         content={
           <>
-            Delete <strong>{row.title}</strong>?
+            {t('common:confirm.content')} <strong>{row.title}</strong>?
           </>
         }
         action={
@@ -115,7 +121,7 @@ export function ClassifiedTableRow({ row, editHref, onDeleteRow }: Props) {
               confirmDialog.onFalse();
             }}
           >
-            Delete
+            {t('common:confirm.deleteAction')}
           </Button>
         }
       />

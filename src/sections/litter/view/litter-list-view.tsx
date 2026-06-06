@@ -14,6 +14,7 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { useGetLittersList } from 'src/actions/litter';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetBreeds, useGetKennels } from 'src/actions/reference';
@@ -28,16 +29,18 @@ import { LitterTableToolbar } from '../litter-table-toolbar';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'breed', label: 'Breed' },
-  { id: 'kennel', label: 'Kennel', width: 200 },
-  { id: 'status', label: 'Status', width: 120 },
-  { id: 'born_at', label: 'Born', width: 140 },
-  { id: 'puppies_count', label: 'Puppies', width: 100 },
-  { id: 'price', label: 'Price', width: 140 },
-];
-
 export function LitterListView() {
+  const { t } = useTranslate(['litter', 'common']);
+
+  const TABLE_HEAD: TableHeadCellProps[] = [
+    { id: 'breed', label: t('list.columns.breed') },
+    { id: 'kennel', label: t('list.columns.kennel'), width: 200 },
+    { id: 'status', label: t('list.columns.status'), width: 120 },
+    { id: 'born_at', label: t('list.columns.born'), width: 140 },
+    { id: 'puppies_count', label: t('list.columns.puppies'), width: 100 },
+    { id: 'price', label: t('list.columns.price'), width: 140 },
+  ];
+
   const table = useTable({ defaultRowsPerPage: 25 });
 
   const filters = useSetState<ILitterTableFilters>({ breed_id: '', status: 'all' });
@@ -56,8 +59,8 @@ export function LitterListView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Litters"
-        links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'Litters' }]}
+        heading={t('list.title')}
+        links={[{ name: t('common:dashboard'), href: paths.dashboard.root }, { name: t('list.title') }]}
         action={
           <Button
             component={RouterLink}
@@ -65,7 +68,7 @@ export function LitterListView() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            Add litter
+            {t('list.new')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}

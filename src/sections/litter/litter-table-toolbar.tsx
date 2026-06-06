@@ -1,3 +1,5 @@
+'use client';
+
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 import type { ILitterTableFilters } from 'src/types/litter';
 
@@ -6,6 +8,8 @@ import { useCallback } from 'react';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+
+import { useTranslate } from 'src/locales';
 
 import { LITTER_STATUSES } from 'src/types/litter';
 
@@ -20,6 +24,7 @@ type Props = {
 };
 
 export function LitterTableToolbar({ filters, onResetPage, breedOptions }: Props) {
+  const { t } = useTranslate(['litter', 'common']);
   const { state: currentFilters, setState: updateFilters } = filters;
 
   const handleStatus = useCallback(
@@ -42,27 +47,27 @@ export function LitterTableToolbar({ filters, onResetPage, breedOptions }: Props
     <Box sx={{ p: 2.5, gap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
       <TextField
         select
-        label="Status"
+        label={t('list.filters.status')}
         value={currentFilters.status}
         onChange={handleStatus}
         sx={{ width: { xs: 1, md: 180 } }}
       >
-        <MenuItem value="all">All</MenuItem>
+        <MenuItem value="all">{t('list.filters.all')}</MenuItem>
         {LITTER_STATUSES.map((status) => (
           <MenuItem key={status} value={status}>
-            {status}
+            {t(`common:enums.litterStatus.${status}`)}
           </MenuItem>
         ))}
       </TextField>
 
       <TextField
         select
-        label="Breed"
+        label={t('list.filters.breed')}
         value={currentFilters.breed_id}
         onChange={handleBreed}
         sx={{ width: { xs: 1, md: 240 } }}
       >
-        <MenuItem value="">All</MenuItem>
+        <MenuItem value="">{t('list.filters.all')}</MenuItem>
         {breedOptions.map((breed) => (
           <MenuItem key={breed.id} value={breed.id}>
             {breed.name}

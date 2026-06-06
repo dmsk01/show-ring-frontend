@@ -1,0 +1,53 @@
+{
+  "list": {
+    "title": "Litters",
+    "new": "Add litter",
+    "columns": {
+      "breed": "Breed",
+      "kennel": "Kennel",
+      "status": "Status",
+      "born": "Born",
+      "puppies": "Puppies",
+      "price": "Price"
+    },
+    "filters": {
+      "status": "Status",
+      "breed": "Breed",
+      "all": "All"
+    }
+  },
+  "form": {
+    "headingNew": "Create a new litter",
+    "headingEdit": "Edit litter",
+    "breadcrumb": {
+      "new": "New",
+      "edit": "Edit"
+    },
+    "fields": {
+      "kennel": "Kennel",
+      "breed": "Breed",
+      "father": "Father",
+      "mother": "Mother",
+      "status": "Status",
+      "bornAt": "Born at",
+      "puppiesCount": "Puppies count",
+      "priceFrom": "Price from",
+      "priceTo": "Price to",
+      "description": "Description"
+    },
+    "validation": {
+      "kennelRequired": "Kennel is required!",
+      "breedRequired": "Breed is required!"
+    },
+    "submitCreate": "Create litter",
+    "submitUpdate": "Save changes"
+  },
+  "detail": {
+    "notFound": "Litter not found."
+  },
+  "toast": {
+    "created": "Create success!",
+    "updated": "Update success!",
+    "saveFailed": "Save failed"
+  }
+}

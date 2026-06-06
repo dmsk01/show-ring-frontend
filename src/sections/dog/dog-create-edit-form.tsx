@@ -1,8 +1,10 @@
 'use client';
 
+import type { TFunction } from 'i18next';
 import type { IDogItem } from 'src/types/dog';
 
 import * as z from 'zod';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -15,6 +17,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useTranslate } from 'src/locales';
 import { createDog, updateDog, useGetDogs } from 'src/actions/dog';
 import { useGetBreeds, useGetKennels } from 'src/actions/reference';
 
@@ -23,22 +26,23 @@ import { Form, Field } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
-export type DogSchemaType = z.infer<typeof DogSchema>;
+export const getDogSchema = (t: TFunction) =>
+  z.object({
+    name: z.string().min(1, { error: t('form.validation.nameRequired') }),
+    sex: z.enum(['male', 'female']),
+    breed_id: z.string().min(1, { error: t('form.validation.breedRequired') }),
+    kennel_id: z.string().nullable(),
+    father_id: z.string().nullable(),
+    mother_id: z.string().nullable(),
+    date_of_birth: z.string().nullable(),
+    color: z.string().nullable(),
+    rkf_number: z.string().nullable(),
+    tattoo: z.string().nullable(),
+    microchip: z.string().nullable(),
+    description: z.string().nullable(),
+  });
 
-export const DogSchema = z.object({
-  name: z.string().min(1, { error: 'Name is required!' }),
-  sex: z.enum(['male', 'female']),
-  breed_id: z.string().min(1, { error: 'Breed is required!' }),
-  kennel_id: z.string().nullable(),
-  father_id: z.string().nullable(),
-  mother_id: z.string().nullable(),
-  date_of_birth: z.string().nullable(),
-  color: z.string().nullable(),
-  rkf_number: z.string().nullable(),
-  tattoo: z.string().nullable(),
-  microchip: z.string().nullable(),
-  description: z.string().nullable(),
-});
+export type DogSchemaType = z.infer<ReturnType<typeof getDogSchema>>;
 
 // ----------------------------------------------------------------------
 
@@ -46,10 +50,13 @@ type Props = { currentDog?: IDogItem };
 
 export function DogCreateEditForm({ currentDog }: Props) {
   const router = useRouter();
+  const { t } = useTranslate(['dog', 'common']);
 
   const { breeds } = useGetBreeds();
   const { kennels } = useGetKennels();
   const { dogs } = useGetDogs({ per_page: 200 });
+
+  const schema = useMemo(() => getDogSchema(t), [t]);
 
   const defaultValues: DogSchemaType = {
     name: '',
@@ -68,7 +75,7 @@ export function DogCreateEditForm({ currentDog }: Props) {
 
   const methods = useForm({
     mode: 'onSubmit',
-    resolver: zodResolver(DogSchema),
+    resolver: zodResolver(schema),
     defaultValues,
     values: currentDog
       ? {
@@ -103,10 +110,10 @@ export function DogCreateEditForm({ currentDog }: Props) {
       };
       if (currentDog) {
         await updateDog(currentDog.id, payload);
-        toast.success('Update success!');
+        toast.success(t('toast.updated'));
       } else {
         await createDog(payload);
-        toast.success('Create success!');
+        toast.success(t('toast.created'));
       }
       router.push(paths.dashboard.dogs.root);
     } catch (error) {
@@ -126,12 +133,12 @@ export function DogCreateEditForm({ currentDog }: Props) {
             gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
           }}
         >
-          <Field.Text name="name" label="Name" />
-          <Field.Select name="sex" label="Sex">
-            <MenuItem value="male">Male</MenuItem>
-            <MenuItem value="female">Female</MenuItem>
+          <Field.Text name="name" label={t('form.fields.name')} />
+          <Field.Select name="sex" label={t('form.fields.sex')}>
+            <MenuItem value="male">{t('enums.sex.male')}</MenuItem>
+            <MenuItem value="female">{t('enums.sex.female')}</MenuItem>
           </Field.Select>
-          <Field.Select name="breed_id" label="Breed">
+          <Field.Select name="breed_id" label={t('form.fields.breed')}>
             <MenuItem value="">—</MenuItem>
             {breeds.map((breed) => (
               <MenuItem key={breed.id} value={breed.id}>
@@ -139,7 +146,7 @@ export function DogCreateEditForm({ currentDog }: Props) {
               </MenuItem>
             ))}
           </Field.Select>
-          <Field.Select name="kennel_id" label="Kennel">
+          <Field.Select name="kennel_id" label={t('form.fields.kennel')}>
             <MenuItem value="">—</MenuItem>
             {kennels.map((kennel) => (
               <MenuItem key={kennel.id} value={kennel.id}>
@@ -147,7 +154,7 @@ export function DogCreateEditForm({ currentDog }: Props) {
               </MenuItem>
             ))}
           </Field.Select>
-          <Field.Select name="father_id" label="Father">
+          <Field.Select name="father_id" label={t('form.fields.father')}>
             <MenuItem value="">—</MenuItem>
             {dogs
               .filter((dog) => dog.id !== currentDog?.id)
@@ -157,7 +164,7 @@ export function DogCreateEditForm({ currentDog }: Props) {
                 </MenuItem>
               ))}
           </Field.Select>
-          <Field.Select name="mother_id" label="Mother">
+          <Field.Select name="mother_id" label={t('form.fields.mother')}>
             <MenuItem value="">—</MenuItem>
             {dogs
               .filter((dog) => dog.id !== currentDog?.id)
@@ -167,20 +174,20 @@ export function DogCreateEditForm({ currentDog }: Props) {
                 </MenuItem>
               ))}
           </Field.Select>
-          <Field.Text name="date_of_birth" label="Date of birth" placeholder="YYYY-MM-DD" />
-          <Field.Text name="color" label="Color" />
-          <Field.Text name="rkf_number" label="RKF number" />
-          <Field.Text name="tattoo" label="Tattoo" />
-          <Field.Text name="microchip" label="Microchip" />
+          <Field.Text name="date_of_birth" label={t('form.fields.dateOfBirth')} placeholder="YYYY-MM-DD" />
+          <Field.Text name="color" label={t('form.fields.color')} />
+          <Field.Text name="rkf_number" label={t('form.fields.rkfNumber')} />
+          <Field.Text name="tattoo" label={t('form.fields.tattoo')} />
+          <Field.Text name="microchip" label={t('form.fields.microchip')} />
         </Box>
 
         <Box sx={{ mt: 3 }}>
-          <Field.Text name="description" label="Description" multiline rows={3} />
+          <Field.Text name="description" label={t('form.fields.description')} multiline rows={3} />
         </Box>
 
         <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
           <Button type="submit" variant="contained" loading={isSubmitting}>
-            {currentDog ? 'Save changes' : 'Create dog'}
+            {currentDog ? t('form.submitUpdate') : t('form.submitCreate')}
           </Button>
         </Stack>
       </Card>

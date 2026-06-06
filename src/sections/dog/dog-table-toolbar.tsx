@@ -1,3 +1,5 @@
+'use client';
+
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 import type { IDogTableFilters } from 'src/types/dog';
 
@@ -7,6 +9,8 @@ import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
+
+import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -21,6 +25,7 @@ type Props = {
 };
 
 export function DogTableToolbar({ filters, onResetPage, breedOptions }: Props) {
+  const { t } = useTranslate(['dog', 'common']);
   const { state: currentFilters, setState: updateFilters } = filters;
 
   const handleSearch = useCallback(
@@ -51,24 +56,24 @@ export function DogTableToolbar({ filters, onResetPage, breedOptions }: Props) {
     <Box sx={{ p: 2.5, gap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
       <TextField
         select
-        label="Sex"
+        label={t('list.filters.sex')}
         value={currentFilters.sex}
         onChange={handleSex}
         sx={{ width: { xs: 1, md: 160 } }}
       >
-        <MenuItem value="all">All</MenuItem>
-        <MenuItem value="male">Male</MenuItem>
-        <MenuItem value="female">Female</MenuItem>
+        <MenuItem value="all">{t('list.filters.all')}</MenuItem>
+        <MenuItem value="male">{t('enums.sex.male')}</MenuItem>
+        <MenuItem value="female">{t('enums.sex.female')}</MenuItem>
       </TextField>
 
       <TextField
         select
-        label="Breed"
+        label={t('list.filters.breed')}
         value={currentFilters.breed_id}
         onChange={handleBreed}
         sx={{ width: { xs: 1, md: 220 } }}
       >
-        <MenuItem value="">All</MenuItem>
+        <MenuItem value="">{t('list.filters.all')}</MenuItem>
         {breedOptions.map((b) => (
           <MenuItem key={b.id} value={b.id}>
             {b.name}
@@ -80,7 +85,7 @@ export function DogTableToolbar({ filters, onResetPage, breedOptions }: Props) {
         fullWidth
         value={currentFilters.search}
         onChange={handleSearch}
-        placeholder="Search dogs..."
+        placeholder={t('list.search')}
         slotProps={{
           input: {
             startAdornment: (

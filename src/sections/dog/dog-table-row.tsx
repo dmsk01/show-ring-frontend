@@ -1,3 +1,5 @@
+'use client';
+
 import type { IDogItem } from 'src/types/dog';
 
 import { usePopover } from 'minimal-shared/hooks';
@@ -10,6 +12,8 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 
 import { RouterLink } from 'src/routes/components';
+
+import { useTranslate } from 'src/locales';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -25,6 +29,7 @@ type Props = {
 };
 
 export function DogTableRow({ row, breedName, detailsHref, editHref }: Props) {
+  const { t } = useTranslate(['dog', 'common']);
   const menuActions = usePopover();
 
   return (
@@ -41,7 +46,9 @@ export function DogTableRow({ row, breedName, detailsHref, editHref }: Props) {
         </TableCell>
 
         <TableCell>
-          <Label color={row.sex === 'male' ? 'info' : 'secondary'}>{row.sex}</Label>
+          <Label color={row.sex === 'male' ? 'info' : 'secondary'}>
+            {row.sex === 'female' ? t('enums.sex.female') : t('enums.sex.male')}
+          </Label>
         </TableCell>
 
         <TableCell>{row.rkf_number ?? '—'}</TableCell>
@@ -64,13 +71,13 @@ export function DogTableRow({ row, breedName, detailsHref, editHref }: Props) {
           <li>
             <MenuItem component={RouterLink} href={detailsHref} onClick={menuActions.onClose}>
               <Iconify icon="solar:eye-bold" />
-              View
+              {t('common:actions.view')}
             </MenuItem>
           </li>
           <li>
             <MenuItem component={RouterLink} href={editHref} onClick={menuActions.onClose}>
               <Iconify icon="solar:pen-bold" />
-              Edit
+              {t('common:actions.edit')}
             </MenuItem>
           </li>
         </MenuList>

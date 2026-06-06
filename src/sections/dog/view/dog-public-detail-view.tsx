@@ -15,6 +15,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { fDate } from 'src/utils/format-time';
 
+import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
 import { useGetBreeds } from 'src/actions/reference';
 import { useGetDog, useGetDogTitles, useGetDogPedigree } from 'src/actions/dog';
@@ -32,6 +33,7 @@ import { dogPlaceholderImage } from '../dog-utils';
 type Props = { id: string };
 
 export function DogPublicDetailView({ id }: Props) {
+  const { t } = useTranslate(['dog', 'common']);
   const { dog, dogLoading } = useGetDog(id);
   const { titles } = useGetDogTitles(id);
   const { pedigree } = useGetDogPedigree(id);
@@ -48,20 +50,21 @@ export function DogPublicDetailView({ id }: Props) {
   if (!dog) {
     return (
       <Container sx={{ pt: { xs: 8, md: 12 }, pb: 10 }}>
-        <Typography>Собака не найдена.</Typography>
+        <Typography>{t('detail.notFound')}</Typography>
       </Container>
     );
   }
 
   const breedName = breeds.find((b) => b.id === dog.breed_id)?.name ?? '—';
+  const sexLabel = dog.sex === 'female' ? t('enums.sex.female') : t('enums.sex.male');
 
   const overview = [
-    { label: 'Порода', value: breedName },
-    { label: 'Пол', value: dog.sex === 'female' ? 'Сука' : 'Кобель' },
-    { label: 'Дата рождения', value: dog.date_of_birth ? fDate(dog.date_of_birth) : '—' },
-    { label: 'Окрас', value: dog.color ?? '—' },
-    { label: 'RKF №', value: dog.rkf_number ?? '—' },
-    { label: 'Микрочип', value: dog.microchip ?? '—' },
+    { label: t('detail.breed'), value: breedName },
+    { label: t('detail.sex'), value: sexLabel },
+    { label: t('detail.born'), value: dog.date_of_birth ? fDate(dog.date_of_birth) : '—' },
+    { label: t('detail.color'), value: dog.color ?? '—' },
+    { label: t('detail.rkfNumber'), value: dog.rkf_number ?? '—' },
+    { label: t('detail.microchip'), value: dog.microchip ?? '—' },
   ];
 
   return (
@@ -109,12 +112,12 @@ export function DogPublicDetailView({ id }: Props) {
             {dog.name}
           </Typography>
           <Chip size="small" label={breedName} />
-          <Chip size="small" color="info" label={dog.sex === 'female' ? 'Сука' : 'Кобель'} />
+          <Chip size="small" color="info" label={sexLabel} />
         </Stack>
 
         {dog.kennel_id && (
           <Link component={RouterLink} href={paths.showcase.kennel(dog.kennel_id)} variant="body2">
-            Питомник
+            {t('detail.kennel')}
           </Link>
         )}
 
@@ -143,12 +146,12 @@ export function DogPublicDetailView({ id }: Props) {
         <Stack direction="row" spacing={3} sx={{ mt: 3 }}>
           {dog.father_id && (
             <Link component={RouterLink} href={paths.showcase.dog(dog.father_id)} variant="body2">
-              Отец
+              {t('detail.father')}
             </Link>
           )}
           {dog.mother_id && (
             <Link component={RouterLink} href={paths.showcase.dog(dog.mother_id)} variant="body2">
-              Мать
+              {t('detail.mother')}
             </Link>
           )}
         </Stack>
@@ -163,17 +166,17 @@ export function DogPublicDetailView({ id }: Props) {
         <Divider sx={{ borderStyle: 'dashed', my: 4 }} />
 
         <Typography variant="h6" sx={{ mb: 2 }}>
-          Титулы ({titles.length})
+          {t('detail.titles')} ({titles.length})
         </Typography>
         {titles.length === 0 ? (
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Титулов пока нет.
+            {t('detail.noTitles')}
           </Typography>
         ) : (
           <Stack spacing={1}>
-            {titles.map((t) => (
-              <Typography key={t.id} variant="body2">
-                {t.title_id} — {fDate(t.date_earned)}
+            {titles.map((title) => (
+              <Typography key={title.id} variant="body2">
+                {title.title_id} — {fDate(title.date_earned)}
               </Typography>
             ))}
           </Stack>
@@ -182,14 +185,14 @@ export function DogPublicDetailView({ id }: Props) {
         <Divider sx={{ borderStyle: 'dashed', my: 4 }} />
 
         <Typography variant="h6" sx={{ mb: 2 }}>
-          Родословная
+          {t('detail.pedigree')}
         </Typography>
         <Card sx={{ p: 3 }}>
           {pedigree ? (
             <PedigreeTree node={pedigree} />
           ) : (
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Нет данных о родословной.
+              {t('detail.noPedigree')}
             </Typography>
           )}
         </Card>

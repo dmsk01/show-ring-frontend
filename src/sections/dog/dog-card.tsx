@@ -1,3 +1,5 @@
+'use client';
+
 import type { CardProps } from '@mui/material/Card';
 import type { IDogItem } from 'src/types/dog';
 
@@ -11,6 +13,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { fDate } from 'src/utils/format-time';
 
+import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
 
 import { Image } from 'src/components/image';
@@ -26,6 +29,7 @@ type Props = CardProps & {
 };
 
 export function DogCard({ dog, breedName, sx, ...other }: Props) {
+  const { t } = useTranslate(['dog', 'common']);
   const detailsHref = paths.showcase.dog(dog.id);
 
   const info = [
@@ -40,7 +44,7 @@ export function DogCard({ dog, breedName, sx, ...other }: Props) {
           sx={{ color: 'primary.main' }}
         />
       ),
-      label: dog.sex === 'female' ? 'Сука' : 'Кобель',
+      label: dog.sex === 'female' ? t('enums.sex.female') : t('enums.sex.male'),
     },
     {
       icon: <Iconify icon="solar:calendar-date-bold" sx={{ color: 'warning.main' }} />,

@@ -40,7 +40,7 @@ export function PostSort({ sort, sortOptions, onSort }: Props) {
               onSort(option.value);
             }}
           >
-            {option.label}
+            {t(`list.sort.${option.value}`)}
           </MenuItem>
         ))}
       </MenuList>
@@ -62,7 +62,7 @@ export function PostSort({ sort, sortOptions, onSort }: Props) {
       >
         {t('list.sortBy')}
         <Box component="span" sx={{ ml: 0.5, fontWeight: 'fontWeightBold' }}>
-          {sort}
+          {t(`list.sort.${sort}`)}
         </Box>
       </Button>
 

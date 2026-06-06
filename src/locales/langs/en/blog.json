@@ -5,6 +5,11 @@
     "addPost": "Add post",
     "loadMore": "Load more",
     "sortBy": "Sort by:",
+    "sort": {
+      "latest": "Latest",
+      "popular": "Popular",
+      "oldest": "Oldest"
+    },
     "tabs": {
       "all": "All",
       "published": "Published",
@@ -70,7 +75,11 @@
     "back": "Back",
     "goLive": "Go live",
     "edit": "Edit",
-    "loadingIndicator": "Loading…"
+    "loadingIndicator": "Loading…",
+    "publish": {
+      "published": "Published",
+      "draft": "Draft"
+    }
   },
   "toast": {
     "created": "Create success!",

@@ -61,7 +61,7 @@ export function PostDetailsToolbar({
           >
             {option.value === 'published' && <Iconify icon="eva:cloud-upload-fill" />}
             {option.value === 'draft' && <Iconify icon="solar:file-text-bold" />}
-            {option.label}
+            {t(`toolbar.publish.${option.value}`)}
           </MenuItem>
         ))}
       </MenuList>
@@ -110,7 +110,7 @@ export function PostDetailsToolbar({
           onClick={menuActions.onOpen}
           sx={{ textTransform: 'capitalize' }}
         >
-          {publish}
+          {t(`toolbar.publish.${publish}`)}
         </Button>
       </Box>
 

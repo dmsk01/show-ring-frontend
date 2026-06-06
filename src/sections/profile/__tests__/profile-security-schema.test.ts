@@ -1,6 +1,14 @@
 import { it, expect, describe } from 'vitest';
 
-import { EmailSchema, PasswordSchema } from '../profile-security-form';
+import { getEmailSchema, getPasswordSchema } from '../profile-security-form';
+
+// ----------------------------------------------------------------------
+
+// Identity t: returns the key as-is so we can assert on i18n key strings.
+const t = ((k: string) => k) as any;
+
+const EmailSchema = getEmailSchema(t);
+const PasswordSchema = getPasswordSchema(t);
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +37,9 @@ describe('EmailSchema', () => {
   it('rejects a missing current password', () => {
     const res = EmailSchema.safeParse({ email: 'user@example.com', current_password: '' });
     expect(res.success).toBe(false);
+    if (!res.success) {
+      expect(res.error.issues[0]?.message).toBe('profile:validation.currentPasswordRequired');
+    }
   });
 });
 
@@ -45,13 +56,13 @@ describe('PasswordSchema', () => {
 
   it('rejects new_password shorter than 8 chars', () => {
     const res = PasswordSchema.safeParse({ ...valid, new_password: 'short', confirm_password: 'short' });
-    expect(firstError(res)).toBe('Минимум 8 символов');
+    expect(firstError(res)).toBe('profile:validation.passwordMin');
   });
 
   it('rejects new_password longer than 128 chars', () => {
     const long = 'a'.repeat(129);
     const res = PasswordSchema.safeParse({ ...valid, new_password: long, confirm_password: long });
-    expect(firstError(res)).toBe('Максимум 128 символов');
+    expect(firstError(res)).toBe('profile:validation.passwordMax');
   });
 
   it('rejects when confirm_password does not match (error on confirm_password)', () => {
@@ -59,7 +70,7 @@ describe('PasswordSchema', () => {
     expect(res.success).toBe(false);
     if (!res.success) {
       expect(res.error.issues[0]?.path).toEqual(['confirm_password']);
-      expect(res.error.issues[0]?.message).toBe('Пароли не совпадают');
+      expect(res.error.issues[0]?.message).toBe('profile:validation.passwordMismatch');
     }
   });
 
@@ -69,7 +80,7 @@ describe('PasswordSchema', () => {
     expect(res.success).toBe(false);
     if (!res.success) {
       expect(res.error.issues[0]?.path).toEqual(['new_password']);
-      expect(res.error.issues[0]?.message).toBe('Новый пароль совпадает с текущим');
+      expect(res.error.issues[0]?.message).toBe('profile:validation.passwordSameAsCurrent');
     }
   });
 });

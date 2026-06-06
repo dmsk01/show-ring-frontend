@@ -1,0 +1,62 @@
+{
+  "tabs": {
+    "profile": "Profile",
+    "security": "Security",
+    "socials": "Socials"
+  },
+  "breadcrumb": {
+    "heading": "My Account",
+    "current": "Profile"
+  },
+  "view": {
+    "fields": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "patronymic": "Patronymic",
+      "country": "Country"
+    },
+    "verified": "Verified",
+    "notVerified": "Not verified",
+    "saveChanges": "Save changes"
+  },
+  "security": {
+    "email": {
+      "heading": "Change email",
+      "description": "A confirmation link will be sent to the new address. The email will only change after you follow it.",
+      "fields": {
+        "newEmail": "New email",
+        "currentPassword": "Current password"
+      },
+      "submit": "Save"
+    },
+    "password": {
+      "heading": "Change password",
+      "fields": {
+        "currentPassword": "Current password",
+        "newPassword": "New password",
+        "newPasswordHelper": "8 to 128 characters",
+        "confirmPassword": "Confirm new password"
+      },
+      "submit": "Change password"
+    }
+  },
+  "validation": {
+    "emailRequired": "Enter email",
+    "emailInvalid": "Invalid email",
+    "currentPasswordRequired": "Enter current password",
+    "passwordMin": "Minimum 8 characters",
+    "passwordMax": "Maximum 128 characters",
+    "confirmPasswordRequired": "Confirm new password",
+    "passwordMismatch": "Passwords do not match",
+    "passwordSameAsCurrent": "New password must differ from current"
+  },
+  "toast": {
+    "profileUpdated": "Profile updated",
+    "profileUpdateFailed": "Failed to save",
+    "passwordChanged": "Password changed. Please sign in again.",
+    "emailChangeFallback": "Check your new email to confirm the change"
+  },
+  "placeholder": {
+    "comingSoon": "This section will be available after server support is added."
+  }
+}

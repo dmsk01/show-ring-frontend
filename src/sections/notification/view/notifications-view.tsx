@@ -184,7 +184,7 @@ export function NotificationsView() {
               {subscriptions.map((s) => (
                 <Box key={s.id} sx={{ gap: 1, display: 'flex', alignItems: 'center' }}>
                   <Typography variant="subtitle2" sx={{ flex: 1 }}>
-                    {s.event_type}
+                    {t(`notification:enums.eventType.${s.event_type}`)}
                   </Typography>
                   <Label color="info">{t(`notification:enums.channel.${s.channel}`)}</Label>
                   {breedName(s.filter_breed_id) && <Label>{breedName(s.filter_breed_id)}</Label>}
@@ -247,7 +247,7 @@ export function NotificationsView() {
                       {n.subject}
                     </Typography>
                     <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                      {n.event_type} · {n.created_at?.slice(0, 16).replace('T', ' ')}
+                      {t(`notification:enums.eventType.${n.event_type}`)} · {n.created_at?.slice(0, 16).replace('T', ' ')}
                     </Typography>
                   </Stack>
                   <Label color="default">{t(`notification:enums.channel.${n.channel}`)}</Label>

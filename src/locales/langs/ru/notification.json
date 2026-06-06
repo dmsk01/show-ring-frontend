@@ -24,10 +24,16 @@
   },
   "enums": {
     "eventType": {
-      "show.registration_opened": "Регистрация на выставку открыта",
-      "show.results_published": "Результаты выставки опубликованы",
-      "litter.announced": "Помёт объявлен",
-      "dog.title_earned": "Собака получила титул"
+      "show": {
+        "registration_opened": "Регистрация на выставку открыта",
+        "results_published": "Результаты выставки опубликованы"
+      },
+      "litter": {
+        "announced": "Помёт объявлен"
+      },
+      "dog": {
+        "title_earned": "Собака получила титул"
+      }
     },
     "channel": {
       "email": "Email",

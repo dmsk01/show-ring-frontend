@@ -61,11 +61,11 @@ function ClassifiedsModeration() {
           {items.map((row) => (
             <TableRow key={row.id} hover>
               <TableCell sx={{ fontWeight: 600 }}>{row.title}</TableCell>
-              <TableCell sx={{ textTransform: 'capitalize' }}>
-                {row.category.replace('_', ' ')}
+              <TableCell>
+                {t(`moderation.enums.category.${row.category}`)}
               </TableCell>
               <TableCell>
-                <Label color="warning">{row.status}</Label>
+                <Label color="warning">{t(`moderation.enums.status.${row.status}`)}</Label>
               </TableCell>
               <TableCell align="right">
                 <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>

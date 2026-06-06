@@ -72,7 +72,7 @@ export function AdminUserRow({ row }: Props) {
                 <Chip
                   key={role}
                   size="small"
-                  label={role}
+                  label={t(`users.enums.roles.${role}`)}
                   onDelete={() => handleRole(role, false)}
                 />
               ))
@@ -103,7 +103,7 @@ export function AdminUserRow({ row }: Props) {
               }}
             >
               <Iconify icon="mingcute:add-line" />
-              {role}
+              {t(`users.enums.roles.${role}`)}
             </MenuItem>
           ))}
         </MenuList>

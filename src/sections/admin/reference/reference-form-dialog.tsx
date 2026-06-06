@@ -43,8 +43,6 @@ function getReferenceSchema(config: ReferenceTypeConfig, t: (key: string, opts?:
   return z.object(shape);
 }
 
-export type ReferenceFormType = z.infer<ReturnType<typeof getReferenceSchema>>;
-
 function buildDefaults(config: ReferenceTypeConfig, item?: ReferenceRecord): FormValues {
   const values: FormValues = {};
   config.fields.forEach((f) => {

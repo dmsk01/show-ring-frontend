@@ -36,20 +36,19 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 const KPIS: {
   key: keyof IDashboardStats;
-  tKey: string;
   icon: string;
   color: string;
   href: string;
 }[] = [
-  { key: 'total_users', tKey: 'total_users', icon: 'solar:user-rounded-bold', color: 'primary.main', href: paths.dashboard.adminUsers },
-  { key: 'total_kennels', tKey: 'total_kennels', icon: 'solar:bill-list-bold', color: 'info.main', href: paths.dashboard.kennels.root },
-  { key: 'verified_kennels', tKey: 'verified_kennels', icon: 'solar:shield-check-bold', color: 'success.main', href: paths.dashboard.adminModeration },
-  { key: 'total_dogs', tKey: 'total_dogs', icon: 'solar:heart-bold', color: 'error.main', href: paths.dashboard.dogs.root },
-  { key: 'total_litters', tKey: 'total_litters', icon: 'solar:gallery-add-bold', color: 'warning.main', href: paths.dashboard.litters.root },
-  { key: 'active_classifieds', tKey: 'active_classifieds', icon: 'solar:cart-plus-bold', color: 'secondary.main', href: paths.dashboard.classifieds.root },
-  { key: 'open_shows', tKey: 'open_shows', icon: 'solar:clock-circle-bold', color: 'info.main', href: paths.dashboard.shows.root },
-  { key: 'completed_shows', tKey: 'completed_shows', icon: 'solar:check-circle-bold', color: 'success.main', href: paths.dashboard.shows.root },
-  { key: 'active_campaigns', tKey: 'active_campaigns', icon: 'solar:wad-of-money-bold', color: 'primary.main', href: paths.dashboard.ads.root },
+  { key: 'total_users', icon: 'solar:user-rounded-bold', color: 'primary.main', href: paths.dashboard.adminUsers },
+  { key: 'total_kennels', icon: 'solar:bill-list-bold', color: 'info.main', href: paths.dashboard.kennels.root },
+  { key: 'verified_kennels', icon: 'solar:shield-check-bold', color: 'success.main', href: paths.dashboard.adminModeration },
+  { key: 'total_dogs', icon: 'solar:heart-bold', color: 'error.main', href: paths.dashboard.dogs.root },
+  { key: 'total_litters', icon: 'solar:gallery-add-bold', color: 'warning.main', href: paths.dashboard.litters.root },
+  { key: 'active_classifieds', icon: 'solar:cart-plus-bold', color: 'secondary.main', href: paths.dashboard.classifieds.root },
+  { key: 'open_shows', icon: 'solar:clock-circle-bold', color: 'info.main', href: paths.dashboard.shows.root },
+  { key: 'completed_shows', icon: 'solar:check-circle-bold', color: 'success.main', href: paths.dashboard.shows.root },
+  { key: 'active_campaigns', icon: 'solar:wad-of-money-bold', color: 'primary.main', href: paths.dashboard.ads.root },
 ];
 
 function StatCard({
@@ -139,7 +138,7 @@ export function AdminAnalyticsView() {
         {KPIS.map((kpi) => (
           <Grid key={kpi.key} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
             <StatCard
-              label={t(`analytics.kpi.${kpi.tKey}`)}
+              label={t(`analytics.kpi.${kpi.key}`)}
               value={stats?.[kpi.key] != null ? Number(stats[kpi.key]) : 0}
               icon={kpi.icon}
               color={kpi.color}

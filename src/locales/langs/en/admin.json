@@ -92,6 +92,14 @@
       "emailVerified": {
         "verified": "Verified",
         "unverified": "Unverified"
+      },
+      "roles": {
+        "admin": "Admin",
+        "organizer": "Organizer",
+        "breeder": "Breeder",
+        "judge": "Judge",
+        "buyer": "Buyer",
+        "operator": "Operator"
       }
     },
     "toast": {
@@ -129,6 +137,22 @@
         "name": "Kennel",
         "prefix": "Prefix",
         "verified": "Verified"
+      }
+    },
+    "enums": {
+      "status": {
+        "active": "Active",
+        "moderation": "Moderation",
+        "closed": "Closed",
+        "archived": "Archived"
+      },
+      "category": {
+        "puppy_sale": "Puppies",
+        "adult_sale": "Adults",
+        "mating": "Mating",
+        "handler": "Handler",
+        "grooming": "Grooming",
+        "other": "Other"
       }
     },
     "toast": {

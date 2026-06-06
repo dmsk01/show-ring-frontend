@@ -92,6 +92,14 @@
       "emailVerified": {
         "verified": "Подтверждён",
         "unverified": "Не подтверждён"
+      },
+      "roles": {
+        "admin": "Администратор",
+        "organizer": "Организатор",
+        "breeder": "Заводчик",
+        "judge": "Судья",
+        "buyer": "Покупатель",
+        "operator": "Оператор"
       }
     },
     "toast": {
@@ -129,6 +137,22 @@
         "name": "Питомник",
         "prefix": "Префикс",
         "verified": "Верифицирован"
+      }
+    },
+    "enums": {
+      "status": {
+        "active": "Активно",
+        "moderation": "На модерации",
+        "closed": "Закрыто",
+        "archived": "В архиве"
+      },
+      "category": {
+        "puppy_sale": "Щенки",
+        "adult_sale": "Взрослые",
+        "mating": "Вязка",
+        "handler": "Хендлер",
+        "grooming": "Груминг",
+        "other": "Другое"
       }
     },
     "toast": {

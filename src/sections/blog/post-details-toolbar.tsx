@@ -1,3 +1,5 @@
+'use client';
+
 import type { BoxProps } from '@mui/material/Box';
 
 import { usePopover } from 'minimal-shared/hooks';
@@ -10,6 +12,8 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 
 import { RouterLink } from 'src/routes/components';
+
+import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
@@ -36,6 +40,7 @@ export function PostDetailsToolbar({
   ...other
 }: Props) {
   const menuActions = usePopover();
+  const { t } = useTranslate(['blog', 'common']);
 
   const renderMenuActions = () => (
     <CustomPopover
@@ -77,20 +82,20 @@ export function PostDetailsToolbar({
           href={backHref}
           startIcon={<Iconify icon="eva:arrow-ios-back-fill" width={16} />}
         >
-          Back
+          {t('toolbar.back')}
         </Button>
 
         <Box sx={{ flexGrow: 1 }} />
 
         {publish === 'published' && (
-          <Tooltip title="Go live">
+          <Tooltip title={t('toolbar.goLive')}>
             <IconButton component={RouterLink} href={liveHref}>
               <Iconify icon="eva:external-link-fill" />
             </IconButton>
           </Tooltip>
         )}
 
-        <Tooltip title="Edit">
+        <Tooltip title={t('toolbar.edit')}>
           <IconButton component={RouterLink} href={editHref}>
             <Iconify icon="solar:pen-bold" />
           </IconButton>
@@ -100,7 +105,7 @@ export function PostDetailsToolbar({
           color="inherit"
           variant="contained"
           loading={!publish}
-          loadingIndicator="Loading…"
+          loadingIndicator={t('toolbar.loadingIndicator')}
           endIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
           onClick={menuActions.onOpen}
           sx={{ textTransform: 'capitalize' }}

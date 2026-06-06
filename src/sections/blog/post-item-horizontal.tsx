@@ -1,3 +1,5 @@
+'use client';
+
 import type { CardProps } from '@mui/material/Card';
 import type { IPostItem } from 'src/types/blog';
 
@@ -18,6 +20,8 @@ import { RouterLink } from 'src/routes/components';
 import { fDate } from 'src/utils/format-time';
 import { fShortenNumber } from 'src/utils/format-number';
 
+import { useTranslate } from 'src/locales';
+
 import { Label } from 'src/components/label';
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
@@ -33,6 +37,7 @@ type Props = CardProps & {
 
 export function PostItemHorizontal({ sx, post, editHref, detailsHref, ...other }: Props) {
   const menuActions = usePopover();
+  const { t } = useTranslate(['blog', 'common']);
 
   const renderMenuActions = () => (
     <CustomPopover
@@ -45,20 +50,20 @@ export function PostItemHorizontal({ sx, post, editHref, detailsHref, ...other }
         <li>
           <MenuItem component={RouterLink} href={detailsHref} onClick={() => menuActions.onClose()}>
             <Iconify icon="solar:eye-bold" />
-            View
+            {t('common:actions.view')}
           </MenuItem>
         </li>
 
         <li>
           <MenuItem component={RouterLink} href={editHref} onClick={() => menuActions.onClose()}>
             <Iconify icon="solar:pen-bold" />
-            Edit
+            {t('common:actions.edit')}
           </MenuItem>
         </li>
 
         <MenuItem onClick={() => menuActions.onClose()} sx={{ color: 'error.main' }}>
           <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
+          {t('common:actions.delete')}
         </MenuItem>
       </MenuList>
     </CustomPopover>

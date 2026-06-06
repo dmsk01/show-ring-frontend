@@ -2,6 +2,7 @@
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { useGetPost } from 'src/actions/blog';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -17,15 +18,16 @@ type Props = {
 
 export function PostEditView({ title }: Props) {
   const { post } = useGetPost(title);
+  const { t } = useTranslate(['blog', 'common']);
 
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Edit"
+        heading={t('form.headingEdit')}
         backHref={paths.dashboard.post.root}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Blog', href: paths.dashboard.post.root },
+          { name: t('common:dashboard'), href: paths.dashboard.root },
+          { name: t('list.title'), href: paths.dashboard.post.root },
           { name: post?.title },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}

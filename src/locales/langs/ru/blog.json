@@ -1,0 +1,79 @@
+{
+  "list": {
+    "title": "Блог",
+    "heading": "Список",
+    "addPost": "Добавить публикацию",
+    "loadMore": "Загрузить ещё",
+    "sortBy": "Сортировка:",
+    "tabs": {
+      "all": "Все",
+      "published": "Опубликованные",
+      "draft": "Черновики"
+    },
+    "search": "Поиск..."
+  },
+  "detail": {
+    "comments": "Комментарии",
+    "recentPosts": "Последние публикации",
+    "sharePost": "Поделиться",
+    "home": "Главная"
+  },
+  "form": {
+    "headingCreate": "Новая публикация",
+    "headingEdit": "Редактировать",
+    "details": {
+      "title": "Детали",
+      "subheader": "Заголовок, краткое описание, изображение...",
+      "postTitle": "Заголовок публикации",
+      "description": "Описание",
+      "content": "Содержание",
+      "cover": "Обложка"
+    },
+    "properties": {
+      "title": "Свойства",
+      "subheader": "Дополнительные функции и атрибуты...",
+      "tags": "Теги",
+      "tagsPlaceholder": "+ Теги",
+      "metaTitle": "Мета-заголовок",
+      "metaDescription": "Мета-описание",
+      "metaKeywords": "Мета-ключевые слова",
+      "metaKeywordsPlaceholder": "+ Ключевые слова",
+      "enableComments": "Разрешить комментарии",
+      "publish": "Опубликовать"
+    },
+    "validation": {
+      "titleRequired": "Укажите заголовок!",
+      "descriptionRequired": "Укажите описание!",
+      "contentMin": "Содержание должно быть не менее 100 символов",
+      "coverRequired": "Обложка обязательна!",
+      "tagsMin": "Необходимо минимум 2 тега!",
+      "metaKeywordsRequired": "Мета-ключевые слова обязательны!",
+      "commentRequired": "Введите комментарий!"
+    },
+    "preview": "Предпросмотр",
+    "submitCreate": "Создать публикацию",
+    "submitUpdate": "Сохранить изменения",
+    "previewDialog": {
+      "title": "Предпросмотр",
+      "cancel": "Отмена",
+      "post": "Опубликовать",
+      "emptyContent": "Нет содержания!"
+    }
+  },
+  "comments": {
+    "placeholder": "Напишите комментарий...",
+    "postComment": "Отправить комментарий",
+    "replyPlaceholder": "Напишите ответ...",
+    "reply": "Ответить"
+  },
+  "toolbar": {
+    "back": "Назад",
+    "goLive": "Открыть на сайте",
+    "edit": "Редактировать",
+    "loadingIndicator": "Загрузка…"
+  },
+  "toast": {
+    "created": "Публикация создана!",
+    "updated": "Изменения сохранены!"
+  }
+}

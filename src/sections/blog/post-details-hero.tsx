@@ -1,3 +1,5 @@
+'use client';
+
 import type { BoxProps } from '@mui/material/Box';
 import type { IPostHero } from 'src/types/blog';
 
@@ -15,6 +17,7 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import { fDate } from 'src/utils/format-time';
 
 import { _socials } from 'src/_mock';
+import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
 import { useFilePreview } from 'src/components/file-thumbnail';
@@ -31,6 +34,7 @@ export function PostDetailsHero({
 }: BoxProps & IPostHero) {
   const smUp = useMediaQuery((theme) => theme.breakpoints.up('sm'));
   const { previewUrl } = useFilePreview(coverUrl);
+  const { t } = useTranslate(['blog', 'common']);
 
   return (
     <Box
@@ -101,7 +105,7 @@ export function PostDetailsHero({
 
           <SpeedDial
             direction={smUp ? 'left' : 'up'}
-            ariaLabel="Share post"
+            ariaLabel={t('detail.sharePost')}
             icon={<Iconify icon="solar:share-bold" />}
             FabProps={{ size: 'medium' }}
             sx={{ position: 'absolute', bottom: { xs: 32, md: 64 }, right: { xs: 16, md: 24 } }}

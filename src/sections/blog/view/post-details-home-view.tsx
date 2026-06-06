@@ -16,6 +16,7 @@ import { paths } from 'src/routes/paths';
 
 import { fShortenNumber } from 'src/utils/format-number';
 
+import { useTranslate } from 'src/locales';
 import { useGetPost, useGetLatestPosts } from 'src/actions/blog';
 
 import { Iconify } from 'src/components/iconify';
@@ -36,6 +37,7 @@ type Props = {
 export function PostDetailsHomeView({ title }: Props) {
   const { post } = useGetPost(title);
   const { latestPosts } = useGetLatestPosts(title);
+  const { t } = useTranslate(['blog', 'common']);
 
   return (
     <>
@@ -54,8 +56,8 @@ export function PostDetailsHomeView({ title }: Props) {
       >
         <CustomBreadcrumbs
           links={[
-            { name: 'Home', href: '/' },
-            { name: 'Blog', href: paths.post.root },
+            { name: t('detail.home'), href: '/' },
+            { name: t('list.title'), href: paths.post.root },
             { name: post?.title },
           ]}
           sx={{ maxWidth: 720, mx: 'auto' }}
@@ -121,7 +123,7 @@ export function PostDetailsHomeView({ title }: Props) {
           </Stack>
 
           <Box sx={{ mb: 3, mt: 5, display: 'flex' }}>
-            <Typography variant="h4">Comments</Typography>
+            <Typography variant="h4">{t('detail.comments')}</Typography>
 
             <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
               ({post?.comments.length})
@@ -139,7 +141,7 @@ export function PostDetailsHomeView({ title }: Props) {
       {!!latestPosts?.length && (
         <Container sx={{ pb: 15 }}>
           <Typography variant="h4" sx={{ mb: 5 }}>
-            Recent Posts
+            {t('detail.recentPosts')}
           </Typography>
 
           <Grid container spacing={3}>

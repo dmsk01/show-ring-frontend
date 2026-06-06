@@ -17,6 +17,7 @@ import { paths } from 'src/routes/paths';
 
 import { fShortenNumber } from 'src/utils/format-number';
 
+import { useTranslate } from 'src/locales';
 import { useGetPost } from 'src/actions/blog';
 import { POST_PUBLISH_OPTIONS } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -37,6 +38,7 @@ type Props = {
 
 export function PostDetailsView({ title }: Props) {
   const { post } = useGetPost(title);
+  const { t } = useTranslate(['blog', 'common']);
 
   const [publish, setPublish] = useState('');
 
@@ -131,7 +133,7 @@ export function PostDetailsView({ title }: Props) {
         </Stack>
 
         <Box sx={{ mb: 3, mt: 5, display: 'flex' }}>
-          <Typography variant="h4">Comments</Typography>
+          <Typography variant="h4">{t('detail.comments')}</Typography>
 
           <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
             ({post?.comments.length})

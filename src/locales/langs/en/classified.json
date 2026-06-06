@@ -83,7 +83,6 @@
     "updated": "Update success!",
     "deleted": "Delete success!",
     "deleteFailed": "Delete failed",
-    "saveFailed": "Save failed",
     "uploadPartialFail": "Some images failed to upload",
     "uploadFailed": "Upload failed"
   }

@@ -25,7 +25,7 @@ import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomPopover } from 'src/components/custom-popover';
 
-import { formatClassifiedPrice, classifiedStatusI18nKey, classifiedCategoryI18nKey } from './classified-utils';
+import { formatClassifiedPrice, classifiedStatusI18nKey, classifiedCategoryI18nKey, classifiedPriceKindI18nKey } from './classified-utils';
 
 // ----------------------------------------------------------------------
 
@@ -47,9 +47,10 @@ export function ClassifiedTableRow({ row, editHref, onDeleteRow }: Props) {
   const menuActions = usePopover();
   const confirmDialog = useBoolean();
 
-  const priceRaw = formatClassifiedPrice(row.price, row.price_kind);
   const price =
-    row.price_kind === 'free' || row.price_kind === 'negotiable' ? t(priceRaw) : priceRaw;
+    row.price_kind === 'fixed'
+      ? formatClassifiedPrice(row.price)
+      : t(classifiedPriceKindI18nKey(row.price_kind));
 
   return (
     <>

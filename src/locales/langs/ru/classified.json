@@ -83,7 +83,6 @@
     "updated": "Сохранено!",
     "deleted": "Удалено!",
     "deleteFailed": "Не удалось удалить",
-    "saveFailed": "Ошибка сохранения",
     "uploadPartialFail": "Часть изображений не загружена",
     "uploadFailed": "Ошибка загрузки"
   }

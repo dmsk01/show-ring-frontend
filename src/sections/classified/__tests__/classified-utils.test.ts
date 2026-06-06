@@ -9,17 +9,15 @@ import {
 } from '../classified-utils';
 
 describe('formatClassifiedPrice', () => {
-  it('returns i18n key for free kind', () => {
-    expect(formatClassifiedPrice(0, 'free')).toBe('enums.priceKind.free');
+  it('formats a numeric price with digits', () => {
+    expect(formatClassifiedPrice(1500)).toMatch(/1.?500/);
   });
-  it('returns i18n key for negotiable kind', () => {
-    expect(formatClassifiedPrice(null, 'negotiable')).toBe('enums.priceKind.negotiable');
+  it('returns dash for null price', () => {
+    expect(formatClassifiedPrice(null)).toBe('—');
   });
-  it('formats a fixed price with digits', () => {
-    expect(formatClassifiedPrice(1500, 'fixed')).toMatch(/1.?500/);
-  });
-  it('returns dash for fixed without price', () => {
-    expect(formatClassifiedPrice(null, 'fixed')).toBe('—');
+  it('formats zero price as a displayable string, not an i18n key', () => {
+    const result = formatClassifiedPrice(0);
+    expect(result).not.toMatch(/^enums\./);
   });
 });
 

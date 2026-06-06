@@ -19,7 +19,7 @@ import { Markdown } from 'src/components/markdown';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { Lightbox, useLightbox } from 'src/components/lightbox';
 
-import { formatClassifiedPrice, classifiedCategoryI18nKey } from '../classified-utils';
+import { formatClassifiedPrice, classifiedCategoryI18nKey, classifiedPriceKindI18nKey } from '../classified-utils';
 
 // ----------------------------------------------------------------------
 
@@ -53,11 +53,10 @@ export function ClassifiedDetailView({ id }: Props) {
   }
 
   const breedName = breeds.find((b) => b.id === classified.breed_id)?.name;
-  const priceRaw = formatClassifiedPrice(classified.price, classified.price_kind);
   const priceDisplay =
-    classified.price_kind === 'free' || classified.price_kind === 'negotiable'
-      ? t(priceRaw)
-      : priceRaw;
+    classified.price_kind === 'fixed'
+      ? formatClassifiedPrice(classified.price)
+      : t(classifiedPriceKindI18nKey(classified.price_kind));
 
   return (
     <Container sx={{ pt: { xs: 8, md: 12 }, pb: { xs: 8, md: 12 } }}>

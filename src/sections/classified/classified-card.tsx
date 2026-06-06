@@ -23,6 +23,7 @@ import {
   primaryImageFileId,
   formatClassifiedPrice,
   classifiedCategoryI18nKey,
+  classifiedPriceKindI18nKey,
 } from './classified-utils';
 
 // ----------------------------------------------------------------------
@@ -36,11 +37,10 @@ export function ClassifiedCard({ classified, sx, ...other }: Props) {
   const detailsHref = paths.showcase.classified(classified.id);
   const imageId = primaryImageFileId(classified.images);
 
-  const priceRaw = formatClassifiedPrice(classified.price, classified.price_kind);
   const priceDisplay =
-    classified.price_kind === 'free' || classified.price_kind === 'negotiable'
-      ? t(priceRaw)
-      : priceRaw;
+    classified.price_kind === 'fixed'
+      ? formatClassifiedPrice(classified.price)
+      : t(classifiedPriceKindI18nKey(classified.price_kind));
 
   return (
     <Card sx={sx} {...other}>

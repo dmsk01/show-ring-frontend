@@ -1,4 +1,4 @@
-import type { IClassifiedImage, ClassifiedPriceKind } from 'src/types/classified';
+import type { IClassifiedImage } from 'src/types/classified';
 
 import { fCurrency } from 'src/utils/format-number';
 
@@ -21,20 +21,14 @@ export function classifiedStatusI18nKey(status: string): string {
 }
 
 /**
- * Formats classified price for display.
- * For free/negotiable kinds, returns an i18n KEY so the component can translate it.
- * For fixed with a price, returns the formatted currency string (locale-aware).
- * For fixed without a price, returns an em dash.
+ * Formats a numeric price for display.
+ * Always returns a displayable string — never an i18n key.
+ * For free/negotiable kinds use `classifiedPriceKindI18nKey` + `t()` at the call site.
  *
- * NOTE: callers must check `kind` first — if kind is 'free' or 'negotiable',
- * translate the returned key with t(result, { ns: 'classified' }).
+ * Returns the formatted currency string when `price` is a number,
+ * or an em dash when `price` is null/undefined.
  */
-export function formatClassifiedPrice(
-  price: number | null,
-  kind: ClassifiedPriceKind
-): string {
-  if (kind === 'free') return 'enums.priceKind.free';
-  if (kind === 'negotiable') return 'enums.priceKind.negotiable';
+export function formatClassifiedPrice(price: number | null): string {
   return price != null ? fCurrency(price) : '—';
 }
 

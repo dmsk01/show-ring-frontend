@@ -76,19 +76,48 @@ export function DogPublicDetailView({ id }: Props) {
               gap: 1,
               display: 'grid',
               mb: { xs: 3, md: 5 },
-              gridTemplateColumns: { xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' },
+              gridTemplateColumns: {
+                xs: 'repeat(1, 1fr)',
+                md: slides.length > 1 ? 'repeat(2, 1fr)' : 'repeat(1, 1fr)',
+              },
             }}
           >
-            {slides.slice(0, 4).map((slide) => (
-              <Image
-                key={slide.src}
-                alt={dog.name}
-                src={slide.src}
-                ratio="1/1"
-                onClick={() => lightbox.onOpen(slide.src)}
-                sx={{ borderRadius: 2, cursor: 'pointer', '&:hover': { opacity: 0.8 } }}
-              />
-            ))}
+            <Image
+              alt={dog.name}
+              src={slides[0].src}
+              ratio="1/1"
+              onClick={() => lightbox.onOpen(slides[0].src)}
+              sx={[
+                (theme) => ({
+                  borderRadius: 2,
+                  cursor: 'pointer',
+                  transition: theme.transitions.create('opacity'),
+                  '&:hover': { opacity: 0.8 },
+                }),
+              ]}
+            />
+
+            {slides.length > 1 && (
+              <Box sx={{ gap: 1, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
+                {slides.slice(1, 5).map((slide) => (
+                  <Image
+                    key={slide.src}
+                    alt={dog.name}
+                    src={slide.src}
+                    ratio="1/1"
+                    onClick={() => lightbox.onOpen(slide.src)}
+                    sx={[
+                      (theme) => ({
+                        borderRadius: 2,
+                        cursor: 'pointer',
+                        transition: theme.transitions.create('opacity'),
+                        '&:hover': { opacity: 0.8 },
+                      }),
+                    ]}
+                  />
+                ))}
+              </Box>
+            )}
           </Box>
           <Lightbox
             index={lightbox.selected}

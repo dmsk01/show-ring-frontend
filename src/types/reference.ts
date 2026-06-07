@@ -15,5 +15,5 @@ export type IKennel = {
 
 export type IPageMeta = { total: number; page: number; per_page: number };
 
-export type IBreedPage = { items: IBreed[]; meta: IPageMeta };
-export type IKennelPage = { items: IKennel[]; meta: IPageMeta };
+export type IBreedPage = { items: IBreed[] } & IPageMeta;
+export type IKennelPage = { items: IKennel[] } & IPageMeta;

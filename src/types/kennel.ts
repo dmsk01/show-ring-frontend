@@ -32,7 +32,9 @@ export type IKennelUpdate = Partial<IKennelCreate> & { avatar_file_id?: string |
 
 export type IKennelPage = {
   items: IKennelItem[];
-  meta: { total: number; page: number; per_page: number };
+  total: number;
+  page: number;
+  per_page: number;
 };
 
 export type IKennelTableFilters = {

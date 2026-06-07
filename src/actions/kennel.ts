@@ -25,9 +25,9 @@ export type KennelsQuery = {
 
 // ----------------------------------------------------------------------
 
-// Backend GET /kennels returns a bare array (no pagination wrapper), unlike
-// Dogs/Litters which return { items, meta }. Normalize both shapes defensively
-// so the list keeps working whichever the backend sends.
+// GET /kennels returns a flat page { items, total, page, per_page } (same as
+// Dogs/Litters). A bare-array fallback is kept defensively in case the backend
+// reverts to the older un-wrapped shape.
 export function normalizeKennelsResponse(
   data: IKennelItem[] | IKennelPage | undefined
 ): { items: IKennelItem[]; total: number } {
@@ -35,7 +35,7 @@ export function normalizeKennelsResponse(
     return { items: data, total: data.length };
   }
   const items = data?.items ?? [];
-  return { items, total: data?.meta?.total ?? items.length };
+  return { items, total: data?.total ?? items.length };
 }
 
 export function useGetKennelsList(query: KennelsQuery = {}) {

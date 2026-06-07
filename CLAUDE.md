@@ -41,5 +41,5 @@
 - `tsconfig.json`: без `baseUrl`; алиасы через `paths` (`src/*`). 
 - `npm run build` сейчас падает только на **демо**-странице `/dashboard/post/[title]` (SSR-fetch демо против относительного `/api`) — это припаркованное демо Minimal, не наш код; чистка демо — отдельная задача.
 - Бэкенд (docker-стек) бывает недоступен/инициализируется — рантайм-проверки делай, когда `:8000/health/` отвечает 200; код всегда верифицируй оффлайн (tsc/lint/test).
-- Пагинация бэка неоднородна: Dogs/Litters — плоско `{items,total,page,per_page}`; References/Breeds — `{items, meta:{total,page,per_page}}`; **Kennels (`GET /kennels`) — голый массив `KennelResponse[]` без обёртки и без total** (нормализуй через `normalizeKennelsResponse` в `src/actions/kennel.ts`). Всегда сверяйся со схемой.
+- Пагинация бэка теперь единая плоская `{items,total,page,per_page}` (Dogs/Litters/Kennels/References/Breeds). Kennels-список нормализуй через `normalizeKennelsResponse` (`src/actions/kennel.ts`) — он терпим и к плоской обёртке, и к легаси голому массиву. Всё равно сверяйся со схемой перед реализацией.
 - Коммиты — осмысленными инкрементами; в конце сообщения коммита: `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`.

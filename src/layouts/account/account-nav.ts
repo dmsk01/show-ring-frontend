@@ -22,16 +22,16 @@ export function getUserDisplay(user: UserLike, profile: ProfileLike): UserDispla
 // ----------------------------------------------------------------------
 
 export type MyObjectKey = 'kennels' | 'dogs' | 'litters';
-export type MyObjectLink = { key: MyObjectKey; label: string; href: string };
+export type MyObjectLink = { key: MyObjectKey; href: string };
 
 // Показываем только владельцам (полное право на ресурс), не view-only.
-const MY_OBJECTS: { key: MyObjectKey; label: string; href: string; perm: string }[] = [
-  { key: 'kennels', label: 'Мои питомники', href: paths.dashboard.kennels.root, perm: 'kennels' },
-  { key: 'dogs', label: 'Мои собаки', href: paths.dashboard.dogs.root, perm: 'dogs' },
-  { key: 'litters', label: 'Мои помёты', href: paths.dashboard.litters.root, perm: 'litters' },
+const MY_OBJECTS: { key: MyObjectKey; href: string; perm: string }[] = [
+  { key: 'kennels', href: paths.dashboard.kennels.root, perm: 'kennels' },
+  { key: 'dogs', href: paths.dashboard.dogs.root, perm: 'dogs' },
+  { key: 'litters', href: paths.dashboard.litters.root, perm: 'litters' },
 ];
 
-/** Ссылки «Мои объекты», отфильтрованные по правам (cascade: `kennels` покрывает `kennels:view`, но не наоборот). */
+/** Ссылки «Мои объекты», отфильтрованные по правам (cascade: `kennels` покрывает `kennels:view`, но не наоборот). Подпись резолвится по `key` на стороне UI (i18n). */
 export function getMyObjectLinks(can: (perm: string) => boolean): MyObjectLink[] {
-  return MY_OBJECTS.filter((i) => can(i.perm)).map(({ key, label, href }) => ({ key, label, href }));
+  return MY_OBJECTS.filter((i) => can(i.perm)).map(({ key, href }) => ({ key, href }));
 }

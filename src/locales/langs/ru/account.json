@@ -116,5 +116,14 @@
   },
   "toast": {
     "updated": "Изменения сохранены!"
+  },
+  "drawer": {
+    "dashboard": "Дашборд",
+    "profileSettings": "Настройки профиля",
+    "myKennels": "Мои питомники",
+    "myDogs": "Мои собаки",
+    "myLitters": "Мои помёты",
+    "logout": "Выйти",
+    "logoutError": "Не удалось выйти!"
   }
 }

@@ -116,5 +116,14 @@
   },
   "toast": {
     "updated": "Update success!"
+  },
+  "drawer": {
+    "dashboard": "Dashboard",
+    "profileSettings": "Profile settings",
+    "myKennels": "My kennels",
+    "myDogs": "My dogs",
+    "myLitters": "My litters",
+    "logout": "Log out",
+    "logoutError": "Unable to log out!"
   }
 }

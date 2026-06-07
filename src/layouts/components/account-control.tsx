@@ -6,6 +6,8 @@ import Skeleton from '@mui/material/Skeleton';
 
 import { usePermissions } from 'src/hooks/use-permissions';
 
+import { useTranslate } from 'src/locales';
+
 import { useAuthContext } from 'src/auth/hooks';
 
 import { SignInButton } from './sign-in-button';
@@ -21,6 +23,7 @@ import { getAccountNavData } from '../nav-config-account';
 export function AccountControl({ sx, ...other }: IconButtonProps) {
   const { authenticated, loading } = useAuthContext();
   const { can } = usePermissions();
+  const { t } = useTranslate('account');
 
   if (loading) {
     return <Skeleton variant="circular" width={40} height={40} />;
@@ -30,5 +33,5 @@ export function AccountControl({ sx, ...other }: IconButtonProps) {
     return <SignInButton />;
   }
 
-  return <AccountDrawer data={getAccountNavData(can)} sx={sx} {...other} />;
+  return <AccountDrawer data={getAccountNavData(t, can)} sx={sx} {...other} />;
 }

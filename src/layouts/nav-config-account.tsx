@@ -1,3 +1,5 @@
+import type { TFunction } from 'i18next';
+import type { MyObjectKey } from './account/account-nav';
 import type { AccountDrawerProps } from './components/account-drawer';
 import type { IconifyName } from 'src/components/iconify/register-icons';
 
@@ -11,29 +13,35 @@ import { getMyObjectLinks } from './account/account-nav';
 
 type AccountNavData = NonNullable<AccountDrawerProps['data']>;
 
-const OBJECT_ICON: Record<string, IconifyName> = {
+const OBJECT_ICON: Record<MyObjectKey, IconifyName> = {
   kennels: 'solar:home-2-bold-duotone',
   dogs: 'solar:notes-bold-duotone',
   litters: 'solar:users-group-rounded-bold-duotone',
 };
 
-/** Боевые пункты drawer: Дашборд + Настройки профиля + role-aware «Мои объекты». */
-export function getAccountNavData(can: (perm: string) => boolean): AccountNavData {
+const OBJECT_LABEL_KEY: Record<MyObjectKey, string> = {
+  kennels: 'drawer.myKennels',
+  dogs: 'drawer.myDogs',
+  litters: 'drawer.myLitters',
+};
+
+/** Боевые пункты drawer: Дашборд + Настройки профиля + role-aware «Мои объекты». `t` — namespace `account`. */
+export function getAccountNavData(t: TFunction, can: (perm: string) => boolean): AccountNavData {
   const base: AccountNavData = [
     {
-      label: 'Дашборд',
+      label: t('drawer.dashboard'),
       href: paths.dashboard.root,
       icon: <Iconify icon="solar:home-angle-bold-duotone" />,
     },
     {
-      label: 'Настройки профиля',
+      label: t('drawer.profileSettings'),
       href: paths.dashboard.profile,
       icon: <Iconify icon="solar:settings-bold-duotone" />,
     },
   ];
 
   const myObjects: AccountNavData = getMyObjectLinks(can).map((link) => ({
-    label: link.label,
+    label: t(OBJECT_LABEL_KEY[link.key]),
     href: link.href,
     icon: <Iconify icon={OBJECT_ICON[link.key]} />,
   }));

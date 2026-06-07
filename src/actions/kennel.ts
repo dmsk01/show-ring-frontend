@@ -25,25 +25,42 @@ export type KennelsQuery = {
 
 // ----------------------------------------------------------------------
 
+// Backend GET /kennels returns a bare array (no pagination wrapper), unlike
+// Dogs/Litters which return { items, meta }. Normalize both shapes defensively
+// so the list keeps working whichever the backend sends.
+export function normalizeKennelsResponse(
+  data: IKennelItem[] | IKennelPage | undefined
+): { items: IKennelItem[]; total: number } {
+  if (Array.isArray(data)) {
+    return { items: data, total: data.length };
+  }
+  const items = data?.items ?? [];
+  return { items, total: data?.meta?.total ?? items.length };
+}
+
 export function useGetKennelsList(query: KennelsQuery = {}) {
   const params = Object.fromEntries(
     Object.entries(query).filter(([, v]) => v !== undefined && v !== '')
   );
   const key: [string, { params: Record<string, unknown> }] = [endpoints.kennel.list, { params }];
 
-  const { data, isLoading, error, isValidating } = useSWR<IKennelPage>(key, fetcher, swrOptions);
+  const { data, isLoading, error, isValidating } = useSWR<IKennelItem[] | IKennelPage>(
+    key,
+    fetcher,
+    swrOptions
+  );
 
-  return useMemo(
-    () => ({
-      kennels: data?.items ?? [],
-      kennelsTotal: data?.meta?.total ?? 0,
+  return useMemo(() => {
+    const { items, total } = normalizeKennelsResponse(data);
+    return {
+      kennels: items,
+      kennelsTotal: total,
       kennelsLoading: isLoading,
       kennelsError: error,
       kennelsValidating: isValidating,
-      kennelsEmpty: !isLoading && !isValidating && !(data?.items?.length ?? 0),
-    }),
-    [data, error, isLoading, isValidating]
-  );
+      kennelsEmpty: !isLoading && !isValidating && items.length === 0,
+    };
+  }, [data, error, isLoading, isValidating]);
 }
 
 // ----------------------------------------------------------------------

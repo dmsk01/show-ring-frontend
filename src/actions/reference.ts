@@ -39,11 +39,12 @@ export function useGetBreeds() {
 export function useGetKennels() {
   const key: [string, typeof LIST_PARAMS] = [endpoints.reference.kennels, LIST_PARAMS];
 
-  const { data, isLoading, error } = useSWR<IKennelPage>(key, fetcher, swrOptions);
+  // GET /kennels returns a bare array (no { items, meta } wrapper); accept both.
+  const { data, isLoading, error } = useSWR<IKennel[] | IKennelPage>(key, fetcher, swrOptions);
 
   return useMemo(
     () => ({
-      kennels: (data?.items ?? []) as IKennel[],
+      kennels: (Array.isArray(data) ? data : (data?.items ?? [])) as IKennel[],
       kennelsLoading: isLoading,
       kennelsError: error,
     }),

@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
+import { CONFIG } from 'src/global-config';
 import { fileUrl } from 'src/actions/file';
 import { useTranslate } from 'src/locales';
 import { useGetDogs } from 'src/actions/dog';
@@ -26,6 +27,8 @@ import { ProfileCover } from 'src/sections/user/profile-cover';
 import { KennelLitterCard } from '../kennel-litter-card';
 
 // ----------------------------------------------------------------------
+
+const KENNEL_COVER_PLACEHOLDER = `${CONFIG.assetsDir}/assets/images/mock/cover/cover-4.webp`;
 
 type Props = { id: string };
 
@@ -75,7 +78,7 @@ export function KennelDetailView({ id }: Props) {
         <ProfileCover
           name={kennel.name}
           role={kennel.kennel_prefix ?? ''}
-          coverUrl={avatarUrl || ''}
+          coverUrl={KENNEL_COVER_PLACEHOLDER}
           avatarUrl={avatarUrl || ''}
         />
       </Card>

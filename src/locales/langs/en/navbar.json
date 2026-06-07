@@ -24,5 +24,11 @@
     "analytics": "Analytics (admin)",
     "notifications": "Notifications",
     "profile": "My profile"
+  },
+  "main": {
+    "home": "Home",
+    "kennels": "Kennels",
+    "animals": "Animals",
+    "shows": "Shows"
   }
 }

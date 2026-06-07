@@ -12,7 +12,7 @@ import Alert from '@mui/material/Alert';
 
 import { usePathname } from 'src/routes/hooks';
 
-import { allLangs } from 'src/locales';
+import { allLangs, useTranslate } from 'src/locales';
 
 import { Logo } from 'src/components/logo';
 
@@ -51,11 +51,13 @@ export function MainLayout({
 }: MainLayoutProps) {
   const pathname = usePathname();
 
+  const { t } = useTranslate('navbar');
+
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
   const isHomePage = pathname === '/';
 
-  const navData = slotProps?.nav?.data ?? mainNavData;
+  const navData = slotProps?.nav?.data ?? mainNavData(t);
 
   const renderHeader = () => {
     const headerSlots: HeaderSectionProps['slots'] = {

@@ -1,0 +1,20 @@
+{
+  "description": "Show Ring is a platform for taking part in dog and cat shows: kennel profiles, pedigrees, entries and results in one place.",
+  "nav": {
+    "title": "Navigation",
+    "home": "Home",
+    "kennels": "Kennels",
+    "animals": "Animals",
+    "shows": "Shows"
+  },
+  "info": {
+    "title": "Information",
+    "about": "About us",
+    "contact": "Contact us",
+    "faqs": "FAQs"
+  },
+  "contact": {
+    "title": "Get in touch"
+  },
+  "rights": "All rights reserved."
+}

@@ -1,3 +1,5 @@
+'use client';
+
 import type { Breakpoint } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
@@ -13,32 +15,14 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { _socials } from 'src/_mock';
+import { useTranslate } from 'src/locales';
 
 import { Logo } from 'src/components/logo';
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-const LINKS = [
-  {
-    headline: 'Minimal',
-    children: [
-      { name: 'About us', href: paths.about },
-      { name: 'Contact us', href: paths.contact },
-      { name: 'FAQs', href: paths.faqs },
-    ],
-  },
-  {
-    headline: 'Legal',
-    children: [
-      { name: 'Terms and condition', href: '#' },
-      { name: 'Privacy policy', href: '#' },
-    ],
-  },
-  { headline: 'Contact', children: [{ name: 'support@minimals.cc', href: '#' }] },
-];
-
-// ----------------------------------------------------------------------
+const SUPPORT_EMAIL = 'support@showring.app';
 
 const FooterRoot = styled('footer')(({ theme }) => ({
   position: 'relative',
@@ -52,6 +36,28 @@ export function Footer({
   layoutQuery = 'md',
   ...other
 }: FooterProps & { layoutQuery?: Breakpoint }) {
+  const { t } = useTranslate('footer');
+
+  const linkSections = [
+    {
+      headline: t('nav.title'),
+      children: [
+        { name: t('nav.home'), href: '/' },
+        { name: t('nav.kennels'), href: paths.showcase.kennels },
+        { name: t('nav.animals'), href: paths.showcase.animals },
+        { name: t('nav.shows'), href: paths.showcase.shows },
+      ],
+    },
+    {
+      headline: t('info.title'),
+      children: [
+        { name: t('info.about'), href: paths.about },
+        { name: t('info.contact'), href: paths.contact },
+        { name: t('info.faqs'), href: paths.faqs },
+      ],
+    },
+  ];
+
   return (
     <FooterRoot sx={sx} {...other}>
       <Divider />
@@ -85,8 +91,7 @@ export function Footer({
                 [theme.breakpoints.up(layoutQuery)]: { mx: 'unset' },
               })}
             >
-              The starting point for your next project with Minimal UI Kit, built on the newest
-              version of Material-UI ©, ready to be customized to your style.
+              {t('description')}
             </Typography>
 
             <Box
@@ -118,7 +123,7 @@ export function Footer({
                 [theme.breakpoints.up(layoutQuery)]: { flexDirection: 'row' },
               })}
             >
-              {LINKS.map((list) => (
+              {linkSections.map((list) => (
                 <Box
                   key={list.headline}
                   sx={(theme) => ({
@@ -147,39 +152,32 @@ export function Footer({
                   ))}
                 </Box>
               ))}
+
+              <Box
+                sx={(theme) => ({
+                  gap: 2,
+                  width: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  [theme.breakpoints.up(layoutQuery)]: { alignItems: 'flex-start' },
+                })}
+              >
+                <Typography component="div" variant="overline">
+                  {t('contact.title')}
+                </Typography>
+
+                <Link href={`mailto:${SUPPORT_EMAIL}`} color="inherit" variant="body2">
+                  {SUPPORT_EMAIL}
+                </Link>
+              </Box>
             </Box>
           </Grid>
         </Grid>
 
         <Typography variant="body2" sx={{ mt: 10 }}>
-          © All rights reserved.
+          © {new Date().getFullYear()} Show Ring. {t('rights')}
         </Typography>
-      </Container>
-    </FooterRoot>
-  );
-}
-
-// ----------------------------------------------------------------------
-
-export function HomeFooter({ sx, ...other }: FooterProps) {
-  return (
-    <FooterRoot
-      sx={[
-        {
-          py: 5,
-          textAlign: 'center',
-        },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
-      {...other}
-    >
-      <Container>
-        <Logo />
-        <Box sx={{ mt: 1, typography: 'caption' }}>
-          © All rights reserved.
-          <br /> made by
-          <Link href="https://minimals.cc/"> minimals.cc </Link>
-        </Box>
       </Container>
     </FooterRoot>
   );

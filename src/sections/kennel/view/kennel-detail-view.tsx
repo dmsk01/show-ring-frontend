@@ -2,6 +2,7 @@
 
 import type { IconifyName } from 'src/components/iconify/register-icons';
 
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
@@ -74,12 +75,24 @@ export function KennelDetailView({ id }: Props) {
 
   return (
     <Container sx={{ pt: { xs: 8, md: 12 }, pb: { xs: 8, md: 12 } }}>
-      <Card sx={{ mb: 3, height: 290 }}>
+      <Card sx={{ mb: 3, height: 290, position: 'relative' }}>
         <ProfileCover
           name={kennel.name}
           role={kennel.kennel_prefix ?? ''}
           coverUrl={KENNEL_COVER_PLACEHOLDER}
           avatarUrl={avatarUrl || ''}
+        />
+
+        <Box
+          sx={{
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9,
+            height: 56,
+            position: 'absolute',
+            bgcolor: 'background.paper',
+          }}
         />
       </Card>
 

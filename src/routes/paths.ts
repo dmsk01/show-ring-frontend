@@ -165,6 +165,7 @@ export const paths = {
       details: (id: string) => `${ROOTS.DASHBOARD}/support/${id}`,
     },
     notifications: `${ROOTS.DASHBOARD}/notifications`,
+    demo: `${ROOTS.DASHBOARD}/demo`,
     adminReferences: `${ROOTS.DASHBOARD}/admin/references`,
     adminUsers: `${ROOTS.DASHBOARD}/admin/users`,
     adminModeration: `${ROOTS.DASHBOARD}/admin/moderation`,

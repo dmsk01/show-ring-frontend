@@ -6,8 +6,8 @@ import type { IDogItem } from 'src/types/dog';
 import * as z from 'zod';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
-import { useMemo, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -61,6 +61,16 @@ export function DogCreateEditForm({ currentDog }: Props) {
   const { dogs } = useGetDogs({ per_page: 200 });
 
   const schema = useMemo(() => getDogSchema(t), [t]);
+
+  // Parents must match sex: fathers are males, mothers are females. Exclude self.
+  const maleDogs = useMemo(
+    () => dogs.filter((dog) => dog.id !== currentDog?.id && dog.sex === 'male'),
+    [dogs, currentDog?.id]
+  );
+  const femaleDogs = useMemo(
+    () => dogs.filter((dog) => dog.id !== currentDog?.id && dog.sex === 'female'),
+    [dogs, currentDog?.id]
+  );
 
   const defaultValues: DogSchemaType = {
     name: '',
@@ -116,6 +126,20 @@ export function DogCreateEditForm({ currentDog }: Props) {
   } = methods;
 
   const photos = watch('photos');
+  const fatherId = watch('father_id');
+  const motherId = watch('mother_id');
+
+  // Clear a parent selection that no longer matches the allowed sex (e.g. left
+  // over from before the lists loaded) so we never submit an out-of-range value.
+  useEffect(() => {
+    if (!dogs.length) return;
+    if (fatherId && !maleDogs.some((dog) => dog.id === fatherId)) {
+      setValue('father_id', '');
+    }
+    if (motherId && !femaleDogs.some((dog) => dog.id === motherId)) {
+      setValue('mother_id', '');
+    }
+  }, [dogs.length, fatherId, motherId, maleDogs, femaleDogs, setValue]);
 
   const handleRemovePhoto = useCallback(
     (inputFile: File | string) => {
@@ -206,23 +230,19 @@ export function DogCreateEditForm({ currentDog }: Props) {
           </Field.Select>
           <Field.Select name="father_id" label={t('form.fields.father')}>
             <MenuItem value="">—</MenuItem>
-            {dogs
-              .filter((dog) => dog.id !== currentDog?.id && dog.sex === 'male')
-              .map((dog) => (
-                <MenuItem key={dog.id} value={dog.id}>
-                  {dog.name}
-                </MenuItem>
-              ))}
+            {maleDogs.map((dog) => (
+              <MenuItem key={dog.id} value={dog.id}>
+                {dog.name}
+              </MenuItem>
+            ))}
           </Field.Select>
           <Field.Select name="mother_id" label={t('form.fields.mother')}>
             <MenuItem value="">—</MenuItem>
-            {dogs
-              .filter((dog) => dog.id !== currentDog?.id && dog.sex === 'female')
-              .map((dog) => (
-                <MenuItem key={dog.id} value={dog.id}>
-                  {dog.name}
-                </MenuItem>
-              ))}
+            {femaleDogs.map((dog) => (
+              <MenuItem key={dog.id} value={dog.id}>
+                {dog.name}
+              </MenuItem>
+            ))}
           </Field.Select>
           <Field.DatePicker
             name="date_of_birth"

@@ -29,7 +29,9 @@
       "tattoo": "Tattoo",
       "microchip": "Microchip",
       "description": "Description",
-      "photos": "Photos"
+      "photos": "Photos",
+      "currentPhotos": "Current photos",
+      "addPhotos": "Add photos"
     },
     "validation": {
       "nameRequired": "Name is required!",

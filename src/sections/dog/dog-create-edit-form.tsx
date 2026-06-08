@@ -24,6 +24,7 @@ import { fileUrl, uploadFile } from 'src/actions/file';
 import { useGetBreeds, useGetKennels } from 'src/actions/reference';
 import { createDog, updateDog, useGetDogs, addDogImages } from 'src/actions/dog';
 
+import { Image } from 'src/components/image';
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
 
@@ -113,7 +114,9 @@ export function DogCreateEditForm({ currentDog }: Props) {
           tattoo: currentDog.tattoo,
           microchip: currentDog.microchip,
           description: currentDog.description,
-          photos: existingPhotoUrls,
+          // The upload field holds only NEW files; existing photos are shown
+          // separately (the backend has no per-image delete endpoint yet).
+          photos: [],
         }
       : undefined,
   });
@@ -260,8 +263,31 @@ export function DogCreateEditForm({ currentDog }: Props) {
           <Field.Text name="description" label={t('form.fields.description')} multiline rows={3} />
         </Box>
 
+        {existingPhotoUrls.length > 0 && (
+          <Stack spacing={1.5} sx={{ mt: 3 }}>
+            <Typography variant="subtitle2">{t('form.fields.currentPhotos')}</Typography>
+            <Box
+              sx={{
+                gap: 1,
+                display: 'grid',
+                gridTemplateColumns: {
+                  xs: 'repeat(3, 1fr)',
+                  sm: 'repeat(4, 1fr)',
+                  md: 'repeat(6, 1fr)',
+                },
+              }}
+            >
+              {existingPhotoUrls.map((url) => (
+                <Image key={url} alt="" src={url} ratio="1/1" sx={{ borderRadius: 1.5 }} />
+              ))}
+            </Box>
+          </Stack>
+        )}
+
         <Stack spacing={1.5} sx={{ mt: 3 }}>
-          <Typography variant="subtitle2">{t('form.fields.photos')}</Typography>
+          <Typography variant="subtitle2">
+            {currentDog ? t('form.fields.addPhotos') : t('form.fields.photos')}
+          </Typography>
           <Field.Upload
             multiple
             name="photos"

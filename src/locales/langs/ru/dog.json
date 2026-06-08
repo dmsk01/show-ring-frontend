@@ -29,7 +29,9 @@
       "tattoo": "Клеймо",
       "microchip": "Микрочип",
       "description": "Описание",
-      "photos": "Фотографии"
+      "photos": "Фотографии",
+      "currentPhotos": "Текущие фотографии",
+      "addPhotos": "Добавить фотографии"
     },
     "validation": {
       "nameRequired": "Укажите кличку!",

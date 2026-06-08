@@ -189,7 +189,8 @@ export function DogCreateEditForm({ currentDog }: Props) {
       }
 
       toast.success(currentDog ? t('toast.updated') : t('toast.created'));
-      router.push(paths.dashboard.dogs.root);
+      // Land on the dog we just saved so its data/photos are immediately visible.
+      router.push(paths.dashboard.dogs.details(dog.id));
     } catch (error) {
       console.error(error);
       toast.error(error instanceof Error ? error.message : t('common:state.error'));

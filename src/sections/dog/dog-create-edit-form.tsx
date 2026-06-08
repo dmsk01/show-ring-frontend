@@ -4,6 +4,7 @@ import type { TFunction } from 'i18next';
 import type { IDogItem } from 'src/types/dog';
 
 import * as z from 'zod';
+import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { useMemo, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -139,6 +140,8 @@ export function DogCreateEditForm({ currentDog }: Props) {
         kennel_id: rest.kennel_id || null,
         father_id: rest.father_id || null,
         mother_id: rest.mother_id || null,
+        // Backend expects a plain date (YYYY-MM-DD); the picker stores a full ISO string.
+        date_of_birth: rest.date_of_birth ? dayjs(rest.date_of_birth).format('YYYY-MM-DD') : null,
       };
 
       const dog = currentDog
@@ -221,7 +224,11 @@ export function DogCreateEditForm({ currentDog }: Props) {
                 </MenuItem>
               ))}
           </Field.Select>
-          <Field.Text name="date_of_birth" label={t('form.fields.dateOfBirth')} placeholder="YYYY-MM-DD" />
+          <Field.DatePicker
+            name="date_of_birth"
+            label={t('form.fields.dateOfBirth')}
+            format="DD.MM.YYYY"
+          />
           <Field.Text name="color" label={t('form.fields.color')} />
           <Field.Text name="rkf_number" label={t('form.fields.rkfNumber')} />
           <Field.Text name="tattoo" label={t('form.fields.tattoo')} />

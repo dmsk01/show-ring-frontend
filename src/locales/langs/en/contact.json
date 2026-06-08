@@ -1,0 +1,25 @@
+{
+  "hero": {
+    "title": ["How to", "reach us?"],
+    "channels": [
+      { "label": "Email", "value": "info@showring.ru" },
+      { "label": "Support", "value": "support@showring.ru" },
+      { "label": "Phone", "value": "+7 (495) 000-00-00" },
+      { "label": "Hours", "value": "Mon–Fri, 10:00–19:00" }
+    ]
+  },
+  "form": {
+    "title": "Feel free to contact us. We'll be glad to hear from you."
+  },
+  "info": {
+    "title": "Contact information",
+    "subtitle": "Write to us — we usually reply within one business day.",
+    "items": [
+      { "label": "Email", "value": "info@showring.ru", "href": "mailto:info@showring.ru" },
+      { "label": "Support", "value": "support@showring.ru", "href": "mailto:support@showring.ru" },
+      { "label": "Phone", "value": "+7 (495) 000-00-00", "href": "tel:+74950000000" },
+      { "label": "Support hours", "value": "Mon–Fri, 10:00–19:00 (MSK)", "href": "" }
+    ],
+    "socialsTitle": "We're on social media"
+  }
+}

@@ -1,3 +1,5 @@
+'use client';
+
 import type { BoxProps } from '@mui/material/Box';
 
 import { m } from 'framer-motion';
@@ -8,12 +10,19 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/global-config';
+import { useTranslate } from 'src/locales';
 
 import { varFade, AnimateText, MotionContainer, animateTextClasses } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
+type Channel = { label: string; value: string };
+
 export function ContactHero({ sx, ...other }: BoxProps) {
+  const { t } = useTranslate('contact');
+
+  const channels = t('hero.channels', { returnObjects: true }) as Channel[];
+
   return (
     <Box
       component="section"
@@ -45,7 +54,7 @@ export function ContactHero({ sx, ...other }: BoxProps) {
           <AnimateText
             component="h1"
             variant="h1"
-            textContent={['Where', 'to find us?']}
+            textContent={t('hero.title', { returnObjects: true }) as string[]}
             variants={varFade('inUp', { distance: 24 })}
             sx={{
               color: 'common.white',
@@ -66,17 +75,17 @@ export function ContactHero({ sx, ...other }: BoxProps) {
               gridTemplateColumns: { xs: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
             }}
           >
-            {CONTACTS.map((contact) => (
-              <li key={contact.country}>
+            {channels.map((channel) => (
+              <li key={channel.label}>
                 <m.div variants={varFade('inUp', { distance: 24 })}>
                   <Typography variant="h6" sx={{ mb: 1 }}>
-                    {contact.country}
+                    {channel.label}
                   </Typography>
                 </m.div>
 
                 <m.div variants={varFade('inUp', { distance: 24 })}>
                   <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                    {contact.address}
+                    {channel.value}
                   </Typography>
                 </m.div>
               </li>
@@ -87,28 +96,3 @@ export function ContactHero({ sx, ...other }: BoxProps) {
     </Box>
   );
 }
-
-// ----------------------------------------------------------------------
-
-const CONTACTS = [
-  {
-    country: 'Bali',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(239) 555-0108',
-  },
-  {
-    country: 'London',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(319) 555-0115',
-  },
-  {
-    country: 'Prague',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(252) 555-0126',
-  },
-  {
-    country: 'Moscow',
-    address: '508 Bridle',
-    phoneNumber: '(307) 555-0133',
-  },
-];

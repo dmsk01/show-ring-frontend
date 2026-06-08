@@ -1,3 +1,5 @@
+'use client';
+
 import type { BoxProps } from '@mui/material/Box';
 
 import { m } from 'framer-motion';
@@ -8,11 +10,12 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import LinearProgress from '@mui/material/LinearProgress';
 
-import { fPercent } from 'src/utils/format-number';
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 
 import { CONFIG } from 'src/global-config';
+import { useTranslate } from 'src/locales';
 
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
@@ -21,6 +24,10 @@ import { varFade, MotionViewport } from 'src/components/animate';
 // ----------------------------------------------------------------------
 
 export function AboutWhat({ sx, ...other }: BoxProps) {
+  const { t } = useTranslate('about');
+
+  const features = t('what.features', { returnObjects: true }) as string[];
+
   return (
     <Box
       component="section"
@@ -74,7 +81,7 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
 
           <Grid size={{ xs: 12, md: 6, lg: 5 }}>
             <Typography component={m.h2} variants={varFade('inRight')} variant="h2" sx={{ mb: 3 }}>
-              What is Minimal?
+              {t('what.title')}
             </Typography>
 
             <Typography
@@ -89,55 +96,47 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
                 }),
               ]}
             >
-              Our theme is the most advanced and user-friendly theme you will find on the market, we
-              have documentation and video to help set your site really easily, pre-installed demos
-              you can import in one click and everything from the theme options to page content can
-              be edited from the front-end. This is the theme you are looking for.
+              {t('what.text')}
             </Typography>
 
             <Box
+              component="ul"
               sx={{
                 my: 5,
-                gap: 3,
+                gap: 2,
                 display: 'flex',
                 flexDirection: 'column',
+                textAlign: 'left',
               }}
             >
-              {SKILLS.map((progress, index) => (
-                <m.div key={progress.label} variants={varFade('inRight')}>
-                  <Box
-                    sx={{
-                      mb: 1,
-                      display: 'flex',
-                      typography: 'body2',
-                      alignItems: 'center',
-                      color: 'text.secondary',
-                    }}
-                  >
-                    <Typography variant="subtitle2" sx={{ flexGrow: 1, color: 'text.primary' }}>
-                      {progress.label}
-                    </Typography>
-                    {fPercent(progress.value)}
-                  </Box>
-
-                  <LinearProgress
-                    color={(index === 0 && 'primary') || (index === 1 && 'warning') || 'error'}
-                    variant="determinate"
-                    value={progress.value}
+              {features.map((feature) => (
+                <Box
+                  key={feature}
+                  component={m.li}
+                  variants={varFade('inRight')}
+                  sx={{ gap: 1.5, display: 'flex', alignItems: 'flex-start' }}
+                >
+                  <Iconify
+                    icon="solar:check-circle-bold"
+                    width={24}
+                    sx={{ flexShrink: 0, color: 'primary.main' }}
                   />
-                </m.div>
+                  <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                    {feature}
+                  </Typography>
+                </Box>
               ))}
             </Box>
 
             <Button
-              component={m.button}
-              variants={varFade('inRight')}
+              component={RouterLink}
+              href={paths.showcase.shows}
               variant="outlined"
               color="inherit"
               size="large"
               endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
             >
-              Our work
+              {t('what.cta')}
             </Button>
           </Grid>
         </Grid>
@@ -145,10 +144,3 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
     </Box>
   );
 }
-
-// ----------------------------------------------------------------------
-
-const SKILLS = Array.from({ length: 3 }, (_, index) => ({
-  value: [20, 40, 60][index],
-  label: ['Development', 'Design', 'Marketing'][index],
-}));

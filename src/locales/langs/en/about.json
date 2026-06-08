@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "title": ["Who", "we are?"],
+    "subtitle": "Show Ring brings breeders, handlers and organizers together — shows, animals and entries in one place."
+  },
+  "what": {
+    "title": "What is Show Ring?",
+    "text": "Show Ring is a modern platform for taking part in dog and cat shows under FCI and national rules. Keep your kennel profile, pedigrees and titles in one place, submit entries online and follow results — without paperwork or queues.",
+    "features": [
+      "Online show entries in a couple of minutes",
+      "Kennel, pedigrees and titles in a single profile",
+      "A show calendar across regions",
+      "Transparent results and judging online"
+    ],
+    "cta": "Open calendar"
+  },
+  "vision": {
+    "text": "Our mission is to make taking part in shows simple and transparent — so you can focus on your animals, not the paperwork."
+  },
+  "team": {
+    "overline": "Our team",
+    "title": "People behind Show Ring",
+    "text": "Breeders, developers and show experts building a platform we want to use ourselves. Questions? Our support replies within a day.",
+    "button": "All members"
+  },
+  "testimonials": {
+    "overline": "Testimonials",
+    "title": ["Loved by", "the community"],
+    "text": "Our goal is a product that breeders, handlers and organizers rely on every day. We keep improving it and really listen to what the community has to say.",
+    "more": "Read more",
+    "items": [
+      {
+        "name": "Anna Sokolova",
+        "role": "Breeder, Severnaya Zvezda kennel",
+        "content": "Submitted entries to three shows in one evening instead of a week of emails. All titles landed in the dog's profile automatically.",
+        "rating": 5,
+        "date": "2026-04-12"
+      },
+      {
+        "name": "Igor Lebedev",
+        "role": "Show organizer",
+        "content": "Catalogue, rings and results all in one place. Judges enter their scores right in the system.",
+        "rating": 5,
+        "date": "2026-03-28"
+      },
+      {
+        "name": "Maria Orlova",
+        "role": "Handler",
+        "content": "A handy dashboard: I can see entry status and the ring schedule without calling organizers.",
+        "rating": 5,
+        "date": "2026-05-02"
+      },
+      {
+        "name": "Dmitry Karpov",
+        "role": "Breeder, Grand Line kennel",
+        "content": "Pedigrees and litters are online now, not in a notebook. Saves a ton of time before the season.",
+        "rating": 4,
+        "date": "2026-02-15"
+      }
+    ]
+  }
+}

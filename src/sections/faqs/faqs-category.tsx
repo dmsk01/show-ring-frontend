@@ -1,3 +1,5 @@
+'use client';
+
 import { useBoolean } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
@@ -8,40 +10,34 @@ import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
 
 import { CONFIG } from 'src/global-config';
+import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-const CATEGORIES = [
-  {
-    label: 'Managing your account',
-    icon: `${CONFIG.assetsDir}/assets/icons/faqs/ic-account.svg`,
-    href: '#',
-  },
-  { label: 'Payment', icon: `${CONFIG.assetsDir}/assets/icons/faqs/ic-payment.svg`, href: '#' },
-  { label: 'Delivery', icon: `${CONFIG.assetsDir}/assets/icons/faqs/ic-delivery.svg`, href: '#' },
-  {
-    label: 'Problem with the product',
-    icon: `${CONFIG.assetsDir}/assets/icons/faqs/ic-package.svg`,
-    href: '#',
-  },
-  {
-    label: 'Return & refund',
-    icon: `${CONFIG.assetsDir}/assets/icons/faqs/ic-refund.svg`,
-    href: '#',
-  },
-  {
-    label: 'Guarantees and assurances',
-    icon: `${CONFIG.assetsDir}/assets/icons/faqs/ic-assurances.svg`,
-    href: '#',
-  },
+const CATEGORY_ICONS = [
+  `${CONFIG.assetsDir}/assets/icons/faqs/ic-account.svg`,
+  `${CONFIG.assetsDir}/assets/icons/faqs/ic-package.svg`,
+  `${CONFIG.assetsDir}/assets/icons/faqs/ic-delivery.svg`,
+  `${CONFIG.assetsDir}/assets/icons/faqs/ic-assurances.svg`,
+  `${CONFIG.assetsDir}/assets/icons/faqs/ic-payment.svg`,
+  `${CONFIG.assetsDir}/assets/icons/faqs/ic-refund.svg`,
 ];
 
 // ----------------------------------------------------------------------
 
 export function FaqsCategory() {
+  const { t } = useTranslate('faqs');
+
   const navOpen = useBoolean();
+
+  const labels = t('categories', { returnObjects: true }) as string[];
+
+  const categories = labels.map((label, index) => ({
+    label,
+    icon: CATEGORY_ICONS[index] ?? CATEGORY_ICONS[0],
+  }));
 
   const renderMobile = () => (
     <>
@@ -59,7 +55,7 @@ export function FaqsCategory() {
         ]}
       >
         <Button startIcon={<Iconify icon="solar:list-bold" />} onClick={navOpen.onTrue}>
-          Categories
+          {t('categoriesLabel')}
         </Button>
       </Box>
 
@@ -72,7 +68,7 @@ export function FaqsCategory() {
             gridTemplateColumns: 'repeat(2, 1fr)',
           }}
         >
-          {CATEGORIES.map((category) => (
+          {categories.map((category) => (
             <ItemMobile key={category.label} category={category} />
           ))}
         </Box>
@@ -88,7 +84,7 @@ export function FaqsCategory() {
         gridTemplateColumns: { md: 'repeat(3, 1fr)', lg: 'repeat(6, 1fr)' },
       }}
     >
-      {CATEGORIES.map((category) => (
+      {categories.map((category) => (
         <ItemDesktop key={category.label} category={category} />
       ))}
     </Box>
@@ -105,7 +101,7 @@ export function FaqsCategory() {
 // ----------------------------------------------------------------------
 
 type ItemProps = {
-  category: (typeof CATEGORIES)[number];
+  category: { label: string; icon: string };
 };
 
 function ItemDesktop({ category }: ItemProps) {

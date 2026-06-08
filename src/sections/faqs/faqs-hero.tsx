@@ -1,3 +1,5 @@
+'use client';
+
 import type { BoxProps } from '@mui/material/Box';
 
 import { m } from 'framer-motion';
@@ -10,6 +12,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 
 import { CONFIG } from 'src/global-config';
+import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
 import { varFade, AnimateText, MotionContainer, animateTextClasses } from 'src/components/animate';
@@ -17,6 +20,8 @@ import { varFade, AnimateText, MotionContainer, animateTextClasses } from 'src/c
 // ----------------------------------------------------------------------
 
 export function FaqsHero({ sx, ...other }: BoxProps) {
+  const { t } = useTranslate('faqs');
+
   return (
     <Box
       component="section"
@@ -48,7 +53,7 @@ export function FaqsHero({ sx, ...other }: BoxProps) {
           <AnimateText
             component="h1"
             variant="h1"
-            textContent={['Where', 'can we help you?']}
+            textContent={t('hero.title', { returnObjects: true }) as string[]}
             variants={varFade('inRight', { distance: 24 })}
             sx={{
               color: 'common.white',
@@ -61,7 +66,7 @@ export function FaqsHero({ sx, ...other }: BoxProps) {
           <m.div variants={varFade('inUp', { distance: 24 })}>
             <TextField
               fullWidth
-              placeholder="Search support..."
+              placeholder={t('hero.searchPlaceholder')}
               slotProps={{
                 input: {
                   startAdornment: (

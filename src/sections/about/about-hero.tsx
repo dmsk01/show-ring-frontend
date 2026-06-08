@@ -1,3 +1,5 @@
+'use client';
+
 import type { BoxProps } from '@mui/material/Box';
 
 import { m } from 'framer-motion';
@@ -7,12 +9,15 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/global-config';
+import { useTranslate } from 'src/locales';
 
 import { varFade, AnimateText, MotionContainer, animateTextClasses } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
 export function AboutHero({ sx, ...other }: BoxProps) {
+  const { t } = useTranslate('about');
+
   return (
     <Box
       component="section"
@@ -44,7 +49,7 @@ export function AboutHero({ sx, ...other }: BoxProps) {
           <AnimateText
             component="h1"
             variant="h1"
-            textContent={['Who', 'we are?']}
+            textContent={t('hero.title', { returnObjects: true }) as string[]}
             variants={varFade('inRight', { distance: 24 })}
             sx={{
               color: 'common.white',
@@ -59,8 +64,7 @@ export function AboutHero({ sx, ...other }: BoxProps) {
               variant="h4"
               sx={{ mt: 3, color: 'common.white', fontWeight: 'fontWeightSemiBold' }}
             >
-              Let&apos;s work together and
-              <br /> make awesome site easily
+              {t('hero.subtitle')}
             </Typography>
           </m.div>
         </Box>

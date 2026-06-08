@@ -4,6 +4,8 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
+import { useTranslate } from 'src/locales';
+
 import { FaqsHero } from '../faqs-hero';
 import { FaqsList } from '../faqs-list';
 import { FaqsForm } from '../faqs-form';
@@ -12,6 +14,8 @@ import { FaqsCategory } from '../faqs-category';
 // ----------------------------------------------------------------------
 
 export function FaqsView() {
+  const { t } = useTranslate('faqs');
+
   return (
     <>
       <FaqsHero />
@@ -19,7 +23,7 @@ export function FaqsView() {
         <FaqsCategory />
 
         <Typography variant="h3" sx={{ my: { xs: 5, md: 10 } }}>
-          Frequently asked questions
+          {t('title')}
         </Typography>
 
         <Box

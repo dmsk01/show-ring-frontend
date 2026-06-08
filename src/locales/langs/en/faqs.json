@@ -1,0 +1,53 @@
+{
+  "hero": {
+    "title": ["How can", "we help you?"],
+    "searchPlaceholder": "Search help..."
+  },
+  "categoriesLabel": "Categories",
+  "categories": [
+    "Account & profile",
+    "Animals & pedigrees",
+    "Shows & entries",
+    "Results & titles",
+    "Payment",
+    "For organizers"
+  ],
+  "title": "Frequently asked questions",
+  "list": [
+    {
+      "q": "What is Show Ring?",
+      "a": "An online platform for managing animal shows: breeders keep kennel profiles, handlers submit entries, and organizers create events and publish results."
+    },
+    {
+      "q": "Which animals can I register?",
+      "a": "Dogs and cats under FCI and national rules to start with. The architecture is multi-species, so the list of breeds and judging systems will keep growing."
+    },
+    {
+      "q": "How do I enter a show?",
+      "a": "Create a profile, add an animal, open the show calendar and submit an entry in one click. Entry status is visible in your dashboard."
+    },
+    {
+      "q": "How much does it cost?",
+      "a": "Registration on the platform is free. The entry fee for a particular show is set by the organizer and shown in the event details."
+    },
+    {
+      "q": "Where can I see results and titles?",
+      "a": "Show results, scores and awarded titles are published online and added to your animal's profile automatically."
+    },
+    {
+      "q": "How do I add a pedigree and a litter?",
+      "a": "In your kennel profile add an animal, fill in its pedigree and, if needed, create a litter — the data is available when submitting entries and in the catalogue."
+    },
+    {
+      "q": "I'm an organizer. How do I create a show?",
+      "a": "Organizers get an event management area: create a show, set up rings and classes, publish the schedule and the final results."
+    },
+    {
+      "q": "What languages are available?",
+      "a": "The interface is available in Russian and English; you can switch the language at any time in the settings."
+    }
+  ],
+  "form": {
+    "title": "Haven't found the right answer?"
+  }
+}

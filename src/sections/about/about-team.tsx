@@ -1,3 +1,5 @@
+'use client';
+
 import type { BoxProps } from '@mui/material/Box';
 
 import { m } from 'framer-motion';
@@ -9,6 +11,7 @@ import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
+import { useTranslate } from 'src/locales';
 import { _socials, _carouselsMembers } from 'src/_mock';
 
 import { Image } from 'src/components/image';
@@ -19,6 +22,8 @@ import { Carousel, useCarousel, CarouselArrowFloatButtons } from 'src/components
 // ----------------------------------------------------------------------
 
 export function AboutTeam({ sx, ...other }: BoxProps) {
+  const { t } = useTranslate('about');
+
   const carousel = useCarousel({
     align: 'start',
     slideSpacing: '24px',
@@ -39,20 +44,19 @@ export function AboutTeam({ sx, ...other }: BoxProps) {
       <Container component={MotionViewport} sx={{ textAlign: 'center', py: { xs: 10, md: 15 } }}>
         <m.div variants={varFade('inDown')}>
           <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-            Dream team
+            {t('team.overline')}
           </Typography>
         </m.div>
 
         <m.div variants={varFade('inUp')}>
           <Typography variant="h2" sx={{ my: 3 }}>
-            Great team is the key
+            {t('team.title')}
           </Typography>
         </m.div>
 
         <m.div variants={varFade('inUp')}>
           <Typography sx={{ mx: 'auto', maxWidth: 640, color: 'text.secondary' }}>
-            Minimal will provide you support if you have any problems, our support team will reply
-            within a day and we also have detailed documentation.
+            {t('team.text')}
           </Typography>
         </m.div>
 
@@ -80,7 +84,7 @@ export function AboutTeam({ sx, ...other }: BoxProps) {
           endIcon={<Iconify icon="eva:arrow-ios-forward-fill" width={24} />}
           sx={{ mx: 'auto' }}
         >
-          All members
+          {t('team.button')}
         </Button>
       </Container>
     </Box>

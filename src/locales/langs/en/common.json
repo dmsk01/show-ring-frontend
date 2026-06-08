@@ -20,6 +20,13 @@
     "view": "View",
     "more": "More"
   },
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Enter your message here.",
+    "submit": "Submit"
+  },
   "table": {
     "name": "Name",
     "status": "Status",

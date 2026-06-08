@@ -1,6 +1,8 @@
-import type { BoxProps } from '@mui/material/Box';
-import type { IDateValue } from 'src/types/common';
+'use client';
 
+import type { BoxProps } from '@mui/material/Box';
+
+import { Fragment } from 'react';
 import { m } from 'framer-motion';
 import { varAlpha } from 'minimal-shared/utils';
 
@@ -14,20 +16,36 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 
-import { fDate } from 'src/utils/format-time';
-
-import { _testimonials } from 'src/_mock';
+import { _mock } from 'src/_mock';
 import { CONFIG } from 'src/global-config';
+import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
 import { varFade, MotionViewport } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
+type TestimonialData = {
+  name: string;
+  role: string;
+  content: string;
+  rating: number;
+};
+
 export function AboutTestimonials({ sx, ...other }: BoxProps) {
+  const { t } = useTranslate('about');
+
+  const title = t('testimonials.title', { returnObjects: true }) as string[];
+  const items = t('testimonials.items', { returnObjects: true }) as TestimonialData[];
+
+  const testimonials = items.map((item, index) => ({
+    ...item,
+    avatarUrl: _mock.image.avatar(index + 1),
+  }));
+
   const renderLink = () => (
     <Button color="primary" endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}>
-      Read more
+      {t('testimonials.more')}
     </Button>
   );
 
@@ -35,23 +53,23 @@ export function AboutTestimonials({ sx, ...other }: BoxProps) {
     <Box sx={{ maxWidth: { md: 360 }, textAlign: { xs: 'center', md: 'unset' } }}>
       <m.div variants={varFade('inUp')}>
         <Typography variant="overline" sx={{ color: 'common.white', opacity: 0.48 }}>
-          Testimonials
+          {t('testimonials.overline')}
         </Typography>
       </m.div>
 
       <m.div variants={varFade('inUp')}>
         <Typography variant="h2" sx={{ my: 3, color: 'common.white' }}>
-          Who love <br />
-          my work
+          {title.map((line, index) => (
+            <Fragment key={line}>
+              {line}
+              {index < title.length - 1 && <br />}
+            </Fragment>
+          ))}
         </Typography>
       </m.div>
 
       <m.div variants={varFade('inUp')}>
-        <Typography sx={{ color: 'common.white' }}>
-          Our goal is to create a product and service that you’re satisfied with and use it every
-          day. This is why we’re constantly working on our services to make it better every day and
-          really listen to what our users has to say.
-        </Typography>
+        <Typography sx={{ color: 'common.white' }}>{t('testimonials.text')}</Typography>
       </m.div>
 
       <Box
@@ -76,7 +94,7 @@ export function AboutTestimonials({ sx, ...other }: BoxProps) {
       ]}
     >
       <Masonry spacing={3} columns={{ xs: 1, md: 2 }} sx={{ ml: 0 }}>
-        {_testimonials.map((testimonial) => (
+        {testimonials.map((testimonial) => (
           <m.div key={testimonial.name} variants={varFade('inUp')}>
             <TestimonialItem testimonial={testimonial} />
           </m.div>
@@ -136,13 +154,7 @@ export function AboutTestimonials({ sx, ...other }: BoxProps) {
 // ----------------------------------------------------------------------
 
 type TestimonialItemProps = BoxProps & {
-  testimonial: {
-    name: string;
-    content: string;
-    avatarUrl: string;
-    ratingNumber: number;
-    postedDate: IDateValue;
-  };
+  testimonial: TestimonialData & { avatarUrl: string };
 };
 
 function TestimonialItem({ testimonial, sx, ...other }: TestimonialItemProps) {
@@ -166,14 +178,14 @@ function TestimonialItem({ testimonial, sx, ...other }: TestimonialItemProps) {
 
       <Typography variant="body2">{testimonial.content}</Typography>
 
-      <Rating value={testimonial.ratingNumber} readOnly size="small" />
+      <Rating value={testimonial.rating} readOnly size="small" />
 
       <Box sx={{ gap: 2, display: 'flex' }}>
         <Avatar alt={testimonial.name} src={testimonial.avatarUrl} />
 
         <ListItemText
           primary={testimonial.name}
-          secondary={fDate(testimonial.postedDate)}
+          secondary={testimonial.role}
           slotProps={{
             secondary: {
               sx: {

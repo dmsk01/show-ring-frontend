@@ -1,3 +1,5 @@
+'use client';
+
 import type { BoxProps } from '@mui/material/Box';
 
 import Box from '@mui/material/Box';
@@ -5,15 +7,16 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import { useTranslate } from 'src/locales';
+
 // ----------------------------------------------------------------------
 
 export function ContactForm({ sx, ...other }: BoxProps) {
+  const { t } = useTranslate(['contact', 'common']);
+
   return (
     <Box sx={sx} {...other}>
-      <Typography variant="h3">
-        Feel free to contact us. <br />
-        We&apos;ll be glad to hear from you buddy.
-      </Typography>
+      <Typography variant="h3">{t('form.title')}</Typography>
       <Box
         sx={{
           my: 5,
@@ -22,14 +25,14 @@ export function ContactForm({ sx, ...other }: BoxProps) {
           flexDirection: 'column',
         }}
       >
-        <TextField fullWidth label="Name" />
-        <TextField fullWidth label="Email" />
-        <TextField fullWidth label="Subject" />
-        <TextField fullWidth label="Enter your message here." multiline rows={4} />
+        <TextField fullWidth label={t('common:form.name')} />
+        <TextField fullWidth label={t('common:form.email')} />
+        <TextField fullWidth label={t('common:form.subject')} />
+        <TextField fullWidth label={t('common:form.message')} multiline rows={4} />
       </Box>
 
       <Button size="large" variant="contained">
-        Submit
+        {t('common:form.submit')}
       </Button>
     </Box>
   );

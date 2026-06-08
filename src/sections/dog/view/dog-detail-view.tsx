@@ -88,32 +88,50 @@ export function DogDetailView({ id }: Props) {
               <>
                 <Box
                   sx={{
-                    gap: 1.5,
+                    gap: 1,
                     display: 'grid',
                     gridTemplateColumns: {
-                      xs: 'repeat(2, 1fr)',
-                      sm: 'repeat(3, 1fr)',
-                      md: 'repeat(4, 1fr)',
+                      xs: 'repeat(1, 1fr)',
+                      md: slides.length > 1 ? 'repeat(2, 1fr)' : 'repeat(1, 1fr)',
                     },
                   }}
                 >
-                  {slides.map((slide) => (
-                    <Image
-                      key={slide.src}
-                      alt={dog.name}
-                      src={slide.src}
-                      ratio="1/1"
-                      onClick={() => lightbox.onOpen(slide.src)}
-                      sx={[
-                        (theme) => ({
-                          borderRadius: 1.5,
-                          cursor: 'pointer',
-                          transition: theme.transitions.create('opacity'),
-                          '&:hover': { opacity: 0.8 },
-                        }),
-                      ]}
-                    />
-                  ))}
+                  <Image
+                    alt={dog.name}
+                    src={slides[0].src}
+                    ratio="1/1"
+                    onClick={() => lightbox.onOpen(slides[0].src)}
+                    sx={[
+                      (theme) => ({
+                        borderRadius: 2,
+                        cursor: 'pointer',
+                        transition: theme.transitions.create('opacity'),
+                        '&:hover': { opacity: 0.8 },
+                      }),
+                    ]}
+                  />
+
+                  {slides.length > 1 && (
+                    <Box sx={{ gap: 1, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
+                      {slides.slice(1, 5).map((slide) => (
+                        <Image
+                          key={slide.src}
+                          alt={dog.name}
+                          src={slide.src}
+                          ratio="1/1"
+                          onClick={() => lightbox.onOpen(slide.src)}
+                          sx={[
+                            (theme) => ({
+                              borderRadius: 2,
+                              cursor: 'pointer',
+                              transition: theme.transitions.create('opacity'),
+                              '&:hover': { opacity: 0.8 },
+                            }),
+                          ]}
+                        />
+                      ))}
+                    </Box>
+                  )}
                 </Box>
 
                 <Lightbox
@@ -127,8 +145,8 @@ export function DogDetailView({ id }: Props) {
               <Image
                 alt={dog.name}
                 src={dogPlaceholderImage(dog.sex)}
-                ratio="1/1"
-                sx={{ borderRadius: 1.5, maxWidth: 320 }}
+                ratio="16/9"
+                sx={{ borderRadius: 2 }}
               />
             )}
 

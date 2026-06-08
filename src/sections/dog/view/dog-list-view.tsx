@@ -1,8 +1,9 @@
 'use client';
 
-import type { IDogTableFilters } from 'src/types/dog';
+import type { DogSex, IDogTableFilters } from 'src/types/dog';
 import type { TableHeadCellProps } from 'src/components/table';
 
+import { useEffect } from 'react';
 import { useSetState } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
@@ -13,6 +14,7 @@ import TableBody from '@mui/material/TableBody';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
+import { useRouter, usePathname, useSearchParams } from 'src/routes/hooks';
 
 import { useTranslate } from 'src/locales';
 import { useGetDogs } from 'src/actions/dog';
@@ -48,10 +50,44 @@ export function DogListView() {
     { id: '', width: 88 },
   ];
 
-  const table = useTable({ defaultRowsPerPage: 25 });
+  // Persist search/filters/page in the URL so they survive navigating away and
+  // back (and are shareable). Seeded once from the address bar on mount.
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const filters = useSetState<IDogTableFilters>({ search: '', breed_id: '', kennel_id: '', sex: 'all' });
+  const pageParam = Number(searchParams.get('page'));
+
+  const table = useTable({
+    defaultRowsPerPage: 25,
+    defaultCurrentPage: pageParam > 1 ? pageParam - 1 : 0,
+  });
+
+  const filters = useSetState<IDogTableFilters>({
+    search: searchParams.get('search') ?? '',
+    breed_id: searchParams.get('breed_id') ?? '',
+    kennel_id: searchParams.get('kennel_id') ?? '',
+    sex: (searchParams.get('sex') as DogSex | 'all') ?? 'all',
+  });
   const { state: currentFilters } = filters;
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (currentFilters.search) params.set('search', currentFilters.search);
+    if (currentFilters.breed_id) params.set('breed_id', currentFilters.breed_id);
+    if (currentFilters.sex !== 'all') params.set('sex', currentFilters.sex);
+    if (table.page > 0) params.set('page', String(table.page + 1));
+
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname);
+  }, [
+    currentFilters.search,
+    currentFilters.breed_id,
+    currentFilters.sex,
+    table.page,
+    pathname,
+    router,
+  ]);
 
   const { breeds } = useGetBreeds();
 

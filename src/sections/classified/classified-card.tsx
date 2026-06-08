@@ -45,6 +45,19 @@ export function ClassifiedCard({ classified, sx, ...other }: Props) {
   return (
     <Card sx={sx} {...other}>
       <Box sx={{ p: 1, position: 'relative' }}>
+        {classified.sex && (
+          <Label
+            color={classified.sex === 'female' ? 'secondary' : 'info'}
+            startIcon={
+              <Iconify
+                icon={classified.sex === 'female' ? 'solar:women-bold' : 'solar:men-bold'}
+              />
+            }
+            sx={{ position: 'absolute', top: 16, left: 16, zIndex: 9 }}
+          >
+            {t(classified.sex === 'female' ? 'enums.sex.female' : 'enums.sex.male')}
+          </Label>
+        )}
         <Label
           color="info"
           sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}

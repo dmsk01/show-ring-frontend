@@ -1,3 +1,5 @@
+import type { DogSex } from './dog';
+
 export type ClassifiedCategory =
   | 'puppy_sale'
   | 'adult_sale'
@@ -36,6 +38,8 @@ export type IClassifiedItem = {
   description: string;
   breed_id: string | null;
   litter_id: string | null;
+  // Animal sex; null for sexless categories (grooming/handler) or legacy rows.
+  sex: DogSex | null;
   price: number | null;
   price_kind: ClassifiedPriceKind;
   city: string | null;

@@ -111,6 +111,15 @@ export function ClassifiedDetailView({ id }: Props) {
               {breedName}
             </Box>
           )}
+          {classified.sex && (
+            <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+              <Iconify
+                icon={classified.sex === 'female' ? 'solar:women-bold' : 'solar:men-bold'}
+                sx={{ color: 'primary.main' }}
+              />
+              {t(classified.sex === 'female' ? 'enums.sex.female' : 'enums.sex.male')}
+            </Box>
+          )}
           <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
             <Iconify icon="mingcute:location-fill" sx={{ color: 'error.main' }} />
             {classified.city ?? '—'}

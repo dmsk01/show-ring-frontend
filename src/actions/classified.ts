@@ -24,6 +24,10 @@ export type ClassifiedsQuery = {
   per_page?: number;
   category?: string;
   breed_id?: string;
+  // Backend does not filter by sex yet (Classified has no `sex` column) — see
+  // docs/superpowers/specs/2026-06-08-classified-sex-filter-backend.md. The param
+  // is harmlessly ignored by FastAPI until that lands.
+  sex?: 'male' | 'female';
   city?: string;
   price_from?: number;
   price_to?: number;

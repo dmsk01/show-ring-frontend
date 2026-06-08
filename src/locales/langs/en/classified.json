@@ -47,7 +47,14 @@
   "showcase": {
     "title": "Pets — classifieds",
     "searchPlaceholder": "Search by title...",
+    "category": "Category",
     "allCategories": "All categories",
+    "breed": "Breed",
+    "allBreeds": "All breeds",
+    "sex": "Sex",
+    "anySex": "Any sex",
+    "priceFrom": "Price from",
+    "priceTo": "Price to",
     "city": "City",
     "empty": "No classifieds found",
     "sort": {
@@ -65,6 +72,10 @@
       "handler": "Handler",
       "grooming": "Grooming",
       "other": "Other"
+    },
+    "sex": {
+      "male": "Male",
+      "female": "Female"
     },
     "priceKind": {
       "fixed": "Fixed",

@@ -47,7 +47,14 @@
   "showcase": {
     "title": "Животные — объявления",
     "searchPlaceholder": "Поиск по заголовку...",
+    "category": "Категория",
     "allCategories": "Все категории",
+    "breed": "Порода",
+    "allBreeds": "Все породы",
+    "sex": "Пол",
+    "anySex": "Любой пол",
+    "priceFrom": "Цена от",
+    "priceTo": "Цена до",
     "city": "Город",
     "empty": "Объявления не найдены",
     "sort": {
@@ -65,6 +72,10 @@
       "handler": "Хендлер",
       "grooming": "Груминг",
       "other": "Другое"
+    },
+    "sex": {
+      "male": "Кобель",
+      "female": "Сука"
     },
     "priceKind": {
       "fixed": "Фиксированная",

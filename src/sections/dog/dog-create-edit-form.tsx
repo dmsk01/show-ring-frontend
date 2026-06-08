@@ -207,7 +207,7 @@ export function DogCreateEditForm({ currentDog }: Props) {
           <Field.Select name="father_id" label={t('form.fields.father')}>
             <MenuItem value="">—</MenuItem>
             {dogs
-              .filter((dog) => dog.id !== currentDog?.id)
+              .filter((dog) => dog.id !== currentDog?.id && dog.sex === 'male')
               .map((dog) => (
                 <MenuItem key={dog.id} value={dog.id}>
                   {dog.name}
@@ -217,7 +217,7 @@ export function DogCreateEditForm({ currentDog }: Props) {
           <Field.Select name="mother_id" label={t('form.fields.mother')}>
             <MenuItem value="">—</MenuItem>
             {dogs
-              .filter((dog) => dog.id !== currentDog?.id)
+              .filter((dog) => dog.id !== currentDog?.id && dog.sex === 'female')
               .map((dog) => (
                 <MenuItem key={dog.id} value={dog.id}>
                   {dog.name}

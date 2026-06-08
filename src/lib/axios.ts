@@ -164,6 +164,7 @@ export const endpoints = {
     details: (id: string) => `/dogs/${id}`,
     pedigree: (id: string) => `/dogs/${id}/pedigree`,
     titles: (id: string) => `/dogs/${id}/titles`,
+    images: (id: string) => `/dogs/${id}/images`,
   },
   kennel: {
     list: '/kennels',

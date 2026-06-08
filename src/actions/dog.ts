@@ -6,6 +6,7 @@ import type {
   IDogCreate,
   IDogUpdate,
   IPedigreeNode,
+  IDogImageCreate,
 } from 'src/types/dog';
 
 import { useMemo } from 'react';
@@ -105,6 +106,17 @@ export async function createDog(payload: IDogCreate): Promise<IDogItem> {
 
 export async function updateDog(dogId: string, payload: IDogUpdate): Promise<IDogItem> {
   const res = await axios.put<IDogItem>(endpoints.dog.details(dogId), payload);
+  await mutate(endpoints.dog.details(dogId));
+  await mutate((key) => Array.isArray(key) && key[0] === endpoints.dog.list);
+  return res.data;
+}
+
+/** Attach already-uploaded files (file_id from uploadFile) to a dog. */
+export async function addDogImages(
+  dogId: string,
+  images: IDogImageCreate[]
+): Promise<IDogItem> {
+  const res = await axios.post<IDogItem>(endpoints.dog.images(dogId), images);
   await mutate(endpoints.dog.details(dogId));
   await mutate((key) => Array.isArray(key) && key[0] === endpoints.dog.list);
   return res.data;

@@ -45,6 +45,13 @@ export type IDogCreate = {
 
 export type IDogUpdate = Partial<IDogCreate>;
 
+/** Attach an already-uploaded file (file_id from POST /files/upload) to a dog. */
+export type IDogImageCreate = {
+  file_id: string;
+  position?: number;
+  is_primary?: boolean;
+};
+
 export type IDogPage = {
   items: IDogItem[];
   total: number;

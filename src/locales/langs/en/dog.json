@@ -28,7 +28,8 @@
       "rkfNumber": "RKF number",
       "tattoo": "Tattoo",
       "microchip": "Microchip",
-      "description": "Description"
+      "description": "Description",
+      "photos": "Photos"
     },
     "validation": {
       "nameRequired": "Name is required!",

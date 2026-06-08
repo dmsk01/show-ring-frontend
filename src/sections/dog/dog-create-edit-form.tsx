@@ -4,8 +4,8 @@ import type { TFunction } from 'i18next';
 import type { IDogItem } from 'src/types/dog';
 
 import * as z from 'zod';
-import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { useMemo, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
@@ -13,13 +13,15 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useTranslate } from 'src/locales';
-import { createDog, updateDog, useGetDogs } from 'src/actions/dog';
+import { fileUrl, uploadFile } from 'src/actions/file';
 import { useGetBreeds, useGetKennels } from 'src/actions/reference';
+import { createDog, updateDog, useGetDogs, addDogImages } from 'src/actions/dog';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
@@ -40,6 +42,7 @@ export const getDogSchema = (t: TFunction) =>
     tattoo: z.string().nullable(),
     microchip: z.string().nullable(),
     description: z.string().nullable(),
+    photos: z.array(z.union([z.string(), z.file()])),
   });
 
 export type DogSchemaType = z.infer<ReturnType<typeof getDogSchema>>;
@@ -71,7 +74,15 @@ export function DogCreateEditForm({ currentDog }: Props) {
     tattoo: null,
     microchip: null,
     description: null,
+    photos: [],
   };
+
+  // Existing images (avatar first), shown as preview URLs in the upload field.
+  const existingPhotoUrls = currentDog
+    ? [currentDog.avatar_file_id, ...currentDog.photo_file_ids]
+        .filter((v, i, arr): v is string => !!v && arr.indexOf(v) === i)
+        .map((fid) => fileUrl(fid))
+    : [];
 
   const methods = useForm({
     mode: 'onSubmit',
@@ -91,30 +102,66 @@ export function DogCreateEditForm({ currentDog }: Props) {
           tattoo: currentDog.tattoo,
           microchip: currentDog.microchip,
           description: currentDog.description,
+          photos: existingPhotoUrls,
         }
       : undefined,
   });
 
   const {
+    watch,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
+  const photos = watch('photos');
+
+  const handleRemovePhoto = useCallback(
+    (inputFile: File | string) => {
+      setValue(
+        'photos',
+        photos.filter((file) => file !== inputFile),
+        { shouldValidate: true }
+      );
+    },
+    [photos, setValue]
+  );
+
+  const handleRemoveAllPhotos = useCallback(() => {
+    setValue('photos', [], { shouldValidate: true });
+  }, [setValue]);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
+      const { photos: photoValues, ...rest } = data;
       const payload = {
-        ...data,
-        kennel_id: data.kennel_id || null,
-        father_id: data.father_id || null,
-        mother_id: data.mother_id || null,
+        ...rest,
+        kennel_id: rest.kennel_id || null,
+        father_id: rest.father_id || null,
+        mother_id: rest.mother_id || null,
       };
-      if (currentDog) {
-        await updateDog(currentDog.id, payload);
-        toast.success(t('toast.updated'));
-      } else {
-        await createDog(payload);
-        toast.success(t('toast.created'));
+
+      const dog = currentDog
+        ? await updateDog(currentDog.id, payload)
+        : await createDog(payload);
+
+      // Newly dropped files (strings are already-attached previews — skip them).
+      const newFiles = photoValues.filter((p): p is File => p instanceof File);
+      if (newFiles.length) {
+        const uploaded = await Promise.all(newFiles.map((file) => uploadFile(file)));
+        // Make the first photo the avatar only when the dog has none yet.
+        const hasAvatar = !!dog.avatar_file_id;
+        await addDogImages(
+          dog.id,
+          uploaded.map((f, i) => ({
+            file_id: f.id,
+            position: i,
+            is_primary: !hasAvatar && i === 0,
+          }))
+        );
       }
+
+      toast.success(currentDog ? t('toast.updated') : t('toast.created'));
       router.push(paths.dashboard.dogs.root);
     } catch (error) {
       console.error(error);
@@ -184,6 +231,17 @@ export function DogCreateEditForm({ currentDog }: Props) {
         <Box sx={{ mt: 3 }}>
           <Field.Text name="description" label={t('form.fields.description')} multiline rows={3} />
         </Box>
+
+        <Stack spacing={1.5} sx={{ mt: 3 }}>
+          <Typography variant="subtitle2">{t('form.fields.photos')}</Typography>
+          <Field.Upload
+            multiple
+            name="photos"
+            maxSize={5242880}
+            onRemove={handleRemovePhoto}
+            onRemoveAll={handleRemoveAllPhotos}
+          />
+        </Stack>
 
         <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
           <Button type="submit" variant="contained" loading={isSubmitting}>

@@ -28,7 +28,8 @@
       "rkfNumber": "Номер РКФ",
       "tattoo": "Клеймо",
       "microchip": "Микрочип",
-      "description": "Описание"
+      "description": "Описание",
+      "photos": "Фотографии"
     },
     "validation": {
       "nameRequired": "Укажите кличку!",

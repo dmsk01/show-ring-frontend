@@ -123,8 +123,10 @@ export async function addDogImages(
 }
 
 /** Detach a photo (dog↔file link) from a dog. Backend: DELETE /dogs/{id}/images/{file_id}. */
-export async function deleteDogImage(dogId: string, fileId: string): Promise<void> {
-  await axios.delete(endpoints.dog.image(dogId, fileId));
-  await mutate(endpoints.dog.details(dogId));
+export async function deleteDogImage(dogId: string, fileId: string): Promise<IDogItem> {
+  // Backend returns the updated dog — seed the detail cache from it (no extra GET).
+  const res = await axios.delete<IDogItem>(endpoints.dog.image(dogId, fileId));
+  await mutate(endpoints.dog.details(dogId), res.data, { revalidate: false });
   await mutate((key) => Array.isArray(key) && key[0] === endpoints.dog.list);
+  return res.data;
 }

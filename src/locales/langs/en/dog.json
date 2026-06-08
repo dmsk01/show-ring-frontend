@@ -37,6 +37,11 @@
       "nameRequired": "Name is required!",
       "breedRequired": "Breed is required!"
     },
+    "deletePhoto": {
+      "title": "Delete photo",
+      "content": "This photo will be detached from the dog. This action cannot be undone.",
+      "confirm": "Delete"
+    },
     "submitCreate": "Create dog",
     "submitUpdate": "Save changes"
   },
@@ -65,5 +70,5 @@
     "dam": "Dam"
   },
   "enums": { "sex": { "male": "Male", "female": "Female" } },
-  "toast": { "created": "Create success!", "updated": "Update success!" }
+  "toast": { "created": "Create success!", "updated": "Update success!", "photoDeleted": "Photo deleted" }
 }

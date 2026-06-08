@@ -7,13 +7,14 @@ import * as z from 'zod';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
@@ -22,11 +23,13 @@ import { useRouter } from 'src/routes/hooks';
 import { useTranslate } from 'src/locales';
 import { fileUrl, uploadFile } from 'src/actions/file';
 import { useGetBreeds, useGetKennels } from 'src/actions/reference';
-import { createDog, updateDog, useGetDogs, addDogImages } from 'src/actions/dog';
+import { createDog, updateDog, useGetDogs, addDogImages, deleteDogImage } from 'src/actions/dog';
 
 import { Image } from 'src/components/image';
 import { toast } from 'src/components/snackbar';
+import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
+import { ConfirmDialog } from 'src/components/custom-dialog';
 
 // ----------------------------------------------------------------------
 
@@ -89,11 +92,12 @@ export function DogCreateEditForm({ currentDog }: Props) {
     photos: [],
   };
 
-  // Existing images (avatar first), shown as preview URLs in the upload field.
-  const existingPhotoUrls = currentDog
-    ? [currentDog.avatar_file_id, ...currentDog.photo_file_ids]
-        .filter((v, i, arr): v is string => !!v && arr.indexOf(v) === i)
-        .map((fid) => fileUrl(fid))
+  // Existing image file_ids (avatar first), shown as a read-only gallery with
+  // a per-photo delete control in edit mode.
+  const existingPhotoIds = currentDog
+    ? [currentDog.avatar_file_id, ...currentDog.photo_file_ids].filter(
+        (v, i, arr): v is string => !!v && arr.indexOf(v) === i
+      )
     : [];
 
   const methods = useForm({
@@ -158,6 +162,25 @@ export function DogCreateEditForm({ currentDog }: Props) {
   const handleRemoveAllPhotos = useCallback(() => {
     setValue('photos', [], { shouldValidate: true });
   }, [setValue]);
+
+  // Deleting an already-attached photo (file_id) via the backend.
+  const [photoToDelete, setPhotoToDelete] = useState<string | null>(null);
+  const [deletingPhoto, setDeletingPhoto] = useState(false);
+
+  const handleConfirmDeletePhoto = useCallback(async () => {
+    if (!currentDog || !photoToDelete) return;
+    try {
+      setDeletingPhoto(true);
+      await deleteDogImage(currentDog.id, photoToDelete);
+      toast.success(t('toast.photoDeleted'));
+      setPhotoToDelete(null);
+    } catch (error) {
+      console.error(error);
+      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+    } finally {
+      setDeletingPhoto(false);
+    }
+  }, [currentDog, photoToDelete, t]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -263,7 +286,7 @@ export function DogCreateEditForm({ currentDog }: Props) {
           <Field.Text name="description" label={t('form.fields.description')} multiline rows={3} />
         </Box>
 
-        {existingPhotoUrls.length > 0 && (
+        {existingPhotoIds.length > 0 && (
           <Stack spacing={1.5} sx={{ mt: 3 }}>
             <Typography variant="subtitle2">{t('form.fields.currentPhotos')}</Typography>
             <Box
@@ -277,8 +300,25 @@ export function DogCreateEditForm({ currentDog }: Props) {
                 },
               }}
             >
-              {existingPhotoUrls.map((url) => (
-                <Image key={url} alt="" src={url} ratio="1/1" sx={{ borderRadius: 1.5 }} />
+              {existingPhotoIds.map((fid) => (
+                <Box key={fid} sx={{ position: 'relative' }}>
+                  <Image alt="" src={fileUrl(fid)} ratio="1/1" sx={{ borderRadius: 1.5 }} />
+                  <IconButton
+                    type="button"
+                    size="small"
+                    onClick={() => setPhotoToDelete(fid)}
+                    sx={{
+                      position: 'absolute',
+                      top: 4,
+                      right: 4,
+                      color: 'common.white',
+                      bgcolor: 'rgba(0, 0, 0, 0.48)',
+                      '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.72)' },
+                    }}
+                  >
+                    <Iconify icon="mingcute:close-line" width={16} />
+                  </IconButton>
+                </Box>
               ))}
             </Box>
           </Stack>
@@ -303,6 +343,23 @@ export function DogCreateEditForm({ currentDog }: Props) {
           </Button>
         </Stack>
       </Card>
+
+      <ConfirmDialog
+        open={!!photoToDelete}
+        onClose={() => setPhotoToDelete(null)}
+        title={t('form.deletePhoto.title')}
+        content={t('form.deletePhoto.content')}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            loading={deletingPhoto}
+            onClick={handleConfirmDeletePhoto}
+          >
+            {t('form.deletePhoto.confirm')}
+          </Button>
+        }
+      />
     </Form>
   );
 }

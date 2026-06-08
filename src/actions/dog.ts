@@ -121,3 +121,10 @@ export async function addDogImages(
   await mutate((key) => Array.isArray(key) && key[0] === endpoints.dog.list);
   return res.data;
 }
+
+/** Detach a photo (dog↔file link) from a dog. Backend: DELETE /dogs/{id}/images/{file_id}. */
+export async function deleteDogImage(dogId: string, fileId: string): Promise<void> {
+  await axios.delete(endpoints.dog.image(dogId, fileId));
+  await mutate(endpoints.dog.details(dogId));
+  await mutate((key) => Array.isArray(key) && key[0] === endpoints.dog.list);
+}

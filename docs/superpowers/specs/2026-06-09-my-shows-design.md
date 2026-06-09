@@ -26,8 +26,12 @@
 4. Кнопки **edit/delete** показываются только пока регистрация открыта
    (`canRegisterForShow`), иначе запись read-only с подсказкой.
 5. Ссылка на раздел — **в двух местах**: AccountDrawer (правый ящик аккаунта) и
-   левое меню дашборда. Гейт: видна **всем авторизованным** (личный раздел; пустой
-   список — допустимое состояние).
+   левое меню дашборда. **RBAC обязателен**: и пункты навигации, и сами страницы
+   гейтятся правом `dogs:view` (его имеют те, кто владеет/регистрирует собак: breeder
+   через каскад `dogs`, buyer — `dogs:view`, admin — `*`). Организатор/судья/оператор
+   раздел не видят. Страница показывает только записи **самого пользователя**
+   (`entries/my`) — чужой состав участников не раскрывается. Бэкенд-эндпоинты тоже
+   возвращают только записи текущего пользователя (проверка `registered_by`/владельца).
 6. В записи **нельзя менять собаку** (смена собаки = другая запись); PATCH меняет
    только `show_class_id` / `handler_id` / `notes`.
 
@@ -104,13 +108,15 @@ App Router (Next 16, `params: Promise<{ id }>` → `await params`):
 - `src/app/dashboard/my-shows/page.tsx` → `<MyShowsListView />`
 - `src/app/dashboard/my-shows/[id]/page.tsx` → `<MyShowDetailView id={id} />`
 
-Навигация (ссылка «Мои выставки», иконка кубка):
+Навигация (ссылка «Мои выставки», иконка кубка) — обе точки гейтятся `dogs:view`:
 - AccountDrawer: добавить пункт в `getAccountNavData` (`src/layouts/nav-config-account.tsx`),
-  подпись `account:drawer.myShows`. Базовый пункт (рядом с «Настройки профиля»),
-  виден всем авторизованным.
+  подпись `account:drawer.myShows`, показывать при `can('dogs:view')` (пункт получает
+  доступ к `can`, как `getMyObjectLinks`).
 - Левое меню дашборда: добавить личный item в `navData`
-  (`src/layouts/nav-config-dashboard.tsx`) рядом с `profile`, без `permission`
-  (виден всем), подпись `nav:showtail.myShows`, иконка `ICONS.booking`.
+  (`src/layouts/nav-config-dashboard.tsx`) рядом с `profile`, `permission: 'dogs:view'`,
+  подпись `nav:showtail.myShows`, иконка `ICONS.booking`.
+- Обе страницы (`page.tsx`) обернуть в `<PermissionGuard permission="dogs:view">`
+  (паттерн `src/app/dashboard/dogs/page.tsx`).
 
 Иконку кубка для drawer (напр. `solar:cup-star-bold-duotone`) зарегистрировать в
 `src/components/iconify/icon-sets.ts`, если её там нет.

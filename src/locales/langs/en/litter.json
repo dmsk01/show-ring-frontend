@@ -45,6 +45,12 @@
   "detail": {
     "notFound": "Litter not found."
   },
+  "page": {
+    "title": "Litter",
+    "puppies": "Puppies",
+    "puppiesEmpty": "No puppies yet",
+    "notFound": "Litter not found"
+  },
   "toast": {
     "created": "Create success!",
     "updated": "Update success!"

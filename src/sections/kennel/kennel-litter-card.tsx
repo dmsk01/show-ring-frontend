@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { fDate } from 'src/utils/format-time';
@@ -27,6 +28,10 @@ type Props = {
 
 export function KennelLitterCard({ litter, breedName }: Props) {
   const { t } = useTranslate(['kennel', 'common']);
+  const router = useRouter();
+
+  const href = paths.showcase.litter(litter.id);
+  const goToLitter = () => router.push(href);
 
   const price =
     litter.price_from != null || litter.price_to != null
@@ -37,7 +42,23 @@ export function KennelLitterCard({ litter, breedName }: Props) {
       : '—';
 
   return (
-    <Card sx={{ p: 2.5 }}>
+    <Card
+      role="link"
+      tabIndex={0}
+      onClick={goToLitter}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          goToLitter();
+        }
+      }}
+      sx={{
+        p: 2.5,
+        cursor: 'pointer',
+        transition: (theme) => theme.transitions.create(['box-shadow']),
+        '&:hover': { boxShadow: (theme) => theme.customShadows.z16 },
+      }}
+    >
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1.5 }}>
         <Typography variant="subtitle1">{breedName ?? t('detail.litter.fallback')}</Typography>
         <Label color="info">
@@ -62,12 +83,20 @@ export function KennelLitterCard({ litter, breedName }: Props) {
         <Box>{t('detail.litter.price')}: {price}</Box>
         <Stack direction="row" spacing={1.5}>
           {litter.father && (
-            <Link component={RouterLink} href={paths.showcase.dog(litter.father.id)}>
+            <Link
+              component={RouterLink}
+              href={paths.showcase.dog(litter.father.id)}
+              onClick={(e) => e.stopPropagation()}
+            >
               ♂ {litter.father.name}
             </Link>
           )}
           {litter.mother && (
-            <Link component={RouterLink} href={paths.showcase.dog(litter.mother.id)}>
+            <Link
+              component={RouterLink}
+              href={paths.showcase.dog(litter.mother.id)}
+              onClick={(e) => e.stopPropagation()}
+            >
               ♀ {litter.mother.name}
             </Link>
           )}

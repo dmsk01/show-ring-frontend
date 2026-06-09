@@ -45,6 +45,12 @@
   "detail": {
     "notFound": "Помёт не найден."
   },
+  "page": {
+    "title": "Помёт",
+    "puppies": "Щенки",
+    "puppiesEmpty": "Щенков пока нет",
+    "notFound": "Помёт не найден"
+  },
   "toast": {
     "created": "Создано!",
     "updated": "Сохранено!"

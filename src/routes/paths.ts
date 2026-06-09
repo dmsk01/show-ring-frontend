@@ -52,6 +52,7 @@ export const paths = {
     shows: `/shows`,
     show: (id: string) => `/shows/${id}`,
     dog: (id: string) => `/dogs/${id}`,
+    litter: (id: string) => `/litters/${id}`,
   },
   // AUTH
   auth: {

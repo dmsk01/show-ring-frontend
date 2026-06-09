@@ -9,7 +9,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { fDate } from 'src/utils/format-time';
@@ -18,6 +17,7 @@ import { fCurrency } from 'src/utils/format-number';
 import { useTranslate } from 'src/locales';
 
 import { Label } from 'src/components/label';
+import { CardLink, cardActionableSx } from 'src/components/card-link';
 
 // ----------------------------------------------------------------------
 
@@ -28,10 +28,8 @@ type Props = {
 
 export function KennelLitterCard({ litter, breedName }: Props) {
   const { t } = useTranslate(['kennel', 'common']);
-  const router = useRouter();
 
   const href = paths.showcase.litter(litter.id);
-  const goToLitter = () => router.push(href);
 
   const price =
     litter.price_from != null || litter.price_to != null
@@ -42,25 +40,11 @@ export function KennelLitterCard({ litter, breedName }: Props) {
       : '—';
 
   return (
-    <Card
-      role="link"
-      tabIndex={0}
-      onClick={goToLitter}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          goToLitter();
-        }
-      }}
-      sx={{
-        p: 2.5,
-        cursor: 'pointer',
-        transition: (theme) => theme.transitions.create(['box-shadow']),
-        '&:hover': { boxShadow: (theme) => theme.customShadows.z16 },
-      }}
-    >
+    <Card sx={[cardActionableSx, { p: 2.5 }]}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1.5 }}>
-        <Typography variant="subtitle1">{breedName ?? t('detail.litter.fallback')}</Typography>
+        <CardLink href={href} variant="subtitle1">
+          {breedName ?? t('detail.litter.fallback')}
+        </CardLink>
         <Label color="info">
           {t(`common:enums.litterStatus.${litter.status}`, { defaultValue: litter.status })}
         </Label>
@@ -86,7 +70,7 @@ export function KennelLitterCard({ litter, breedName }: Props) {
             <Link
               component={RouterLink}
               href={paths.showcase.dog(litter.father.id)}
-              onClick={(e) => e.stopPropagation()}
+              sx={{ position: 'relative' }}
             >
               ♂ {litter.father.name}
             </Link>
@@ -95,7 +79,7 @@ export function KennelLitterCard({ litter, breedName }: Props) {
             <Link
               component={RouterLink}
               href={paths.showcase.dog(litter.mother.id)}
-              onClick={(e) => e.stopPropagation()}
+              sx={{ position: 'relative' }}
             >
               ♀ {litter.mother.name}
             </Link>

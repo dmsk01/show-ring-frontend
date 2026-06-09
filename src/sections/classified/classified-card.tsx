@@ -4,12 +4,10 @@ import type { CardProps } from '@mui/material/Card';
 import type { IClassifiedItem } from 'src/types/classified';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import ListItemText from '@mui/material/ListItemText';
 
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
 import { CONFIG } from 'src/global-config';
@@ -18,6 +16,7 @@ import { fileUrl } from 'src/actions/file';
 import { Label } from 'src/components/label';
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
+import { CardLink, cardActionableSx } from 'src/components/card-link';
 
 import {
   primaryImageFileId,
@@ -43,7 +42,7 @@ export function ClassifiedCard({ classified, sx, ...other }: Props) {
       : t(classifiedPriceKindI18nKey(classified.price_kind));
 
   return (
-    <Card sx={sx} {...other}>
+    <Card sx={[cardActionableSx, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       <Box sx={{ p: 1, position: 'relative' }}>
         {classified.sex && (
           <Label
@@ -74,11 +73,7 @@ export function ClassifiedCard({ classified, sx, ...other }: Props) {
 
       <ListItemText
         sx={{ p: (theme) => theme.spacing(1, 2.5, 0, 2.5) }}
-        primary={
-          <Link component={RouterLink} href={detailsHref} color="inherit">
-            {classified.title}
-          </Link>
-        }
+        primary={<CardLink href={detailsHref}>{classified.title}</CardLink>}
         secondary={priceDisplay}
         slotProps={{
           primary: { noWrap: true, sx: { typography: 'subtitle1' } },

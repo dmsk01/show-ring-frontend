@@ -4,12 +4,10 @@ import type { CardProps } from '@mui/material/Card';
 import type { IKennelItem } from 'src/types/kennel';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import ListItemText from '@mui/material/ListItemText';
 
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 
 import { CONFIG } from 'src/global-config';
 import { fileUrl } from 'src/actions/file';
@@ -18,6 +16,7 @@ import { useTranslate } from 'src/locales';
 import { Image } from 'src/components/image';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
+import { CardLink, cardActionableSx } from 'src/components/card-link';
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +32,7 @@ export function KennelCard({ kennel, sx, ...other }: Props) {
   const location = [kennel.city, kennel.country].filter(Boolean).join(', ') || '—';
 
   return (
-    <Card sx={sx} {...other}>
+    <Card sx={[cardActionableSx, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       <Box sx={{ p: 1, position: 'relative' }}>
         {kennel.is_verified && (
           <Label
@@ -54,11 +53,7 @@ export function KennelCard({ kennel, sx, ...other }: Props) {
 
       <ListItemText
         sx={{ p: (theme) => theme.spacing(1, 2.5, 0, 2.5) }}
-        primary={
-          <Link component={RouterLink} href={detailsHref} color="inherit">
-            {kennel.name}
-          </Link>
-        }
+        primary={<CardLink href={detailsHref}>{kennel.name}</CardLink>}
         secondary={
           kennel.kennel_prefix ? `${t('card.prefix')}: ${kennel.kennel_prefix}` : ' '
         }

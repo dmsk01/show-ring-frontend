@@ -4,13 +4,11 @@ import type { CardProps } from '@mui/material/Card';
 import type { IShowItem } from 'src/types/show';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
@@ -19,6 +17,7 @@ import { useTranslate } from 'src/locales';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
+import { CardLink, cardActionableSx } from 'src/components/card-link';
 
 import { SHOW_STATUS_COLOR, showStatusI18nKey } from './show-utils';
 
@@ -36,16 +35,16 @@ export function ShowCard({ show, sx, ...other }: Props) {
   const location = [show.city, show.country].filter(Boolean).join(', ') || '—';
 
   return (
-    <Card sx={{ p: 3, ...sx }} {...other}>
+    <Card sx={[cardActionableSx, { p: 3 }, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       <Stack
         direction="row"
         alignItems="flex-start"
         justifyContent="space-between"
         sx={{ mb: 2 }}
       >
-        <Link component={RouterLink} href={detailsHref} color="inherit" variant="subtitle1">
+        <CardLink href={detailsHref} variant="subtitle1">
           {show.name}
-        </Link>
+        </CardLink>
         <Label color={SHOW_STATUS_COLOR[show.status] ?? 'default'}>
           {t(showStatusI18nKey(show.status))}
         </Label>

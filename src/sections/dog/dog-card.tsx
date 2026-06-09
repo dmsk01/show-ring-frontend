@@ -4,12 +4,10 @@ import type { CardProps } from '@mui/material/Card';
 import type { IDogItem } from 'src/types/dog';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import ListItemText from '@mui/material/ListItemText';
 
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 
 import { fDate } from 'src/utils/format-time';
 
@@ -18,6 +16,7 @@ import { fileUrl } from 'src/actions/file';
 
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
+import { CardLink, cardActionableSx } from 'src/components/card-link';
 
 import { dogPlaceholderImage } from './dog-utils';
 
@@ -53,7 +52,7 @@ export function DogCard({ dog, breedName, sx, ...other }: Props) {
   ];
 
   return (
-    <Card sx={sx} {...other}>
+    <Card sx={[cardActionableSx, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       <Box sx={{ p: 1 }}>
         <Image
           alt={dog.name}
@@ -65,11 +64,7 @@ export function DogCard({ dog, breedName, sx, ...other }: Props) {
 
       <ListItemText
         sx={{ p: (theme) => theme.spacing(1, 2.5, 0, 2.5) }}
-        primary={
-          <Link component={RouterLink} href={detailsHref} color="inherit">
-            {dog.name}
-          </Link>
-        }
+        primary={<CardLink href={detailsHref}>{dog.name}</CardLink>}
         secondary={dog.rkf_number ? `${t('detail.rkfNumber')}: ${dog.rkf_number}` : ' '}
         slotProps={{
           primary: { noWrap: true, sx: { typography: 'subtitle1' } },

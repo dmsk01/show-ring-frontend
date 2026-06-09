@@ -151,6 +151,7 @@ export const endpoints = {
   // --- ShowTail backend ---
   auth: {
     me: '/users/me',
+    myDogs: '/users/me/dogs',
     profile: '/users/me/profile',
     password: '/users/me/password',
     signIn: '/auth/login',
@@ -191,6 +192,9 @@ export const endpoints = {
     status: (id: string) => `/shows/${id}/status`,
     publish: (id: string) => `/shows/${id}/publish`,
     entries: (id: string) => `/shows/${id}/entries`,
+    myEntries: (id: string) => `/shows/${id}/entries/my`,
+    availableClasses: (id: string, dogId: string) =>
+      `/shows/${id}/available-classes/${dogId}`,
     results: (id: string) => `/shows/${id}/results`,
     resultItem: (id: string, resultId: string) => `/shows/${id}/results/${resultId}`,
     catalogGenerate: (id: string) => `/shows/${id}/catalog/generate`,

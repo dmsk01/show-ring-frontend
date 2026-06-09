@@ -37,6 +37,26 @@ export const SHOW_STATUS_COLOR: Record<string, LabelColor> = {
   cancelled: 'error',
 };
 
+// ----------------------------------------------------------------------
+
+/**
+ * Можно ли записаться на выставку: регистрация открыта и дедлайн (если задан)
+ * ещё не прошёл. Дедлайн сравниваем по концу дня (включительно).
+ */
+export function canRegisterForShow(
+  status: ShowStatus,
+  registrationDeadline: string | null,
+  now: Date = new Date()
+): boolean {
+  if (status !== 'registration_open') return false;
+  if (!registrationDeadline) return true;
+
+  const deadline = new Date(registrationDeadline);
+  if (Number.isNaN(deadline.getTime())) return true; // некорректную дату не считаем барьером
+  deadline.setHours(23, 59, 59, 999);
+  return now.getTime() <= deadline.getTime();
+}
+
 export const SHOW_AWARD_FLAGS: { key: keyof IShowResult; label: string }[] = [
   { key: 'is_class_winner', label: 'CW' },
   { key: 'is_best_male', label: 'BM' },

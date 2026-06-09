@@ -59,6 +59,28 @@ export function useGetDogs(query: DogsQuery = {}) {
 
 // ----------------------------------------------------------------------
 
+/** Собаки текущего пользователя (owner_id == me). Требует авторизации. */
+export function useGetMyDogs() {
+  const { data, isLoading, error, isValidating } = useSWR<IDogPage>(
+    endpoints.auth.myDogs,
+    fetcher,
+    swrOptions
+  );
+
+  return useMemo(
+    () => ({
+      dogs: data?.items ?? [],
+      dogsTotal: data?.total ?? 0,
+      dogsLoading: isLoading,
+      dogsError: error,
+      dogsEmpty: !isLoading && !isValidating && !(data?.items?.length ?? 0),
+    }),
+    [data, error, isLoading, isValidating]
+  );
+}
+
+// ----------------------------------------------------------------------
+
 export function useGetDog(dogId?: string) {
   const key = dogId ? endpoints.dog.details(dogId) : null;
 

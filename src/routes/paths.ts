@@ -51,6 +51,7 @@ export const paths = {
     classified: (id: string) => `/animals/${id}`,
     shows: `/shows`,
     show: (id: string) => `/shows/${id}`,
+    showRegister: (id: string) => `/shows/${id}/register`,
     dog: (id: string) => `/dogs/${id}`,
     litter: (id: string) => `/litters/${id}`,
   },

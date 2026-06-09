@@ -7,10 +7,15 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
+
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
@@ -20,10 +25,13 @@ import { useGetShow } from 'src/actions/show';
 import { useShowResultRows } from 'src/actions/show-result';
 
 import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
 import { LoadingScreen } from 'src/components/loading-screen';
 
+import { useAuthContext } from 'src/auth/hooks';
+
 import { ShowResultsTable } from '../show-results-table';
-import { SHOW_STATUS_COLOR, showStatusI18nKey } from '../show-utils';
+import { SHOW_STATUS_COLOR, showStatusI18nKey, canRegisterForShow } from '../show-utils';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +39,8 @@ type Props = { id: string };
 
 export function ShowPublicDetailView({ id }: Props) {
   const { t } = useTranslate(['show', 'common']);
+  const router = useRouter();
+  const { authenticated } = useAuthContext();
   const { show, showLoading } = useGetShow(id);
 
   const isCompleted = show?.status === 'completed';
@@ -62,15 +72,44 @@ export function ShowPublicDetailView({ id }: Props) {
     },
   ];
 
+  const canRegister = canRegisterForShow(show.status, show.registration_deadline);
+
+  const handleRegister = () => {
+    const target = paths.showcase.showRegister(id);
+    if (authenticated) {
+      router.push(target);
+    } else {
+      const query = new URLSearchParams({ returnTo: target }).toString();
+      router.push(`${paths.auth.jwt.signIn}?${query}`);
+    }
+  };
+
   return (
     <Container sx={{ pt: { xs: 8, md: 12 }, pb: { xs: 8, md: 12 } }}>
-      <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 3 }}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={1.5}
+        sx={{ mb: 3, alignItems: { sm: 'center' } }}
+      >
         <Typography variant="h4" sx={{ flexGrow: 1 }}>
           {show.name}
         </Typography>
         <Label color={SHOW_STATUS_COLOR[show.status] ?? 'default'}>
           {t(showStatusI18nKey(show.status))}
         </Label>
+        <Tooltip title={canRegister ? '' : t('register.unavailable')} arrow>
+          <span>
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={!canRegister}
+              onClick={handleRegister}
+              startIcon={<Iconify icon="solar:user-plus-bold" />}
+            >
+              {t('register.cta')}
+            </Button>
+          </span>
+        </Tooltip>
       </Stack>
 
       <Card sx={{ p: 3, mb: 5 }}>

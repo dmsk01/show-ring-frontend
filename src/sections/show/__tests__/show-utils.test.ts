@@ -4,6 +4,7 @@ import {
   classifyShow,
   showStatusI18nKey,
   SHOW_STATUS_COLOR,
+  canRegisterForShow,
   SHOW_PAST_STATUSES,
   SHOW_UPCOMING_STATUSES,
 } from '../show-utils';
@@ -30,6 +31,32 @@ describe('showStatusI18nKey', () => {
 
   it('returns a key string for any status code', () => {
     expect(showStatusI18nKey('draft')).toBe('enums.status.draft');
+  });
+});
+
+describe('canRegisterForShow', () => {
+  const now = new Date('2026-06-09T12:00:00Z');
+
+  it('allows registration when open and no deadline', () => {
+    expect(canRegisterForShow('registration_open', null, now)).toBe(true);
+  });
+
+  it('allows registration when open and deadline is in the future', () => {
+    expect(canRegisterForShow('registration_open', '2026-06-20', now)).toBe(true);
+  });
+
+  it('allows registration on the deadline day itself (inclusive)', () => {
+    expect(canRegisterForShow('registration_open', '2026-06-09', now)).toBe(true);
+  });
+
+  it('blocks registration after the deadline has passed', () => {
+    expect(canRegisterForShow('registration_open', '2026-06-01', now)).toBe(false);
+  });
+
+  it('blocks registration for any non-open status', () => {
+    expect(canRegisterForShow('registration_closed', null, now)).toBe(false);
+    expect(canRegisterForShow('draft', null, now)).toBe(false);
+    expect(canRegisterForShow('completed', null, now)).toBe(false);
   });
 });
 

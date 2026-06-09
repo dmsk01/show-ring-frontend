@@ -59,6 +59,35 @@
     },
     "results": "Results"
   },
+  "register": {
+    "cta": "Register",
+    "heading": "Show registration",
+    "unavailable": "Registration for this show is not available right now.",
+    "myEntries": "You already registered:",
+    "duplicate": "This dog is already registered in the selected class.",
+    "requiresDocuments": "documents required",
+    "noClasses": "No classes are available for this dog at this show.",
+    "submit": "Register for the show",
+    "fields": {
+      "dog": "Dog",
+      "class": "Class",
+      "classHint": "Select a dog first",
+      "notes": "Notes"
+    },
+    "validation": {
+      "dogRequired": "Select a dog!",
+      "classRequired": "Select a class!"
+    },
+    "noDogs": {
+      "title": "You have no dogs yet",
+      "description": "To register for a show, add a dog first.",
+      "action": "Add a dog"
+    },
+    "toast": {
+      "success": "Dog registered for the show!",
+      "failed": "Could not register for the show"
+    }
+  },
   "showcase": {
     "title": "Shows",
     "upcoming": "Upcoming",

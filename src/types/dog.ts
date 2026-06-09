@@ -11,6 +11,7 @@ export type IDogItem = {
   id: string;
   name: string;
   sex: DogSex;
+  owner_id: string | null;
   breed_id: string;
   kennel_id: string | null;
   litter_id: string | null;

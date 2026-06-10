@@ -156,6 +156,10 @@ export const paths = {
       results: (id: string) => `${ROOTS.DASHBOARD}/shows/${id}/results`,
       documents: (id: string) => `${ROOTS.DASHBOARD}/shows/${id}/documents`,
     },
+    myShows: {
+      root: `${ROOTS.DASHBOARD}/my-shows`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/my-shows/${id}`,
+    },
     ads: {
       root: `${ROOTS.DASHBOARD}/ads`,
       new: `${ROOTS.DASHBOARD}/ads/new`,

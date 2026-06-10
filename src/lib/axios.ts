@@ -193,6 +193,8 @@ export const endpoints = {
     publish: (id: string) => `/shows/${id}/publish`,
     entries: (id: string) => `/shows/${id}/entries`,
     myEntries: (id: string) => `/shows/${id}/entries/my`,
+    myShowsList: '/shows/entries/my',
+    entryItem: (id: string, entryId: string) => `/shows/${id}/entries/${entryId}`,
     availableClasses: (id: string, dogId: string) =>
       `/shows/${id}/available-classes/${dogId}`,
     results: (id: string) => `/shows/${id}/results`,

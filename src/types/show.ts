@@ -60,3 +60,14 @@ export type IShowFilters = {
   status: ShowStatus | 'all';
   city: string;
 };
+
+export type IMyShowItem = IShowItem & { my_entries_count: number };
+
+export type IMyShowPage = {
+  items: IMyShowItem[];
+  total: number;
+  page: number;
+  per_page: number;
+};
+
+export type MyShowStatusGroup = 'all' | 'active' | 'past';

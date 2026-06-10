@@ -10,6 +10,16 @@ export type IShowEntry = {
   catalog_number: number | null;
   notes: string | null;
   created_at: string;
+  // enriched by GET /shows/{id}/entries/my and PATCH
+  dog_name: string;
+  class_code: string;
+  class_name: string;
+};
+
+export type IShowEntryUpdate = {
+  show_class_id?: string;
+  handler_id?: string | null;
+  notes?: string | null;
 };
 
 export type IShowEntryCreate = {

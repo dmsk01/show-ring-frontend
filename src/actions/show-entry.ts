@@ -1,5 +1,10 @@
 import type { SWRConfiguration } from 'swr';
-import type { IShowEntry, IShowEntryCreate, IAvailableClasses } from 'src/types/show-entry';
+import type {
+  IShowEntry,
+  IShowEntryCreate,
+  IShowEntryUpdate,
+  IAvailableClasses,
+} from 'src/types/show-entry';
 
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -56,4 +61,25 @@ export async function createShowEntry(
   const res = await axios.post<IShowEntry>(endpoints.show.entries(showId), payload);
   await mutate(endpoints.show.myEntries(showId));
   return res.data;
+}
+
+// ----------------------------------------------------------------------
+
+export async function updateShowEntry(
+  showId: string,
+  entryId: string,
+  payload: IShowEntryUpdate
+): Promise<IShowEntry> {
+  const res = await axios.patch<IShowEntry>(endpoints.show.entryItem(showId, entryId), payload);
+  await mutate(endpoints.show.myEntries(showId));
+  // Ключ агрегата — массив [url, {params}]: ревалидируем предикатом
+  // (любые params).
+  await mutate((key) => Array.isArray(key) && key[0] === endpoints.show.myShowsList);
+  return res.data;
+}
+
+export async function deleteShowEntry(showId: string, entryId: string): Promise<void> {
+  await axios.delete(endpoints.show.entryItem(showId, entryId));
+  await mutate(endpoints.show.myEntries(showId));
+  await mutate((key) => Array.isArray(key) && key[0] === endpoints.show.myShowsList);
 }

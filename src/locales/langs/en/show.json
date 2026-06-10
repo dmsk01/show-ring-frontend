@@ -193,7 +193,8 @@
     "detail": {
       "addDog": "Register another dog",
       "locked": "Registration is closed — editing entries is unavailable.",
-      "empty": "You have no entries for this show yet."
+      "empty": "You have no entries for this show yet.",
+      "error": "Failed to load entries"
     },
     "editDialog": {
       "title": "Edit entry",
@@ -214,6 +215,7 @@
     "empty": {
       "title": "No shows",
       "description": "Shows you have registered your dogs for will appear here."
-    }
+    },
+    "error": "Failed to load shows"
   }
 }

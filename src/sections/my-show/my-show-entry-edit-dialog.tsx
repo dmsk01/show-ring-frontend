@@ -106,7 +106,7 @@ export function MyShowEntryEditDialog({ open, onClose, show, entry, entries }: P
         </DialogContent>
         <DialogActions>
           <Button color="inherit" onClick={onClose}>
-            {t('common:cancel', { defaultValue: 'Отмена' })}
+            {t('common:actions.cancel')}
           </Button>
           <Button type="submit" variant="contained" loading={isSubmitting}>
             {t('myShows.editDialog.submit')}

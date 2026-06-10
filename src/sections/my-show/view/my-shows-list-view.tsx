@@ -2,7 +2,7 @@
 
 import type { MyShowStatusGroup } from 'src/types/show';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -30,11 +30,16 @@ export function MyShowsListView() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(12);
 
-  const { items, total, isLoading, isEmpty } = useMyShows({
+  const { items, total, isLoading, error, isEmpty } = useMyShows({
     statusGroup: group,
     page: page + 1,
     perPage: rowsPerPage,
   });
+
+  // Если текущая страница опустела (total уменьшился после удалений) — на первую.
+  useEffect(() => {
+    if (!isLoading && items.length === 0 && total > 0 && page > 0) setPage(0);
+  }, [isLoading, items.length, total, page]);
 
   const handleGroup = (_e: React.SyntheticEvent, value: MyShowStatusGroup) => {
     setGroup(value);
@@ -57,6 +62,8 @@ export function MyShowsListView() {
 
       {isLoading ? (
         <LoadingScreen />
+      ) : error ? (
+        <EmptyContent filled title={t('myShows.error')} sx={{ py: 10 }} />
       ) : isEmpty ? (
         <EmptyContent
           filled

@@ -60,6 +60,11 @@ export async function createShowEntry(
 ): Promise<IShowEntry> {
   const res = await axios.post<IShowEntry>(endpoints.show.entries(showId), payload);
   await mutate(endpoints.show.myEntries(showId));
+  // Ключ агрегата — массив [url, {params}]; вьюха в этот момент размонтирована,
+  // поэтому чистим кэш (data=undefined, revalidate=false) — remount перезапросит.
+  await mutate((key) => Array.isArray(key) && key[0] === endpoints.show.myShowsList, undefined, {
+    revalidate: false,
+  });
   return res.data;
 }
 
@@ -72,14 +77,19 @@ export async function updateShowEntry(
 ): Promise<IShowEntry> {
   const res = await axios.patch<IShowEntry>(endpoints.show.entryItem(showId, entryId), payload);
   await mutate(endpoints.show.myEntries(showId));
-  // Ключ агрегата — массив [url, {params}]: ревалидируем предикатом
-  // (любые params).
-  await mutate((key) => Array.isArray(key) && key[0] === endpoints.show.myShowsList);
+  // Ключ агрегата — массив [url, {params}]; вьюха в этот момент размонтирована,
+  // поэтому чистим кэш (data=undefined, revalidate=false) — remount перезапросит.
+  await mutate((key) => Array.isArray(key) && key[0] === endpoints.show.myShowsList, undefined, {
+    revalidate: false,
+  });
   return res.data;
 }
 
 export async function deleteShowEntry(showId: string, entryId: string): Promise<void> {
   await axios.delete(endpoints.show.entryItem(showId, entryId));
   await mutate(endpoints.show.myEntries(showId));
-  await mutate((key) => Array.isArray(key) && key[0] === endpoints.show.myShowsList);
+  // Чистим кэш агрегата (вьюха размонтирована) — remount перезапросит.
+  await mutate((key) => Array.isArray(key) && key[0] === endpoints.show.myShowsList, undefined, {
+    revalidate: false,
+  });
 }

@@ -42,7 +42,7 @@ type Props = { id: string };
 export function MyShowDetailView({ id }: Props) {
   const { t } = useTranslate('show');
   const { show, showLoading } = useGetShow(id);
-  const { entries, entriesLoading } = useMyShowEntries(id);
+  const { entries, entriesLoading, entriesError } = useMyShowEntries(id);
 
   const [editing, setEditing] = useState<IShowEntry | null>(null);
   const [deleting, setDeleting] = useState<IShowEntry | null>(null);
@@ -128,7 +128,9 @@ export function MyShowDetailView({ id }: Props) {
         </Typography>
       )}
 
-      {entries.length === 0 ? (
+      {entriesError ? (
+        <EmptyContent filled title={t('myShows.detail.error')} sx={{ py: 8 }} />
+      ) : entries.length === 0 ? (
         <EmptyContent filled title={t('myShows.detail.empty')} sx={{ py: 8 }} />
       ) : (
         <Card>

@@ -23,6 +23,7 @@
     "moderation": "Moderation (admin)",
     "analytics": "Analytics (admin)",
     "notifications": "Notifications",
+    "myShows": "My shows",
     "profile": "My profile"
   },
   "main": {

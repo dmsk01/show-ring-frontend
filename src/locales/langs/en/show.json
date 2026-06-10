@@ -181,5 +181,39 @@
     "downloadFailed": "Failed to download",
     "documentFailed": "Failed to get document",
     "documentNotReady": "Document not ready"
+  },
+  "myShows": {
+    "title": "My shows",
+    "breadcrumb": "My shows",
+    "tabs": { "all": "All", "active": "Active", "past": "Past" },
+    "card": {
+      "entriesCount_one": "{{count}} entry",
+      "entriesCount_other": "{{count}} entries"
+    },
+    "detail": {
+      "addDog": "Register another dog",
+      "locked": "Registration is closed — editing entries is unavailable.",
+      "empty": "You have no entries for this show yet."
+    },
+    "editDialog": {
+      "title": "Edit entry",
+      "dogReadonly": "Dog",
+      "fields": { "class": "Class", "notes": "Notes" },
+      "submit": "Save"
+    },
+    "delete": {
+      "title": "Delete entry?",
+      "message": "This show entry will be deleted. This action cannot be undone.",
+      "confirm": "Delete"
+    },
+    "toast": {
+      "updated": "Entry updated",
+      "deleted": "Entry deleted",
+      "failed": "Action failed"
+    },
+    "empty": {
+      "title": "No shows",
+      "description": "Shows you have registered your dogs for will appear here."
+    }
   }
 }

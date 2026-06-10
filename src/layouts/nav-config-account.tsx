@@ -46,6 +46,16 @@ export function getAccountNavData(t: TFunction, can: (perm: string) => boolean):
     icon: <Iconify icon={OBJECT_ICON[link.key]} />,
   }));
 
-  return [...base, ...myObjects];
+  const myShows: AccountNavData = can('dogs:view')
+    ? [
+        {
+          label: t('drawer.myShows'),
+          href: paths.dashboard.myShows.root,
+          icon: <Iconify icon="solar:cup-star-bold-duotone" />,
+        },
+      ]
+    : [];
+
+  return [...base, ...myShows, ...myObjects];
 }
 

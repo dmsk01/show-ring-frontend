@@ -38,7 +38,9 @@
     "validation": {
       "nameRequired": "Укажите название!",
       "rankRequired": "Укажите ранг!",
-      "dateStartRequired": "Укажите дату начала!"
+      "dateStartRequired": "Укажите дату начала!",
+      "dateEndBeforeStart": "Дата окончания не может быть раньше даты начала!",
+      "deadlineAfterStart": "Дедлайн регистрации не может быть позже начала выставки!"
     },
     "submitCreate": "Создать выставку",
     "submitUpdate": "Сохранить изменения",

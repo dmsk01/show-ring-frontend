@@ -27,18 +27,42 @@ import { Form, Field } from 'src/components/hook-form';
 // ----------------------------------------------------------------------
 
 export function getShowSchema(t: TFunction<['show', 'common']>) {
-  return z.object({
-    name: z.string().min(1, { error: t('show:form.validation.nameRequired') }),
-    rank_id: z.string().min(1, { error: t('show:form.validation.rankRequired') }),
-    date_start: z.string().min(1, { error: t('show:form.validation.dateStartRequired') }),
-    date_end: z.string().nullable(),
-    registration_deadline: z.string().nullable(),
-    city: z.string().nullable(),
-    country: z.string().nullable(),
-    venue: z.string().nullable(),
-    entry_fee: z.string().nullable(),
-    description: z.string().nullable(),
-  });
+  return z
+    .object({
+      name: z.string().min(1, { error: t('show:form.validation.nameRequired') }),
+      rank_id: z.string().min(1, { error: t('show:form.validation.rankRequired') }),
+      date_start: z.string().min(1, { error: t('show:form.validation.dateStartRequired') }),
+      date_end: z.string().nullable(),
+      registration_deadline: z.string().nullable(),
+      city: z.string().nullable(),
+      country: z.string().nullable(),
+      venue: z.string().nullable(),
+      entry_fee: z.string().nullable(),
+      description: z.string().nullable(),
+    })
+    // Кросс-валидация дат — зеркало бэкендовых правил ShowBase (теперь они
+    // применяются и на PUT через merged-значения). Даты — ISO 'YYYY-MM-DD',
+    // поэтому сравнение строк корректно.
+    .superRefine((data, ctx) => {
+      if (data.date_end && data.date_start && data.date_end < data.date_start) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['date_end'],
+          message: t('show:form.validation.dateEndBeforeStart'),
+        });
+      }
+      if (
+        data.registration_deadline &&
+        data.date_start &&
+        data.registration_deadline > data.date_start
+      ) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['registration_deadline'],
+          message: t('show:form.validation.deadlineAfterStart'),
+        });
+      }
+    });
 }
 
 export type ShowSchemaType = z.infer<ReturnType<typeof getShowSchema>>;

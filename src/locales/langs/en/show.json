@@ -38,7 +38,9 @@
     "validation": {
       "nameRequired": "Name is required!",
       "rankRequired": "Rank is required!",
-      "dateStartRequired": "Start date is required!"
+      "dateStartRequired": "Start date is required!",
+      "dateEndBeforeStart": "End date cannot be before the start date!",
+      "deadlineAfterStart": "Registration deadline cannot be after the show starts!"
     },
     "submitCreate": "Create show",
     "submitUpdate": "Save changes",

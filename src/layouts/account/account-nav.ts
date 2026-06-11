@@ -24,10 +24,12 @@ export function getUserDisplay(user: UserLike, profile: ProfileLike): UserDispla
 export type MyObjectKey = 'kennels' | 'dogs' | 'litters';
 export type MyObjectLink = { key: MyObjectKey; href: string };
 
-// Показываем только владельцам (полное право на ресурс), не view-only.
+// «Мои объекты»: kennels/litters — только владельцам (полное право на ресурс);
+// dogs — каждой роли (dogs:create есть у всех, владение — по Dog.owner_id),
+// и ведёт в личный раздел «Мои собаки», а не в общий список.
 const MY_OBJECTS: { key: MyObjectKey; href: string; perm: string }[] = [
   { key: 'kennels', href: paths.dashboard.kennels.root, perm: 'kennels' },
-  { key: 'dogs', href: paths.dashboard.dogs.root, perm: 'dogs' },
+  { key: 'dogs', href: paths.dashboard.myDogs.root, perm: 'dogs:create' },
   { key: 'litters', href: paths.dashboard.litters.root, perm: 'litters' },
 ];
 

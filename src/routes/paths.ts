@@ -160,6 +160,9 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}/my-shows`,
       details: (id: string) => `${ROOTS.DASHBOARD}/my-shows/${id}`,
     },
+    myDogs: {
+      root: `${ROOTS.DASHBOARD}/my-dogs`,
+    },
     ads: {
       root: `${ROOTS.DASHBOARD}/ads`,
       new: `${ROOTS.DASHBOARD}/ads/new`,

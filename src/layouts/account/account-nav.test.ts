@@ -2,6 +2,8 @@ import { it, expect, describe } from 'vitest';
 
 import { paths } from 'src/routes/paths';
 
+import { can as canPerm } from 'src/utils/permissions';
+
 import { getUserDisplay, getMyObjectLinks } from './account-nav';
 
 describe('getUserDisplay', () => {
@@ -26,22 +28,22 @@ describe('getUserDisplay', () => {
   });
 });
 
+const canFor = (granted: string[]) => (p: string) => canPerm(p, granted);
+
 describe('getMyObjectLinks', () => {
-  it('breeder (полные права) видит все три ссылки', () => {
-    const can = (p: string) => ['kennels', 'dogs', 'litters'].includes(p);
-    const links = getMyObjectLinks(can);
+  it('breeder (полные права) видит все три ссылки; dogs ведёт в личный раздел', () => {
+    const links = getMyObjectLinks(canFor(['kennels', 'dogs', 'litters']));
     expect(links.map((l) => l.key)).toEqual(['kennels', 'dogs', 'litters']);
     expect(links[0].href).toBe(paths.dashboard.kennels.root);
+    expect(links[1].href).toBe(paths.dashboard.myDogs.root);
+  });
+
+  it('buyer (dogs:create без полного dogs) видит только «Мои собаки»', () => {
+    const links = getMyObjectLinks(canFor(['dogs:view', 'dogs:create', 'kennels:view']));
+    expect(links.map((l) => l.key)).toEqual(['dogs']);
   });
 
   it('view-only права не дают ссылок', () => {
-    const can = (p: string) => p === 'kennels:view' || p === 'dogs:view';
-    expect(getMyObjectLinks(can)).toEqual([]);
-  });
-
-  it('частичные права фильтруются', () => {
-    const can = (p: string) => p === 'dogs';
-    const links = getMyObjectLinks(can);
-    expect(links.map((l) => l.key)).toEqual(['dogs']);
+    expect(getMyObjectLinks(canFor(['kennels:view', 'dogs:view']))).toEqual([]);
   });
 });

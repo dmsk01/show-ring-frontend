@@ -1,4 +1,4 @@
-import type { DogSex } from 'src/types/dog';
+import type { DogSex, IDogItem } from 'src/types/dog';
 
 import { CONFIG } from 'src/global-config';
 
@@ -13,4 +13,20 @@ export function dogPlaceholderImage(sex?: DogSex | null): string {
     return DOG_PLACEHOLDERS[sex];
   }
   return DOG_PLACEHOLDERS.male;
+}
+
+// ----------------------------------------------------------------------
+
+/**
+ * Может ли пользователь управлять собакой (edit/delete/фото).
+ * Зеркало бэкендовского `_can_manage_dog` (app/services/dog.py) с упрощением:
+ * ветка «владелец питомника» на фронте покрыта правом `dogs:edit` (breeder),
+ * бэкенд всё равно перепроверяет. owner_id=null (легаси) — только по праву.
+ */
+export function canManageDog(
+  dog: Pick<IDogItem, 'owner_id'>,
+  userId: string | null | undefined,
+  can: (perm: string) => boolean
+): boolean {
+  return can('dogs:edit') || (!!userId && dog.owner_id === userId);
 }

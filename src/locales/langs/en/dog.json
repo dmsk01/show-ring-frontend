@@ -73,6 +73,7 @@
   "myDogs": {
     "title": "My dogs",
     "empty": "You don't have any dogs yet",
+    "error": "Failed to load dogs",
     "add": "Add dog"
   },
   "enums": { "sex": { "male": "Male", "female": "Female" } },

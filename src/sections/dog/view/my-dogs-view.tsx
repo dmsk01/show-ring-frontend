@@ -2,6 +2,8 @@
 
 import type { TableHeadCellProps } from 'src/components/table';
 
+import { useEffect } from 'react';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
@@ -21,6 +23,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { EmptyContent } from 'src/components/empty-content';
+import { LoadingScreen } from 'src/components/loading-screen';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import {
   useTable,
@@ -55,10 +58,17 @@ export function MyDogsView() {
   const table = useTable({ defaultRowsPerPage: 25 });
   const { breeds } = useGetBreeds();
 
-  const { dogs, dogsTotal, dogsLoading, dogsEmpty } = useGetMyDogs({
+  const { dogs, dogsTotal, dogsLoading, dogsError, dogsEmpty } = useGetMyDogs({
     page: table.page + 1, // backend is 1-based
     per_page: table.rowsPerPage,
   });
+
+  // Если текущая страница опустела (например, после удаления) — назад на первую.
+  useEffect(() => {
+    if (!dogsLoading && dogs.length === 0 && dogsTotal > 0 && table.page > 0) {
+      table.onResetPage();
+    }
+  }, [dogsLoading, dogs.length, dogsTotal, table]);
 
   return (
     <DashboardContent>
@@ -81,7 +91,11 @@ export function MyDogsView() {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      {dogsEmpty ? (
+      {dogsLoading ? (
+        <LoadingScreen />
+      ) : dogsError ? (
+        <EmptyContent filled title={t('myDogs.error')} sx={{ py: 10 }} />
+      ) : dogsEmpty ? (
         <EmptyContent filled title={t('myDogs.empty')} sx={{ py: 10 }} />
       ) : (
         <Card>

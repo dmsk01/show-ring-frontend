@@ -41,6 +41,7 @@ describe('getMyObjectLinks', () => {
   it('buyer (dogs:create без полного dogs) видит только «Мои собаки»', () => {
     const links = getMyObjectLinks(canFor(['dogs:view', 'dogs:create', 'kennels:view']));
     expect(links.map((l) => l.key)).toEqual(['dogs']);
+    expect(links[0].href).toBe(paths.dashboard.myDogs.root);
   });
 
   it('view-only права не дают ссылок', () => {

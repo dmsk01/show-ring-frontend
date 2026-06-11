@@ -46,7 +46,7 @@ export function getAccountNavData(t: TFunction, can: (perm: string) => boolean):
     icon: <Iconify icon={OBJECT_ICON[link.key]} />,
   }));
 
-  const myShows: AccountNavData = can('dogs:view')
+  const myShows: AccountNavData = can('shows:view')
     ? [
         {
           label: t('drawer.myShows'),

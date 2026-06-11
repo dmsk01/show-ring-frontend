@@ -60,12 +60,13 @@ export function useGetDogs(query: DogsQuery = {}) {
 // ----------------------------------------------------------------------
 
 /** Собаки текущего пользователя (owner_id == me). Требует авторизации. */
-export function useGetMyDogs() {
-  const { data, isLoading, error, isValidating } = useSWR<IDogPage>(
-    endpoints.auth.myDogs,
-    fetcher,
-    swrOptions
+export function useGetMyDogs(query: { page?: number; per_page?: number } = {}) {
+  const params = Object.fromEntries(
+    Object.entries(query).filter(([, v]) => v !== undefined)
   );
+  const key: [string, { params: Record<string, unknown> }] = [endpoints.auth.myDogs, { params }];
+
+  const { data, isLoading, error, isValidating } = useSWR<IDogPage>(key, fetcher, swrOptions);
 
   return useMemo(
     () => ({

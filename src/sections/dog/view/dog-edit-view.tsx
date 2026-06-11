@@ -24,10 +24,12 @@ type Props = { id: string };
 export function DogEditView({ id }: Props) {
   const { t } = useTranslate(['dog', 'common']);
   const { dog, dogLoading } = useGetDog(id);
-  const { user } = useAuthContext();
+  const { user, loading: authLoading } = useAuthContext();
   const { can } = usePermissions();
 
-  if (dogLoading) return <LoadingScreen />;
+  // authLoading: не решаем «нет доступа», пока сессия не загружена (актуально
+  // при CONFIG.auth.skip, когда AuthGuard не дожидается checkUserSession).
+  if (dogLoading || authLoading) return <LoadingScreen />;
 
   // Avoid silently falling into "create" mode when the dog id is missing/deleted.
   if (!dog) return <DashboardContent>{t('detail.notFound')}</DashboardContent>;

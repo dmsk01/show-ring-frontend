@@ -40,15 +40,18 @@ describe('documents permission', () => {
 });
 
 describe('dogs:create (зеркало бэкенда: создать собаку может любой авторизованный)', () => {
-  it('есть у всех ролей', () => {
+  it('dogs:create и dogs:view есть у всех ролей (каталог + создание своей собаки)', () => {
     ROLES_LIST.forEach((role) => {
       expect(can('dogs:create', getPermissionsForRole(role))).toBe(true);
+      expect(can('dogs:view', getPermissionsForRole(role))).toBe(true);
     });
   });
 
   it('dogs:edit по-прежнему только у breeder/admin', () => {
     expect(can('dogs:edit', getPermissionsForRole('buyer'))).toBe(false);
     expect(can('dogs:edit', getPermissionsForRole('organizer'))).toBe(false);
+    expect(can('dogs:edit', getPermissionsForRole('judge'))).toBe(false);
+    expect(can('dogs:edit', getPermissionsForRole('operator'))).toBe(false);
     expect(can('dogs:edit', getPermissionsForRole('breeder'))).toBe(true);
     expect(can('dogs:edit', getPermissionsForRole('admin'))).toBe(true);
   });

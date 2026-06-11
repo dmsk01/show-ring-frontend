@@ -9,9 +9,13 @@ export const ROLES_LIST: Role[] = ['admin', 'organizer', 'breeder', 'judge', 'bu
 // Стартовая матрица прав. Расширяется по мере добавления доменов.
 export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
   admin: ['*'],
-  organizer: ['dashboard:view', 'shows', 'results', 'documents', 'references:view', 'ads', 'kennels:view', 'litters:view', 'classifieds:view', 'support:view', 'support:create', 'dogs:create'],
+  // dogs:view + dogs:create — у всех ролей: каталог собак читается любой ролью
+  // (как у buyer), а создать собаку бэкенд разрешает любому авторизованному
+  // (owner_id = создатель). Управление своей собакой — ownership-aware
+  // (canManageDog), dogs:edit остаётся у breeder/admin.
+  organizer: ['dashboard:view', 'shows', 'results', 'documents', 'references:view', 'ads', 'kennels:view', 'litters:view', 'classifieds:view', 'support:view', 'support:create', 'dogs:view', 'dogs:create'],
   breeder: ['dashboard:view', 'dogs', 'kennels', 'litters', 'classifieds', 'shows:view', 'references:view', 'support:view', 'support:create'],
-  judge: ['dashboard:view', 'shows:view', 'results:create', 'results:edit', 'documents', 'references:view', 'kennels:view', 'litters:view', 'classifieds:view', 'support:view', 'support:create', 'dogs:create'],
+  judge: ['dashboard:view', 'shows:view', 'results:create', 'results:edit', 'documents', 'references:view', 'kennels:view', 'litters:view', 'classifieds:view', 'support:view', 'support:create', 'dogs:view', 'dogs:create'],
   buyer: ['dashboard:view', 'classifieds:view', 'dogs:view', 'dogs:create', 'references:view', 'kennels:view', 'litters:view', 'shows:view', 'support:view', 'support:create'],
-  operator: ['dashboard:view', 'support', 'classifieds:view', 'references:view', 'kennels:view', 'litters:view', 'shows:view', 'dogs:create'],
+  operator: ['dashboard:view', 'support', 'classifieds:view', 'references:view', 'kennels:view', 'litters:view', 'shows:view', 'dogs:view', 'dogs:create'],
 };

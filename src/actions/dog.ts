@@ -62,6 +62,8 @@ export function useGetDogs(query: DogsQuery = {}) {
 /** Собаки текущего пользователя (owner_id == me). Требует авторизации. */
 export function useGetMyDogs(query: { page?: number; per_page?: number } = {}) {
   const params = Object.fromEntries(
+    // Только undefined: оба поля числовые, строковые гарды (''/'all') из
+    // useGetDogs тут не тайпчекаются — добавить при появлении строковых полей.
     Object.entries(query).filter(([, v]) => v !== undefined)
   );
   const key: [string, { params: Record<string, unknown> }] = [endpoints.auth.myDogs, { params }];
@@ -121,16 +123,24 @@ export function useGetDogPedigree(dogId?: string) {
 
 // ----------------------------------------------------------------------
 
+/** Инвалидация списочных SWR-кэшей собак: общий каталог + «Мои собаки». */
+async function mutateDogLists() {
+  await mutate(
+    (key) =>
+      Array.isArray(key) && (key[0] === endpoints.dog.list || key[0] === endpoints.auth.myDogs)
+  );
+}
+
 export async function createDog(payload: IDogCreate): Promise<IDogItem> {
   const res = await axios.post<IDogItem>(endpoints.dog.list, payload);
-  await mutate((key) => Array.isArray(key) && key[0] === endpoints.dog.list);
+  await mutateDogLists();
   return res.data;
 }
 
 export async function updateDog(dogId: string, payload: IDogUpdate): Promise<IDogItem> {
   const res = await axios.put<IDogItem>(endpoints.dog.details(dogId), payload);
   await mutate(endpoints.dog.details(dogId));
-  await mutate((key) => Array.isArray(key) && key[0] === endpoints.dog.list);
+  await mutateDogLists();
   return res.data;
 }
 
@@ -141,7 +151,7 @@ export async function addDogImages(
 ): Promise<IDogItem> {
   const res = await axios.post<IDogItem>(endpoints.dog.images(dogId), images);
   await mutate(endpoints.dog.details(dogId));
-  await mutate((key) => Array.isArray(key) && key[0] === endpoints.dog.list);
+  await mutateDogLists();
   return res.data;
 }
 
@@ -150,6 +160,6 @@ export async function deleteDogImage(dogId: string, fileId: string): Promise<IDo
   // Backend returns the updated dog — seed the detail cache from it (no extra GET).
   const res = await axios.delete<IDogItem>(endpoints.dog.image(dogId, fileId));
   await mutate(endpoints.dog.details(dogId), res.data, { revalidate: false });
-  await mutate((key) => Array.isArray(key) && key[0] === endpoints.dog.list);
+  await mutateDogLists();
   return res.data;
 }

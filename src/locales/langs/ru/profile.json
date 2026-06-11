@@ -46,6 +46,7 @@
     "currentPasswordRequired": "Введите текущий пароль",
     "passwordMin": "Минимум 8 символов",
     "passwordMax": "Максимум 128 символов",
+    "passwordBytes": "Максимум 72 байта (UTF-8)",
     "confirmPasswordRequired": "Подтвердите новый пароль",
     "passwordMismatch": "Пароли не совпадают",
     "passwordSameAsCurrent": "Новый пароль совпадает с текущим"

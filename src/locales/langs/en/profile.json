@@ -46,6 +46,7 @@
     "currentPasswordRequired": "Enter current password",
     "passwordMin": "Minimum 8 characters",
     "passwordMax": "Maximum 128 characters",
+    "passwordBytes": "Maximum 72 bytes (UTF-8)",
     "confirmPasswordRequired": "Confirm new password",
     "passwordMismatch": "Passwords do not match",
     "passwordSameAsCurrent": "New password must differ from current"

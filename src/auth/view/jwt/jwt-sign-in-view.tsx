@@ -1,7 +1,9 @@
 'use client';
 
+import type { TFunction } from 'i18next';
+
 import * as z from 'zod';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useBoolean } from 'minimal-shared/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,6 +19,8 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
+
 import { Iconify } from 'src/components/iconify';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
@@ -27,20 +31,28 @@ import { signInWithPassword } from '../../context/jwt';
 
 // ----------------------------------------------------------------------
 
-export type SignInSchemaType = z.infer<typeof SignInSchema>;
+// Вход — пароль лишь обязателен (аутентификация существующих учёток, а не
+// создание): не навязываем 8–128, чтобы не блокировать легаси-пароли. Полную
+// политику применяем на регистрации/смене пароля (src/auth/password-policy.ts).
+function getSignInSchema(t: TFunction<['auth']>) {
+  return z.object({
+    email: schemaUtils.email({
+      error: {
+        required: t('auth:validation.emailRequired'),
+        invalid: t('auth:validation.emailInvalid'),
+      },
+    }),
+    password: z.string().min(1, { error: t('auth:validation.passwordRequired') }),
+  });
+}
 
-export const SignInSchema = z.object({
-  email: schemaUtils.email(),
-  password: z
-    .string()
-    .min(1, { error: 'Password is required!' })
-    .min(6, { error: 'Password must be at least 6 characters!' }),
-});
+export type SignInSchemaType = z.infer<ReturnType<typeof getSignInSchema>>;
 
 // ----------------------------------------------------------------------
 
 export function JwtSignInView() {
   const router = useRouter();
+  const { t } = useTranslate(['auth']);
 
   const showPassword = useBoolean();
 
@@ -48,14 +60,11 @@ export function JwtSignInView() {
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const defaultValues: SignInSchemaType = {
-    email: 'admin@admin.com',
-    password: 'Password123!',
-  };
+  const SignInSchema = useMemo(() => getSignInSchema(t), [t]);
 
-  const methods = useForm({
+  const methods = useForm<SignInSchemaType>({
     resolver: zodResolver(SignInSchema),
-    defaultValues,
+    defaultValues: { email: '', password: '' },
   });
 
   const {
@@ -78,7 +87,11 @@ export function JwtSignInView() {
 
   const renderForm = () => (
     <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-      <Field.Text name="email" label="Email address" slotProps={{ inputLabel: { shrink: true } }} />
+      <Field.Text
+        name="email"
+        label={t('auth:fields.email')}
+        slotProps={{ inputLabel: { shrink: true } }}
+      />
 
       <Box sx={{ gap: 1.5, display: 'flex', flexDirection: 'column' }}>
         <Link
@@ -88,13 +101,13 @@ export function JwtSignInView() {
           color="inherit"
           sx={{ alignSelf: 'flex-end' }}
         >
-          Forgot password?
+          {t('auth:signIn.forgotPassword')}
         </Link>
 
         <Field.Text
           name="password"
-          label="Password"
-          placeholder="6+ characters"
+          label={t('auth:fields.password')}
+          placeholder={t('auth:fields.passwordPlaceholder')}
           type={showPassword.value ? 'text' : 'password'}
           slotProps={{
             inputLabel: { shrink: true },
@@ -120,9 +133,9 @@ export function JwtSignInView() {
         type="submit"
         variant="contained"
         loading={isSubmitting}
-        loadingIndicator="Sign in..."
+        loadingIndicator={t('auth:signIn.submitting')}
       >
-        Sign in
+        {t('auth:signIn.submit')}
       </Button>
     </Box>
   );
@@ -130,23 +143,17 @@ export function JwtSignInView() {
   return (
     <>
       <FormHead
-        title="Sign in to your account"
+        title={t('auth:signIn.title')}
         description={
           <>
-            {`Don’t have an account? `}
+            {`${t('auth:signIn.noAccount')} `}
             <Link component={RouterLink} href={paths.auth.jwt.signUp} variant="subtitle2">
-              Get started
+              {t('auth:signIn.getStarted')}
             </Link>
           </>
         }
         sx={{ textAlign: { xs: 'center', md: 'left' } }}
       />
-
-      <Alert severity="info" sx={{ mb: 3 }}>
-        Use <strong>{defaultValues.email}</strong>
-        {' with password '}
-        <strong>{defaultValues.password}</strong>
-      </Alert>
 
       {!!errorMessage && (
         <Alert severity="error" sx={{ mb: 3 }}>

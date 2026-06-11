@@ -1,7 +1,9 @@
 'use client';
 
+import type { TFunction } from 'i18next';
+
 import * as z from 'zod';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useBoolean } from 'minimal-shared/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,6 +19,8 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
+
 import { Iconify } from 'src/components/iconify';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
@@ -24,26 +28,37 @@ import { signUp } from '../../context/jwt';
 import { useAuthContext } from '../../hooks';
 import { getErrorMessage } from '../../utils';
 import { FormHead } from '../../components/form-head';
+import { passwordPolicy } from '../../password-policy';
 import { SignUpTerms } from '../../components/sign-up-terms';
 
 // ----------------------------------------------------------------------
 
-export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
+// Бэкенд /auth/register (UserCreate) принимает только { email, password } —
+// имя/фамилию НЕ собираем, иначе введённые значения молча выбрасывались бы.
+// Пароль — единая политика с бэкендом (8–128 символов, ≤72 байт UTF-8).
+function getSignUpSchema(t: TFunction<['auth']>) {
+  return z.object({
+    email: schemaUtils.email({
+      error: {
+        required: t('auth:validation.emailRequired'),
+        invalid: t('auth:validation.emailInvalid'),
+      },
+    }),
+    password: passwordPolicy({
+      min: t('auth:validation.passwordMin'),
+      max: t('auth:validation.passwordMax'),
+      bytes: t('auth:validation.passwordBytes'),
+    }),
+  });
+}
 
-export const SignUpSchema = z.object({
-  firstName: z.string().min(1, { error: 'First name is required!' }),
-  lastName: z.string().min(1, { error: 'Last name is required!' }),
-  email: schemaUtils.email(),
-  password: z
-    .string()
-    .min(1, { error: 'Password is required!' })
-    .min(6, { error: 'Password must be at least 6 characters!' }),
-});
+export type SignUpSchemaType = z.infer<ReturnType<typeof getSignUpSchema>>;
 
 // ----------------------------------------------------------------------
 
 export function JwtSignUpView() {
   const router = useRouter();
+  const { t } = useTranslate(['auth']);
 
   const showPassword = useBoolean();
 
@@ -51,16 +66,11 @@ export function JwtSignUpView() {
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const defaultValues: SignUpSchemaType = {
-    firstName: 'Hello',
-    lastName: 'Friend',
-    email: 'hello@gmail.com',
-    password: '@2Minimal',
-  };
+  const SignUpSchema = useMemo(() => getSignUpSchema(t), [t]);
 
-  const methods = useForm({
+  const methods = useForm<SignUpSchemaType>({
     resolver: zodResolver(SignUpSchema),
-    defaultValues,
+    defaultValues: { email: '', password: '' },
   });
 
   const {
@@ -70,10 +80,7 @@ export function JwtSignUpView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await signUp({
-        email: data.email,
-        password: data.password,
-      });
+      await signUp({ email: data.email, password: data.password });
       await checkUserSession?.();
 
       router.refresh();
@@ -86,27 +93,16 @@ export function JwtSignUpView() {
 
   const renderForm = () => (
     <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-      <Box
-        sx={{ display: 'flex', gap: { xs: 3, sm: 2 }, flexDirection: { xs: 'column', sm: 'row' } }}
-      >
-        <Field.Text
-          name="firstName"
-          label="First name"
-          slotProps={{ inputLabel: { shrink: true } }}
-        />
-        <Field.Text
-          name="lastName"
-          label="Last name"
-          slotProps={{ inputLabel: { shrink: true } }}
-        />
-      </Box>
-
-      <Field.Text name="email" label="Email address" slotProps={{ inputLabel: { shrink: true } }} />
+      <Field.Text
+        name="email"
+        label={t('auth:fields.email')}
+        slotProps={{ inputLabel: { shrink: true } }}
+      />
 
       <Field.Text
         name="password"
-        label="Password"
-        placeholder="6+ characters"
+        label={t('auth:fields.password')}
+        placeholder={t('auth:fields.passwordPlaceholder')}
         type={showPassword.value ? 'text' : 'password'}
         slotProps={{
           inputLabel: { shrink: true },
@@ -129,9 +125,9 @@ export function JwtSignUpView() {
         type="submit"
         variant="contained"
         loading={isSubmitting}
-        loadingIndicator="Create account..."
+        loadingIndicator={t('auth:signUp.submitting')}
       >
-        Create account
+        {t('auth:signUp.submit')}
       </Button>
     </Box>
   );
@@ -139,12 +135,12 @@ export function JwtSignUpView() {
   return (
     <>
       <FormHead
-        title="Get started absolutely free"
+        title={t('auth:signUp.title')}
         description={
           <>
-            {`Already have an account? `}
+            {`${t('auth:signUp.haveAccount')} `}
             <Link component={RouterLink} href={paths.auth.jwt.signIn} variant="subtitle2">
-              Get started
+              {t('auth:signUp.signInLink')}
             </Link>
           </>
         }

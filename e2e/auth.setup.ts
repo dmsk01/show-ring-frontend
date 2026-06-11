@@ -15,9 +15,11 @@ setup('authenticate as admin', async ({ page, request }) => {
   }
 
   await page.goto('/auth/jwt/sign-in');
-  await page.getByLabel('Email address').fill('admin@admin.com');
-  await page.getByLabel('Password').fill('Password123!');
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  // Локаль-независимые селекторы: дефолтный язык — RU, поэтому таргетим поля по
+  // атрибуту name и сабмит по type, а не по видимым (переводимым) подписям.
+  await page.locator('input[name="email"]').fill('admin@admin.com');
+  await page.locator('input[name="password"]').fill('Password123!');
+  await page.locator('button[type="submit"]').click();
 
   // GuestGuard redirects authenticated users out of /auth into the dashboard.
   await page.waitForURL((url) => !url.pathname.startsWith('/auth'), { timeout: 30_000 });

@@ -2,7 +2,7 @@
 
 import type { Permission } from 'src/types/permissions';
 
-import { useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -27,15 +27,19 @@ export function PermissionGuard({ permission, mode = 'any', children }: Permissi
   const { can, canAny, canAll } = usePermissions();
 
   const [isChecking, setIsChecking] = useState(true);
+  // Гард от повторного router.replace: эффект пере-срабатывает на смену любых
+  // зависимостей, а навигация на /403 должна случиться ровно один раз.
+  const redirected = useRef(false);
 
   useEffect(() => {
-    if (loading) return;
+    if (loading || redirected.current) return;
 
     const perms = Array.isArray(permission) ? permission : [permission];
     const allowed =
       perms.length === 1 ? can(perms[0]) : mode === 'all' ? canAll(perms) : canAny(perms);
 
     if (!allowed) {
+      redirected.current = true;
       router.replace(paths.page403);
     } else {
       setIsChecking(false);

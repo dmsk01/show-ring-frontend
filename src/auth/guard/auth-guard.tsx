@@ -38,7 +38,9 @@ export function AuthGuard({ children }: AuthGuardProps) {
     return `${currentPath}?${queryString}`;
   };
 
-  const checkPermissions = async (): Promise<void> => {
+  // Проверяет только аутентификацию (есть ли сессия). Права на конкретные
+  // ресурсы проверяет отдельный PermissionGuard.
+  const checkAuth = async (): Promise<void> => {
     if (loading) {
       return;
     }
@@ -58,7 +60,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
   };
 
   useEffect(() => {
-    checkPermissions();
+    checkAuth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticated, loading]);
 

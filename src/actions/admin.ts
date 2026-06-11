@@ -17,10 +17,15 @@ const swrOptions: SWRConfiguration = {
 
 // ----------------------------------------------------------------------
 
+// GET /admin/users возвращает голый массив без `total` (page/per_page до 200).
+// Тянем максимальную страницу, чтобы список не обрезался молча на меньшем пределе.
+// TODO: настоящая server-side пагинация (page/per_page + UI) появится, когда бэкенд
+// начнёт отдавать `total` в обёртке {items,total,page,per_page} — тогда per_page 200
+// заменить на постраничную навигацию через TablePaginationCustom.
 export function useGetAdminUsers() {
   const key: [string, { params: { per_page: number } }] = [
     endpoints.admin.users,
-    { params: { per_page: 100 } },
+    { params: { per_page: 200 } },
   ];
   const { data, isLoading, error } = useSWR<IAdminUser[]>(key, fetcher, swrOptions);
   return useMemo(
@@ -41,30 +46,33 @@ export async function setUserRole(id: string, role: Role, grant: boolean): Promi
 
 // ----------------------------------------------------------------------
 
+// Модерационные очереди — тот же голый массив без `total` (см. useGetAdminUsers).
+// Тянем максимальную страницу бэкенда (200), чтобы очередь не обрезалась молча.
 export function useGetModerationClassifieds() {
-  const { data, isLoading } = useSWR<IClassifiedModeration[]>(
+  const key: [string, { params: { per_page: number } }] = [
     endpoints.admin.moderationClassifieds,
-    fetcher,
-    swrOptions
-  );
+    { params: { per_page: 200 } },
+  ];
+  const { data, isLoading } = useSWR<IClassifiedModeration[]>(key, fetcher, swrOptions);
   return useMemo(() => ({ items: data ?? [], loading: isLoading }), [data, isLoading]);
 }
 
 export async function decideClassified(id: string, approve: boolean, reason?: string): Promise<void> {
   await axios.put(endpoints.admin.moderationClassified(id), { approve, reason: reason ?? null });
-  await mutate(endpoints.admin.moderationClassifieds);
+  // Ключ — массив [url, {params}]: ревалидируем по предикату, а не по строке.
+  await mutate((key) => Array.isArray(key) && key[0] === endpoints.admin.moderationClassifieds);
 }
 
 export function useGetModerationKennels() {
-  const { data, isLoading } = useSWR<IKennelModeration[]>(
+  const key: [string, { params: { per_page: number } }] = [
     endpoints.admin.moderationKennels,
-    fetcher,
-    swrOptions
-  );
+    { params: { per_page: 200 } },
+  ];
+  const { data, isLoading } = useSWR<IKennelModeration[]>(key, fetcher, swrOptions);
   return useMemo(() => ({ items: data ?? [], loading: isLoading }), [data, isLoading]);
 }
 
 export async function verifyKennel(id: string, isVerified: boolean): Promise<void> {
   await axios.put(endpoints.admin.kennelVerify(id), { is_verified: isVerified });
-  await mutate(endpoints.admin.moderationKennels);
+  await mutate((key) => Array.isArray(key) && key[0] === endpoints.admin.moderationKennels);
 }

@@ -331,6 +331,7 @@ export function DogCreateEditForm({ currentDog }: Props) {
           <Field.Upload
             multiple
             name="photos"
+            accept={{ 'image/*': [] }}
             maxSize={5242880}
             onRemove={handleRemovePhoto}
             onRemoveAll={handleRemoveAllPhotos}

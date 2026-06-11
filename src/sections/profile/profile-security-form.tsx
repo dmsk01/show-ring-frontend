@@ -27,6 +27,7 @@ import { Iconify } from 'src/components/iconify';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
 import { useAuthContext } from 'src/auth/hooks';
+import { passwordPolicy } from 'src/auth/password-policy';
 import { resetRevokedSession } from 'src/auth/context/jwt';
 
 // ----------------------------------------------------------------------
@@ -53,10 +54,11 @@ export function getPasswordSchema(t: TFunction<['profile', 'common']>) {
       current_password: z
         .string()
         .min(1, { error: t('profile:validation.currentPasswordRequired') }),
-      new_password: z
-        .string()
-        .min(8, { error: t('profile:validation.passwordMin') })
-        .max(128, { error: t('profile:validation.passwordMax') }),
+      new_password: passwordPolicy({
+        min: t('profile:validation.passwordMin'),
+        max: t('profile:validation.passwordMax'),
+        bytes: t('profile:validation.passwordBytes'),
+      }),
       confirm_password: z
         .string()
         .min(1, { error: t('profile:validation.confirmPasswordRequired') }),

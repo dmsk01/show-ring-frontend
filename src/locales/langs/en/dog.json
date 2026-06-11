@@ -70,6 +70,11 @@
     "sire": "Sire",
     "dam": "Dam"
   },
+  "myDogs": {
+    "title": "My dogs",
+    "empty": "You don't have any dogs yet",
+    "add": "Add dog"
+  },
   "enums": { "sex": { "male": "Male", "female": "Female" } },
   "toast": { "created": "Create success!", "updated": "Update success!", "photoDeleted": "Photo deleted" }
 }

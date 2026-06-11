@@ -19,9 +19,11 @@ export function dogPlaceholderImage(sex?: DogSex | null): string {
 
 /**
  * Может ли пользователь управлять собакой (edit/delete/фото).
- * Зеркало бэкендовского `_can_manage_dog` (app/services/dog.py) с упрощением:
- * ветка «владелец питомника» на фронте покрыта правом `dogs:edit` (breeder),
- * бэкенд всё равно перепроверяет. owner_id=null (легаси) — только по праву.
+ * Зеркало бэкендовского `_check_can_manage_dog` (app/services/dog.py)
+ * с упрощением: ветку «владелец питомника» на фронте не проверяем — такой
+ * пользователь это breeder, у него уже есть `dogs:edit` через право `dogs`.
+ * Авторитет — бэкенд, он перепроверяет права независимо.
+ * owner_id=null (легаси-собаки без владельца) — только по праву.
  */
 export function canManageDog(
   dog: Pick<IDogItem, 'owner_id'>,

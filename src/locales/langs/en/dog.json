@@ -63,7 +63,8 @@
     "earned": "earned",
     "kennel": "Kennel",
     "father": "Father",
-    "mother": "Mother"
+    "mother": "Mother",
+    "noAccess": "You don't have access to edit this dog."
   },
   "pedigree": {
     "sire": "Sire",

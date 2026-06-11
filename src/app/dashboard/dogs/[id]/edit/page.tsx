@@ -2,19 +2,16 @@ import { CONFIG } from 'src/global-config';
 
 import { DogEditView } from 'src/sections/dog/view';
 
-import { PermissionGuard } from 'src/auth/guard';
-
 // ----------------------------------------------------------------------
 
 export const metadata = { title: `Edit dog | Dashboard - ${CONFIG.appName}` };
 
 type Props = { params: Promise<{ id: string }> };
 
+// Доступ ownership-aware (Dog.owner_id) — решает вьюха после загрузки собаки:
+// статический PermissionGuard владельца не знает. Auth обеспечивает
+// AuthGuard дашборд-layout'а.
 export default async function Page({ params }: Props) {
   const { id } = await params;
-  return (
-    <PermissionGuard permission="dogs:edit">
-      <DogEditView id={id} />
-    </PermissionGuard>
-  );
+  return <DogEditView id={id} />;
 }

@@ -10,7 +10,7 @@ export const metadata = { title: `My Shows | Dashboard - ${CONFIG.appName}` };
 
 export default function Page() {
   return (
-    <PermissionGuard permission="dogs:view">
+    <PermissionGuard permission="shows:view">
       <MyShowsListView />
     </PermissionGuard>
   );

@@ -13,7 +13,7 @@ type Props = { params: Promise<{ id: string }> };
 export default async function Page({ params }: Props) {
   const { id } = await params;
   return (
-    <PermissionGuard permission="dogs:view">
+    <PermissionGuard permission="shows:view">
       <MyShowDetailView id={id} />
     </PermissionGuard>
   );

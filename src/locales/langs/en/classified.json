@@ -7,6 +7,7 @@
       "category": "Category",
       "price": "Price",
       "city": "City",
+      "availability": "Availability",
       "status": "Status"
     },
     "filters": {
@@ -26,6 +27,7 @@
       "city": "City",
       "priceKind": "Price kind",
       "price": "Price",
+      "availability": "Availability",
       "contactPhone": "Contact phone",
       "contactEmail": "Contact email",
       "description": "Description",
@@ -53,6 +55,8 @@
     "allBreeds": "All breeds",
     "sex": "Sex",
     "anySex": "Any sex",
+    "availability": "Availability",
+    "anyAvailability": "Any availability",
     "priceFrom": "Price from",
     "priceTo": "Price to",
     "city": "City",
@@ -81,6 +85,11 @@
       "fixed": "Fixed",
       "free": "Free",
       "negotiable": "Negotiable"
+    },
+    "availability": {
+      "available": "Available",
+      "reserved": "Reserved",
+      "sold": "Sold"
     },
     "status": {
       "active": "Active",

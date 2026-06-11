@@ -19,7 +19,13 @@ import { Markdown } from 'src/components/markdown';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { Lightbox, useLightbox } from 'src/components/lightbox';
 
-import { formatClassifiedPrice, classifiedCategoryI18nKey, classifiedPriceKindI18nKey } from '../classified-utils';
+import {
+  AVAILABILITY_COLOR,
+  formatClassifiedPrice,
+  classifiedCategoryI18nKey,
+  classifiedPriceKindI18nKey,
+  classifiedAvailabilityI18nKey,
+} from '../classified-utils';
 
 // ----------------------------------------------------------------------
 
@@ -53,6 +59,8 @@ export function ClassifiedDetailView({ id }: Props) {
   }
 
   const breedName = breeds.find((b) => b.id === classified.breed_id)?.name;
+  // Defensive: legacy rows are migrated to `available`, but keep a cheap fallback.
+  const availability = classified.availability ?? 'available';
   const priceDisplay =
     classified.price_kind === 'fixed'
       ? formatClassifiedPrice(classified.price)
@@ -95,6 +103,9 @@ export function ClassifiedDetailView({ id }: Props) {
           <Typography variant="h4" sx={{ flexGrow: 1 }}>
             {classified.title}
           </Typography>
+          <Label color={AVAILABILITY_COLOR[availability]} variant="filled">
+            {t(classifiedAvailabilityI18nKey(availability))}
+          </Label>
           <Label color="info">
             {t(classifiedCategoryI18nKey(classified.category))}
           </Label>

@@ -12,6 +12,9 @@ export type ClassifiedPriceKind = 'fixed' | 'free' | 'negotiable';
 
 export type ClassifiedStatus = 'active' | 'moderation' | 'closed' | 'archived';
 
+// Animal availability on a classified (backend enum AnimalAvailability).
+export type AnimalAvailability = 'available' | 'reserved' | 'sold';
+
 export const CLASSIFIED_CATEGORIES: ClassifiedCategory[] = [
   'puppy_sale',
   'adult_sale',
@@ -22,6 +25,8 @@ export const CLASSIFIED_CATEGORIES: ClassifiedCategory[] = [
 ];
 
 export const CLASSIFIED_PRICE_KINDS: ClassifiedPriceKind[] = ['fixed', 'free', 'negotiable'];
+
+export const ANIMAL_AVAILABILITIES: AnimalAvailability[] = ['available', 'reserved', 'sold'];
 
 export type IClassifiedImage = {
   id?: string;
@@ -46,6 +51,7 @@ export type IClassifiedItem = {
   contact_phone: string | null;
   contact_email: string | null;
   status: ClassifiedStatus;
+  availability: AnimalAvailability;
   views_count: number;
   images: IClassifiedImage[];
   created_at: string;
@@ -65,7 +71,11 @@ export type IClassifiedCreate = {
   images?: IClassifiedImage[];
 };
 
-export type IClassifiedUpdate = Partial<IClassifiedCreate> & { status?: ClassifiedStatus };
+// `availability` is update-only: ClassifiedCreate does not accept it (backend defaults to `available`).
+export type IClassifiedUpdate = Partial<IClassifiedCreate> & {
+  status?: ClassifiedStatus;
+  availability?: AnimalAvailability;
+};
 
 export type IClassifiedPage = {
   items: IClassifiedItem[];

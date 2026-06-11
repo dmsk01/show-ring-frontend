@@ -26,10 +26,18 @@ import { createClassified, updateClassified } from 'src/actions/classified';
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
 
-import { CLASSIFIED_CATEGORIES, CLASSIFIED_PRICE_KINDS } from 'src/types/classified';
+import {
+  CLASSIFIED_CATEGORIES,
+  ANIMAL_AVAILABILITIES,
+  CLASSIFIED_PRICE_KINDS,
+} from 'src/types/classified';
 
 import { ClassifiedImagesUpload } from './classified-images-upload';
-import { classifiedCategoryI18nKey, classifiedPriceKindI18nKey } from './classified-utils';
+import {
+  classifiedCategoryI18nKey,
+  classifiedPriceKindI18nKey,
+  classifiedAvailabilityI18nKey,
+} from './classified-utils';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +47,8 @@ export const getClassifiedSchema = (t: TFunction) =>
     title: z.string().min(1, { error: t('form.validation.titleRequired') }),
     description: z.string().min(1, { error: t('form.validation.descriptionRequired') }),
     price_kind: z.enum(['fixed', 'free', 'negotiable']),
+    // Update-only on the backend (ClassifiedCreate has no such field) — sent only when editing.
+    availability: z.enum(['available', 'reserved', 'sold']),
     breed_id: z.string().nullable(),
     price: z.string().nullable(),
     city: z.string().nullable(),
@@ -64,6 +74,7 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
     title: '',
     description: '',
     price_kind: 'fixed',
+    availability: 'available',
     breed_id: '',
     price: null,
     city: null,
@@ -81,6 +92,7 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
           title: currentClassified.title,
           description: currentClassified.description,
           price_kind: currentClassified.price_kind,
+          availability: currentClassified.availability ?? 'available',
           breed_id: currentClassified.breed_id ?? '',
           price: currentClassified.price?.toString() ?? null,
           city: currentClassified.city,
@@ -110,7 +122,7 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
       };
 
       if (currentClassified) {
-        await updateClassified(currentClassified.id, base);
+        await updateClassified(currentClassified.id, { ...base, availability: data.availability });
         toast.success(t('toast.updated'));
       } else {
         await createClassified({
@@ -168,6 +180,17 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
 
           <Field.Text name="contact_phone" label={t('form.fields.contactPhone')} />
           <Field.Text name="contact_email" label={t('form.fields.contactEmail')} />
+
+          {/* Backend accepts availability only on update — hidden when creating. */}
+          {currentClassified && (
+            <Field.Select name="availability" label={t('form.fields.availability')}>
+              {ANIMAL_AVAILABILITIES.map((value) => (
+                <MenuItem key={value} value={value}>
+                  {t(classifiedAvailabilityI18nKey(value))}
+                </MenuItem>
+              ))}
+            </Field.Select>
+          )}
         </Box>
 
         <Box sx={{ mt: 3 }}>

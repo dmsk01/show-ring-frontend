@@ -1,7 +1,7 @@
 'use client';
 
 import type { TableHeadCellProps } from 'src/components/table';
-import type { IClassifiedFilters } from 'src/types/classified';
+import type { IClassifiedFilters, AnimalAvailability } from 'src/types/classified';
 
 import { useCallback } from 'react';
 import { useSetState } from 'minimal-shared/hooks';
@@ -17,7 +17,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { deleteClassified, useGetClassifieds } from 'src/actions/classified';
+import { deleteClassified, updateClassified, useGetClassifieds } from 'src/actions/classified';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
@@ -38,6 +38,7 @@ export function ClassifiedListView() {
     { id: 'category', label: t('list.columns.category'), width: 160 },
     { id: 'price', label: t('list.columns.price'), width: 120 },
     { id: 'city', label: t('list.columns.city'), width: 140 },
+    { id: 'availability', label: t('list.columns.availability'), width: 130 },
     { id: 'status', label: t('list.columns.status'), width: 120 },
     { id: '', width: 88 },
   ];
@@ -63,6 +64,18 @@ export function ClassifiedListView() {
     }
   }, [t]);
 
+  const handleChangeAvailability = useCallback(
+    async (id: string, availability: AnimalAvailability) => {
+      try {
+        await updateClassified(id, { availability });
+        toast.success(t('toast.updated'));
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      }
+    },
+    [t]
+  );
+
   return (
     <DashboardContent>
       <CustomBreadcrumbs
@@ -86,7 +99,7 @@ export function ClassifiedListView() {
 
         <Box sx={{ position: 'relative' }}>
           <Scrollbar>
-            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 1080 }}>
               <TableHeadCustom headCells={TABLE_HEAD} rowCount={classifieds.length} />
 
               <TableBody>
@@ -96,6 +109,9 @@ export function ClassifiedListView() {
                     row={row}
                     editHref={paths.dashboard.classifieds.edit(row.id)}
                     onDeleteRow={() => handleDelete(row.id)}
+                    onChangeAvailability={(availability) =>
+                      handleChangeAvailability(row.id, availability)
+                    }
                   />
                 ))}
 

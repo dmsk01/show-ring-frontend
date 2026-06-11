@@ -1,7 +1,7 @@
 'use client';
 
 import type { LabelColor } from 'src/components/label';
-import type { IClassifiedItem, ClassifiedStatus } from 'src/types/classified';
+import type { IClassifiedItem, ClassifiedStatus, AnimalAvailability } from 'src/types/classified';
 
 import { useBoolean, usePopover } from 'minimal-shared/hooks';
 
@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
@@ -25,7 +26,16 @@ import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomPopover } from 'src/components/custom-popover';
 
-import { formatClassifiedPrice, classifiedStatusI18nKey, classifiedCategoryI18nKey, classifiedPriceKindI18nKey } from './classified-utils';
+import { ANIMAL_AVAILABILITIES } from 'src/types/classified';
+
+import {
+  AVAILABILITY_COLOR,
+  formatClassifiedPrice,
+  classifiedStatusI18nKey,
+  classifiedCategoryI18nKey,
+  classifiedPriceKindI18nKey,
+  classifiedAvailabilityI18nKey,
+} from './classified-utils';
 
 // ----------------------------------------------------------------------
 
@@ -40,12 +50,16 @@ type Props = {
   row: IClassifiedItem;
   editHref: string;
   onDeleteRow: () => void;
+  onChangeAvailability: (availability: AnimalAvailability) => void;
 };
 
-export function ClassifiedTableRow({ row, editHref, onDeleteRow }: Props) {
+export function ClassifiedTableRow({ row, editHref, onDeleteRow, onChangeAvailability }: Props) {
   const { t } = useTranslate(['classified', 'common']);
   const menuActions = usePopover();
   const confirmDialog = useBoolean();
+
+  // Defensive: legacy rows are migrated to `available`, but keep a cheap fallback.
+  const availability = row.availability ?? 'available';
 
   const price =
     row.price_kind === 'fixed'
@@ -73,6 +87,11 @@ export function ClassifiedTableRow({ row, editHref, onDeleteRow }: Props) {
         <TableCell>{price}</TableCell>
         <TableCell>{row.city ?? '—'}</TableCell>
         <TableCell>
+          <Label color={AVAILABILITY_COLOR[availability]}>
+            {t(classifiedAvailabilityI18nKey(availability))}
+          </Label>
+        </TableCell>
+        <TableCell>
           <Label color={STATUS_COLOR[row.status]}>{t(classifiedStatusI18nKey(row.status))}</Label>
         </TableCell>
 
@@ -85,6 +104,24 @@ export function ClassifiedTableRow({ row, editHref, onDeleteRow }: Props) {
 
       <CustomPopover open={menuActions.open} anchorEl={menuActions.anchorEl} onClose={menuActions.onClose}>
         <MenuList>
+          {/* Quick availability change — PUT with a single field, no need to open the form. */}
+          {ANIMAL_AVAILABILITIES.map((value) => (
+            <MenuItem
+              key={value}
+              selected={value === availability}
+              onClick={() => {
+                menuActions.onClose();
+                if (value !== availability) onChangeAvailability(value);
+              }}
+            >
+              <Label color={AVAILABILITY_COLOR[value]} sx={{ mr: 1 }}>
+                {t(classifiedAvailabilityI18nKey(value))}
+              </Label>
+            </MenuItem>
+          ))}
+
+          <Divider sx={{ borderStyle: 'dashed' }} />
+
           <li>
             <MenuItem component={RouterLink} href={editHref} onClick={menuActions.onClose}>
               <Iconify icon="solar:pen-bold" />

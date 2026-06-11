@@ -7,6 +7,7 @@
       "category": "Категория",
       "price": "Цена",
       "city": "Город",
+      "availability": "Доступность",
       "status": "Статус"
     },
     "filters": {
@@ -26,6 +27,7 @@
       "city": "Город",
       "priceKind": "Тип цены",
       "price": "Цена",
+      "availability": "Доступность",
       "contactPhone": "Телефон",
       "contactEmail": "E-mail",
       "description": "Описание",
@@ -53,6 +55,8 @@
     "allBreeds": "Все породы",
     "sex": "Пол",
     "anySex": "Любой пол",
+    "availability": "Доступность",
+    "anyAvailability": "Любая доступность",
     "priceFrom": "Цена от",
     "priceTo": "Цена до",
     "city": "Город",
@@ -81,6 +85,11 @@
       "fixed": "Фиксированная",
       "free": "Бесплатно",
       "negotiable": "Договорная"
+    },
+    "availability": {
+      "available": "Свободен",
+      "reserved": "Резерв",
+      "sold": "Продан"
     },
     "status": {
       "active": "Активно",

@@ -22,10 +22,10 @@ import { LoadingScreen } from 'src/components/loading-screen';
 
 import { ShowcaseShell } from 'src/sections/showcase';
 
-import { CLASSIFIED_CATEGORIES } from 'src/types/classified';
+import { CLASSIFIED_CATEGORIES, ANIMAL_AVAILABILITIES } from 'src/types/classified';
 
 import { ClassifiedCardGrid } from '../classified-card-grid';
-import { classifiedCategoryI18nKey } from '../classified-utils';
+import { classifiedCategoryI18nKey, classifiedAvailabilityI18nKey } from '../classified-utils';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +35,7 @@ type ShowcaseFilters = {
   city: string;
   breed_id: string;
   sex: 'male' | 'female' | 'all';
+  availability: 'available' | 'reserved' | 'sold' | 'all';
   price_from: string;
   price_to: string;
 };
@@ -67,6 +68,7 @@ export function ClassifiedShowcaseView() {
     city: searchParams.get('city') ?? '',
     breed_id: searchParams.get('breed_id') ?? '',
     sex: (searchParams.get('sex') as ShowcaseFilters['sex']) || 'all',
+    availability: (searchParams.get('availability') as ShowcaseFilters['availability']) || 'all',
     price_from: searchParams.get('price_from') ?? '',
     price_to: searchParams.get('price_to') ?? '',
   });
@@ -79,6 +81,7 @@ export function ClassifiedShowcaseView() {
     if (state.city) params.set('city', state.city);
     if (state.breed_id) params.set('breed_id', state.breed_id);
     if (state.sex !== 'all') params.set('sex', state.sex);
+    if (state.availability !== 'all') params.set('availability', state.availability);
     if (state.price_from) params.set('price_from', state.price_from);
     if (state.price_to) params.set('price_to', state.price_to);
     if (page > 0) params.set('page', String(page + 1));
@@ -102,6 +105,7 @@ export function ClassifiedShowcaseView() {
       city: state.city || undefined,
       breed_id: state.breed_id || undefined,
       sex: state.sex === 'all' ? undefined : state.sex,
+      availability: state.availability === 'all' ? undefined : state.availability,
       price_from: state.price_from ? Number(state.price_from) : undefined,
       price_to: state.price_to ? Number(state.price_to) : undefined,
       sort_by: sortBy,
@@ -191,6 +195,21 @@ export function ClassifiedShowcaseView() {
             <MenuItem value="all">{t('showcase.anySex')}</MenuItem>
             <MenuItem value="male">{t('enums.sex.male')}</MenuItem>
             <MenuItem value="female">{t('enums.sex.female')}</MenuItem>
+          </TextField>
+
+          <TextField
+            select
+            label={t('showcase.availability')}
+            value={state.availability}
+            onChange={(e) => handleField('availability', e.target.value)}
+            sx={{ width: { xs: 1, sm: 170 } }}
+          >
+            <MenuItem value="all">{t('showcase.anyAvailability')}</MenuItem>
+            {ANIMAL_AVAILABILITIES.map((value) => (
+              <MenuItem key={value} value={value}>
+                {t(classifiedAvailabilityI18nKey(value))}
+              </MenuItem>
+            ))}
           </TextField>
 
           <TextField

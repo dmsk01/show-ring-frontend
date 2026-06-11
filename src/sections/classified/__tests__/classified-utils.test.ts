@@ -1,11 +1,15 @@
 import { it, expect, describe } from 'vitest';
 
+import { ANIMAL_AVAILABILITIES } from 'src/types/classified';
+
 import {
+  AVAILABILITY_COLOR,
   primaryImageFileId,
   formatClassifiedPrice,
   classifiedStatusI18nKey,
   classifiedCategoryI18nKey,
   classifiedPriceKindI18nKey,
+  classifiedAvailabilityI18nKey,
 } from '../classified-utils';
 
 describe('formatClassifiedPrice', () => {
@@ -53,6 +57,27 @@ describe('classifiedPriceKindI18nKey', () => {
   });
   it('returns correct i18n key for free', () => {
     expect(classifiedPriceKindI18nKey('free')).toBe('enums.priceKind.free');
+  });
+});
+
+describe('classifiedAvailabilityI18nKey', () => {
+  it('returns correct i18n key for reserved', () => {
+    expect(classifiedAvailabilityI18nKey('reserved')).toBe('enums.availability.reserved');
+  });
+  it('returns correct i18n key for sold', () => {
+    expect(classifiedAvailabilityI18nKey('sold')).toBe('enums.availability.sold');
+  });
+});
+
+describe('AVAILABILITY_COLOR', () => {
+  it('covers every availability value', () => {
+    ANIMAL_AVAILABILITIES.forEach((a) => {
+      expect(AVAILABILITY_COLOR[a]).toBeTruthy();
+    });
+  });
+  it('mutes sold and highlights available', () => {
+    expect(AVAILABILITY_COLOR.available).toBe('success');
+    expect(AVAILABILITY_COLOR.sold).toBe('default');
   });
 });
 

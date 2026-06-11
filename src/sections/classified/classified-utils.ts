@@ -1,4 +1,5 @@
-import type { IClassifiedImage } from 'src/types/classified';
+import type { LabelColor } from 'src/components/label';
+import type { IClassifiedImage, AnimalAvailability } from 'src/types/classified';
 
 import { fCurrency } from 'src/utils/format-number';
 
@@ -19,6 +20,20 @@ export function classifiedPriceKindI18nKey(kind: string): string {
 export function classifiedStatusI18nKey(status: string): string {
   return `enums.status.${status}`;
 }
+
+// Returns the i18n key for an availability label.
+// Translate at component call site: t(`enums.availability.${availability}`)
+export function classifiedAvailabilityI18nKey(availability: string): string {
+  return `enums.availability.${availability}`;
+}
+
+// Shared Label colors for availability across card / detail / table.
+// `sold` is intentionally muted (default) — it's a terminal state.
+export const AVAILABILITY_COLOR: Record<AnimalAvailability, LabelColor> = {
+  available: 'success',
+  reserved: 'warning',
+  sold: 'default',
+};
 
 /**
  * Formats a numeric price for display.

@@ -5,6 +5,7 @@ import type { IClassifiedItem } from 'src/types/classified';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
 import ListItemText from '@mui/material/ListItemText';
 
 import { paths } from 'src/routes/paths';
@@ -19,10 +20,12 @@ import { Iconify } from 'src/components/iconify';
 import { CardLink, cardActionableSx } from 'src/components/card-link';
 
 import {
+  AVAILABILITY_COLOR,
   primaryImageFileId,
   formatClassifiedPrice,
   classifiedCategoryI18nKey,
   classifiedPriceKindI18nKey,
+  classifiedAvailabilityI18nKey,
 } from './classified-utils';
 
 // ----------------------------------------------------------------------
@@ -44,19 +47,30 @@ export function ClassifiedCard({ classified, sx, ...other }: Props) {
   return (
     <Card sx={[cardActionableSx, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       <Box sx={{ p: 1, position: 'relative' }}>
-        {classified.sex && (
-          <Label
-            color={classified.sex === 'female' ? 'secondary' : 'info'}
-            startIcon={
-              <Iconify
-                icon={classified.sex === 'female' ? 'solar:women-bold' : 'solar:men-bold'}
-              />
-            }
-            sx={{ position: 'absolute', top: 16, left: 16, zIndex: 9 }}
-          >
-            {t(classified.sex === 'female' ? 'enums.sex.female' : 'enums.sex.male')}
-          </Label>
-        )}
+        <Stack
+          direction="row"
+          spacing={0.75}
+          sx={{ position: 'absolute', top: 16, left: 16, zIndex: 9 }}
+        >
+          {classified.sex && (
+            <Label
+              color={classified.sex === 'female' ? 'secondary' : 'info'}
+              startIcon={
+                <Iconify
+                  icon={classified.sex === 'female' ? 'solar:women-bold' : 'solar:men-bold'}
+                />
+              }
+            >
+              {t(classified.sex === 'female' ? 'enums.sex.female' : 'enums.sex.male')}
+            </Label>
+          )}
+          {/* `available` is the default state — badge only the noteworthy ones. */}
+          {classified.availability && classified.availability !== 'available' && (
+            <Label color={AVAILABILITY_COLOR[classified.availability]} variant="filled">
+              {t(classifiedAvailabilityI18nKey(classified.availability))}
+            </Label>
+          )}
+        </Stack>
         <Label
           color="info"
           sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}

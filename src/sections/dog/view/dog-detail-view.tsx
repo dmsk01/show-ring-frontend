@@ -13,6 +13,8 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { usePermissions } from 'src/hooks/use-permissions';
+
 import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
 import { useGetBreeds } from 'src/actions/reference';
@@ -25,8 +27,10 @@ import { LoadingScreen } from 'src/components/loading-screen';
 import { Lightbox, useLightbox } from 'src/components/lightbox';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
+import { useAuthContext } from 'src/auth/hooks';
+
 import { PedigreeTree } from '../pedigree-tree';
-import { dogPlaceholderImage } from '../dog-utils';
+import { canManageDog, dogPlaceholderImage } from '../dog-utils';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +38,8 @@ type Props = { id: string };
 
 export function DogDetailView({ id }: Props) {
   const { t } = useTranslate(['dog', 'common']);
+  const { user } = useAuthContext();
+  const { can } = usePermissions();
   const [tab, setTab] = useState('info');
 
   const { dog, dogLoading } = useGetDog(id);
@@ -63,14 +69,16 @@ export function DogDetailView({ id }: Props) {
           { name: dog.name },
         ]}
         action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.dogs.edit(dog.id)}
-            variant="contained"
-            startIcon={<Iconify icon="solar:pen-bold" />}
-          >
-            {t('detail.edit')}
-          </Button>
+          canManageDog(dog, user?.id, can) ? (
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.dogs.edit(dog.id)}
+              variant="contained"
+              startIcon={<Iconify icon="solar:pen-bold" />}
+            >
+              {t('detail.edit')}
+            </Button>
+          ) : undefined
         }
         sx={{ mb: { xs: 3, md: 5 } }}
       />

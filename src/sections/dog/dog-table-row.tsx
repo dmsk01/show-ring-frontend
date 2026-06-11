@@ -26,9 +26,10 @@ type Props = {
   breedName?: string;
   detailsHref: string;
   editHref: string;
+  canEdit: boolean;
 };
 
-export function DogTableRow({ row, breedName, detailsHref, editHref }: Props) {
+export function DogTableRow({ row, breedName, detailsHref, editHref, canEdit }: Props) {
   const { t } = useTranslate(['dog', 'common']);
   const menuActions = usePopover();
 
@@ -74,12 +75,14 @@ export function DogTableRow({ row, breedName, detailsHref, editHref }: Props) {
               {t('common:actions.view')}
             </MenuItem>
           </li>
-          <li>
-            <MenuItem component={RouterLink} href={editHref} onClick={menuActions.onClose}>
-              <Iconify icon="solar:pen-bold" />
-              {t('common:actions.edit')}
-            </MenuItem>
-          </li>
+          {canEdit && (
+            <li>
+              <MenuItem component={RouterLink} href={editHref} onClick={menuActions.onClose}>
+                <Iconify icon="solar:pen-bold" />
+                {t('common:actions.edit')}
+              </MenuItem>
+            </li>
+          )}
         </MenuList>
       </CustomPopover>
     </>

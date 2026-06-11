@@ -4,6 +4,7 @@ import type { Namespace } from 'i18next';
 import type { LangCode } from './locales-config';
 
 import dayjs from 'dayjs';
+import { mutate } from 'swr';
 import { useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -52,6 +53,11 @@ export function useTranslate(namespace?: Namespace) {
 
         updateDirection(lang);
         updateDayjsLocale(lang);
+
+        // Backend data is localized via the Accept-Language header
+        // (src/lib/axios.ts) — revalidate every SWR key so cached
+        // responses are refetched in the new language.
+        mutate(() => true);
 
         router.refresh(); // only nextjs
       } catch (error) {

@@ -1,10 +1,12 @@
 import type { AxiosRequestConfig } from 'axios';
 
 import axios from 'axios';
+import i18next from 'i18next';
 
 import { paths } from 'src/routes/paths';
 
 import { CONFIG } from 'src/global-config';
+import { fallbackLng } from 'src/locales/locales-config';
 
 import { JWT_STORAGE_KEY, JWT_REFRESH_STORAGE_KEY } from 'src/auth/context/jwt/constant';
 
@@ -16,7 +18,11 @@ const axiosInstance = axios.create({
 });
 
 // Attach bearer on every request (survives token refresh, unlike axios.defaults).
+// Accept-Language tells the backend which locale to localize reference data
+// to (/references/*); harmless for other endpoints. Falls back to 'ru' until
+// i18next is initialized (matches its fallbackLng).
 axiosInstance.interceptors.request.use((config) => {
+  config.headers['Accept-Language'] = i18next.resolvedLanguage ?? fallbackLng;
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem(JWT_STORAGE_KEY);
     if (token) {

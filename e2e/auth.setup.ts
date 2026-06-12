@@ -1,7 +1,10 @@
 import { test as setup, expect } from '@playwright/test';
 
+import { pinLocale } from './i18n';
+
 // ----------------------------------------------------------------------
 
+const BASE_URL = process.env.E2E_BASE_URL ?? 'http://localhost:8082';
 const AUTH_FILE = 'e2e/.auth/admin.json';
 const BACKEND_HEALTH = process.env.E2E_BACKEND_HEALTH ?? 'http://localhost:8000/health/';
 
@@ -13,6 +16,10 @@ setup('authenticate as admin', async ({ page, request }) => {
       `Backend not reachable at ${BACKEND_HEALTH}. Start ShowTail (:8000) before running e2e.`
     );
   }
+
+  // Пиним язык RU ДО первой навигации — кука уедет в storageState и закрепит
+  // локаль для всех спеков, переиспользующих эту сессию.
+  await pinLocale(page.context(), BASE_URL);
 
   await page.goto('/auth/jwt/sign-in');
   // Локаль-независимые селекторы: дефолтный язык — RU, поэтому таргетим поля по

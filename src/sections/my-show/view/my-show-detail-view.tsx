@@ -155,10 +155,17 @@ export function MyShowDetailView({ id }: Props) {
                 </Stack>
                 {editable && (
                   <Stack direction="row" spacing={1}>
-                    <IconButton onClick={() => setEditing(entry)}>
+                    <IconButton
+                      aria-label={t('myShows.editDialog.title')}
+                      onClick={() => setEditing(entry)}
+                    >
                       <Iconify icon="solar:pen-bold" />
                     </IconButton>
-                    <IconButton color="error" onClick={() => setDeleting(entry)}>
+                    <IconButton
+                      color="error"
+                      aria-label={t('myShows.delete.title')}
+                      onClick={() => setDeleting(entry)}
+                    >
                       <Iconify icon="solar:trash-bin-trash-bold" />
                     </IconButton>
                   </Stack>

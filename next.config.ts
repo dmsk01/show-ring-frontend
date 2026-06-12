@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
   // Don't 308-redirect `/api/*` to a trailing slash — let the rewrite proxy POST/PUT
   // bodies straight through to the backend without an extra redirect round-trip.
   skipTrailingSlashRedirect: true,
-  output: isStaticExport ? 'export' : undefined,
+  output: isStaticExport ? 'export' : 'standalone',
   env: {
     BUILD_STATIC_EXPORT: JSON.stringify(isStaticExport),
   },

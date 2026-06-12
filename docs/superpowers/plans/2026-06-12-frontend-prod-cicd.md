@@ -183,14 +183,13 @@ ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     PORT=8082 \
     HOSTNAME=0.0.0.0
-# non-root (uid 1000 — как в бэк-образе, совместимо с host volumes).
-RUN groupadd --gid 1000 app \
-    && useradd --uid 1000 --gid app --shell /bin/bash --home /app app
+# node:22-slim уже содержит non-root пользователя `node` (uid/gid 1000) —
+# переиспользуем его (свой groupadd упал бы: GID 1000 exists).
 # standalone-артефакты: сервер + статика + public.
-COPY --from=build --chown=app:app /app/.next/standalone ./
-COPY --from=build --chown=app:app /app/.next/static ./.next/static
-COPY --from=build --chown=app:app /app/public ./public
-USER app
+COPY --from=build --chown=node:node /app/.next/standalone ./
+COPY --from=build --chown=node:node /app/.next/static ./.next/static
+COPY --from=build --chown=node:node /app/public ./public
+USER node
 EXPOSE 8082
 HEALTHCHECK --interval=15s --timeout=5s --start-period=15s --retries=3 \
   CMD node -e "fetch('http://127.0.0.1:8082/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"

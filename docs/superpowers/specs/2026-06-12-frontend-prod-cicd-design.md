@@ -121,10 +121,10 @@ classifieds/shows/blog). Удаляем:
 - `src/app/dashboard/product/` (целиком: list, new, `[id]/(details)`, `[id]/edit`, error/loading)
 - `src/app/product/` (целиком: list, `[id]`, checkout, layout, error/loading)
 - `src/actions/product-ssr.ts`
-- пункт меню product в `src/layouts/nav-config-dashboard.tsx` (и `ICONS.product`, если станет неиспользуемым)
 
-**Не трогаем** (используются демо `_examples`/секциями, удаление дало бы ripple в `tsc`):
-`src/sections/product`, `paths.ts` (строки путей), `_mock`.
+**Не трогаем:** `src/layouts/nav-config-dashboard.tsx` — отдельного пункта меню product нет,
+а `ICONS.product` переиспользован для меню **dogs** (должен остаться). `src/sections/product`,
+`paths.ts` (строки путей), `_mock` — держат демо `_examples`, удаление дало бы ripple в `tsc`.
 
 После удаления — итеративно гнать `next build` до зелёного. Если всплывёт ещё один
 **припаркованный** демо-роут того же класса (server-side относительный axios на билде) — применить

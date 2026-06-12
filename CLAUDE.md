@@ -39,7 +39,8 @@
 
 ## Полезное / известные нюансы
 - `tsconfig.json`: без `baseUrl`; алиасы через `paths` (`src/*`). 
-- `npm run build` сейчас падает только на **демо**-странице `/dashboard/post/[title]` (SSR-fetch демо против относительного `/api`) — это припаркованное демо Minimal, не наш код; чистка демо — отдельная задача.
+- `npm run build` — **зелёный**. Ранее падал на припаркованных демо-роутах товаров (`/dashboard/product/[id]`, публичный `/product/[id]`): `generateStaticParams`/SSR делали axios на относительный `/api`, что невалидно в Node на билде. Демо товаров удалено (домена products у нас нет). Если добавляешь демо-роут с server-side fetch — не используй относительный axios на этапе сборки (или ставь `export const dynamic='force-dynamic'`).
+- Прод-деплой: фронт собирается в `standalone` Docker-образ (`Dockerfile`, non-root, порт 8082, HEALTHCHECK `/healthz`) → ghcr; CI `lint→tsc→test→build→deploy` в `.github/workflows/ci.yml` + `.gitlab-ci.yml`. Фронт+бэк на одном VPS за единым nginx (nginx — в репо бэка): `/api/*`(HTTP+WS)→api, `/`→web. См. `docs/superpowers/specs/2026-06-12-frontend-prod-cicd-design.md` и doc-патч бэка `…-backend-deploy-integration.md`.
 - Бэкенд (docker-стек) бывает недоступен/инициализируется — рантайм-проверки делай, когда `:8000/health/` отвечает 200; код всегда верифицируй оффлайн (tsc/lint/test).
 - Пагинация бэка теперь единая плоская `{items,total,page,per_page}` (Dogs/Litters/Kennels/References/Breeds). Kennels-список нормализуй через `normalizeKennelsResponse` (`src/actions/kennel.ts`) — он терпим и к плоской обёртке, и к легаси голому массиву. Всё равно сверяйся со схемой перед реализацией.
 - Коммиты — осмысленными инкрементами; в конце сообщения коммита: `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`.

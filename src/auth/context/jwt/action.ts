@@ -2,54 +2,44 @@
 
 import axios, { endpoints } from 'src/lib/axios';
 
-import { setSession } from './utils';
-import { JWT_REFRESH_STORAGE_KEY } from './constant';
-
 // ----------------------------------------------------------------------
 
 export type SignInParams = { email: string; password: string };
 export type SignUpParams = { email: string; password: string };
 
-function storeTokens(data: { access_token?: string; refresh_token?: string }) {
-  const { access_token, refresh_token } = data;
-  if (!access_token) throw new Error('Access token not found in response');
-  setSession(access_token);
-  if (refresh_token) localStorage.setItem(JWT_REFRESH_STORAGE_KEY, refresh_token);
-}
+// Cookie-режим: бэкенд кладёт access/refresh в httpOnly-куки (тело — null).
+// Фронт ничего не хранит сам — браузер шлёт куки автоматически (withCredentials
+// в src/lib/axios.ts).
 
-/** Sign in — POST /auth/login → { access_token, refresh_token, token_type } */
+/** Sign in — POST /auth/login. Бэкенд ставит httpOnly-куки сессии в ответе. */
 export const signInWithPassword = async ({ email, password }: SignInParams): Promise<void> => {
-  const res = await axios.post(endpoints.auth.signIn, { email, password });
-  storeTokens(res.data);
+  await axios.post(endpoints.auth.signIn, { email, password });
 };
 
-/** Sign up — POST /auth/register (same token shape) */
-export const signUp = async ({ email, password }: SignUpParams): Promise<void> => {
-  const res = await axios.post(endpoints.auth.signUp, { email, password });
-  storeTokens(res.data);
+/**
+ * Sign up — POST /auth/register. НЕ логинит пользователя: бэкенд создаёт аккаунт
+ * и шлёт письмо для подтверждения email (ответ { message }, без токенов/кук).
+ * Вьюха после успеха ведёт на /sign-in с уведомлением «проверьте почту».
+ */
+export const signUp = async ({ email, password }: SignUpParams): Promise<string | undefined> => {
+  const res = await axios.post<{ message?: string }>(endpoints.auth.signUp, { email, password });
+  return res.data?.message;
 };
 
-/** Sign out — best-effort backend logout (revokes the refresh token), then clear local session */
+/** Sign out — POST /auth/logout. Бэкенд всегда чистит обе куки; тело не нужно. */
 export const signOut = async (): Promise<void> => {
   try {
-    const refreshToken = localStorage.getItem(JWT_REFRESH_STORAGE_KEY);
-    // Backend requires { refresh_token } to revoke it; skip the call if we don't have one.
-    if (refreshToken) {
-      await axios.post(endpoints.auth.logout, { refresh_token: refreshToken });
-    }
+    await axios.post(endpoints.auth.logout, {});
   } catch {
-    // ignore network/401 on logout
-  } finally {
-    setSession(null);
-    localStorage.removeItem(JWT_REFRESH_STORAGE_KEY);
+    // ignore network/401 on logout — куки бэкенд всё равно удаляет
   }
 };
 
 /**
  * Сценарий «бэкенд отозвал все refresh-токены» (смена пароля / подтверждение
- * смены email): локальные токены уже мертвы. Чистим сессию И синхронизируем
- * React-контекст, иначе state.user останется «авторизованным» до перезагрузки
- * страницы и пользователя молча выкинет при ближайшем refresh access-токена.
+ * смены email): серверная сессия уже мертва. Дёргаем logout (чистит куки) И
+ * синхронизируем React-контекст, иначе state.user останется «авторизованным»
+ * до перезагрузки и пользователя молча выкинет при ближайшем refresh.
  */
 export const resetRevokedSession = async (
   checkUserSession?: () => Promise<void>

@@ -21,11 +21,11 @@ import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
 
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
 import { signUp } from '../../context/jwt';
-import { useAuthContext } from '../../hooks';
 import { getErrorMessage } from '../../utils';
 import { FormHead } from '../../components/form-head';
 import { passwordPolicy } from '../../password-policy';
@@ -62,8 +62,6 @@ export function JwtSignUpView() {
 
   const showPassword = useBoolean();
 
-  const { checkUserSession } = useAuthContext();
-
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const SignUpSchema = useMemo(() => getSignUpSchema(t), [t]);
@@ -80,10 +78,11 @@ export function JwtSignUpView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await signUp({ email: data.email, password: data.password });
-      await checkUserSession?.();
-
-      router.refresh();
+      // Регистрация НЕ логинит: бэкенд шлёт письмо для подтверждения email.
+      // Ведём на /sign-in с уведомлением, а не в дашборд.
+      const message = await signUp({ email: data.email, password: data.password });
+      toast.success(message || t('auth:signUp.checkEmail'));
+      router.push(paths.auth.jwt.signIn);
     } catch (error) {
       console.error(error);
       const feedbackMessage = getErrorMessage(error);

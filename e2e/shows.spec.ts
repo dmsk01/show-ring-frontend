@@ -3,12 +3,12 @@ import { test, expect, request as apiRequest } from '@playwright/test';
 // ----------------------------------------------------------------------
 
 const BASE_URL = process.env.E2E_BASE_URL ?? 'http://localhost:8082';
+const AUTH_FILE = 'e2e/.auth/admin.json';
 const stamp = Date.now();
 const showName = `E2E Show ${stamp}`;
 const showCity = `E2E-City-${stamp}`;
 
 let showId = '';
-let accessToken: string | null = null;
 
 test.describe.serial('Shows full lifecycle', () => {
   test('create a draft show', async ({ page }) => {
@@ -22,10 +22,6 @@ test.describe.serial('Shows full lifecycle', () => {
 
     await page.getByLabel('Start date').fill('2026-09-01');
     await page.getByLabel('City').fill(showCity);
-
-    // Capture token (storageState already populated localStorage for this origin).
-    accessToken = await page.evaluate(() => localStorage.getItem('jwt_access_token'));
-    expect(accessToken).toBeTruthy();
 
     const createResp = page.waitForResponse(
       (r) => /\/api\/shows\/?$/.test(r.url()) && r.request().method() === 'POST'
@@ -98,14 +94,14 @@ test.describe.serial('Shows full lifecycle', () => {
   });
 
   test.afterAll(async () => {
-    if (!showId || !accessToken) return;
+    if (!showId) return;
     // Hard-delete the show created by this run (DELETE /shows/{id} → 204).
-    // Soft: failures here must not fail the suite.
-    const ctx = await apiRequest.newContext();
+    // Cookie-режим: поднимаем request-контекст с сохранённой сессией (storageState
+    // несёт httpOnly access_token-куку), её и пошлёт DELETE. Soft: ошибки чистки
+    // не валят сьют.
+    const ctx = await apiRequest.newContext({ storageState: AUTH_FILE });
     try {
-      await ctx.delete(`${BASE_URL}/api/shows/${showId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      await ctx.delete(`${BASE_URL}/api/shows/${showId}`);
     } catch {
       // ignore cleanup errors
     } finally {

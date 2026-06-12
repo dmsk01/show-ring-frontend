@@ -24,10 +24,14 @@ setup('authenticate as admin', async ({ page, request }) => {
   // GuestGuard redirects authenticated users out of /auth into the dashboard.
   await page.waitForURL((url) => !url.pathname.startsWith('/auth'), { timeout: 30_000 });
 
-  // Token is persisted to localStorage by the JWT auth context.
+  // Cookie-режим: бэкенд кладёт сессию в httpOnly-куки (JS их не видит, но
+  // Playwright читает их из контекста). Ждём появления access_token-куки.
   await expect
-    .poll(() => page.evaluate(() => localStorage.getItem('jwt_access_token')), { timeout: 15_000 })
-    .not.toBeNull();
+    .poll(
+      async () => (await page.context().cookies()).some((c) => c.name === 'access_token'),
+      { timeout: 15_000 }
+    )
+    .toBe(true);
 
   await page.context().storageState({ path: AUTH_FILE });
 });

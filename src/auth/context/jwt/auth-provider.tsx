@@ -9,8 +9,6 @@ import { normalizeRoles, getPermissionsForRoles } from 'src/utils/permissions';
 
 import axios, { endpoints } from 'src/lib/axios';
 
-import { setSession } from './utils';
-import { JWT_STORAGE_KEY } from './constant';
 import { AuthContext } from '../auth-context';
 
 // ----------------------------------------------------------------------
@@ -22,22 +20,15 @@ export function AuthProvider({ children }: Props) {
 
   const checkUserSession = useCallback(async () => {
     try {
-      const accessToken = localStorage.getItem(JWT_STORAGE_KEY);
+      // Cookie-режим: access-кука httpOnly (JS её не видит), поэтому просто
+      // пробуем /users/me — браузер пришлёт куку сам. Если access протух, но
+      // refresh-кука жива, response-интерсептор молча обновит сессию и повторит.
+      // `_skipAuthRedirect`: для анонима (нет валидной сессии) 401 не должен
+      // редиректить на логин — публичные страницы остаются доступными.
+      const res = await axios.get(endpoints.auth.me, { _skipAuthRedirect: true });
 
-      if (!accessToken) {
-        setState({ user: null, loading: false });
-        return;
-      }
-
-      setSession(accessToken);
-      // /users/me; if access token is expired the response interceptor refreshes once.
-      const res = await axios.get(endpoints.auth.me);
-      const user = res.data;
-
-      setState({ user: { ...user, accessToken }, loading: false });
-    } catch (error) {
-      console.error(error);
-      setSession(null);
+      setState({ user: { ...res.data }, loading: false });
+    } catch {
       setState({ user: null, loading: false });
     }
   }, [setState]);

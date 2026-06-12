@@ -1,8 +1,8 @@
-import axios from 'src/lib/axios';
-
-import { JWT_STORAGE_KEY } from './constant';
-
 // ----------------------------------------------------------------------
+// Cookie-режим: access/refresh живут в httpOnly-куках, JS их не читает и не
+// хранит. Поэтому здесь нет setSession/localStorage — только утилиты разбора
+// JWT (на случай, если где-то понадобится прочитать claims из не-httpOnly
+// токена, например в body-режиме мобильного клиента).
 
 export function jwtDecode(token: string) {
   try {
@@ -24,16 +24,4 @@ export function isValidToken(accessToken: string) {
   const decoded = jwtDecode(accessToken);
   if (!decoded || !('exp' in decoded)) return false;
   return decoded.exp > Date.now() / 1000;
-}
-
-// ----------------------------------------------------------------------
-
-export function setSession(accessToken: string | null) {
-  if (accessToken) {
-    localStorage.setItem(JWT_STORAGE_KEY, accessToken);
-    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-  } else {
-    localStorage.removeItem(JWT_STORAGE_KEY);
-    delete axios.defaults.headers.common.Authorization;
-  }
 }

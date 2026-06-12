@@ -1,4 +1,4 @@
-import type { AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 
 import axios from 'axios';
 import i18next from 'i18next';
@@ -8,27 +8,33 @@ import { paths } from 'src/routes/paths';
 import { CONFIG } from 'src/global-config';
 import { fallbackLng } from 'src/locales/locales-config';
 
-import { JWT_STORAGE_KEY, JWT_REFRESH_STORAGE_KEY } from 'src/auth/context/jwt/constant';
-
 // ----------------------------------------------------------------------
+
+declare module 'axios' {
+  // Внутренние флаги интерсептора, переносимые на конфиге запроса.
+  export interface AxiosRequestConfig {
+    _retry?: boolean;
+    // Не редиректить на логин при провале refresh — для загрузочного пробника
+    // сессии (/users/me на старте у анонима).
+    _skipAuthRedirect?: boolean;
+  }
+}
 
 const axiosInstance = axios.create({
   baseURL: CONFIG.serverUrl, // '/api' → proxied to backend by Next.js rewrites
   headers: { 'Content-Type': 'application/json' },
+  // Cookie-режим: бэкенд отдаёт access/refresh в httpOnly-куках (JS их не
+  // читает). withCredentials заставляет браузер слать куки с каждым запросом
+  // (и принимать Set-Cookie). Авторизация больше не вешается заголовком из
+  // localStorage — access-кука уходит автоматически.
+  withCredentials: true,
 });
 
-// Attach bearer on every request (survives token refresh, unlike axios.defaults).
 // Accept-Language tells the backend which locale to localize reference data
 // to (/references/*); harmless for other endpoints. Falls back to 'ru' until
 // i18next is initialized (matches its fallbackLng).
 axiosInstance.interceptors.request.use((config) => {
   config.headers['Accept-Language'] = i18next.resolvedLanguage ?? fallbackLng;
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem(JWT_STORAGE_KEY);
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-  }
   return config;
 });
 
@@ -47,60 +53,41 @@ function redirectToSignIn(): void {
 // 401 handling: a single in-flight refresh guarded by `isRefreshing`. Any
 // request that fails with 401 while a refresh is running is parked in
 // `pendingQueue` instead of firing its own refresh. When the refresh settles
-// the queue is flushed — every parked request is replayed with the fresh token
-// (success) or rejected and the user is sent to sign-in (failure).
-
-type RetryableConfig = AxiosRequestConfig & { _retry?: boolean };
+// the queue is flushed — every parked request is replayed against the fresh
+// access cookie (success) or rejected and the user is sent to sign-in (failure).
+//
+// Cookie-режим: и access, и refresh — в httpOnly-куках. Refresh не передаёт
+// токен в теле (его несёт refresh-кука, path=/api/auth), а ретрай просто
+// переотправляет исходный запрос — свежая access-кука уйдёт автоматически.
 
 type QueuedRequest = {
-  resolve: (token: string) => void;
+  resolve: () => void;
   reject: (reason: unknown) => void;
 };
 
 let isRefreshing = false;
 let pendingQueue: QueuedRequest[] = [];
 
-function flushQueue(error: unknown, token: string | null): void {
-  pendingQueue.forEach(({ resolve, reject }) => {
-    if (token) {
-      resolve(token);
-    } else {
-      reject(error);
-    }
-  });
+function flushQueue(error: unknown, success: boolean): void {
+  pendingQueue.forEach(({ resolve, reject }) => (success ? resolve() : reject(error)));
   pendingQueue = [];
 }
 
-async function refreshAccessToken(): Promise<string | null> {
-  const refreshToken =
-    typeof window !== 'undefined' ? localStorage.getItem(JWT_REFRESH_STORAGE_KEY) : null;
-  if (!refreshToken) return null;
-
+async function refreshSession(): Promise<boolean> {
   try {
-    const res = await axios.post(`${CONFIG.serverUrl}${endpoints.auth.refresh}`, {
-      refresh_token: refreshToken,
-    });
-    const { access_token, refresh_token } = res.data;
-    localStorage.setItem(JWT_STORAGE_KEY, access_token);
-    if (refresh_token) localStorage.setItem(JWT_REFRESH_STORAGE_KEY, refresh_token);
-    return access_token;
+    // Тело пустое — refresh-кука уходит автоматически (withCredentials).
+    // Бэкенд ставит свежие access/refresh куки в ответе.
+    await axios.post(`${CONFIG.serverUrl}${endpoints.auth.refresh}`, {}, { withCredentials: true });
+    return true;
   } catch {
-    localStorage.removeItem(JWT_STORAGE_KEY);
-    localStorage.removeItem(JWT_REFRESH_STORAGE_KEY);
-    return null;
+    return false;
   }
-}
-
-// Replay a request with the refreshed bearer token.
-function retryWithToken(original: RetryableConfig, token: string) {
-  original.headers = { ...original.headers, Authorization: `Bearer ${token}` };
-  return axiosInstance(original);
 }
 
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const original = error.config as RetryableConfig | undefined;
+    const original = error.config as InternalAxiosRequestConfig | undefined;
     const status = error?.response?.status;
 
     const isAuthCall = original?.url?.includes('/auth/');
@@ -111,22 +98,22 @@ axiosInstance.interceptors.response.use(
       // A refresh is already in flight: park this request until it settles,
       // then replay it (or reject it if the refresh failed).
       if (isRefreshing) {
-        return new Promise<string>((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
           pendingQueue.push({ resolve, reject });
-        }).then((token) => retryWithToken(original, token));
+        }).then(() => axiosInstance(original));
       }
 
       // This request owns the refresh for the current wave of 401s.
       isRefreshing = true;
       try {
-        const newToken = await refreshAccessToken();
-        if (!newToken) {
+        const ok = await refreshSession();
+        if (!ok) {
           // Refresh failed — release the queue with the error and re-auth.
-          flushQueue(error, null);
-          redirectToSignIn();
+          flushQueue(error, false);
+          if (!original._skipAuthRedirect) redirectToSignIn();
         } else {
-          flushQueue(null, newToken);
-          return await retryWithToken(original, newToken);
+          flushQueue(null, true);
+          return await axiosInstance(original);
         }
       } finally {
         isRefreshing = false;

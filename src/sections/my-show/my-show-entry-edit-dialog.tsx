@@ -61,6 +61,12 @@ export function MyShowEntryEditDialog({ open, onClose, show, entry, entries }: P
   const { classes, classesLoading } = useAvailableClasses(show.id, entry.dog_id);
   const taken = registeredClassIds(entries, entry.dog_id, entry.id);
 
+  // Значение Select по умолчанию — текущий класс записи, но `classes` грузятся
+  // асинхронно: пока их нет (или если собака уже выросла из класса), значение
+  // окажется «вне диапазона» опций → MUI-варнинг и молчаливый сброс. Держим
+  // текущий класс как fallback-опцию, чтобы значение всегда было валидным.
+  const hasCurrentClass = classes.some((cls) => cls.id === entry.show_class_id);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       await updateShowEntry(show.id, entry.id, {
@@ -88,8 +94,11 @@ export function MyShowEntryEditDialog({ open, onClose, show, entry, entries }: P
             <Field.Select
               name="show_class_id"
               label={t('myShows.editDialog.fields.class')}
-              disabled={classesLoading || classes.length === 0}
+              disabled={classesLoading}
             >
+              {!hasCurrentClass && (
+                <MenuItem value={entry.show_class_id}>{entry.class_name}</MenuItem>
+              )}
               {classes.map((cls) => (
                 <MenuItem key={cls.id} value={cls.id} disabled={taken.has(cls.id)}>
                   {cls.name}

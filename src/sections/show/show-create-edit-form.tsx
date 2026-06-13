@@ -110,9 +110,17 @@ export function ShowCreateEditForm({ currentShow }: Props) {
   });
 
   const {
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  // `ranks` грузятся асинхронно (SWR), а в режиме правки rank_id выставлен сразу
+  // из currentShow → пока список пуст, значение Select оказывается «вне диапазона»
+  // опций (MUI-варнинг). Держим выбранный ранг как fallback-опцию, пока его нет в
+  // загруженном списке, — значение всегда валидно.
+  const selectedRankId = watch('rank_id');
+  const rankInList = ranks.some((rank) => rank.id === selectedRankId);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -156,6 +164,9 @@ export function ShowCreateEditForm({ currentShow }: Props) {
           <Field.Text name="name" label={t('form.fields.name')} />
           <Field.Select name="rank_id" label={t('form.fields.rank')} disabled={!!currentShow}>
             <MenuItem value="">—</MenuItem>
+            {!!selectedRankId && !rankInList && (
+              <MenuItem value={selectedRankId}>{t('common:state.loading')}</MenuItem>
+            )}
             {ranks.map((rank) => (
               <MenuItem key={rank.id} value={rank.id}>
                 {rank.name}

@@ -1,7 +1,10 @@
+import type { IShowItem } from 'src/types/show';
+
 import { it, expect, describe } from 'vitest';
 
 import {
   classifyShow,
+  canEnterResults,
   showStatusI18nKey,
   SHOW_STATUS_COLOR,
   canRegisterForShow,
@@ -57,6 +60,28 @@ describe('canRegisterForShow', () => {
     expect(canRegisterForShow('registration_closed', null, now)).toBe(false);
     expect(canRegisterForShow('draft', null, now)).toBe(false);
     expect(canRegisterForShow('completed', null, now)).toBe(false);
+  });
+});
+
+describe('canEnterResults', () => {
+  const mkShow = (organizerId: string) => ({ organizer_id: organizerId }) as unknown as IShowItem;
+  const can = (granted: string[]) => (perm: string) => granted.includes(perm);
+
+  it('allows the show owner', () => {
+    expect(canEnterResults(mkShow('u1'), 'u1', can([]))).toBe(true);
+  });
+
+  it('allows admin (wildcard) even when not the owner', () => {
+    expect(canEnterResults(mkShow('u1'), 'u2', can(['*']))).toBe(true);
+  });
+
+  it('denies a non-owner non-admin (judge / organizer-role with results:create)', () => {
+    expect(canEnterResults(mkShow('u1'), 'u2', can(['results:create', 'shows:view']))).toBe(false);
+  });
+
+  it('denies when show or user is missing', () => {
+    expect(canEnterResults(undefined, 'u1', can(['*']))).toBe(false);
+    expect(canEnterResults(mkShow('u1'), undefined, can(['*']))).toBe(false);
   });
 });
 

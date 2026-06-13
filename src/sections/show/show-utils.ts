@@ -1,6 +1,6 @@
-import type { ShowStatus } from 'src/types/show';
 import type { LabelColor } from 'src/components/label';
 import type { IShowResult } from 'src/types/show-result';
+import type { IShowItem, ShowStatus } from 'src/types/show';
 
 export const SHOW_UPCOMING_STATUSES: ShowStatus[] = [
   'registration_open',
@@ -55,6 +55,21 @@ export function canRegisterForShow(
   if (Number.isNaN(deadline.getTime())) return true; // некорректную дату не считаем барьером
   deadline.setHours(23, 59, 59, 999);
   return now.getTime() <= deadline.getTime();
+}
+
+/**
+ * Кто может вносить/править результаты выставки. Зеркало бэкенда: ВЛАДЕЛЕЦ
+ * выставки (`organizer_id`) ИЛИ admin (`*`). НЕ роль `judge` и НЕ привязка судьи
+ * к рингу — бэкенд их не авторизует (отдаёт 403). Судья и прочие видят
+ * результаты read-only. Аналог ownership-гейта `canManageDog` у собак.
+ */
+export function canEnterResults(
+  show: IShowItem | undefined,
+  userId: string | undefined,
+  can: (permission: string) => boolean
+): boolean {
+  if (!show || !userId) return false;
+  return show.organizer_id === userId || can('*');
 }
 
 export const SHOW_AWARD_FLAGS: { key: keyof IShowResult; label: string }[] = [

@@ -26,6 +26,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { useAuthContext } from 'src/auth/hooks';
 
+import { canEnterResults } from '../show-utils';
 import { ShowResultDialog } from '../show-result-dialog';
 import { ShowResultsTable } from '../show-results-table';
 import { ShowDocumentsPanel } from '../show-documents-panel';
@@ -38,10 +39,12 @@ export function ShowResultsView({ id }: Props) {
   const { t } = useTranslate(['show', 'common']);
   const { can } = usePermissions();
   const { user } = useAuthContext();
-  const canEdit = can('results:create') || can('results:edit');
   const canGenerate = can('documents:create');
 
   const { show } = useGetShow(id);
+  // Внесение/правка результатов — по владению выставкой (organizer_id) или admin,
+  // как на бэкенде. Судья и не-владельцы видят результаты read-only.
+  const canEdit = canEnterResults(show, user?.id, can);
   const { entries } = useGetShowEntries(id);
   const { rows, loading } = useShowResultRows(id);
   const { items: grades } = useReferenceList('/references/grades');

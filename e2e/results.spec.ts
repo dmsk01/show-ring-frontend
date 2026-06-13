@@ -7,16 +7,15 @@ import { t } from './i18n';
 // выставки).
 //
 // ВАЖНО (проверено probe'ом по бэкенду): создание результата авторизуется по
-// ВЛАДЕЛЬЦУ выставки (`organizer_id` == текущий пользователь) ИЛИ admin. НЕ по
-// роли `judge` и НЕ по привязке судьи к рингу: judge и сторонний organizer-юзер
-// получают 403 даже при назначенном (class-matched) ринге. Т.е. фронтовое право
-// `judge: results:create` бэкенд НЕ соблюдает — оценку вносит организатор. Это
-// зафиксированный RBAC-рассинхрон (см. заметку проекту); здесь тестируем рабочий
-// путь: организатор выставки ставит оценку.
+// ВЛАДЕЛЬЦУ выставки (`organizer_id`) ИЛИ admin — НЕ по роли `judge` и НЕ по
+// привязке судьи к рингу (judge и сторонний organizer-юзер → 403, владелец → 201).
+// Фронт согласован: действие гейтится `canEnterResults` (ownership/admin), судья
+// видит результаты read-only — это проверяет второй describe.
 // ----------------------------------------------------------------------
 
 const BASE_URL = process.env.E2E_BASE_URL ?? 'http://localhost:8082';
 const ADMIN = 'e2e/.auth/admin.json';
+const JUDGE = 'e2e/.auth/judge.json';
 const stamp = Date.now();
 const showName = `E2E Results Show ${stamp}`;
 const showCity = `E2E-Res-${stamp}`;
@@ -139,16 +138,36 @@ test.describe.serial('Show results entry (organizer)', () => {
       tbody.getByRole('button', { name: t('show', 'results.actions.edit') })
     ).toBeVisible();
   });
+});
 
-  test.afterAll(async () => {
-    const ctx = await apiRequest.newContext({ storageState: ADMIN });
-    try {
-      if (showId) await ctx.delete(`${BASE_URL}/api/shows/${showId}`);
-      if (dogId) await ctx.delete(`${BASE_URL}/api/dogs/${dogId}`);
-    } catch {
-      // ignore cleanup errors
-    } finally {
-      await ctx.dispose();
-    }
+test.describe('Show results — read-only for judge', () => {
+  test.use({ storageState: JUDGE });
+
+  test('judge sees results without grade/edit actions', async ({ page }) => {
+    test.skip(!showId, 'depends on the seeded show');
+
+    await page.goto(`/dashboard/shows/${showId}/results`);
+    // Страница доступна судье (shows:view) и грузится…
+    await expect(
+      page.getByRole('heading', { name: t('show', 'results.heading', { name: showName }) })
+    ).toBeVisible({ timeout: 30_000 });
+
+    // …но в строке НЕТ действий внесения/правки результата (canEnterResults=false):
+    // судья видит результаты read-only.
+    const tbody = page.locator('tbody');
+    await expect(tbody.getByRole('button', { name: t('show', 'results.actions.grade') })).toHaveCount(0);
+    await expect(tbody.getByRole('button', { name: t('show', 'results.actions.edit') })).toHaveCount(0);
   });
+});
+
+test.afterAll(async () => {
+  const ctx = await apiRequest.newContext({ storageState: ADMIN });
+  try {
+    if (showId) await ctx.delete(`${BASE_URL}/api/shows/${showId}`);
+    if (dogId) await ctx.delete(`${BASE_URL}/api/dogs/${dogId}`);
+  } catch {
+    // ignore cleanup errors
+  } finally {
+    await ctx.dispose();
+  }
 });

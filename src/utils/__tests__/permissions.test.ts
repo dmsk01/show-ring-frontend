@@ -21,8 +21,8 @@ describe('multi-role resolution', () => {
 
   it('unions and dedupes permissions across roles', () => {
     const perms = getPermissionsForRoles(['breeder', 'judge']);
-    expect(perms).toContain('dogs');
-    expect(perms).toContain('results:create');
+    expect(perms).toContain('dogs'); // breeder
+    expect(perms).toContain('documents'); // judge
     expect(perms.filter((p) => p === 'dashboard:view')).toHaveLength(1);
   });
 });

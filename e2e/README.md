@@ -77,7 +77,7 @@ docker compose exec api printenv AUTH_LOGIN_RATE_LIMIT   # ожидаем 100
 
 - `auth.setup.ts` — логин админа (UI) + пин локали; `roles.setup.ts` — сессии ролей
   (API-логин, reuse свежего storageState). Состояния → `e2e/.auth/*.json` (gitignore).
-- Спеки: `shows`, `auth`, `show-entry`, `rbac`, `kennels`, `dogs`, `judge-results`.
+- Спеки: `shows`, `auth`, `show-entry`, `rbac`, `kennels`, `dogs`, `results`.
 - `i18n.ts` — пин локали `i18next=ru` + `t(ns,key)` из словарей приложения
   (UI на RU по умолчанию, всё переведено через `t()` — ассертим строки из словарей).
 - `users.ts` — сид-юзеры, домен-константа `e2e.example`, `apiLogin` (429-aware).

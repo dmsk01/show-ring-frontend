@@ -4,12 +4,21 @@ End-to-end тесты против **реального бэкенда ShowTail*
 dev-сервера (:8082). Запуск:
 
 ```bash
-npm run test:e2e        # playwright test
+npm run test:e2e        # dev-сервер (turbopack) — быстрый, для итераций
 npm run test:e2e:ui     # интерактивный UI-режим
+npm run test:e2e:prod   # ПРОД-сборка (next build + start) — детерминированно
 ```
 
 `playwright.config.ts` сам поднимает фронт (`npm run dev`, :8082,
 `reuseExistingServer`). Бэкенд-стек нужно поднять заранее.
+
+**Dev vs prod.** В dev первый визит на тяжёлый роут (например
+`/dashboard/shows/[id]/results`) запускает холодную turbopack-компиляцию (>60с) —
+отсюда редкие first-attempt флаки (страхуются `retries:1`). Для детерминизма
+(CI/проверка перед мержем) — `npm run test:e2e:prod`: `playwright.prod.config.ts`
+наследует базовый конфиг и подменяет `webServer` на `next build && next start`
+(всё скомпилировано заранее). Перед прод-прогоном убедитесь, что на :8082 нет
+запущенного dev-сервера (иначе `reuseExistingServer` переиспользует его).
 
 ## Предпосылки (поднять ДО прогона)
 

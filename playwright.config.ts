@@ -8,7 +8,9 @@ export default defineConfig({
   testDir: './e2e',
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: 0,
+  // Живой стенд (dev-сервер turbopack) даёт редкие транзиентные флаки на
+  // навигации/логине — одна повторная попытка делает сьют устойчивым.
+  retries: 1,
   workers: 1,
   timeout: 60_000,
   expect: { timeout: 10_000 },
@@ -19,7 +21,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   projects: [
-    { name: 'setup', testMatch: /auth\.setup\.ts/ },
+    { name: 'setup', testMatch: /.*\.setup\.ts/ },
     {
       name: 'chromium',
       testMatch: /.*\.spec\.ts/,

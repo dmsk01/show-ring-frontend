@@ -15,6 +15,7 @@ import type { BrowserContext } from '@playwright/test';
 import showRu from '../src/locales/langs/ru/show.json';
 import dogRu from '../src/locales/langs/ru/dog.json';
 import authRu from '../src/locales/langs/ru/auth.json';
+import kennelRu from '../src/locales/langs/ru/kennel.json';
 import commonRu from '../src/locales/langs/ru/common.json';
 
 export const E2E_LANG = 'ru';
@@ -23,6 +24,7 @@ const DICTS: Record<string, unknown> = {
   show: showRu,
   dog: dogRu,
   auth: authRu,
+  kennel: kennelRu,
   common: commonRu,
 };
 

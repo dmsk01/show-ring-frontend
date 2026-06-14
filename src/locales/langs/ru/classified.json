@@ -28,6 +28,7 @@
       "priceKind": "Тип цены",
       "price": "Цена",
       "availability": "Доступность",
+      "active": "Активно",
       "contactPhone": "Телефон",
       "contactEmail": "E-mail",
       "description": "Описание",

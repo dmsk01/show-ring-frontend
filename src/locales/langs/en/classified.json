@@ -28,6 +28,7 @@
       "priceKind": "Price kind",
       "price": "Price",
       "availability": "Availability",
+      "active": "Active",
       "contactPhone": "Contact phone",
       "contactEmail": "Contact email",
       "description": "Description",

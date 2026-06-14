@@ -49,6 +49,8 @@ export const getClassifiedSchema = (t: TFunction) =>
     price_kind: z.enum(['fixed', 'free', 'negotiable']),
     // Update-only on the backend (ClassifiedCreate has no such field) — sent only when editing.
     availability: z.enum(['available', 'reserved', 'sold']),
+    // Update-only toggle: on → status `active`, off → `closed`.
+    active: z.boolean(),
     breed_id: z.string().nullable(),
     price: z.string().nullable(),
     city: z.string().nullable(),
@@ -75,6 +77,7 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
     description: '',
     price_kind: 'fixed',
     availability: 'available',
+    active: true,
     breed_id: '',
     price: null,
     city: null,
@@ -93,6 +96,7 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
           description: currentClassified.description,
           price_kind: currentClassified.price_kind,
           availability: currentClassified.availability ?? 'available',
+          active: currentClassified.status === 'active',
           breed_id: currentClassified.breed_id ?? '',
           price: currentClassified.price?.toString() ?? null,
           city: currentClassified.city,
@@ -122,7 +126,14 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
       };
 
       if (currentClassified) {
-        await updateClassified(currentClassified.id, { ...base, availability: data.availability });
+        // Send `status` only when the toggle actually changed, so a plain save
+        // never clobbers `moderation`/`archived` states the owner didn't touch.
+        const wasActive = currentClassified.status === 'active';
+        await updateClassified(currentClassified.id, {
+          ...base,
+          availability: data.availability,
+          ...(data.active !== wasActive && { status: data.active ? 'active' : 'closed' }),
+        });
         toast.success(t('toast.updated'));
       } else {
         await createClassified({
@@ -224,7 +235,19 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
           )}
         </Box>
 
-        <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>
+        <Stack
+          direction="row"
+          sx={{
+            mt: 3,
+            alignItems: 'center',
+            justifyContent: currentClassified ? 'space-between' : 'flex-end',
+          }}
+        >
+          {/* Active toggle — owner can deactivate (close) or reactivate the listing on edit. */}
+          {currentClassified && (
+            <Field.Switch name="active" label={t('form.fields.active')} />
+          )}
+
           <Button type="submit" variant="contained" loading={isSubmitting}>
             {currentClassified ? t('form.submitUpdate') : t('form.submitCreate')}
           </Button>

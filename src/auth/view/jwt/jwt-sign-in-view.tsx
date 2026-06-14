@@ -50,6 +50,25 @@ export type SignInSchemaType = z.infer<ReturnType<typeof getSignInSchema>>;
 
 // ----------------------------------------------------------------------
 
+// Бэкенд отдаёт машиночитаемые коды (detail) и rate-limit-строки — показывать
+// их пользователю нельзя. Переводим в человекочитаемые сообщения; ключи
+// сравниваем без учёта регистра, неизвестное падает в общий фолбэк.
+const SIGN_IN_ERROR_KEYS: Record<string, string> = {
+  invalid_credentials: 'auth:errors.invalidCredentials',
+  user_blocked: 'auth:errors.userBlocked',
+  'too many requests': 'auth:errors.tooManyRequests',
+  'rate limit subsystem unavailable': 'auth:errors.serviceUnavailable',
+  'network error': 'auth:errors.network',
+};
+
+function resolveSignInError(error: unknown, t: TFunction<['auth']>): string {
+  const raw = getErrorMessage(error).trim().toLowerCase();
+  const key = SIGN_IN_ERROR_KEYS[raw];
+  return t(key ?? 'auth:errors.generic');
+}
+
+// ----------------------------------------------------------------------
+
 export function JwtSignInView() {
   const router = useRouter();
   const { t } = useTranslate(['auth']);
@@ -80,8 +99,7 @@ export function JwtSignInView() {
       router.refresh();
     } catch (error) {
       console.error(error);
-      const feedbackMessage = getErrorMessage(error);
-      setErrorMessage(feedbackMessage);
+      setErrorMessage(resolveSignInError(error, t));
     }
   });
 

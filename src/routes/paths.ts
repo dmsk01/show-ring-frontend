@@ -27,6 +27,11 @@ export const paths = {
   page404: '/error/404',
   page500: '/error/500',
   components: '/components',
+  legal: {
+    privacy: '/legal/privacy-policy.html',
+    terms: '/legal/terms-of-service.html',
+    consent: '/legal/consent.html',
+  },
   docs: 'https://docs.minimals.cc/',
   changelog: 'https://docs.minimals.cc/changelog/',
   zoneStore: 'https://mui.com/store/items/zone-landing-page/',

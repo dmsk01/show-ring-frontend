@@ -13,6 +13,12 @@
     "contact": "Contact us",
     "faqs": "FAQs"
   },
+  "legal": {
+    "title": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "consent": "Personal Data Consent"
+  },
   "contact": {
     "title": "Get in touch"
   },

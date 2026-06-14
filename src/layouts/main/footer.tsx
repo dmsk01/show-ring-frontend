@@ -164,6 +164,34 @@ export function Footer({
                 })}
               >
                 <Typography component="div" variant="overline">
+                  {t('legal.title')}
+                </Typography>
+
+                {(
+                  [
+                    { name: t('legal.privacy'), href: paths.legal.privacy },
+                    { name: t('legal.terms'), href: paths.legal.terms },
+                    { name: t('legal.consent'), href: paths.legal.consent },
+                  ] as const
+                ).map((link) => (
+                  // Статические HTML в public/ — обычный <a>, не клиентский роутинг Next.
+                  <Link key={link.name} href={link.href} color="inherit" variant="body2">
+                    {link.name}
+                  </Link>
+                ))}
+              </Box>
+
+              <Box
+                sx={(theme) => ({
+                  gap: 2,
+                  width: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  [theme.breakpoints.up(layoutQuery)]: { alignItems: 'flex-start' },
+                })}
+              >
+                <Typography component="div" variant="overline">
                   {t('contact.title')}
                 </Typography>
 

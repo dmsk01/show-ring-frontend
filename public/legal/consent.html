@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Согласие на обработку персональных данных / Consent to Personal Data Processing</title>
+  <meta name="robots" content="index, follow" />
+  <style>
+    :root {
+      --fg: #1c252e;
+      --muted: #637381;
+      --line: #e4e8eb;
+      --accent: #1877f2;
+      --bg-note: #f4f6f8;
+      --max: 880px;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      color: var(--fg);
+      font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #fff;
+    }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 32px 20px 96px; }
+    header.doc { border-bottom: 1px solid var(--line); padding-bottom: 16px; margin-bottom: 8px; }
+    h1 { font-size: 27px; line-height: 1.25; margin: 8px 0 4px; }
+    h2 { font-size: 21px; margin: 40px 0 12px; padding-top: 8px; }
+    h3 { font-size: 17px; margin: 24px 0 8px; }
+    p, li { color: var(--fg); }
+    .muted { color: var(--muted); font-size: 14px; }
+    a { color: var(--accent); }
+    table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14.5px; }
+    th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
+    th { background: var(--bg-note); font-weight: 600; }
+    .note { background: var(--bg-note); border-left: 3px solid var(--accent); padding: 12px 16px; border-radius: 6px; margin: 16px 0; }
+    .consent-block { border: 1px solid var(--line); border-radius: 10px; padding: 16px 20px; margin: 20px 0; }
+    .consent-block.optional { border-style: dashed; }
+    .tag { display: inline-block; font-size: 12px; font-weight: 600; border-radius: 999px; padding: 2px 10px; vertical-align: middle; margin-left: 8px; }
+    .tag.req { background: #e7f4ea; color: #1a7a3c; }
+    .tag.opt { background: #fff3cd; color: #8a6d00; }
+    .ph { background: #fff3cd; border: 1px solid #ffe69c; border-radius: 4px; padding: 0 4px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; }
+    .lang-switch { position: sticky; top: 0; background: #fff; padding: 10px 0; border-bottom: 1px solid var(--line); margin-bottom: 16px; z-index: 5; }
+    .lang-switch button {
+      font: inherit; font-size: 14px; cursor: pointer; border: 1px solid var(--line);
+      background: #fff; color: var(--fg); border-radius: 8px; padding: 6px 14px; margin-right: 8px;
+    }
+    .lang-switch button[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .lang-en { display: none; }
+    body.show-en .lang-ru { display: none; }
+    body.show-en .lang-en { display: block; }
+    @media print { .lang-switch { display: none; } .lang-en, .lang-ru { display: block !important; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="lang-switch" role="group" aria-label="Language / Язык">
+      <button type="button" data-lang="ru" aria-pressed="true">Русский</button>
+      <button type="button" data-lang="en" aria-pressed="false">English</button>
+    </div>
+
+    <!-- ================= RU ================= -->
+    <section class="lang-ru" lang="ru">
+      <header class="doc">
+        <p class="muted">Документ имеет юридическую силу на русском языке. Английская версия приведена для удобства; при расхождениях приоритет имеет русский текст.</p>
+        <h1>Согласие на обработку персональных данных</h1>
+        <p class="muted">
+          Сайт: <span class="ph">[адрес сайта]</span> · Редакция от: <span class="ph">[дата]</span>
+        </p>
+      </header>
+
+      <div class="note">
+        Настоящее Согласие оформлено отдельным документом в соответствии с требованиями, действующими с 01.09.2025, и не включается в текст Пользовательского соглашения или Политики. Согласие даётся свободно, своей волей и в своём интересе. Часть обработки (создание учётной записи, запись на выставку, оплата) осуществляется без отдельного согласия — на основании договора (Пользовательского соглашения) и закона; такая обработка не зависит от того, дадите ли вы согласия ниже.
+      </div>
+
+      <h2>Реквизиты согласия (ст. 9 ч. 4 152-ФЗ)</h2>
+      <table>
+        <tbody>
+          <tr><th style="width:34%">Субъект персональных данных</th><td>ФИО: <span class="ph">[указывается в форме]</span>; идентификатор в Сервисе: адрес электронной почты, указанный при регистрации. <span class="muted">(Реквизиты документа, удостоверяющего личность, при онлайн-предоставлении согласия не запрашиваются.)</span></td></tr>
+          <tr><th>Представитель субъекта</th><td><span class="ph">[заполняется, если согласие даёт законный представитель: ФИО, адрес, реквизиты документа о полномочиях]</span></td></tr>
+          <tr><th>Оператор</th><td><span class="ph">[ИП / ООО «___» / ФИО]</span>, ОГРН/ОГРНИП <span class="ph">[___]</span>, ИНН <span class="ph">[___]</span>, адрес: <span class="ph">[___]</span></td></tr>
+          <tr><th>Лица, обрабатывающие данные по поручению Оператора</th><td>Хостинг-провайдер <span class="ph">[наименование, адрес]</span>; платёжный провайдер <span class="ph">[наименование, адрес]</span>; сервис рассылок <span class="ph">[наименование, адрес, при наличии]</span> — на условиях поручения (ст. 6 ч. 3 152-ФЗ) с обязательством соблюдать конфиденциальность.</td></tr>
+          <tr><th>Способ дачи согласия</th><td>Совершение конклюдентного действия в Сервисе — проставление отметки (галочки) в соответствующем поле и/или подтверждение действия. Дата и факт согласия фиксируются Оператором в электронных журналах.</td></tr>
+        </tbody>
+      </table>
+
+      <p>Перечень действий с персональными данными, на которые даётся согласие: сбор, запись, систематизация, накопление, хранение, уточнение (обновление, изменение), извлечение, использование, передача (предоставление, доступ) указанным выше лицам, блокирование, удаление, уничтожение, обезличивание. Общее описание способов обработки: смешанная обработка (с использованием средств автоматизации и без таковых) без принятия решений, порождающих юридические последствия исключительно на основании автоматизированной обработки.</p>
+
+      <!-- ===== Согласие 1: основное ===== -->
+      <div class="consent-block">
+        <h3>1. Согласие на обработку персональных данных <span class="tag req">основное</span></h3>
+        <p>Я даю Оператору согласие на обработку моих персональных данных в следующих целях и составе:</p>
+        <table>
+          <thead><tr><th>Цель</th><th>Перечень персональных данных</th></tr></thead>
+          <tbody>
+            <tr><td>Ведение профиля пользователя и профилей животных/питомников, формирование родословных</td><td>ФИО, страна; кличка и характеристики животного, фотографии; название, контактные телефон, email, сайт, город/страна питомника</td></tr>
+            <tr><td>Участие в выставках: формирование заявок, каталогов, проведение экспертизы и публикация результатов</td><td>ФИО участника/хендлера, сведения о животном, класс, каталожный номер</td></tr>
+            <tr><td>Информационная и техническая поддержка</td><td>Email, содержание обращений и переписки</td></tr>
+          </tbody>
+        </table>
+        <p class="muted">Без этого согласия публикация и сопутствующая обработка указанных данных не производятся.</p>
+      </div>
+
+      <!-- ===== Согласие 2: рассылки ===== -->
+      <div class="consent-block optional">
+        <h3>2. Согласие на получение рассылок <span class="tag opt">по желанию</span></h3>
+        <p>Я даю согласие на обработку моего адреса электронной почты и идентификатора устройства для направления мне уведомлений и информационных (рекламных) рассылок о событиях Сервиса (открытие регистрации, публикация результатов, объявления о помётах, присвоение титулов и т. п.) по каналам email и push, в том числе с использованием автоматизированных средств. Отказ от рассылок возможен в любой момент в настройках подписок или по ссылке в сообщении и не влияет на доступ к иным функциям Сервиса.</p>
+      </div>
+
+      <!-- ===== Согласие 3: распространение (ст. 10.1) ===== -->
+      <div class="consent-block optional">
+        <h3>3. Согласие на обработку персональных данных, разрешённых для распространения <span class="tag opt">по желанию</span></h3>
+        <p>В соответствии со ст. 10.1 152-ФЗ я даю отдельное согласие на распространение (предоставление неограниченному кругу лиц) следующих моих персональных данных путём их размещения в открытых разделах Сайта:</p>
+        <ul>
+          <li>при публикации профиля питомника и объявлений: указанные мной название/имя, город, контактный телефон, контактный email, ссылка на сайт;</li>
+          <li>при участии в выставке: ФИО участника/хендлера, сведения о животном, класс и результаты в составе публичного каталога и итогов мероприятия.</li>
+        </ul>
+        <p><strong>Условия и запреты, устанавливаемые субъектом:</strong> распространяются только те данные, которые я добровольно указал(а) в соответствующих публичных полях; передача данных по запросам третьих лиц и их обработка иными способами, кроме отображения на Сайте в целях работы Сервиса, <span class="ph">[разрешена / запрещена — выбрать]</span>. Я вправе в любой момент потребовать прекращения передачи (распространения) этих данных; требование исполняется Оператором в порядке ст. 10.1 152-ФЗ.</p>
+        <p class="muted">Без этого согласия данные не размещаются в открытом доступе; функции, требующие публикации (публичные объявления, каталоги), могут быть недоступны.</p>
+      </div>
+
+      <h2>Срок действия и порядок отзыва</h2>
+      <p>Согласие действует с момента его предоставления до достижения целей обработки либо до его отзыва. Согласие может быть отозвано в любой момент путём направления заявления на адрес <span class="ph">[privacy@example.ru]</span> либо через соответствующие настройки в личном кабинете. После отзыва Оператор прекращает обработку соответствующих данных и обеспечивает их уничтожение в срок, не превышающий <strong>30 дней</strong>, если отсутствуют иные правовые основания для продолжения обработки (например, требования закона об учёте платежей). Отзыв согласия не распространяется на обработку, осуществляемую на основании договора и закона.</p>
+
+      <div class="note">
+        Подробная информация об обработке (категории данных, сроки хранения, права субъекта, меры защиты, локализация) приведена в <a href="/legal/privacy-policy.html">Политике в отношении обработки персональных данных</a>. Условия использования Сервиса — в <a href="/legal/terms-of-service.html">Пользовательском соглашении</a>.
+      </div>
+
+      <p class="muted">© <span class="ph">[год]</span> <span class="ph">[наименование Оператора]</span>.</p>
+    </section>
+
+    <!-- ================= EN ================= -->
+    <section class="lang-en" lang="en">
+      <header class="doc">
+        <p class="muted">This document is legally binding in its Russian version. The English text is provided for convenience only; in case of any discrepancy, the Russian version prevails.</p>
+        <h1>Consent to Personal Data Processing</h1>
+        <p class="muted">Website: <span class="ph">[website URL]</span> · Revision: <span class="ph">[date]</span></p>
+      </header>
+
+      <div class="note">
+        This Consent is a standalone document, in line with requirements effective from 1 September 2025, and is not incorporated into the User Agreement or Privacy Policy. Consent is given freely, by the subject's own will and interest. Some processing (account creation, show registration, payment) is performed without separate consent — on the basis of the contract (User Agreement) and the law; it does not depend on the consents below.
+      </div>
+
+      <h2>Consent particulars (Art. 9(4) of the Law)</h2>
+      <table>
+        <tbody>
+          <tr><th style="width:34%">Data subject</th><td>Full name: <span class="ph">[provided in the form]</span>; Service identifier: the email used at registration. <span class="muted">(ID-document details are not requested for online consent.)</span></td></tr>
+          <tr><th>Subject's representative</th><td><span class="ph">[if consent is given by a legal representative: name, address, authority document]</span></td></tr>
+          <tr><th>Operator</th><td><span class="ph">[sole proprietor / LLC / individual]</span>, OGRN/OGRNIP <span class="ph">[___]</span>, INN <span class="ph">[___]</span>, address: <span class="ph">[___]</span></td></tr>
+          <tr><th>Processors acting on the Operator's behalf</th><td>Hosting provider <span class="ph">[name, address]</span>; payment provider <span class="ph">[name, address]</span>; mailing service <span class="ph">[name, address, if any]</span> — under a processing assignment (Art. 6(3)) with confidentiality obligations.</td></tr>
+          <tr><th>Manner of giving consent</th><td>An affirmative action in the Service — ticking the relevant box and/or confirming the action. The date and fact of consent are logged by the Operator.</td></tr>
+        </tbody>
+      </table>
+
+      <p>List of actions consented to: collection, recording, systematization, accumulation, storage, updating, retrieval, use, transfer (provision, access) to the persons named above, blocking, deletion, destruction, anonymization. Manner of processing: mixed (automated and non-automated), with no decisions producing legal effects solely on the basis of automated processing.</p>
+
+      <div class="consent-block">
+        <h3>1. Consent to personal data processing <span class="tag req">core</span></h3>
+        <p>I consent to the Operator processing my personal data for the following purposes and scope:</p>
+        <table>
+          <thead><tr><th>Purpose</th><th>Personal data</th></tr></thead>
+          <tbody>
+            <tr><td>Maintaining the user profile and animal/kennel profiles, building pedigrees</td><td>Name, country; animal name and attributes, photos; kennel name, phone, email, website, city/country</td></tr>
+            <tr><td>Show participation: entries, catalogs, judging and results publication</td><td>Participant/handler name, animal details, class, catalog number</td></tr>
+            <tr><td>Informational and technical support</td><td>Email, content of requests and correspondence</td></tr>
+          </tbody>
+        </table>
+        <p class="muted">Without this consent, publication and related processing of this data are not performed.</p>
+      </div>
+
+      <div class="consent-block optional">
+        <h3>2. Consent to receive mailings <span class="tag opt">optional</span></h3>
+        <p>I consent to processing my email and device identifier to send me notifications and informational (advertising) mailings about Service events (registration opening, results, litter announcements, titles, etc.) via email and push, including by automated means. I may opt out at any time in subscription settings or via the link in a message; this does not affect access to other features.</p>
+      </div>
+
+      <div class="consent-block optional">
+        <h3>3. Consent to processing of personal data authorized for dissemination <span class="tag opt">optional</span></h3>
+        <p>Under Article 10.1 of the Law, I give a separate consent to the dissemination (provision to an unlimited number of persons) of the following data by publishing it in public sections of the Website:</p>
+        <ul>
+          <li>when publishing a kennel profile and ads: the name, city, contact phone, contact email and website I provide;</li>
+          <li>when participating in a show: participant/handler name, animal details, class and results within the public catalog and event results.</li>
+        </ul>
+        <p><strong>Conditions and prohibitions set by the subject:</strong> only data I voluntarily entered in public fields is disseminated; transfer upon third-party requests and processing by means other than display on the Website is <span class="ph">[permitted / prohibited — choose]</span>. I may at any time demand that dissemination cease; the Operator complies under Article 10.1.</p>
+        <p class="muted">Without this consent the data is not made public; features requiring publication may be unavailable.</p>
+      </div>
+
+      <h2>Validity and withdrawal</h2>
+      <p>The consent is valid from the moment given until the purposes are achieved or it is withdrawn. It may be withdrawn at any time by a request to <span class="ph">[privacy@example.ru]</span> or via account settings. After withdrawal the Operator stops the relevant processing and destroys the data within <strong>30 days</strong>, absent another legal ground (e.g. statutory payment records). Withdrawal does not affect processing based on the contract or the law.</p>
+
+      <div class="note">
+        Detailed information is in the <a href="/legal/privacy-policy.html">Privacy Policy</a>; usage terms are in the <a href="/legal/terms-of-service.html">Terms of Service</a>.
+      </div>
+
+      <p class="muted">© <span class="ph">[year]</span> <span class="ph">[Operator]</span>.</p>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var buttons = document.querySelectorAll('.lang-switch button');
+      function setLang(lang) {
+        document.body.classList.toggle('show-en', lang === 'en');
+        document.documentElement.lang = lang;
+        buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+        try { localStorage.setItem('legalLang', lang); } catch (e) {}
+      }
+      buttons.forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.lang); }); });
+      var saved;
+      try { saved = localStorage.getItem('legalLang'); } catch (e) {}
+      var initial = saved || ((navigator.language || 'ru').slice(0, 2) === 'en' ? 'en' : 'ru');
+      setLang(initial);
+    })();
+  </script>
+</body>
+</html>

@@ -12,6 +12,7 @@
     },
     "filters": {
       "category": "Category",
+      "status": "Status",
       "city": "City",
       "all": "All"
     }

@@ -176,6 +176,7 @@ export const endpoints = {
   },
   classified: {
     list: '/classifieds',
+    mine: '/classifieds/mine',
     search: '/classifieds/search',
     details: (id: string) => `/classifieds/${id}`,
   },

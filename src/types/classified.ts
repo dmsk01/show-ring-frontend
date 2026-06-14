@@ -26,6 +26,14 @@ export const CLASSIFIED_CATEGORIES: ClassifiedCategory[] = [
 
 export const CLASSIFIED_PRICE_KINDS: ClassifiedPriceKind[] = ['fixed', 'free', 'negotiable'];
 
+// Order shown in the dashboard status filter.
+export const CLASSIFIED_STATUSES: ClassifiedStatus[] = [
+  'active',
+  'closed',
+  'moderation',
+  'archived',
+];
+
 export const ANIMAL_AVAILABILITIES: AnimalAvailability[] = ['available', 'reserved', 'sold'];
 
 export type IClassifiedImage = {
@@ -88,4 +96,5 @@ export type IClassifiedFilters = {
   search: string;
   category: ClassifiedCategory | 'all';
   city: string;
+  status: ClassifiedStatus | 'all';
 };

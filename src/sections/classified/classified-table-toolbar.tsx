@@ -11,9 +11,9 @@ import TextField from '@mui/material/TextField';
 
 import { useTranslate } from 'src/locales';
 
-import { CLASSIFIED_CATEGORIES } from 'src/types/classified';
+import { CLASSIFIED_STATUSES, CLASSIFIED_CATEGORIES } from 'src/types/classified';
 
-import { classifiedCategoryI18nKey } from './classified-utils';
+import { classifiedStatusI18nKey, classifiedCategoryI18nKey } from './classified-utils';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +30,14 @@ export function ClassifiedTableToolbar({ filters, onResetPage }: Props) {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onResetPage();
       updateFilters({ category: event.target.value as IClassifiedFilters['category'] });
+    },
+    [onResetPage, updateFilters]
+  );
+
+  const handleStatus = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onResetPage();
+      updateFilters({ status: event.target.value as IClassifiedFilters['status'] });
     },
     [onResetPage, updateFilters]
   );
@@ -55,6 +63,21 @@ export function ClassifiedTableToolbar({ filters, onResetPage }: Props) {
         {CLASSIFIED_CATEGORIES.map((cat) => (
           <MenuItem key={cat} value={cat}>
             {t(classifiedCategoryI18nKey(cat))}
+          </MenuItem>
+        ))}
+      </TextField>
+
+      <TextField
+        select
+        label={t('list.filters.status')}
+        value={currentFilters.status}
+        onChange={handleStatus}
+        sx={{ width: { xs: 1, md: 200 } }}
+      >
+        <MenuItem value="all">{t('list.filters.all')}</MenuItem>
+        {CLASSIFIED_STATUSES.map((status) => (
+          <MenuItem key={status} value={status}>
+            {t(classifiedStatusI18nKey(status))}
           </MenuItem>
         ))}
       </TextField>

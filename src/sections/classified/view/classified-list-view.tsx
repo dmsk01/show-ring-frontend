@@ -19,7 +19,7 @@ import { usePermissions } from 'src/hooks/use-permissions';
 
 import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { deleteClassified, updateClassified, useGetClassifieds } from 'src/actions/classified';
+import { deleteClassified, updateClassified, useGetMyClassifieds } from 'src/actions/classified';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
@@ -48,15 +48,22 @@ export function ClassifiedListView() {
 
   const table = useTable({ defaultRowsPerPage: 25 });
 
-  const filters = useSetState<IClassifiedFilters>({ search: '', category: 'all', city: '' });
+  const filters = useSetState<IClassifiedFilters>({
+    search: '',
+    category: 'all',
+    city: '',
+    status: 'all',
+  });
   const { state: currentFilters } = filters;
 
-  const { classifieds, classifiedsTotal, classifiedsLoading, classifiedsEmpty } = useGetClassifieds({
-    page: table.page + 1,
-    per_page: table.rowsPerPage,
-    category: currentFilters.category,
-    city: currentFilters.city || undefined,
-  });
+  const { classifieds, classifiedsTotal, classifiedsLoading, classifiedsEmpty } =
+    useGetMyClassifieds({
+      page: table.page + 1,
+      per_page: table.rowsPerPage,
+      category: currentFilters.category,
+      city: currentFilters.city || undefined,
+      status: currentFilters.status === 'all' ? undefined : currentFilters.status,
+    });
 
   const handleDelete = useCallback(async (id: string) => {
     try {

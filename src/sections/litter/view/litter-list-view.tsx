@@ -46,7 +46,7 @@ export function LitterListView() {
 
   const table = useTable({ defaultRowsPerPage: 25 });
 
-  const filters = useSetState<ILitterTableFilters>({ breed_id: '', status: 'all' });
+  const filters = useSetState<ILitterTableFilters>({ breed_id: '', status: 'all', search: '' });
   const { state: currentFilters } = filters;
 
   const { breeds } = useGetBreeds();
@@ -57,6 +57,7 @@ export function LitterListView() {
     per_page: table.rowsPerPage,
     breed_id: currentFilters.breed_id || undefined,
     status: currentFilters.status,
+    search: currentFilters.search || undefined,
   });
 
   return (

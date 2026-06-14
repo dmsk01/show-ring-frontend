@@ -45,7 +45,7 @@ export function ShowListView() {
 
   const table = useTable({ defaultRowsPerPage: 25 });
 
-  const filters = useSetState<IShowFilters>({ status: 'all', city: '' });
+  const filters = useSetState<IShowFilters>({ status: 'all', city: '', search: '' });
   const { state: currentFilters } = filters;
 
   const { items: ranks } = useReferenceList('/references/show-ranks');
@@ -55,6 +55,7 @@ export function ShowListView() {
     per_page: table.rowsPerPage,
     status: currentFilters.status,
     city: currentFilters.city || undefined,
+    search: currentFilters.search || undefined,
   });
 
   return (

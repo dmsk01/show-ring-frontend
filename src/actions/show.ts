@@ -17,6 +17,7 @@ const swrOptions: SWRConfiguration = {
 export type ShowsQuery = {
   page?: number;
   per_page?: number;
+  search?: string;
   rank_id?: string;
   city?: string;
   status?: string;

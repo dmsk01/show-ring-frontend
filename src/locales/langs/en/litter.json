@@ -2,6 +2,7 @@
   "list": {
     "title": "Litters",
     "new": "Add litter",
+    "search": "Search by kennel...",
     "columns": {
       "breed": "Breed",
       "kennel": "Kennel",

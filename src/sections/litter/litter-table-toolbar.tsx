@@ -8,8 +8,11 @@ import { useCallback } from 'react';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import { useTranslate } from 'src/locales';
+
+import { Iconify } from 'src/components/iconify';
 
 import { LITTER_STATUSES } from 'src/types/litter';
 
@@ -39,6 +42,14 @@ export function LitterTableToolbar({ filters, onResetPage, breedOptions }: Props
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onResetPage();
       updateFilters({ breed_id: event.target.value });
+    },
+    [onResetPage, updateFilters]
+  );
+
+  const handleSearch = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onResetPage();
+      updateFilters({ search: event.target.value });
     },
     [onResetPage, updateFilters]
   );
@@ -74,6 +85,23 @@ export function LitterTableToolbar({ filters, onResetPage, breedOptions }: Props
           </MenuItem>
         ))}
       </TextField>
+
+      <TextField
+        fullWidth
+        value={currentFilters.search}
+        onChange={handleSearch}
+        placeholder={t('list.search')}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon="eva:search-fill" />
+              </InputAdornment>
+            ),
+          },
+        }}
+        sx={{ flex: 1, minWidth: 200 }}
+      />
     </Box>
   );
 }

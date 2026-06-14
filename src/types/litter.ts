@@ -57,4 +57,5 @@ export type ILitterPage = {
 export type ILitterTableFilters = {
   breed_id: string;
   status: LitterStatus | 'all';
+  search: string;
 };

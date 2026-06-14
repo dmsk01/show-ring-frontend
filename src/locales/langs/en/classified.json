@@ -39,8 +39,13 @@
     "validation": {
       "titleRequired": "Title is required!",
       "descriptionRequired": "Description is required!",
+      "titleMin": "Title must be at least 3 characters",
+      "titleMax": "Title must be at most 255 characters",
+      "descriptionMin": "Description must be at least 10 characters",
+      "cityMax": "City must be at most 128 characters",
       "priceInvalid": "Enter a valid price",
-      "phoneInvalid": "Invalid phone number!"
+      "phoneInvalid": "Invalid phone number!",
+      "emailInvalid": "Invalid email address!"
     },
     "submitCreate": "Create classified",
     "submitUpdate": "Save changes"

@@ -39,8 +39,13 @@
     "validation": {
       "titleRequired": "Укажите заголовок!",
       "descriptionRequired": "Укажите описание!",
+      "titleMin": "Заголовок не короче 3 символов",
+      "titleMax": "Заголовок не длиннее 255 символов",
+      "descriptionMin": "Описание не короче 10 символов",
+      "cityMax": "Город не длиннее 128 символов",
       "priceInvalid": "Укажите корректную цену",
-      "phoneInvalid": "Некорректный номер телефона!"
+      "phoneInvalid": "Некорректный номер телефона!",
+      "emailInvalid": "Некорректный email!"
     },
     "submitCreate": "Создать объявление",
     "submitUpdate": "Сохранить изменения"

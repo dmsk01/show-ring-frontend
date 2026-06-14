@@ -45,8 +45,12 @@ import {
 export const getClassifiedSchema = (t: TFunction) =>
   z.object({
     category: z.enum(['puppy_sale', 'adult_sale', 'mating', 'handler', 'grooming', 'other']),
-    title: z.string().min(1, { error: t('form.validation.titleRequired') }),
-    description: z.string().min(1, { error: t('form.validation.descriptionRequired') }),
+    // Mirror backend constraints (ClassifiedCreate): title 3..255, description ≥10.
+    title: z
+      .string()
+      .min(3, { error: t('form.validation.titleMin') })
+      .max(255, { error: t('form.validation.titleMax') }),
+    description: z.string().min(10, { error: t('form.validation.descriptionMin') }),
     price_kind: z.enum(['fixed', 'free', 'negotiable']),
     // Update-only on the backend (ClassifiedCreate has no such field) — sent only when editing.
     availability: z.enum(['available', 'reserved', 'sold']),
@@ -61,7 +65,7 @@ export const getClassifiedSchema = (t: TFunction) =>
       .refine((val) => val == null || val === '' || (!Number.isNaN(Number(val)) && Number(val) >= 0), {
         error: t('form.validation.priceInvalid'),
       }),
-    city: z.string().nullable(),
+    city: z.string().max(128, { error: t('form.validation.cityMax') }).nullable(),
     // Optional, but must be a valid number with country code when provided.
     contact_phone: z
       .string()
@@ -69,7 +73,13 @@ export const getClassifiedSchema = (t: TFunction) =>
         error: t('form.validation.phoneInvalid'),
       })
       .nullish(),
-    contact_email: z.string().nullable(),
+    // Optional, but must be a valid email when provided (backend requires email format).
+    contact_email: z
+      .string()
+      .refine((val) => !val || z.email().safeParse(val).success, {
+        error: t('form.validation.emailInvalid'),
+      })
+      .nullish(),
   });
 
 export type ClassifiedSchemaType = z.infer<ReturnType<typeof getClassifiedSchema>>;

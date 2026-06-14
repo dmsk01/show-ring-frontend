@@ -59,100 +59,36 @@ export function navData(t: TFunction): NavSectionProps['data'] {
           path: paths.dashboard.dogs.root,
           icon: ICONS.product,
           permission: 'dogs:view',
-          children: [
-            { title: t('showtail.list'), path: paths.dashboard.dogs.root, permission: 'dogs:view' },
-            {
-              title: t('showtail.create'),
-              path: paths.dashboard.dogs.new,
-              permission: 'dogs:create',
-            },
-          ],
         },
         {
           title: t('showtail.kennels'),
           path: paths.dashboard.kennels.root,
           icon: ICONS.folder,
           permission: 'kennels:view',
-          children: [
-            {
-              title: t('showtail.list'),
-              path: paths.dashboard.kennels.root,
-              permission: 'kennels:view',
-            },
-            {
-              title: t('showtail.create'),
-              path: paths.dashboard.kennels.new,
-              permission: 'kennels:create',
-            },
-          ],
         },
         {
           title: t('showtail.litters'),
           path: paths.dashboard.litters.root,
           icon: ICONS.course,
           permission: 'litters:view',
-          children: [
-            {
-              title: t('showtail.list'),
-              path: paths.dashboard.litters.root,
-              permission: 'litters:view',
-            },
-            {
-              title: t('showtail.create'),
-              path: paths.dashboard.litters.new,
-              permission: 'litters:create',
-            },
-          ],
         },
         {
           title: t('showtail.shows'),
           path: paths.dashboard.shows.root,
           icon: ICONS.booking,
           permission: 'shows:view',
-          children: [
-            {
-              title: t('showtail.list'),
-              path: paths.dashboard.shows.root,
-              permission: 'shows:view',
-            },
-            {
-              title: t('showtail.create'),
-              path: paths.dashboard.shows.new,
-              permission: 'shows:create',
-            },
-          ],
         },
         {
           title: t('showtail.classifieds'),
           path: paths.dashboard.classifieds.root,
           icon: ICONS.blog,
           permission: 'classifieds:view',
-          children: [
-            {
-              title: t('showtail.list'),
-              path: paths.dashboard.classifieds.root,
-              permission: 'classifieds:view',
-            },
-            {
-              title: t('showtail.create'),
-              path: paths.dashboard.classifieds.new,
-              permission: 'classifieds:create',
-            },
-          ],
         },
         {
           title: t('showtail.ads'),
           path: paths.dashboard.ads.root,
           icon: ICONS.banking,
           permission: 'ads:view',
-          children: [
-            {
-              title: t('showtail.campaigns'),
-              path: paths.dashboard.ads.root,
-              permission: 'ads:view',
-            },
-            { title: t('showtail.create'), path: paths.dashboard.ads.new, permission: 'ads:create' },
-          ],
         },
         {
           title: t('showtail.support'),

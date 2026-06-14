@@ -15,6 +15,8 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { usePermissions } from 'src/hooks/use-permissions';
+
 import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { deleteClassified, updateClassified, useGetClassifieds } from 'src/actions/classified';
@@ -32,6 +34,7 @@ import { ClassifiedTableToolbar } from '../classified-table-toolbar';
 
 export function ClassifiedListView() {
   const { t } = useTranslate(['classified', 'common']);
+  const { can } = usePermissions();
 
   const TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'title', label: t('list.columns.title') },
@@ -82,14 +85,16 @@ export function ClassifiedListView() {
         heading={t('list.title')}
         links={[{ name: t('common:dashboard'), href: paths.dashboard.root }, { name: t('list.title') }]}
         action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.classifieds.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            {t('list.new')}
-          </Button>
+          can('classifieds:create') ? (
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.classifieds.new}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              {t('list.new')}
+            </Button>
+          ) : undefined
         }
         sx={{ mb: { xs: 3, md: 5 } }}
       />

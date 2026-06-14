@@ -14,6 +14,8 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { usePermissions } from 'src/hooks/use-permissions';
+
 import { useTranslate } from 'src/locales';
 import { useGetLittersList } from 'src/actions/litter';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -31,6 +33,7 @@ import { LitterTableToolbar } from '../litter-table-toolbar';
 
 export function LitterListView() {
   const { t } = useTranslate(['litter', 'common']);
+  const { can } = usePermissions();
 
   const TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'breed', label: t('list.columns.breed') },
@@ -62,14 +65,16 @@ export function LitterListView() {
         heading={t('list.title')}
         links={[{ name: t('common:dashboard'), href: paths.dashboard.root }, { name: t('list.title') }]}
         action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.litters.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            {t('list.new')}
-          </Button>
+          can('litters:create') ? (
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.litters.new}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              {t('list.new')}
+            </Button>
+          ) : undefined
         }
         sx={{ mb: { xs: 3, md: 5 } }}
       />

@@ -114,14 +114,16 @@ export function DogListView() {
         heading={t('list.title')}
         links={[{ name: t('common:dashboard'), href: paths.dashboard.root }, { name: t('list.title') }]}
         action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.dogs.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            {t('list.new')}
-          </Button>
+          can('dogs:create') ? (
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.dogs.new}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              {t('list.new')}
+            </Button>
+          ) : undefined
         }
         sx={{ mb: { xs: 3, md: 5 } }}
       />

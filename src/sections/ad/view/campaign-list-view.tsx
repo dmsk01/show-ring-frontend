@@ -11,6 +11,8 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { usePermissions } from 'src/hooks/use-permissions';
+
 import { useTranslate } from 'src/locales';
 import { useGetCampaigns } from 'src/actions/ad';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -26,6 +28,7 @@ import { CampaignTableRow } from '../campaign-table-row';
 
 export function CampaignListView() {
   const { t } = useTranslate(['ad', 'common']);
+  const { can } = usePermissions();
   const table = useTable();
   const { campaigns, campaignsLoading, campaignsEmpty } = useGetCampaigns();
 
@@ -46,14 +49,16 @@ export function CampaignListView() {
           { name: t('list.title') },
         ]}
         action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.ads.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            {t('list.new')}
-          </Button>
+          can('ads:create') ? (
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.ads.new}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              {t('list.new')}
+            </Button>
+          ) : undefined
         }
         sx={{ mb: { xs: 3, md: 5 } }}
       />

@@ -15,6 +15,8 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { usePermissions } from 'src/hooks/use-permissions';
+
 import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { deleteKennel, useGetKennelsList } from 'src/actions/kennel';
@@ -32,6 +34,7 @@ import { KennelTableToolbar } from '../kennel-table-toolbar';
 
 export function KennelListView() {
   const { t } = useTranslate(['kennel', 'common']);
+  const { can } = usePermissions();
 
   const TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'name', label: t('list.columns.name') },
@@ -72,14 +75,16 @@ export function KennelListView() {
         heading={t('list.title')}
         links={[{ name: t('common:dashboard'), href: paths.dashboard.root }, { name: t('list.title') }]}
         action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.kennels.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            {t('list.new')}
-          </Button>
+          can('kennels:create') ? (
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.kennels.new}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              {t('list.new')}
+            </Button>
+          ) : undefined
         }
         sx={{ mb: { xs: 3, md: 5 } }}
       />

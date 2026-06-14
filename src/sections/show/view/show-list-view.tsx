@@ -14,6 +14,8 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { usePermissions } from 'src/hooks/use-permissions';
+
 import { useTranslate } from 'src/locales';
 import { useGetShows } from 'src/actions/show';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -31,6 +33,7 @@ import { ShowTableToolbar } from '../show-table-toolbar';
 
 export function ShowListView() {
   const { t } = useTranslate(['show', 'common']);
+  const { can } = usePermissions();
 
   const TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'name', label: t('list.columns.name') },
@@ -60,14 +63,16 @@ export function ShowListView() {
         heading={t('list.title')}
         links={[{ name: t('common:dashboard'), href: paths.dashboard.root }, { name: t('list.title') }]}
         action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.shows.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            {t('list.new')}
-          </Button>
+          can('shows:create') ? (
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.shows.new}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              {t('list.new')}
+            </Button>
+          ) : undefined
         }
         sx={{ mb: { xs: 3, md: 5 } }}
       />

@@ -38,7 +38,9 @@
     },
     "validation": {
       "titleRequired": "Title is required!",
-      "descriptionRequired": "Description is required!"
+      "descriptionRequired": "Description is required!",
+      "priceInvalid": "Enter a valid price",
+      "phoneInvalid": "Invalid phone number!"
     },
     "submitCreate": "Create classified",
     "submitUpdate": "Save changes"

@@ -38,7 +38,9 @@
     },
     "validation": {
       "titleRequired": "Укажите заголовок!",
-      "descriptionRequired": "Укажите описание!"
+      "descriptionRequired": "Укажите описание!",
+      "priceInvalid": "Укажите корректную цену",
+      "phoneInvalid": "Некорректный номер телефона!"
     },
     "submitCreate": "Создать объявление",
     "submitUpdate": "Сохранить изменения"

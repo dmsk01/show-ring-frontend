@@ -7,6 +7,7 @@ import * as z from 'zod';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { isValidPhoneNumber } from 'react-phone-number-input/input';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -52,9 +53,22 @@ export const getClassifiedSchema = (t: TFunction) =>
     // Update-only toggle: on → status `active`, off → `closed`.
     active: z.boolean(),
     breed_id: z.string().nullable(),
-    price: z.string().nullable(),
+    // `Field.Text type="number"` emits a string while typing but a number on blur
+    // (minimal-shared `transformValueOnBlur` → parseFloat), so accept both here.
+    price: z
+      .union([z.string(), z.number()])
+      .nullable()
+      .refine((val) => val == null || val === '' || (!Number.isNaN(Number(val)) && Number(val) >= 0), {
+        error: t('form.validation.priceInvalid'),
+      }),
     city: z.string().nullable(),
-    contact_phone: z.string().nullable(),
+    // Optional, but must be a valid number with country code when provided.
+    contact_phone: z
+      .string()
+      .refine((val) => !val || isValidPhoneNumber(val), {
+        error: t('form.validation.phoneInvalid'),
+      })
+      .nullish(),
     contact_email: z.string().nullable(),
   });
 
@@ -189,7 +203,11 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
           </Field.Select>
           <Field.Text name="price" label={t('form.fields.price')} type="number" />
 
-          <Field.Text name="contact_phone" label={t('form.fields.contactPhone')} />
+          <Field.Phone
+            name="contact_phone"
+            label={t('form.fields.contactPhone')}
+            defaultCountry="RU"
+          />
           <Field.Text name="contact_email" label={t('form.fields.contactEmail')} />
 
           {/* Backend accepts availability only on update — hidden when creating. */}

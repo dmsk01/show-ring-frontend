@@ -13,8 +13,10 @@ import { themeConfig, ThemeProvider, primary as primaryColor } from 'src/theme';
 
 import { Snackbar } from 'src/components/snackbar';
 import { ProgressBar } from 'src/components/progress-bar';
+import { CookieConsent } from 'src/components/cookie-consent';
 import { MotionLazy } from 'src/components/animate/motion-lazy';
 import { detectSettings } from 'src/components/settings/server';
+import { detectCookieConsent } from 'src/components/cookie-consent/server';
 import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/components/settings';
 
 import { CheckoutProvider } from 'src/sections/checkout/context';
@@ -61,15 +63,21 @@ async function getAppConfig() {
       lang: 'en',
       i18nLang: undefined,
       cookieSettings: undefined,
+      cookieConsent: undefined,
       dir: defaultSettings.direction,
     };
   } else {
-    const [lang, settings] = await Promise.all([detectLanguage(), detectSettings()]);
+    const [lang, settings, cookieConsent] = await Promise.all([
+      detectLanguage(),
+      detectSettings(),
+      detectCookieConsent(),
+    ]);
 
     return {
       lang,
       i18nLang: lang,
       cookieSettings: settings,
+      cookieConsent,
       dir: settings.direction,
     };
   }
@@ -105,6 +113,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                         <ProgressBar />
                         <SettingsDrawer defaultSettings={defaultSettings} />
                         {children}
+                        <CookieConsent consented={appConfig.cookieConsent} />
                       </CheckoutProvider>
                     </MotionLazy>
                   </ThemeProvider>

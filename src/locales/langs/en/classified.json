@@ -56,7 +56,8 @@
   "detail": {
     "notFound": "Classified not found.",
     "loadError": "Failed to load classified. Please try again later.",
-    "contacts": "Contacts"
+    "contacts": "Contacts",
+    "noAccess": "You do not have access to this listing."
   },
   "showcase": {
     "title": "Pets — classifieds",

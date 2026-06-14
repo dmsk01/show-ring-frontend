@@ -5,12 +5,31 @@ import { ANIMAL_AVAILABILITIES } from 'src/types/classified';
 import {
   AVAILABILITY_COLOR,
   primaryImageFileId,
+  canManageClassified,
   formatClassifiedPrice,
   classifiedStatusI18nKey,
   classifiedCategoryI18nKey,
   classifiedPriceKindI18nKey,
   classifiedAvailabilityI18nKey,
 } from '../classified-utils';
+
+describe('canManageClassified', () => {
+  const item = { author_id: 'user-1' };
+
+  it('lets the author manage their own listing', () => {
+    expect(canManageClassified(item, 'user-1', false)).toBe(true);
+  });
+  it('denies a non-owner who is not admin', () => {
+    expect(canManageClassified(item, 'user-2', false)).toBe(false);
+  });
+  it('lets an admin manage any listing', () => {
+    expect(canManageClassified(item, 'user-2', true)).toBe(true);
+  });
+  it('denies an anonymous (no user id)', () => {
+    expect(canManageClassified(item, undefined, false)).toBe(false);
+    expect(canManageClassified(item, null, false)).toBe(false);
+  });
+});
 
 describe('formatClassifiedPrice', () => {
   it('formats a numeric price with digits', () => {

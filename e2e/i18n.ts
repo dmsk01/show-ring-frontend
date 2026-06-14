@@ -17,6 +17,7 @@ import dogRu from '../src/locales/langs/ru/dog.json';
 import authRu from '../src/locales/langs/ru/auth.json';
 import kennelRu from '../src/locales/langs/ru/kennel.json';
 import commonRu from '../src/locales/langs/ru/common.json';
+import accountRu from '../src/locales/langs/ru/account.json';
 import classifiedRu from '../src/locales/langs/ru/classified.json';
 
 export const E2E_LANG = 'ru';
@@ -27,6 +28,7 @@ const DICTS: Record<string, unknown> = {
   auth: authRu,
   kennel: kennelRu,
   common: commonRu,
+  account: accountRu,
   classified: classifiedRu,
 };
 

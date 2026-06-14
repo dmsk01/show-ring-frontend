@@ -30,6 +30,7 @@
       "price": "Цена",
       "availability": "Доступность",
       "active": "Активно",
+      "published": "Опубликовано",
       "contactPhone": "Телефон",
       "contactEmail": "E-mail",
       "description": "Описание",
@@ -48,7 +49,9 @@
       "emailInvalid": "Некорректный email!"
     },
     "submitCreate": "Создать объявление",
-    "submitUpdate": "Сохранить изменения"
+    "submitUpdate": "Сохранить изменения",
+    "createModerationHint": "Объявление будет опубликовано после проверки модератором.",
+    "publishModerationHint": "Публикация или правка объявления отправляет его на модерацию; одобряет администратор."
   },
   "detail": {
     "notFound": "Объявление не найдено.",
@@ -109,6 +112,7 @@
   },
   "toast": {
     "created": "Создано!",
+    "sentToModeration": "Объявление отправлено на модерацию",
     "updated": "Сохранено!",
     "deleted": "Удалено!",
     "deleteFailed": "Не удалось удалить",

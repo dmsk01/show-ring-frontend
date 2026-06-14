@@ -54,8 +54,10 @@ export const getClassifiedSchema = (t: TFunction) =>
     price_kind: z.enum(['fixed', 'free', 'negotiable']),
     // Update-only on the backend (ClassifiedCreate has no such field) — sent only when editing.
     availability: z.enum(['available', 'reserved', 'sold']),
-    // Update-only toggle: on → status `active`, off → `closed`.
-    active: z.boolean(),
+    // Publish/withdraw toggle (edit only). published = status !== 'closed' (active or
+    // moderation read as "published/pending"). On submit: off → `closed`, on (from closed) →
+    // `moderation` (re-submit; only an admin can set `active` directly — see moderation design).
+    published: z.boolean(),
     breed_id: z.string().nullable(),
     // `Field.Text type="number"` emits a string while typing but a number on blur
     // (minimal-shared `transformValueOnBlur` → parseFloat), so accept both here.
@@ -101,7 +103,7 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
     description: '',
     price_kind: 'fixed',
     availability: 'available',
-    active: true,
+    published: true,
     breed_id: '',
     price: null,
     city: null,
@@ -120,7 +122,7 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
           description: currentClassified.description,
           price_kind: currentClassified.price_kind,
           availability: currentClassified.availability ?? 'available',
-          active: currentClassified.status === 'active',
+          published: currentClassified.status !== 'closed',
           breed_id: currentClassified.breed_id ?? '',
           price: currentClassified.price?.toString() ?? null,
           city: currentClassified.city,
@@ -150,21 +152,27 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
       };
 
       if (currentClassified) {
-        // Send `status` only when the toggle actually changed, so a plain save
-        // never clobbers `moderation`/`archived` states the owner didn't touch.
-        const wasActive = currentClassified.status === 'active';
+        // Send `status` only when the publish toggle actually changed, so a plain save never
+        // clobbers `moderation`/`archived` states the owner didn't touch. Re-publishing a closed
+        // listing goes back to `moderation` (not straight to `active`); the backend also
+        // re-moderates an `active` listing on any content edit (handled server-side).
+        const wasPublished = currentClassified.status !== 'closed';
         await updateClassified(currentClassified.id, {
           ...base,
           availability: data.availability,
-          ...(data.active !== wasActive && { status: data.active ? 'active' : 'closed' }),
+          ...(data.published !== wasPublished && {
+            status: data.published ? 'moderation' : 'closed',
+          }),
         });
         toast.success(t('toast.updated'));
       } else {
-        await createClassified({
+        const created = await createClassified({
           ...base,
           images: imageIds.map((file_id, i) => ({ file_id, position: i, is_primary: i === 0 })),
         });
-        toast.success(t('toast.created'));
+        // Copy follows the real status the API returned, so it stays correct whether or not the
+        // backend moderation gate is deployed yet.
+        toast.success(created.status === 'moderation' ? t('toast.sentToModeration') : t('toast.created'));
       }
       router.push(paths.dashboard.classifieds.root);
     } catch (error) {
@@ -263,17 +271,30 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
           )}
         </Box>
 
+        {/* New listings go through moderation before they are published publicly. */}
+        {!currentClassified && (
+          <Typography variant="caption" sx={{ mt: 3, display: 'block', color: 'text.secondary' }}>
+            {t('form.createModerationHint')}
+          </Typography>
+        )}
+
         <Stack
           direction="row"
           sx={{
-            mt: 3,
+            mt: currentClassified ? 3 : 1,
             alignItems: 'center',
             justifyContent: currentClassified ? 'space-between' : 'flex-end',
           }}
         >
-          {/* Active toggle — owner can deactivate (close) or reactivate the listing on edit. */}
+          {/* Publish/withdraw toggle — re-publishing or editing a published listing goes back to
+              moderation; only an admin can set it `active` directly. */}
           {currentClassified && (
-            <Field.Switch name="active" label={t('form.fields.active')} />
+            <Box>
+              <Field.Switch name="published" label={t('form.fields.published')} />
+              <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary' }}>
+                {t('form.publishModerationHint')}
+              </Typography>
+            </Box>
           )}
 
           <Button type="submit" variant="contained" loading={isSubmitting}>

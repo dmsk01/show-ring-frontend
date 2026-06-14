@@ -21,6 +21,7 @@ import { t } from './i18n';
 const BASE_URL = process.env.E2E_BASE_URL ?? 'http://localhost:8082';
 const BREEDER = 'e2e/.auth/breeder.json';
 const BUYER = 'e2e/.auth/buyer.json';
+const ADMIN = 'e2e/.auth/admin.json';
 const stamp = Date.now();
 const title = `E2E Classified ${stamp}`;
 
@@ -81,6 +82,72 @@ test.describe('Classifieds — RBAC', () => {
     // У buyer только `classifieds:view` — PermissionGuard шлёт на /error/403.
     await page.goto('/dashboard/classifieds/new');
     await expect(page).toHaveURL(/\/error\/403/);
+  });
+});
+
+// ----------------------------------------------------------------------
+// Полный флоу модерации (API-driven, через прокси :8082/api). Активируется
+// автоматически, как только бэкенд начнёт создавать объявления со статусом
+// `moderation` (см. docs/superpowers/specs/2026-06-14-classifieds-moderation-*).
+// Пока бэкенд отдаёт `active` на create — тест self-skip'ается, чтобы сьют
+// оставался зелёным до выката бэкенда.
+// ----------------------------------------------------------------------
+test.describe('Classifieds — moderation flow (create → moderation → publish)', () => {
+  test('non-admin create waits in moderation; admin approve publishes it', async () => {
+    const breeder = await apiRequest.newContext({ storageState: BREEDER });
+    const admin = await apiRequest.newContext({ storageState: ADMIN });
+    const anon = await apiRequest.newContext();
+    let modId = '';
+    try {
+      const createRes = await breeder.post(`${BASE_URL}/api/classifieds`, {
+        data: {
+          category: 'puppy_sale',
+          title: `E2E Moderation ${stamp}`,
+          description: 'moderation flow description long enough',
+          price: '700',
+          price_kind: 'fixed',
+        },
+      });
+      expect(createRes.ok()).toBeTruthy();
+      const created = await createRes.json();
+      modId = created.id;
+
+      // Бэкенд-гейт модерации ещё не выкачен — статус active. Пропускаем.
+      test.skip(created.status !== 'moderation', 'backend moderation gate not deployed yet');
+
+      const inMine = async (ctx: typeof breeder) => {
+        const r = await ctx.get(`${BASE_URL}/api/classifieds/mine?per_page=100`);
+        const items = (await r.json()).items as Array<{ id: string }>;
+        return items.some((i) => i.id === modId);
+      };
+      const inPublic = async () => {
+        const r = await anon.get(`${BASE_URL}/api/classifieds?per_page=100`);
+        const items = (await r.json()).items as Array<{ id: string }>;
+        return items.some((i) => i.id === modId);
+      };
+
+      // На модерации: автор видит у себя, в паблике — нет.
+      expect(await inMine(breeder)).toBeTruthy();
+      expect(await inPublic()).toBeFalsy();
+
+      // Админ одобряет → active → появляется в паблике.
+      const decision = await admin.put(`${BASE_URL}/api/admin/moderation/classifieds/${modId}`, {
+        data: { approve: true, reason: null },
+      });
+      expect(decision.ok()).toBeTruthy();
+      expect(await inPublic()).toBeTruthy();
+    } finally {
+      if (modId) {
+        try {
+          await breeder.delete(`${BASE_URL}/api/classifieds/${modId}`);
+        } catch {
+          // ignore cleanup errors
+        }
+      }
+      await breeder.dispose();
+      await admin.dispose();
+      await anon.dispose();
+    }
   });
 });
 

@@ -72,6 +72,11 @@ test.describe.serial('Classifieds — create flow (breeder)', () => {
     classifiedId = body.id;
     expect(classifiedId).toBeTruthy();
     expect(Number(body.price)).toBe(1500);
+
+    // The user's exact complaint: after submit the form redirects to the dashboard list, and the
+    // new listing must show up there without a manual refresh (SWR revalidation on create).
+    await expect(page).toHaveURL(/\/dashboard\/classifieds(\?|$)/);
+    await expect(page.getByRole('link', { name: title })).toBeVisible();
   });
 });
 

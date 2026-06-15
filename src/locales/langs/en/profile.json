@@ -40,6 +40,20 @@
       "submit": "Change password"
     }
   },
+  "socials": {
+    "heading": "Social networks",
+    "description": "Add links to your profiles. The address must be absolute (start with http:// or https://). Clear a field to remove the link.",
+    "fields": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "vk": "VK",
+      "telegram": "Telegram"
+    },
+    "submit": "Save",
+    "contactHeading": "Social networks",
+    "empty": "No social links yet.",
+    "emptyAction": "Add"
+  },
   "validation": {
     "emailRequired": "Enter email",
     "emailInvalid": "Invalid email",
@@ -49,13 +63,15 @@
     "passwordBytes": "Maximum 72 bytes (UTF-8)",
     "confirmPasswordRequired": "Confirm new password",
     "passwordMismatch": "Passwords do not match",
-    "passwordSameAsCurrent": "New password must differ from current"
+    "passwordSameAsCurrent": "New password must differ from current",
+    "socialUrlInvalid": "Enter a full address starting with http:// or https://"
   },
   "toast": {
     "profileUpdated": "Profile updated",
     "profileUpdateFailed": "Failed to save",
     "passwordChanged": "Password changed. Please sign in again.",
-    "emailChangeFallback": "Check your new email to confirm the change"
+    "emailChangeFallback": "Check your new email to confirm the change",
+    "socialsUpdated": "Socials updated"
   },
   "placeholder": {
     "comingSoon": "This section will be available after server support is added."

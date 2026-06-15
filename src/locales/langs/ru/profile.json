@@ -40,6 +40,20 @@
       "submit": "Сменить пароль"
     }
   },
+  "socials": {
+    "heading": "Социальные сети",
+    "description": "Укажите ссылки на ваши профили. Адрес должен быть полным (начинаться с http:// или https://). Очистите поле, чтобы удалить ссылку.",
+    "fields": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "vk": "ВКонтакте",
+      "telegram": "Telegram"
+    },
+    "submit": "Сохранить",
+    "contactHeading": "Социальные сети",
+    "empty": "Соцсети не указаны.",
+    "emptyAction": "Добавить"
+  },
   "validation": {
     "emailRequired": "Введите email",
     "emailInvalid": "Некорректный email",
@@ -49,13 +63,15 @@
     "passwordBytes": "Максимум 72 байта (UTF-8)",
     "confirmPasswordRequired": "Подтвердите новый пароль",
     "passwordMismatch": "Пароли не совпадают",
-    "passwordSameAsCurrent": "Новый пароль совпадает с текущим"
+    "passwordSameAsCurrent": "Новый пароль совпадает с текущим",
+    "socialUrlInvalid": "Введите полный адрес, начиная с http:// или https://"
   },
   "toast": {
     "profileUpdated": "Профиль обновлён",
     "profileUpdateFailed": "Не удалось сохранить",
     "passwordChanged": "Пароль изменён. Войдите заново.",
-    "emailChangeFallback": "Проверьте новый email для подтверждения смены"
+    "emailChangeFallback": "Проверьте новый email для подтверждения смены",
+    "socialsUpdated": "Соцсети обновлены"
   },
   "placeholder": {
     "comingSoon": "Раздел появится после поддержки на сервере."

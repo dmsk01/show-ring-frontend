@@ -22,6 +22,8 @@ import { LoadingScreen } from 'src/components/loading-screen';
 
 import { ProfileCover } from 'src/sections/user/profile-cover';
 
+import { ProfileSocialsList } from './profile-socials-list';
+
 // ----------------------------------------------------------------------
 
 type ProfileSchemaType = z.infer<typeof ProfileSchema>;
@@ -114,6 +116,10 @@ export function ProfileView() {
         <Typography variant="body2" sx={{ mb: 3, color: 'text.secondary' }}>
           {me?.email}
         </Typography>
+
+        <Box sx={{ mb: 3 }}>
+          <ProfileSocialsList />
+        </Box>
 
         <Form methods={methods} onSubmit={onSubmit}>
           <Box

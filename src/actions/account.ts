@@ -58,6 +58,54 @@ export async function updateMyProfile(payload: Partial<IUserProfile>): Promise<I
 
 // ----------------------------------------------------------------------
 
+// GET /users/me/socials отдаёт пустой каркас (не 404), если профиля соцсетей
+// ещё нет. Значения — абсолютные http(s)-URL или пусто.
+export type IUserSocials = {
+  instagram: string;
+  facebook: string;
+  vk: string;
+  telegram: string;
+};
+
+const EMPTY_SOCIALS: IUserSocials = { instagram: '', facebook: '', vk: '', telegram: '' };
+
+// Бэкенд может прислать null/отсутствующие поля — нормализуем к пустой строке,
+// чтобы поля формы оставались контролируемыми.
+function normalizeSocials(data?: Partial<Record<keyof IUserSocials, string | null>>): IUserSocials {
+  return {
+    instagram: data?.instagram ?? '',
+    facebook: data?.facebook ?? '',
+    vk: data?.vk ?? '',
+    telegram: data?.telegram ?? '',
+  };
+}
+
+export function useGetMySocials() {
+  const { data, isLoading, error } = useSWR<Partial<IUserSocials>>(
+    endpoints.auth.socials,
+    fetcher,
+    swrOptions
+  );
+  return useMemo(
+    () => ({
+      socials: data ? normalizeSocials(data) : EMPTY_SOCIALS,
+      socialsLoading: isLoading,
+      socialsError: error,
+    }),
+    [data, isLoading, error]
+  );
+}
+
+// PATCH /users/me/socials — частичное обновление. Пустая строка очищает ссылку,
+// поэтому отправляем все четыре поля как полное желаемое состояние формы.
+export async function updateMySocials(payload: Partial<IUserSocials>): Promise<IUserSocials> {
+  const res = await axios.patch<Partial<IUserSocials>>(endpoints.auth.socials, payload);
+  await mutate(endpoints.auth.socials);
+  return normalizeSocials(res.data);
+}
+
+// ----------------------------------------------------------------------
+
 export type IUserEmailUpdate = {
   email: string;
   current_password: string;

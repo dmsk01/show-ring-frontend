@@ -146,6 +146,7 @@ export const endpoints = {
     me: '/users/me',
     myDogs: '/users/me/dogs',
     profile: '/users/me/profile',
+    socials: '/users/me/socials',
     password: '/users/me/password',
     signIn: '/auth/login',
     signUp: '/auth/register',

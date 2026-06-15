@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 
 import { CONFIG } from 'src/global-config';
 
-import { ProfilePlaceholder } from 'src/sections/profile/profile-placeholder';
+import { ProfileSocialsForm } from 'src/sections/profile/profile-socials-form';
 
 // ----------------------------------------------------------------------
 
 export const metadata: Metadata = { title: `Соцсети | ${CONFIG.appName}` };
 
 export default function Page() {
-  return <ProfilePlaceholder />;
+  return <ProfileSocialsForm />;
 }

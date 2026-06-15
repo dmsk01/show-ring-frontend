@@ -24,6 +24,7 @@
     "profile": "My profile"
   },
   "main": {
+    "menu": "Site",
     "home": "Home",
     "kennels": "Kennels",
     "animals": "Animals",

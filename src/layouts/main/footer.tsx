@@ -174,8 +174,17 @@ export function Footer({
                     { name: t('legal.consent'), href: paths.legal.consent },
                   ] as const
                 ).map((link) => (
-                  // Статические HTML в public/ — обычный <a>, не клиентский роутинг Next.
-                  <Link key={link.name} href={link.href} color="inherit" variant="body2">
+                  // Статические HTML в public/ — открываем в новой вкладке обычной ссылкой.
+                  // Навигация в той же вкладке уводит из Next-SPA, и возврат «назад»
+                  // оставляет пустой экран (App Router не восстанавливается из bfcache).
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener"
+                    color="inherit"
+                    variant="body2"
+                  >
                     {link.name}
                   </Link>
                 ))}

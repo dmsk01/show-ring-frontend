@@ -151,17 +151,6 @@ export function DashboardLayout({
           />
           <NavMobile data={mobileNavData} open={open} onClose={onClose} cssVars={navVars.section} />
 
-          {/** @slot Public showcase nav (desktop, vertical/mini modes) */}
-          {!isNavHorizontal && (
-            <NavDesktop
-              data={showcaseNav}
-              sx={{
-                display: 'none',
-                [theme.breakpoints.up(layoutQuery)]: { ml: 1, display: 'flex' },
-              }}
-            />
-          )}
-
           {/** @slot Logo */}
           {isNavHorizontal && (
             <Logo
@@ -180,6 +169,17 @@ export function DashboardLayout({
       ),
       rightArea: (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0, sm: 0.75 } }}>
+          {/** @slot Public showcase nav (desktop, vertical/mini modes) */}
+          {!isNavHorizontal && (
+            <NavDesktop
+              data={showcaseNav}
+              sx={{
+                display: 'none',
+                [theme.breakpoints.up(layoutQuery)]: { mr: 2.5, display: 'flex' },
+              }}
+            />
+          )}
+
           {/** @slot Language popover */}
           <LanguagePopover data={allLangs} />
 

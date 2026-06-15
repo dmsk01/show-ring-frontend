@@ -100,6 +100,20 @@ export function DashboardLayout({
 
   const showcaseNav = useMemo(() => mainNavData(t), [t]);
 
+  // Public showcase links live in the header on desktop; on mobile the burger
+  // drawer is the header's stand-in, so surface them there as a top section.
+  // Sidebar (NavVertical) intentionally keeps the original navData.
+  const mobileNavData = useMemo(
+    () => [
+      {
+        subheader: t('main.menu'),
+        items: showcaseNav.map(({ title, path, icon }) => ({ title, path, icon })),
+      },
+      ...navData,
+    ],
+    [t, showcaseNav, navData]
+  );
+
   const isNavMini = settings.state.navLayout === 'mini';
   const isNavHorizontal = settings.state.navLayout === 'horizontal';
   const isNavVertical = isNavMini || settings.state.navLayout === 'vertical';
@@ -135,7 +149,7 @@ export function DashboardLayout({
             onClick={onOpen}
             sx={{ mr: 1, ml: -1, [theme.breakpoints.up(layoutQuery)]: { display: 'none' } }}
           />
-          <NavMobile data={navData} open={open} onClose={onClose} cssVars={navVars.section} />
+          <NavMobile data={mobileNavData} open={open} onClose={onClose} cssVars={navVars.section} />
 
           {/** @slot Public showcase nav (desktop, vertical/mini modes) */}
           {!isNavHorizontal && (

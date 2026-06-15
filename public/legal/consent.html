@@ -40,25 +40,14 @@
     .tag.req { background: #e7f4ea; color: #1a7a3c; }
     .tag.opt { background: #fff3cd; color: #8a6d00; }
     .ph { background: #fff3cd; border: 1px solid #ffe69c; border-radius: 4px; padding: 0 4px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; }
-    .lang-switch { position: sticky; top: 0; background: #fff; padding: 10px 0; border-bottom: 1px solid var(--line); margin-bottom: 16px; z-index: 5; }
-    .lang-switch button {
-      font: inherit; font-size: 14px; cursor: pointer; border: 1px solid var(--line);
-      background: #fff; color: var(--fg); border-radius: 8px; padding: 6px 14px; margin-right: 8px;
-    }
-    .lang-switch button[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
     .lang-en { display: none; }
     body.show-en .lang-ru { display: none; }
     body.show-en .lang-en { display: block; }
-    @media print { .lang-switch { display: none; } .lang-en, .lang-ru { display: block !important; } }
+    @media print { .lang-en, .lang-ru { display: block !important; } }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="lang-switch" role="group" aria-label="Language / Язык">
-      <button type="button" data-lang="ru" aria-pressed="true">Русский</button>
-      <button type="button" data-lang="en" aria-pressed="false">English</button>
-    </div>
-
     <!-- ================= RU ================= -->
     <section class="lang-ru" lang="ru">
       <header class="doc">
@@ -197,18 +186,20 @@
 
   <script>
     (function () {
-      var buttons = document.querySelectorAll('.lang-switch button');
-      function setLang(lang) {
-        document.body.classList.toggle('show-en', lang === 'en');
-        document.documentElement.lang = lang;
-        buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
-        try { localStorage.setItem('legalLang', lang); } catch (e) {}
+      // Pick up the locale chosen elsewhere in the app. The SSR interface
+      // persists the selected language in the `i18next` cookie (with the
+      // `i18nextLng` localStorage key as a fallback); mirror it here.
+      function getCookie(name) {
+        var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+        return m ? decodeURIComponent(m[1]) : null;
       }
-      buttons.forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.lang); }); });
-      var saved;
-      try { saved = localStorage.getItem('legalLang'); } catch (e) {}
-      var initial = saved || ((navigator.language || 'ru').slice(0, 2) === 'en' ? 'en' : 'ru');
-      setLang(initial);
+      var lang;
+      try { lang = getCookie('i18next') || localStorage.getItem('i18nextLng'); } catch (e) {}
+      if (lang !== 'en' && lang !== 'ru') {
+        lang = (navigator.language || 'ru').slice(0, 2) === 'en' ? 'en' : 'ru';
+      }
+      document.body.classList.toggle('show-en', lang === 'en');
+      document.documentElement.lang = lang;
     })();
   </script>
 </body>

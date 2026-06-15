@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 
+import { useTranslate } from 'src/locales';
 import { fileUrl, uploadFile } from 'src/actions/file';
+import { uploadErrorMessage } from 'src/actions/file-errors';
 
 import { toast } from 'src/components/snackbar';
 import { UploadAvatar } from 'src/components/upload';
@@ -16,6 +18,7 @@ type Props = {
 };
 
 export function FileAvatarUploader({ fileId, size = 96, onUploaded }: Props) {
+  const { t } = useTranslate('common');
   const [localFile, setLocalFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -28,9 +31,9 @@ export function FileAvatarUploader({ fileId, size = 96, onUploaded }: Props) {
     try {
       const res = await uploadFile(file);
       onUploaded(res.id);
-      toast.success('Image uploaded!');
+      toast.success(t('upload.success'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Upload failed');
+      toast.error(uploadErrorMessage(error));
       setLocalFile(null);
     } finally {
       setUploading(false);

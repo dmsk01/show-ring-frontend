@@ -23,6 +23,7 @@ import { useRouter } from 'src/routes/hooks';
 import { useTranslate } from 'src/locales';
 import { fileUrl, uploadFile } from 'src/actions/file';
 import { useGetBreeds, useGetKennels } from 'src/actions/reference';
+import { UploadError, uploadErrorMessage } from 'src/actions/file-errors';
 import { createDog, updateDog, useGetDogs, addDogImages, deleteDogImage } from 'src/actions/dog';
 
 import { Image } from 'src/components/image';
@@ -223,7 +224,11 @@ export function DogCreateEditForm({ currentDog }: Props) {
       router.push(paths.dashboard.dogs.details(dog.id));
     } catch (error) {
       console.error(error);
-      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      if (error instanceof UploadError) {
+        toast.error(uploadErrorMessage(error));
+      } else {
+        toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      }
     }
   });
 

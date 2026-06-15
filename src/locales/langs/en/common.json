@@ -1,4 +1,14 @@
 {
+  "upload": {
+    "success": "File uploaded",
+    "rateLimited": "Daily upload limit reached. Please try again later.",
+    "rateLimitedUntil": "Daily upload limit reached. Please try again after {{time}}.",
+    "storageFull": "Your account storage is full. Delete old files and try again.",
+    "fileTooLarge": "File is larger than 10 MB.",
+    "unsupportedType": "Unsupported format. Allowed: JPEG, PNG, WebP, GIF.",
+    "storageBusy": "Storage is temporarily busy, please try again.",
+    "generic": "Could not upload the file. Please try again later."
+  },
   "demo": {
     "lang": "English",
     "description": "The starting point for your next project is based on MUI. Easy customization helps you build apps faster and better."

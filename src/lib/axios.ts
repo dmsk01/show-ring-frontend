@@ -1,4 +1,4 @@
-import type { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
+import type { AxiosResponse, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 
 import axios from 'axios';
 import i18next from 'i18next';
@@ -19,6 +19,12 @@ declare module 'axios' {
     _skipAuthRedirect?: boolean;
   }
 }
+
+/** Error carrying the raw axios response so callers can read status/body/headers. */
+export type ApiError = Error & {
+  status?: number;
+  response?: AxiosResponse;
+};
 
 const axiosInstance = axios.create({
   baseURL: CONFIG.serverUrl, // '/api' → proxied to backend by Next.js rewrites
@@ -122,7 +128,15 @@ axiosInstance.interceptors.response.use(
 
     const message =
       error?.response?.data?.detail || error?.response?.data?.message || error?.message || 'Something went wrong!';
-    return Promise.reject(new Error(typeof message === 'string' ? message : 'Request failed'));
+
+    // Keep the raw status + response on the rejected Error (additive — `message`
+    // is unchanged, so existing `error.message` readers are unaffected). Lets
+    // callers read structured bodies/headers the flattening would otherwise drop
+    // (e.g. upload 429 `reset_at` / 503 `Retry-After`).
+    const apiError: ApiError = new Error(typeof message === 'string' ? message : 'Request failed');
+    apiError.status = status;
+    apiError.response = error?.response;
+    return Promise.reject(apiError);
   }
 );
 

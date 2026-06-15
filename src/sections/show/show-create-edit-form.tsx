@@ -152,7 +152,7 @@ export function ShowCreateEditForm({ currentShow }: Props) {
         await createShow({ ...common, rank_id: data.rank_id });
         toast.success(t('toast.created'));
       }
-      router.push(paths.dashboard.shows.root);
+      router.push(paths.showcase.shows);
     } catch (error) {
       console.error(error);
       toast.error(error instanceof Error ? error.message : t('toast.saveFailed'));

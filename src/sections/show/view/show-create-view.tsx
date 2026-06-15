@@ -20,7 +20,7 @@ export function ShowCreateView() {
         heading={t('form.headingNew')}
         links={[
           { name: t('common:dashboard'), href: paths.dashboard.root },
-          { name: t('list.title'), href: paths.dashboard.shows.root },
+          { name: t('list.title'), href: paths.showcase.shows },
           { name: t('form.headingNew') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}

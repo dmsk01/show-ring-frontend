@@ -46,8 +46,8 @@ const KPIS: {
   { key: 'total_dogs', icon: 'solar:heart-bold', color: 'error.main', href: paths.dashboard.dogs.root },
   { key: 'total_litters', icon: 'solar:gallery-add-bold', color: 'warning.main', href: paths.dashboard.litters.root },
   { key: 'active_classifieds', icon: 'solar:cart-plus-bold', color: 'secondary.main', href: paths.dashboard.classifieds.root },
-  { key: 'open_shows', icon: 'solar:clock-circle-bold', color: 'info.main', href: paths.dashboard.shows.root },
-  { key: 'completed_shows', icon: 'solar:check-circle-bold', color: 'success.main', href: paths.dashboard.shows.root },
+  { key: 'open_shows', icon: 'solar:clock-circle-bold', color: 'info.main', href: paths.showcase.shows },
+  { key: 'completed_shows', icon: 'solar:check-circle-bold', color: 'success.main', href: paths.showcase.shows },
   { key: 'active_campaigns', icon: 'solar:wad-of-money-bold', color: 'primary.main', href: paths.dashboard.ads.root },
 ];
 

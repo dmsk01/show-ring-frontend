@@ -56,12 +56,6 @@ export type IShowPage = {
   per_page: number;
 };
 
-export type IShowFilters = {
-  status: ShowStatus | 'all';
-  city: string;
-  search: string;
-};
-
 export type IMyShowItem = IShowItem & { my_entries_count: number };
 
 export type IMyShowPage = {

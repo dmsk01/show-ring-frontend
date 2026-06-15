@@ -24,7 +24,7 @@ export function ShowDocumentsView({ id }: Props) {
         heading={show ? t('documents.heading', { name: show.name }) : t('documents.headingFallback')}
         links={[
           { name: t('common:dashboard'), href: paths.dashboard.root },
-          { name: t('list.title'), href: paths.dashboard.shows.root },
+          { name: t('list.title'), href: paths.showcase.shows },
           { name: t('documents.headingFallback') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}

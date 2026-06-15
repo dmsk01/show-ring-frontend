@@ -61,7 +61,7 @@ export function ShowEditView({ id }: Props) {
         heading={t('form.headingEdit')}
         links={[
           { name: t('common:dashboard'), href: paths.dashboard.root },
-          { name: t('list.title'), href: paths.dashboard.shows.root },
+          { name: t('list.title'), href: paths.showcase.shows },
           { name: show.name },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}

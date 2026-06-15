@@ -73,12 +73,6 @@ export function navData(t: TFunction): NavSectionProps['data'] {
           permission: 'litters:view',
         },
         {
-          title: t('showtail.shows'),
-          path: paths.dashboard.shows.root,
-          icon: ICONS.booking,
-          permission: 'shows:view',
-        },
-        {
           title: t('showtail.classifieds'),
           path: paths.dashboard.classifieds.root,
           icon: ICONS.blog,

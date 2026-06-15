@@ -61,7 +61,9 @@
       "titleCreate": "Create",
       "titleEdit": "Edit",
       "validation": {
-        "required": "{{field}} is required!"
+        "required": "{{field}} is required!",
+        "tooLong": "Must be at most {{max}} characters",
+        "numberRange": "Value must be between {{min}} and {{max}}"
       },
       "boolYes": "Yes",
       "boolNo": "No"

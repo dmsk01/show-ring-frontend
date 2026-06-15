@@ -28,7 +28,10 @@
       "budgetRequired": "Budget is required!",
       "dateStartRequired": "Start date is required!",
       "dateEndRequired": "End date is required!",
-      "targetUrlRequired": "Target URL is required!"
+      "targetUrlRequired": "Target URL is required!",
+      "tooLong": "Must be at most {{max}} characters",
+      "budgetPositive": "Budget must be greater than 0",
+      "cpiInvalid": "Cost per impression cannot be negative"
     },
     "submitCreate": "Create campaign",
     "submitUpdate": "Save changes"

@@ -29,15 +29,24 @@ import { Form, Field } from 'src/components/hook-form';
 export function getShowSchema(t: TFunction<['show', 'common']>) {
   return z
     .object({
-      name: z.string().min(1, { error: t('show:form.validation.nameRequired') }),
+      // maxLengths / entry_fee≥0 mirror backend ShowCreate so input fails fast, not as a 422.
+      name: z
+        .string()
+        .min(1, { error: t('show:form.validation.nameRequired') })
+        .max(255, { error: t('show:form.validation.tooLong', { max: 255 }) }),
       rank_id: z.string().min(1, { error: t('show:form.validation.rankRequired') }),
       date_start: z.string().min(1, { error: t('show:form.validation.dateStartRequired') }),
       date_end: z.string().nullable(),
       registration_deadline: z.string().nullable(),
-      city: z.string().nullable(),
-      country: z.string().nullable(),
-      venue: z.string().nullable(),
-      entry_fee: z.string().nullable(),
+      city: z.string().max(128, { error: t('show:form.validation.tooLong', { max: 128 }) }).nullable(),
+      country: z.string().max(64, { error: t('show:form.validation.tooLong', { max: 64 }) }).nullable(),
+      venue: z.string().max(255, { error: t('show:form.validation.tooLong', { max: 255 }) }).nullable(),
+      entry_fee: z
+        .string()
+        .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
+          error: t('show:form.validation.entryFeeInvalid'),
+        })
+        .nullable(),
       description: z.string().nullable(),
     })
     // Кросс-валидация дат — зеркало бэкендовых правил ShowBase (теперь они

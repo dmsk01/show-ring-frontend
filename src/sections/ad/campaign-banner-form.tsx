@@ -26,9 +26,13 @@ import { BANNER_PLACEMENTS } from 'src/types/ad';
 
 export function getCampaignBannerSchema(t: TFunction) {
   return z.object({
-    target_url: z.string().min(1, { error: t('form.validation.targetUrlRequired') }),
+    // Mirror backend BannerCreate: target_url maxLength 2048, title maxLength 255.
+    target_url: z
+      .string()
+      .min(1, { error: t('form.validation.targetUrlRequired') })
+      .max(2048, { error: t('form.validation.tooLong', { max: 2048 }) }),
     placement: z.enum(['sidebar', 'top', 'inline', 'footer']),
-    title: z.string().nullable(),
+    title: z.string().max(255, { error: t('form.validation.tooLong', { max: 255 }) }).nullable(),
     is_active: z.boolean(),
   });
 }

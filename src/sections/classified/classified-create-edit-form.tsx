@@ -82,6 +82,22 @@ export const getClassifiedSchema = (t: TFunction) =>
         error: t('form.validation.emailInvalid'),
       })
       .nullish(),
+  })
+  .check((ctx) => {
+    // Backend rule: price_kind=fixed requires price > 0 (422 otherwise). Cross-field,
+    // so it lives here rather than on the `price` field. Free/negotiable need no price.
+    const data = ctx.value;
+    if (data.price_kind === 'fixed') {
+      const amount = data.price == null || data.price === '' ? NaN : Number(data.price);
+      if (Number.isNaN(amount) || amount <= 0) {
+        ctx.issues.push({
+          code: 'custom',
+          message: t('form.validation.priceRequiredFixed'),
+          input: data.price,
+          path: ['price'],
+        });
+      }
+    }
   });
 
 export type ClassifiedSchemaType = z.infer<ReturnType<typeof getClassifiedSchema>>;

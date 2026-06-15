@@ -26,7 +26,10 @@
       "description": "Описание"
     },
     "validation": {
-      "nameRequired": "Укажите название!"
+      "nameRequired": "Укажите название!",
+      "tooLong": "Не длиннее {{max}} символов",
+      "websiteUrl": "Ссылка должна начинаться с http:// или https://",
+      "emailInvalid": "Некорректный email!"
     },
     "submitCreate": "Создать питомник",
     "submitUpdate": "Сохранить изменения",

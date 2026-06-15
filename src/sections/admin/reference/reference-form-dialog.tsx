@@ -33,12 +33,31 @@ function getReferenceSchema(config: ReferenceTypeConfig, t: (key: string, opts?:
   config.fields.forEach((f) => {
     if (f.kind === 'switch') {
       shape[f.name] = z.boolean();
-    } else {
-      const fieldLabel = t(`reference.types.${config.key}.fields.${f.name}`);
-      shape[f.name] = f.required
-        ? z.string().min(1, { error: t('reference.form.validation.required', { field: fieldLabel }) })
-        : z.string();
+      return;
     }
+    const fieldLabel = t(`reference.types.${config.key}.fields.${f.name}`);
+    // Build the string schema, mirroring backend constraints (maxLength, number bounds).
+    let base = z.string();
+    if (f.required) {
+      base = base.min(1, { error: t('reference.form.validation.required', { field: fieldLabel }) });
+    }
+    if (f.maxLength) {
+      base = base.max(f.maxLength, { error: t('reference.form.validation.tooLong', { max: f.maxLength }) });
+    }
+    let field: z.ZodType = base;
+    if (f.kind === 'number' && (f.min != null || f.max != null)) {
+      field = base.refine(
+        (v) => {
+          if (!v) return true; // emptiness is governed by `required` above
+          const n = Number(v);
+          return (
+            !Number.isNaN(n) && (f.min == null || n >= f.min) && (f.max == null || n <= f.max)
+          );
+        },
+        { error: t('reference.form.validation.numberRange', { min: f.min ?? 0, max: f.max ?? '' }) }
+      );
+    }
+    shape[f.name] = field;
   });
   return z.object(shape);
 }

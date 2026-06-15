@@ -5,6 +5,11 @@ export type RefField = {
   label: string;
   kind: RefFieldKind;
   required?: boolean;
+  /** maxLength for text fields — mirrors backend so over-long input fails fast, not as a 422. */
+  maxLength?: number;
+  /** min/max for number fields — mirrors backend numeric bounds. */
+  min?: number;
+  max?: number;
 };
 
 export type ReferenceTypeConfig = {
@@ -29,8 +34,8 @@ export const REFERENCE_TYPES: ReferenceTypeConfig[] = [
     adminUrl: '/admin/references/animal-types',
     columns: ['code', 'name'],
     fields: [
-      { name: 'code', label: 'Code', kind: 'text', required: true },
-      { name: 'name', label: 'Name', kind: 'text', required: true },
+      { name: 'code', label: 'Code', kind: 'text', required: true, maxLength: 32 },
+      { name: 'name', label: 'Name', kind: 'text', required: true, maxLength: 128 },
     ],
   },
   {
@@ -40,8 +45,8 @@ export const REFERENCE_TYPES: ReferenceTypeConfig[] = [
     adminUrl: '/admin/references/show-ranks',
     columns: ['code', 'name'],
     fields: [
-      { name: 'code', label: 'Code', kind: 'text', required: true },
-      { name: 'name', label: 'Name', kind: 'text', required: true },
+      { name: 'code', label: 'Code', kind: 'text', required: true, maxLength: 64 },
+      { name: 'name', label: 'Name', kind: 'text', required: true, maxLength: 255 },
       { name: 'description', label: 'Description', kind: 'text' },
     ],
   },
@@ -53,8 +58,8 @@ export const REFERENCE_TYPES: ReferenceTypeConfig[] = [
     columns: ['code', 'name', 'is_reserve'],
     fields: [
       { name: 'animal_type_id', label: 'Animal type', kind: 'animalType', required: true },
-      { name: 'code', label: 'Code', kind: 'text', required: true },
-      { name: 'name', label: 'Name', kind: 'text', required: true },
+      { name: 'code', label: 'Code', kind: 'text', required: true, maxLength: 64 },
+      { name: 'name', label: 'Name', kind: 'text', required: true, maxLength: 128 },
       { name: 'is_reserve', label: 'Reserve', kind: 'switch' },
       { name: 'description', label: 'Description', kind: 'text' },
     ],
@@ -67,8 +72,8 @@ export const REFERENCE_TYPES: ReferenceTypeConfig[] = [
     columns: ['code', 'name'],
     fields: [
       { name: 'animal_type_id', label: 'Animal type', kind: 'animalType', required: true },
-      { name: 'code', label: 'Code', kind: 'text', required: true },
-      { name: 'name', label: 'Name', kind: 'text', required: true },
+      { name: 'code', label: 'Code', kind: 'text', required: true, maxLength: 64 },
+      { name: 'name', label: 'Name', kind: 'text', required: true, maxLength: 128 },
       { name: 'is_disqualifying', label: 'Disqualifying', kind: 'switch' },
       { name: 'is_puppy_grade', label: 'Puppy grade', kind: 'switch' },
       { name: 'description', label: 'Description', kind: 'text' },
@@ -82,10 +87,10 @@ export const REFERENCE_TYPES: ReferenceTypeConfig[] = [
     columns: ['code', 'name', 'age_from_months'],
     fields: [
       { name: 'animal_type_id', label: 'Animal type', kind: 'animalType', required: true },
-      { name: 'code', label: 'Code', kind: 'text', required: true },
-      { name: 'name', label: 'Name', kind: 'text', required: true },
-      { name: 'age_from_months', label: 'Age from (months)', kind: 'number', required: true },
-      { name: 'age_to_months', label: 'Age to (months)', kind: 'number' },
+      { name: 'code', label: 'Code', kind: 'text', required: true, maxLength: 64 },
+      { name: 'name', label: 'Name', kind: 'text', required: true, maxLength: 128 },
+      { name: 'age_from_months', label: 'Age from (months)', kind: 'number', required: true, min: 0, max: 360 },
+      { name: 'age_to_months', label: 'Age to (months)', kind: 'number', min: 0, max: 360 },
       { name: 'can_receive_cac', label: 'Can receive CAC', kind: 'switch' },
       { name: 'description', label: 'Description', kind: 'text' },
     ],

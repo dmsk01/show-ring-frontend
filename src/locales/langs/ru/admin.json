@@ -61,7 +61,9 @@
       "titleCreate": "Создать",
       "titleEdit": "Редактировать",
       "validation": {
-        "required": "{{field}} обязателен!"
+        "required": "{{field}} обязателен!",
+        "tooLong": "Не длиннее {{max}} символов",
+        "numberRange": "Значение от {{min}} до {{max}}"
       },
       "boolYes": "Да",
       "boolNo": "Нет"

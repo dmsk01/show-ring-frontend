@@ -37,9 +37,25 @@ export const getLitterSchema = (t: TFunction) =>
     father_id: z.string().nullable(),
     mother_id: z.string().nullable(),
     born_at: z.string().nullable(),
-    puppies_count: z.string().nullable(),
-    price_from: z.string().nullable(),
-    price_to: z.string().nullable(),
+    // Mirror backend LitterCreate: puppies_count 0..30, price_from/price_to ≥ 0.
+    puppies_count: z
+      .string()
+      .refine((v) => !v || (Number.isInteger(Number(v)) && Number(v) >= 0 && Number(v) <= 30), {
+        error: t('form.validation.puppiesRange'),
+      })
+      .nullable(),
+    price_from: z
+      .string()
+      .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
+        error: t('form.validation.priceInvalid'),
+      })
+      .nullable(),
+    price_to: z
+      .string()
+      .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
+        error: t('form.validation.priceInvalid'),
+      })
+      .nullable(),
     description: z.string().nullable(),
   });
 

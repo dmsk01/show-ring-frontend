@@ -35,7 +35,8 @@
     },
     "validation": {
       "nameRequired": "Укажите кличку!",
-      "breedRequired": "Укажите породу!"
+      "breedRequired": "Укажите породу!",
+      "tooLong": "Не длиннее {{max}} символов"
     },
     "deletePhoto": {
       "title": "Удалить фотографию",

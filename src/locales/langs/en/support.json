@@ -18,7 +18,10 @@
     },
     "validation": {
       "subjectRequired": "Subject is required!",
-      "messageRequired": "Message is required!"
+      "messageRequired": "Message is required!",
+      "subjectMin": "Subject must be at least 3 characters",
+      "messageMin": "Message must be at least 3 characters",
+      "tooLong": "Must be at most {{max}} characters"
     },
     "submit": "Create ticket"
   },

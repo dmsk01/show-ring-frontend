@@ -35,17 +35,21 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 
 export const getDogSchema = (t: TFunction) =>
   z.object({
-    name: z.string().min(1, { error: t('form.validation.nameRequired') }),
+    // maxLengths mirror backend DogCreate so over-long input fails fast, not as a 422.
+    name: z
+      .string()
+      .min(1, { error: t('form.validation.nameRequired') })
+      .max(255, { error: t('form.validation.tooLong', { max: 255 }) }),
     sex: z.enum(['male', 'female']),
     breed_id: z.string().min(1, { error: t('form.validation.breedRequired') }),
     kennel_id: z.string().nullable(),
     father_id: z.string().nullable(),
     mother_id: z.string().nullable(),
     date_of_birth: z.string().nullable(),
-    color: z.string().nullable(),
-    rkf_number: z.string().nullable(),
-    tattoo: z.string().nullable(),
-    microchip: z.string().nullable(),
+    color: z.string().max(128, { error: t('form.validation.tooLong', { max: 128 }) }).nullable(),
+    rkf_number: z.string().max(64, { error: t('form.validation.tooLong', { max: 64 }) }).nullable(),
+    tattoo: z.string().max(64, { error: t('form.validation.tooLong', { max: 64 }) }).nullable(),
+    microchip: z.string().max(32, { error: t('form.validation.tooLong', { max: 32 }) }).nullable(),
     description: z.string().nullable(),
     photos: z.array(z.union([z.string(), z.file()])),
   });

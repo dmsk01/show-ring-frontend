@@ -45,6 +45,7 @@
       "descriptionMin": "Description must be at least 10 characters",
       "cityMax": "City must be at most 128 characters",
       "priceInvalid": "Enter a valid price",
+      "priceRequiredFixed": "For a fixed price, enter an amount greater than 0",
       "phoneInvalid": "Invalid phone number!",
       "emailInvalid": "Invalid email address!"
     },

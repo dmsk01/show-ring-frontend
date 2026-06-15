@@ -35,7 +35,8 @@
     },
     "validation": {
       "nameRequired": "Name is required!",
-      "breedRequired": "Breed is required!"
+      "breedRequired": "Breed is required!",
+      "tooLong": "Must be at most {{max}} characters"
     },
     "deletePhoto": {
       "title": "Delete photo",

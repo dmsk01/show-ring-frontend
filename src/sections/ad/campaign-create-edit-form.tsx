@@ -29,11 +29,25 @@ import { CAMPAIGN_STATUSES } from 'src/types/ad';
 
 export function getCampaignSchema(t: TFunction) {
   return z.object({
-    name: z.string().min(1, { error: t('form.validation.nameRequired') }),
-    budget: z.string().min(1, { error: t('form.validation.budgetRequired') }),
+    // Mirror backend CampaignCreate: name maxLength 255, budget > 0, cost_per_impression ≥ 0.
+    name: z
+      .string()
+      .min(1, { error: t('form.validation.nameRequired') })
+      .max(255, { error: t('form.validation.tooLong', { max: 255 }) }),
+    budget: z
+      .string()
+      .min(1, { error: t('form.validation.budgetRequired') })
+      .refine((v) => !Number.isNaN(Number(v)) && Number(v) > 0, {
+        error: t('form.validation.budgetPositive'),
+      }),
     date_start: z.string().min(1, { error: t('form.validation.dateStartRequired') }),
     date_end: z.string().min(1, { error: t('form.validation.dateEndRequired') }),
-    cost_per_impression: z.string().nullable(),
+    cost_per_impression: z
+      .string()
+      .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
+        error: t('form.validation.cpiInvalid'),
+      })
+      .nullable(),
     description: z.string().nullable(),
     status: z.enum(['draft', 'active', 'paused', 'completed', 'cancelled']),
   });

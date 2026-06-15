@@ -28,8 +28,12 @@ import { TICKET_PRIORITIES } from 'src/types/support';
 
 export const getTicketSchema = (t: TFunction) =>
   z.object({
-    subject: z.string().min(1, { error: t('form.validation.subjectRequired') }),
-    body: z.string().min(1, { error: t('form.validation.messageRequired') }),
+    // Mirror backend TicketCreate: subject 3..255, body ≥ 3.
+    subject: z
+      .string()
+      .min(3, { error: t('form.validation.subjectMin') })
+      .max(255, { error: t('form.validation.tooLong', { max: 255 }) }),
+    body: z.string().min(3, { error: t('form.validation.messageMin') }),
     priority: z.enum(['low', 'normal', 'high', 'urgent']),
   });
 

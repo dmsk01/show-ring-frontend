@@ -38,7 +38,9 @@
     },
     "validation": {
       "kennelRequired": "Kennel is required!",
-      "breedRequired": "Breed is required!"
+      "breedRequired": "Breed is required!",
+      "puppiesRange": "Puppies count must be an integer from 0 to 30",
+      "priceInvalid": "Enter a valid price"
     },
     "submitCreate": "Create litter",
     "submitUpdate": "Save changes"

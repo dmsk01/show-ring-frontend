@@ -38,7 +38,9 @@
     },
     "validation": {
       "kennelRequired": "Укажите питомник!",
-      "breedRequired": "Укажите породу!"
+      "breedRequired": "Укажите породу!",
+      "puppiesRange": "Количество щенков — целое от 0 до 30",
+      "priceInvalid": "Укажите корректную цену"
     },
     "submitCreate": "Создать помёт",
     "submitUpdate": "Сохранить изменения"

@@ -18,7 +18,10 @@
     },
     "validation": {
       "subjectRequired": "Укажите тему!",
-      "messageRequired": "Введите сообщение!"
+      "messageRequired": "Введите сообщение!",
+      "subjectMin": "Тема не короче 3 символов",
+      "messageMin": "Сообщение не короче 3 символов",
+      "tooLong": "Не длиннее {{max}} символов"
     },
     "submit": "Создать тикет"
   },

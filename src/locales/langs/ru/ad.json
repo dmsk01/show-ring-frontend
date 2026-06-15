@@ -28,7 +28,10 @@
       "budgetRequired": "Укажите бюджет!",
       "dateStartRequired": "Укажите дату начала!",
       "dateEndRequired": "Укажите дату окончания!",
-      "targetUrlRequired": "Укажите целевой URL!"
+      "targetUrlRequired": "Укажите целевой URL!",
+      "tooLong": "Не длиннее {{max}} символов",
+      "budgetPositive": "Бюджет должен быть больше 0",
+      "cpiInvalid": "Стоимость показа не может быть отрицательной"
     },
     "submitCreate": "Создать кампанию",
     "submitUpdate": "Сохранить изменения"

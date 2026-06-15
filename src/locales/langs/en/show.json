@@ -41,7 +41,9 @@
       "rankRequired": "Rank is required!",
       "dateStartRequired": "Start date is required!",
       "dateEndBeforeStart": "End date cannot be before the start date!",
-      "deadlineAfterStart": "Registration deadline cannot be after the show starts!"
+      "deadlineAfterStart": "Registration deadline cannot be after the show starts!",
+      "tooLong": "Must be at most {{max}} characters",
+      "entryFeeInvalid": "Enter a valid entry fee"
     },
     "submitCreate": "Create show",
     "submitUpdate": "Save changes",

@@ -24,16 +24,32 @@ import { Form, Field } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
+// Mirrors backend KennelCreate constraints (name/prefix/city/country/phone maxLength,
+// website must be an http(s) URL) so the form fails fast instead of getting a 422.
 export const getKennelSchema = (t: TFunction) =>
   z.object({
-    name: z.string().min(1, { error: t('form.validation.nameRequired') }),
-    kennel_prefix: z.string().nullable(),
+    name: z
+      .string()
+      .min(1, { error: t('form.validation.nameRequired') })
+      .max(255, { error: t('form.validation.tooLong', { max: 255 }) }),
+    kennel_prefix: z.string().max(128, { error: t('form.validation.tooLong', { max: 128 }) }).nullable(),
     description: z.string().nullable(),
-    city: z.string().nullable(),
-    country: z.string().nullable(),
-    contact_phone: z.string().nullable(),
-    contact_email: z.string().nullable(),
-    website: z.string().nullable(),
+    city: z.string().max(128, { error: t('form.validation.tooLong', { max: 128 }) }).nullable(),
+    country: z.string().max(64, { error: t('form.validation.tooLong', { max: 64 }) }).nullable(),
+    contact_phone: z.string().max(32, { error: t('form.validation.tooLong', { max: 32 }) }).nullable(),
+    contact_email: z
+      .string()
+      .refine((val) => !val || z.email().safeParse(val).success, {
+        error: t('form.validation.emailInvalid'),
+      })
+      .nullable(),
+    website: z
+      .string()
+      .max(255, { error: t('form.validation.tooLong', { max: 255 }) })
+      .refine((val) => !val || /^https?:\/\/.+/.test(val), {
+        error: t('form.validation.websiteUrl'),
+      })
+      .nullable(),
   });
 
 export type KennelSchemaType = z.infer<ReturnType<typeof getKennelSchema>>;

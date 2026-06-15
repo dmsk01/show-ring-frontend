@@ -26,7 +26,10 @@
       "description": "Description"
     },
     "validation": {
-      "nameRequired": "Name is required!"
+      "nameRequired": "Name is required!",
+      "tooLong": "Must be at most {{max}} characters",
+      "websiteUrl": "The link must start with http:// or https://",
+      "emailInvalid": "Invalid email address!"
     },
     "submitCreate": "Create kennel",
     "submitUpdate": "Save changes",

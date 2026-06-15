@@ -28,7 +28,9 @@ import { VerticalDivider } from './content';
 import { NavVertical } from './nav-vertical';
 import { filterNavItems } from '../nav-filter';
 import { NavHorizontal } from './nav-horizontal';
+import { NavDesktop } from '../main/nav/desktop';
 import { MenuButton } from '../components/menu-button';
+import { navData as mainNavData } from '../nav-config-main';
 import { AccountControl } from '../components/account-control';
 import { SettingsButton } from '../components/settings-button';
 import { LanguagePopover } from '../components/language-popover';
@@ -96,6 +98,8 @@ export function DashboardLayout({
     [rawNavData, can, canAny, canAll, isEnabled]
   );
 
+  const showcaseNav = useMemo(() => mainNavData(t), [t]);
+
   const isNavMini = settings.state.navLayout === 'mini';
   const isNavHorizontal = settings.state.navLayout === 'horizontal';
   const isNavVertical = isNavMini || settings.state.navLayout === 'vertical';
@@ -132,6 +136,17 @@ export function DashboardLayout({
             sx={{ mr: 1, ml: -1, [theme.breakpoints.up(layoutQuery)]: { display: 'none' } }}
           />
           <NavMobile data={navData} open={open} onClose={onClose} cssVars={navVars.section} />
+
+          {/** @slot Public showcase nav (desktop, vertical/mini modes) */}
+          {!isNavHorizontal && (
+            <NavDesktop
+              data={showcaseNav}
+              sx={{
+                display: 'none',
+                [theme.breakpoints.up(layoutQuery)]: { ml: 1, display: 'flex' },
+              }}
+            />
+          )}
 
           {/** @slot Logo */}
           {isNavHorizontal && (

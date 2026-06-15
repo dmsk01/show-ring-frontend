@@ -95,6 +95,7 @@ export function navData(t: TFunction): NavSectionProps['data'] {
           path: paths.dashboard.support.root,
           icon: ICONS.chat,
           permission: 'support:view',
+          flag: 'support',
         },
         {
           title: t('showtail.references'),

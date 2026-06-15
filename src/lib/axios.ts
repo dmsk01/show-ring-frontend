@@ -142,6 +142,7 @@ export const fetcher = async <T = unknown>(
 
 export const endpoints = {
   // --- ShowTail backend ---
+  featureFlags: '/feature-flags',
   auth: {
     me: '/users/me',
     myDogs: '/users/me/dogs',

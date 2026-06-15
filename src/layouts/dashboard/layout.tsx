@@ -1,6 +1,7 @@
 'use client';
 
 import type { Breakpoint } from '@mui/material/styles';
+import type { FeatureFlag } from 'src/config/feature-flags';
 import type { NavSectionProps } from 'src/components/nav-section';
 import type { MainSectionProps, HeaderSectionProps, LayoutSectionProps } from '../core';
 
@@ -15,6 +16,7 @@ import { iconButtonClasses } from '@mui/material/IconButton';
 
 import { usePermissions } from 'src/hooks/use-permissions';
 
+import { useFeatureFlags } from 'src/feature-flags';
 import { allLangs, useTranslate } from 'src/locales';
 
 import { Logo } from 'src/components/logo';
@@ -61,6 +63,8 @@ export function DashboardLayout({
 
   const { can, canAny, canAll } = usePermissions();
 
+  const { isEnabled } = useFeatureFlags();
+
   const settings = useSettingsContext();
 
   const navVars = dashboardNavColorVars(theme, settings.state.navColor, settings.state.navLayout);
@@ -79,13 +83,17 @@ export function DashboardLayout({
       rawNavData
         .map((section) => ({
           ...section,
-          items: filterNavItems(section.items, (p, m) => {
-            const arr = Array.isArray(p) ? p : [p];
-            return arr.length === 1 ? can(arr[0]) : m === 'all' ? canAll(arr) : canAny(arr);
-          }),
+          items: filterNavItems(
+            section.items,
+            (p, m) => {
+              const arr = Array.isArray(p) ? p : [p];
+              return arr.length === 1 ? can(arr[0]) : m === 'all' ? canAll(arr) : canAny(arr);
+            },
+            (flag) => isEnabled(flag as FeatureFlag)
+          ),
         }))
         .filter((section) => section.items.length > 0),
-    [rawNavData, can, canAny, canAll]
+    [rawNavData, can, canAny, canAll, isEnabled]
   );
 
   const isNavMini = settings.state.navLayout === 'mini';

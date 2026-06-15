@@ -1,4 +1,5 @@
 import { CONFIG } from 'src/global-config';
+import { FeatureGuard } from 'src/feature-flags';
 
 import { TicketDetailView } from 'src/sections/support/view';
 
@@ -13,8 +14,10 @@ type Props = { params: Promise<{ id: string }> };
 export default async function Page({ params }: Props) {
   const { id } = await params;
   return (
-    <PermissionGuard permission="support:view">
-      <TicketDetailView id={id} />
-    </PermissionGuard>
+    <FeatureGuard flag="support">
+      <PermissionGuard permission="support:view">
+        <TicketDetailView id={id} />
+      </PermissionGuard>
+    </FeatureGuard>
   );
 }

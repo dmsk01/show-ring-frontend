@@ -5,9 +5,15 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import TablePagination from '@mui/material/TablePagination';
+
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
+
+import { usePermissions } from 'src/hooks/use-permissions';
 
 import { useTranslate } from 'src/locales';
 import { useGetShows } from 'src/actions/show';
@@ -27,6 +33,7 @@ type Bucket = 'upcoming' | 'past';
 
 export function ShowShowcaseView() {
   const { t } = useTranslate('show');
+  const { can } = usePermissions();
   const [bucket, setBucket] = useState<Bucket>('upcoming');
   const [city, setCity] = useState('');
   const [search, setSearch] = useState('');
@@ -64,7 +71,21 @@ export function ShowShowcaseView() {
   };
 
   return (
-    <ShowcaseShell title={t('showcase.title')}>
+    <ShowcaseShell
+      title={t('showcase.title')}
+      action={
+        can('shows:create') ? (
+          <Button
+            component={RouterLink}
+            href={paths.dashboard.shows.new}
+            variant="contained"
+            startIcon={<Iconify icon="mingcute:add-line" />}
+          >
+            {t('list.new')}
+          </Button>
+        ) : undefined
+      }
+    >
       <Tabs value={bucket} onChange={handleBucket} sx={{ mb: { xs: 3, md: 3 } }}>
         <Tab value="upcoming" label={t('showcase.upcoming')} />
         <Tab value="past" label={t('showcase.past')} />

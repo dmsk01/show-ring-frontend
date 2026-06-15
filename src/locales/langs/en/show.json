@@ -48,6 +48,7 @@
     "submitCreate": "Create show",
     "submitUpdate": "Save changes",
     "actions": {
+      "edit": "Edit",
       "publish": "Publish",
       "results": "Results",
       "documents": "Documents"

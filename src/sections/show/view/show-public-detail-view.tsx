@@ -16,6 +16,9 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
+
+import { usePermissions } from 'src/hooks/use-permissions';
 
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
@@ -31,7 +34,12 @@ import { LoadingScreen } from 'src/components/loading-screen';
 import { useAuthContext } from 'src/auth/hooks';
 
 import { ShowResultsTable } from '../show-results-table';
-import { SHOW_STATUS_COLOR, showStatusI18nKey, canRegisterForShow } from '../show-utils';
+import {
+  canEnterResults,
+  SHOW_STATUS_COLOR,
+  showStatusI18nKey,
+  canRegisterForShow,
+} from '../show-utils';
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +48,8 @@ type Props = { id: string };
 export function ShowPublicDetailView({ id }: Props) {
   const { t } = useTranslate(['show', 'common']);
   const router = useRouter();
-  const { authenticated } = useAuthContext();
+  const { authenticated, user } = useAuthContext();
+  const { can } = usePermissions();
   const { show, showLoading } = useGetShow(id);
 
   const isCompleted = show?.status === 'completed';
@@ -111,6 +120,46 @@ export function ShowPublicDetailView({ id }: Props) {
           </span>
         </Tooltip>
       </Stack>
+
+      {(can('shows:edit') || canEnterResults(show, user?.id, can)) && (
+        <Stack direction="row" spacing={1.5} flexWrap="wrap" sx={{ mb: 3 }}>
+          {can('shows:edit') && (
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.shows.edit(id)}
+              variant="outlined"
+              color="inherit"
+              startIcon={<Iconify icon="solar:pen-bold" />}
+            >
+              {t('form.actions.edit')}
+            </Button>
+          )}
+
+          {canEnterResults(show, user?.id, can) && (
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.shows.results(id)}
+              variant="outlined"
+              color="inherit"
+              startIcon={<Iconify icon="solar:bill-list-bold" />}
+            >
+              {t('form.actions.results')}
+            </Button>
+          )}
+
+          {can('shows:edit') && (
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.shows.documents(id)}
+              variant="outlined"
+              color="inherit"
+              startIcon={<Iconify icon="solar:file-text-bold" />}
+            >
+              {t('form.actions.documents')}
+            </Button>
+          )}
+        </Stack>
+      )}
 
       <Card sx={{ p: 3, mb: 5 }}>
         <Box

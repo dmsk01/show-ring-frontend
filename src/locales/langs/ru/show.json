@@ -48,6 +48,7 @@
     "submitCreate": "Создать выставку",
     "submitUpdate": "Сохранить изменения",
     "actions": {
+      "edit": "Редактировать",
       "publish": "Опубликовать",
       "results": "Результаты",
       "documents": "Документы"

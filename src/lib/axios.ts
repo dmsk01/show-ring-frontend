@@ -157,6 +157,7 @@ export const fetcher = async <T = unknown>(
 export const endpoints = {
   // --- ShowTail backend ---
   featureFlags: '/feature-flags',
+  featureFlag: (name: string) => `/feature-flags/${name}`,
   auth: {
     me: '/users/me',
     myDogs: '/users/me/dogs',
@@ -254,6 +255,8 @@ export const endpoints = {
     analyticsAds: '/admin/analytics/ads',
     analyticsTopBreeds: '/admin/analytics/top-breeds',
     analyticsTopCampaigns: '/admin/analytics/top-campaigns',
+    uploadQuotas: '/admin/upload-quotas',
+    uploadQuota: (tier: string) => `/admin/upload-quotas/${tier}`,
   },
   reference: {
     breeds: '/references/breeds',

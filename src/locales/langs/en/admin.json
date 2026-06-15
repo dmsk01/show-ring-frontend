@@ -2,6 +2,34 @@
   "breadcrumb": {
     "admin": "Admin"
   },
+  "system": {
+    "title": "System",
+    "breadcrumb": "System",
+    "quotas": {
+      "heading": "Upload quotas",
+      "description": "Daily file limit and maximum storage per tier.",
+      "columns": {
+        "tier": "Tier",
+        "dailyLimit": "Daily limit",
+        "maxStorageMb": "Storage, MB"
+      },
+      "tiers": {
+        "untrusted": "Untrusted",
+        "standard": "Standard",
+        "breeder": "Breeder"
+      },
+      "save": "Save",
+      "saved": "Quota updated",
+      "saveFailed": "Could not save the quota"
+    },
+    "flags": {
+      "heading": "Feature flags",
+      "description": "Turn application features on and off.",
+      "empty": "No flags configured",
+      "updated": "Flag updated",
+      "saveFailed": "Could not update the flag"
+    }
+  },
   "reference": {
     "list": {
       "title": "References",

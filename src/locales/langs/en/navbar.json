@@ -19,6 +19,7 @@
     "users": "Users (admin)",
     "moderation": "Moderation (admin)",
     "analytics": "Analytics (admin)",
+    "system": "System (admin)",
     "notifications": "Notifications",
     "myShows": "My shows",
     "profile": "My profile"

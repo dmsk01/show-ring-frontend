@@ -184,6 +184,7 @@ export const paths = {
     adminUsers: `${ROOTS.DASHBOARD}/admin/users`,
     adminModeration: `${ROOTS.DASHBOARD}/admin/moderation`,
     adminAnalytics: `${ROOTS.DASHBOARD}/admin/analytics`,
+    adminSystem: `${ROOTS.DASHBOARD}/admin/system`,
     profile: `${ROOTS.DASHBOARD}/profile`,
     product: {
       root: `${ROOTS.DASHBOARD}/product`,

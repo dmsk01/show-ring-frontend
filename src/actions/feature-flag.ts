@@ -1,9 +1,9 @@
 import type { SWRConfiguration } from 'swr';
 
-import useSWR from 'swr';
 import { useMemo } from 'react';
+import useSWR, { mutate } from 'swr';
 
-import { fetcher, endpoints } from 'src/lib/axios';
+import axios, { fetcher, endpoints } from 'src/lib/axios';
 
 // ----------------------------------------------------------------------
 
@@ -32,4 +32,11 @@ export function useFeatureFlagsQuery() {
     }),
     [data, isLoading, error]
   );
+}
+
+/** PUT /feature-flags/{name} (admin). Revalidates the public snapshot so the
+ *  gating layer (nav/routes/inline) reflects the change app-wide. */
+export async function setFeatureFlag(name: string, enabled: boolean): Promise<void> {
+  await axios.put(endpoints.featureFlag(name), { enabled });
+  await mutate(endpoints.featureFlags);
 }

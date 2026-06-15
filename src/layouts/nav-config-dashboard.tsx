@@ -116,6 +116,12 @@ export function navData(t: TFunction): NavSectionProps['data'] {
           permission: 'admin',
         },
         {
+          title: t('showtail.system'),
+          path: paths.dashboard.adminSystem,
+          icon: ICONS.params,
+          permission: 'admin',
+        },
+        {
           title: t('showtail.notifications'),
           path: paths.dashboard.notifications,
           icon: ICONS.label,

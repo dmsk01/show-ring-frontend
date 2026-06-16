@@ -43,7 +43,7 @@ build
 .vercel
 .netlify
 .vscode
-.claude/settings.local.json
+.claude
 CLAUDE.md
 tsconfig.tsbuildinfo
 .ncurc.js

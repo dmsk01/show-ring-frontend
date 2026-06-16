@@ -36,11 +36,13 @@ build
 /test-results
 /playwright-report
 /e2e/.auth
+/e2e/.verify
 
 # misc
 .DS_Store
 .vercel
 .netlify
 .vscode
+.claude/settings.local.json
 tsconfig.tsbuildinfo
 .ncurc.js

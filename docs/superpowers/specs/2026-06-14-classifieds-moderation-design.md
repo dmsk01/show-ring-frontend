@@ -1,8 +1,7 @@
 # Classifieds moderation flow — design
 
 Date: 2026-06-14
-Status: approved (frontend implemented here; backend handed off as a separate prompt — see
-`docs/superpowers/specs/2026-06-14-classifieds-moderation-BACKEND-PROMPT.md`)
+Status: approved (frontend implemented here; backend gate handed off separately)
 
 ## Problem
 

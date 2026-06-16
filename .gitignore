@@ -44,5 +44,6 @@ build
 .netlify
 .vscode
 .claude/settings.local.json
+CLAUDE.md
 tsconfig.tsbuildinfo
 .ncurc.js

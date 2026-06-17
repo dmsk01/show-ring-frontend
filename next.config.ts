@@ -23,6 +23,15 @@ const nextConfig: NextConfig = {
   // bodies straight through to the backend without an extra redirect round-trip.
   skipTrailingSlashRedirect: true,
   output: isStaticExport ? 'export' : 'standalone',
+  // Проверку типов на этапе `next build` отключаем: полный проход tsc по
+  // тяжёлому MUI-шаблону пробивает кучу V8 (~2 ГБ) и роняет docker-сборку на
+  // сервере по OOM (SIGABRT на фазе "Running TypeScript"). Типы по-прежнему
+  // проверяются в CI (`npx tsc --noEmit`, стадия lint в .gitlab-ci.yml), так
+  // что страховка от регрессий сохраняется — она просто не на билде.
+  // ВРЕМЕННО: вернуть, как только сборка получит достаточно памяти/swap.
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   env: {
     BUILD_STATIC_EXPORT: JSON.stringify(isStaticExport),
   },

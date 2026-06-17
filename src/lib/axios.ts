@@ -155,7 +155,7 @@ export const fetcher = async <T = unknown>(
 // ----------------------------------------------------------------------
 
 export const endpoints = {
-  // --- ShowTail backend ---
+  // --- Show Ring backend ---
   featureFlags: '/feature-flags',
   featureFlag: (name: string) => `/feature-flags/${name}`,
   auth: {
@@ -271,7 +271,7 @@ export const endpoints = {
     details: '/api/mail/details',
     labels: '/api/mail/labels',
   },
-  // Blog — backed by ShowTail (see docs/specs). baseURL '/api' + these →
+  // Blog — backed by Show Ring (see docs/specs). baseURL '/api' + these →
   // proxied to the backend (e.g. /api/posts → :8000/posts). Posts are keyed
   // by `slug`; full-text search folds into the list endpoint via `?query=`.
   post: {

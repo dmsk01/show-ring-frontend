@@ -49,92 +49,92 @@ const ICONS = {
 export function navData(t: TFunction): NavSectionProps['data'] {
   return [
     /**
-     * ShowTail
+     * Show Ring
      */
     {
-      subheader: t('showtail.subheader'),
+      subheader: t('show_ring.subheader'),
       items: [
         {
-          title: t('showtail.dogs'),
+          title: t('show_ring.dogs'),
           path: paths.dashboard.dogs.root,
           icon: ICONS.product,
           permission: 'dogs:view',
         },
         {
-          title: t('showtail.kennels'),
+          title: t('show_ring.kennels'),
           path: paths.dashboard.kennels.root,
           icon: ICONS.folder,
           permission: 'kennels:view',
         },
         {
-          title: t('showtail.litters'),
+          title: t('show_ring.litters'),
           path: paths.dashboard.litters.root,
           icon: ICONS.course,
           permission: 'litters:view',
         },
         {
-          title: t('showtail.classifieds'),
+          title: t('show_ring.classifieds'),
           path: paths.dashboard.classifieds.root,
           icon: ICONS.blog,
           permission: 'classifieds:view',
         },
         {
-          title: t('showtail.ads'),
+          title: t('show_ring.ads'),
           path: paths.dashboard.ads.root,
           icon: ICONS.banking,
           permission: 'ads:view',
         },
         {
-          title: t('showtail.support'),
+          title: t('show_ring.support'),
           path: paths.dashboard.support.root,
           icon: ICONS.chat,
           permission: 'support:view',
           flag: 'support',
         },
         {
-          title: t('showtail.references'),
+          title: t('show_ring.references'),
           path: paths.dashboard.adminReferences,
           icon: ICONS.params,
           permission: 'references:edit',
         },
         {
-          title: t('showtail.users'),
+          title: t('show_ring.users'),
           path: paths.dashboard.adminUsers,
           icon: ICONS.user,
           permission: 'admin',
         },
         {
-          title: t('showtail.moderation'),
+          title: t('show_ring.moderation'),
           path: paths.dashboard.adminModeration,
           icon: ICONS.lock,
           permission: 'admin',
         },
         {
-          title: t('showtail.analytics'),
+          title: t('show_ring.analytics'),
           path: paths.dashboard.adminAnalytics,
           icon: ICONS.analytics,
           permission: 'admin',
         },
         {
-          title: t('showtail.system'),
+          title: t('show_ring.system'),
           path: paths.dashboard.adminSystem,
           icon: ICONS.params,
           permission: 'admin',
         },
         {
-          title: t('showtail.notifications'),
+          title: t('show_ring.notifications'),
           path: paths.dashboard.notifications,
           icon: ICONS.label,
           permission: 'dashboard:view',
         },
         {
-          title: t('showtail.myShows'),
+          title: t('show_ring.myShows'),
           path: paths.dashboard.myShows.root,
           icon: ICONS.booking,
           permission: 'dogs:view',
         },
         {
-          title: t('showtail.profile'),
+          title: t('show_ring.profile'),
           path: paths.dashboard.profile,
           icon: ICONS.user,
         },

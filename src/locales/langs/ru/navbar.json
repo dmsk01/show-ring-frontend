@@ -6,8 +6,8 @@
   "invoice": "Счета",
   "blog": { "title": "Блог", "caption": "Пользовательские горячие клавиши." },
   "subheader": "Подзаголовок",
-  "showtail": {
-    "subheader": "ShowTail",
+  "show_ring": {
+    "subheader": "Show Ring",
     "dogs": "Собаки",
     "kennels": "Питомники",
     "litters": "Помёты",

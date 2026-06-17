@@ -13,7 +13,7 @@ setup('authenticate as admin', async ({ page, request }) => {
   const health = await request.get(BACKEND_HEALTH).catch(() => null);
   if (!health || !health.ok()) {
     throw new Error(
-      `Backend not reachable at ${BACKEND_HEALTH}. Start ShowTail (:8000) before running e2e.`
+      `Backend not reachable at ${BACKEND_HEALTH}. Start Show Ring (:8000) before running e2e.`
     );
   }
 

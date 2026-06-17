@@ -58,7 +58,7 @@ deploy:
   script:
     # web-сервис определён в compose бэка; здесь только pull+recreate web.
     # Нужные CI/CD variables (protected): DEPLOY_HOST, DEPLOY_USER, DEPLOY_SSH_KEY.
-    - ssh "$DEPLOY_USER@$DEPLOY_HOST" "cd /opt/showtail
+    - ssh "$DEPLOY_USER@$DEPLOY_HOST" "cd /opt/show_ring
         && docker compose -f docker-compose.yml -f docker-compose.prod.yml pull web
         && docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d web
         && docker image prune -f"

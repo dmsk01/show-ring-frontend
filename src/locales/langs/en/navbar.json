@@ -6,8 +6,8 @@
   "invoice": "Invoice",
   "blog": { "title": "Blog", "caption": "Custom keyboard shortcuts." },
   "subheader": "Sub header",
-  "showtail": {
-    "subheader": "ShowTail",
+  "show_ring": {
+    "subheader": "Show Ring",
     "dogs": "Dogs",
     "kennels": "Kennels",
     "litters": "Litters",

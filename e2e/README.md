@@ -1,6 +1,6 @@
 # E2E (Playwright)
 
-End-to-end тесты против **реального бэкенда ShowTail** (FastAPI :8000) и фронт
+End-to-end тесты против **реального бэкенда Show Ring** (FastAPI :8000) и фронт
 dev-сервера (:8082). Запуск:
 
 ```bash

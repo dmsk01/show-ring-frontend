@@ -1,4 +1,4 @@
-// Запись собаки на выставку (ShowTail: /shows/{id}/entries).
+// Запись собаки на выставку (Show Ring: /shows/{id}/entries).
 
 export type IShowEntry = {
   id: string;

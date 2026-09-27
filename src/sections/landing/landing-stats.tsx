@@ -58,7 +58,7 @@ export function LandingStats() {
                   lineHeight: 1.1,
                 }}
               />
-              <Typography sx={{ mt: 1, color: 'text.secondary', fontWeight: 500 }}>
+              <Typography sx={{ mt: 1, color: 'text.secondary', fontWeight: 'fontWeightMedium' }}>
                 {item.label}
               </Typography>
             </Box>

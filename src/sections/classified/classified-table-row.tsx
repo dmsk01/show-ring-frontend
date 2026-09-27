@@ -20,6 +20,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
+import { STATUS_TONE } from 'src/theme/semantic';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -40,10 +41,10 @@ import {
 // ----------------------------------------------------------------------
 
 const STATUS_COLOR: Record<ClassifiedStatus, LabelColor> = {
-  active: 'success',
-  moderation: 'warning',
-  closed: 'default',
-  archived: 'default',
+  active: STATUS_TONE.active,
+  moderation: STATUS_TONE.pending,
+  closed: STATUS_TONE.neutral,
+  archived: STATUS_TONE.neutral,
 };
 
 type Props = {
@@ -73,11 +74,22 @@ export function ClassifiedTableRow({ row, editHref, onDeleteRow, onChangeAvailab
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <Avatar
               variant="rounded"
-              src={row.images?.find((i) => i.is_primary) ? fileUrl(row.images.find((i) => i.is_primary)!.file_id) : row.images?.[0] ? fileUrl(row.images[0].file_id) : undefined}
+              src={
+                row.images?.find((i) => i.is_primary)
+                  ? fileUrl(row.images.find((i) => i.is_primary)!.file_id)
+                  : row.images?.[0]
+                    ? fileUrl(row.images[0].file_id)
+                    : undefined
+              }
               alt={row.title}
               sx={{ width: 48, height: 48 }}
             />
-            <Link component={RouterLink} href={editHref} color="inherit" sx={{ fontWeight: 600 }}>
+            <Link
+              component={RouterLink}
+              href={editHref}
+              color="inherit"
+              sx={{ fontWeight: 'fontWeightSemiBold' }}
+            >
               {row.title}
             </Link>
           </Box>
@@ -102,7 +114,11 @@ export function ClassifiedTableRow({ row, editHref, onDeleteRow, onChangeAvailab
         </TableCell>
       </TableRow>
 
-      <CustomPopover open={menuActions.open} anchorEl={menuActions.anchorEl} onClose={menuActions.onClose}>
+      <CustomPopover
+        open={menuActions.open}
+        anchorEl={menuActions.anchorEl}
+        onClose={menuActions.onClose}
+      >
         <MenuList>
           {/* Quick availability change — PUT with a single field, no need to open the form. */}
           {ANIMAL_AVAILABILITIES.map((value) => (

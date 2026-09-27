@@ -18,6 +18,7 @@ import CardHeader from '@mui/material/CardHeader';
 import { paths } from 'src/routes/paths';
 
 import { useTranslate } from 'src/locales';
+import { STATUS_TONE } from 'src/theme/semantic';
 import { useGetBreeds } from 'src/actions/reference';
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
@@ -38,7 +39,11 @@ import { EVENT_TYPES, NOTIFICATION_CHANNELS } from 'src/types/notification';
 
 // ----------------------------------------------------------------------
 
-const STATUS_COLOR = { pending: 'warning', sent: 'success', failed: 'error' } as const;
+const STATUS_COLOR = {
+  pending: STATUS_TONE.pending,
+  sent: STATUS_TONE.active,
+  failed: STATUS_TONE.danger,
+} as const;
 
 export function NotificationsView() {
   const { t } = useTranslate(['notification', 'common']);
@@ -243,11 +248,15 @@ export function NotificationsView() {
                     }}
                   />
                   <Stack sx={{ flex: 1 }}>
-                    <Typography variant="subtitle2" sx={{ fontWeight: n.is_read ? 400 : 600 }}>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ fontWeight: n.is_read ? 'fontWeightRegular' : 'fontWeightSemiBold' }}
+                    >
                       {n.subject}
                     </Typography>
                     <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                      {t(`notification:enums.eventType.${n.event_type}`)} · {n.created_at?.slice(0, 16).replace('T', ' ')}
+                      {t(`notification:enums.eventType.${n.event_type}`)} ·{' '}
+                      {n.created_at?.slice(0, 16).replace('T', ' ')}
                     </Typography>
                   </Stack>
                   <Label color="default">{t(`notification:enums.channel.${n.channel}`)}</Label>

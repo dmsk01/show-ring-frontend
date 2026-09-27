@@ -2,6 +2,7 @@
 
 import type { CardProps } from '@mui/material/Card';
 import type { IDogItem } from 'src/types/dog';
+import type { IconifyName } from 'src/components/iconify';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -13,9 +14,10 @@ import { fDate } from 'src/utils/format-time';
 
 import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
+import { SEX_COLOR } from 'src/theme/semantic';
 
 import { Image } from 'src/components/image';
-import { Iconify } from 'src/components/iconify';
+import { MetaRow } from 'src/components/meta-row';
 import { CardLink, cardActionableSx } from 'src/components/card-link';
 
 import { dogPlaceholderImage } from './dog-utils';
@@ -31,22 +33,15 @@ export function DogCard({ dog, breedName, sx, ...other }: Props) {
   const { t } = useTranslate(['dog', 'common']);
   const detailsHref = paths.showcase.dog(dog.id);
 
-  const info = [
+  const info: { icon: IconifyName; iconColor?: string; label: string }[] = [
+    { icon: 'solar:bone-bold-duotone', label: breedName ?? '—' },
     {
-      icon: <Iconify icon="solar:bone-bold-duotone" sx={{ color: 'info.main' }} />,
-      label: breedName ?? '—',
-    },
-    {
-      icon: (
-        <Iconify
-          icon={dog.sex === 'female' ? 'solar:women-bold' : 'solar:men-bold'}
-          sx={{ color: 'primary.main' }}
-        />
-      ),
+      icon: dog.sex === 'female' ? 'solar:women-bold' : 'solar:men-bold',
+      iconColor: `${SEX_COLOR[dog.sex]}.main`,
       label: dog.sex === 'female' ? t('enums.sex.female') : t('enums.sex.male'),
     },
     {
-      icon: <Iconify icon="solar:calendar-date-bold" sx={{ color: 'warning.main' }} />,
+      icon: 'solar:calendar-date-bold',
       label: dog.date_of_birth ? fDate(dog.date_of_birth) : '—',
     },
   ];
@@ -82,13 +77,9 @@ export function DogCard({ dog, breedName, sx, ...other }: Props) {
         }}
       >
         {info.map((item) => (
-          <Box
-            key={item.label}
-            sx={{ gap: 0.5, display: 'flex', alignItems: 'center', mr: 1.5 }}
-          >
-            {item.icon}
+          <MetaRow key={item.label} icon={item.icon} iconColor={item.iconColor} sx={{ mr: 1.5 }}>
             {item.label}
-          </Box>
+          </MetaRow>
         ))}
       </Box>
     </Card>

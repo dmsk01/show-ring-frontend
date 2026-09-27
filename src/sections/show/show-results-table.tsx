@@ -22,9 +22,7 @@ import { Label } from 'src/components/label';
 import { Scrollbar } from 'src/components/scrollbar';
 import { useTable, TableNoData, TableHeadCustom } from 'src/components/table';
 
-import {
-  SHOW_AWARD_FLAGS,
-} from './show-utils';
+import { SHOW_AWARD_FLAGS } from './show-utils';
 import {
   sortRows,
   groupRows,
@@ -118,7 +116,7 @@ export function ShowResultsTable({
                 {sortRows(group.rows, orderBy, order).map((row) => (
                   <TableRow key={row.entryId} hover>
                     <TableCell>{row.catalogNumber ?? '—'}</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>{row.dogName}</TableCell>
+                    <TableCell sx={{ fontWeight: 'fontWeightSemiBold' }}>{row.dogName}</TableCell>
                     <TableCell>{row.breedName}</TableCell>
                     <TableCell>{row.kennelName}</TableCell>
                     <TableCell>{row.className}</TableCell>

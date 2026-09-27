@@ -10,17 +10,18 @@ import TableCell from '@mui/material/TableCell';
 import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
+import { STATUS_TONE } from 'src/theme/semantic';
 
 import { Label } from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
 const STATUS_COLOR: Record<CampaignStatus, LabelColor> = {
-  draft: 'default',
-  active: 'success',
-  paused: 'warning',
-  completed: 'info',
-  cancelled: 'error',
+  draft: STATUS_TONE.neutral,
+  active: STATUS_TONE.active,
+  paused: STATUS_TONE.pending,
+  completed: STATUS_TONE.neutral,
+  cancelled: STATUS_TONE.danger,
 };
 
 type Props = {
@@ -34,7 +35,12 @@ export function CampaignTableRow({ row, editHref }: Props) {
   return (
     <TableRow hover>
       <TableCell>
-        <Link component={RouterLink} href={editHref} color="inherit" sx={{ fontWeight: 600 }}>
+        <Link
+          component={RouterLink}
+          href={editHref}
+          color="inherit"
+          sx={{ fontWeight: 'fontWeightSemiBold' }}
+        >
           {row.name}
         </Link>
       </TableCell>

@@ -54,25 +54,38 @@ function ClassifiedsModeration() {
             { id: 'title', label: t('moderation.classifieds.columns.title') },
             { id: 'category', label: t('moderation.classifieds.columns.category'), width: 160 },
             { id: 'status', label: t('moderation.classifieds.columns.status'), width: 140 },
-            { id: '', label: t('moderation.classifieds.columns.decision'), width: 200, align: 'right' },
+            {
+              id: '',
+              label: t('moderation.classifieds.columns.decision'),
+              width: 200,
+              align: 'right',
+            },
           ]}
         />
         <TableBody>
           {items.map((row) => (
             <TableRow key={row.id} hover>
-              <TableCell sx={{ fontWeight: 600 }}>{row.title}</TableCell>
-              <TableCell>
-                {t(`moderation.enums.category.${row.category}`)}
-              </TableCell>
+              <TableCell sx={{ fontWeight: 'fontWeightSemiBold' }}>{row.title}</TableCell>
+              <TableCell>{t(`moderation.enums.category.${row.category}`)}</TableCell>
               <TableCell>
                 <Label color="warning">{t(`moderation.enums.status.${row.status}`)}</Label>
               </TableCell>
               <TableCell align="right">
                 <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
-                  <Button size="small" color="success" variant="soft" onClick={() => decide(row.id, true)}>
+                  <Button
+                    size="small"
+                    color="success"
+                    variant="soft"
+                    onClick={() => decide(row.id, true)}
+                  >
                     {t('moderation.classifieds.actions.approve')}
                   </Button>
-                  <Button size="small" color="error" variant="soft" onClick={() => decide(row.id, false)}>
+                  <Button
+                    size="small"
+                    color="error"
+                    variant="soft"
+                    onClick={() => decide(row.id, false)}
+                  >
                     {t('moderation.classifieds.actions.reject')}
                   </Button>
                 </Stack>
@@ -106,13 +119,18 @@ function KennelsModeration() {
           headCells={[
             { id: 'name', label: t('moderation.kennels.columns.name') },
             { id: 'prefix', label: t('moderation.kennels.columns.prefix'), width: 200 },
-            { id: 'verified', label: t('moderation.kennels.columns.verified'), width: 120, align: 'right' },
+            {
+              id: 'verified',
+              label: t('moderation.kennels.columns.verified'),
+              width: 120,
+              align: 'right',
+            },
           ]}
         />
         <TableBody>
           {items.map((row) => (
             <TableRow key={row.id} hover>
-              <TableCell sx={{ fontWeight: 600 }}>{row.name}</TableCell>
+              <TableCell sx={{ fontWeight: 'fontWeightSemiBold' }}>{row.name}</TableCell>
               <TableCell>{row.kennel_prefix ?? '—'}</TableCell>
               <TableCell align="right">
                 <Switch

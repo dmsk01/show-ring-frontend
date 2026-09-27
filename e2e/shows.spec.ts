@@ -75,8 +75,17 @@ test.describe.serial('Shows full lifecycle', () => {
   // Публичный /shows скрывает черновики (classifyShow: draft → null), поэтому
   // переход из списка проверяем уже после смены статуса на registration_open.
   test('navigate from list to edit (404 regression)', async ({ page }) => {
+    // Список грузится клиентским SWR-запросом: раз он ушёл — страница
+    // гидратирована. Ввод до гидратации React сбрасывает, фильтр не срабатывает.
+    const listLoaded = page.waitForResponse(
+      (r) => /\/api\/shows\?/.test(r.url()) && r.request().method() === 'GET'
+    );
     await page.goto('/shows');
-    await page.getByPlaceholder(t('show', 'list.filters.city')).fill(showCity);
+    await listLoaded;
+
+    const cityFilter = page.getByPlaceholder(t('show', 'list.filters.city'));
+    await cityFilter.fill(showCity);
+    await expect(cityFilter).toHaveValue(showCity);
 
     const cardLink = page.getByRole('link', { name: showName });
     await expect(cardLink).toBeVisible();

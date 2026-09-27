@@ -1,10 +1,10 @@
 import type { SWRConfiguration } from 'swr';
 import type { IPostItem, IPostComment } from 'src/types/blog';
 
-import useSWR from 'swr';
 import { useMemo } from 'react';
+import useSWR, { mutate } from 'swr';
 
-import { fetcher, endpoints } from 'src/lib/axios';
+import axios, { fetcher, endpoints } from 'src/lib/axios';
 
 // ----------------------------------------------------------------------
 
@@ -49,6 +49,20 @@ type ApiPost = ApiPostCard & {
   meta_keywords?: string[];
   comments?: IPostComment[];
   favorite_person?: { name: string; avatarUrl: string }[];
+};
+
+// Write payload (POST /posts, PUT /posts/{id}). PUT is partial — omit a
+// field to leave it untouched (backend uses exclude_unset).
+export type IPostWritePayload = {
+  title: string;
+  description: string;
+  content: string;
+  cover_url: string | null;
+  tags: string[];
+  meta_keywords: string[];
+  meta_title: string | null;
+  meta_description: string | null;
+  publish: 'published' | 'draft';
 };
 
 type ApiPostPage = {
@@ -170,4 +184,33 @@ export function useSearchPosts(query: string) {
       searchEmpty: !isLoading && !isValidating && !searchResults.length,
     };
   }, [data, error, isLoading, isValidating]);
+}
+
+// ----------------------------------------------------------------------
+// Mutations (admin/organizer). Revalidate every cached list (keys are
+// [endpoints.post.list, {params}] — plain list and search) and the detail.
+
+const revalidateLists = () => mutate((key) => Array.isArray(key) && key[0] === endpoints.post.list);
+
+export async function createPost(payload: IPostWritePayload): Promise<IPostItem> {
+  const res = await axios.post<ApiPost>(endpoints.post.list, payload);
+  await revalidateLists();
+  return mapPostFromApi(res.data);
+}
+
+export async function updatePost(
+  postId: string,
+  payload: Partial<IPostWritePayload>,
+  // slug before the update: the detail is cached by slug, and a title
+  // change regenerates it — the old key must be revalidated too.
+  prevSlug?: string
+): Promise<IPostItem> {
+  const res = await axios.put<ApiPost>(endpoints.post.update(postId), payload);
+  const post = mapPostFromApi(res.data);
+  if (prevSlug && prevSlug !== post.slug) {
+    await mutate(endpoints.post.details(prevSlug), undefined, { revalidate: false });
+  }
+  await mutate(endpoints.post.details(post.slug), res.data, { revalidate: false });
+  await revalidateLists();
+  return post;
 }

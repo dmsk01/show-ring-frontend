@@ -278,6 +278,8 @@ export const endpoints = {
     list: '/posts',
     details: (slug: string) => `/posts/${slug}`,
     related: (slug: string) => `/posts/${slug}/related`,
+    // Writes are keyed by id (PUT/DELETE /posts/{post_id}), reads by slug.
+    update: (id: string) => `/posts/${id}`,
   },
   product: {
     list: '/api/product/list',

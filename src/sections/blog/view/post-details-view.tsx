@@ -18,10 +18,11 @@ import { paths } from 'src/routes/paths';
 import { fShortenNumber } from 'src/utils/format-number';
 
 import { useTranslate } from 'src/locales';
-import { useGetPost } from 'src/actions/blog';
 import { POST_PUBLISH_OPTIONS } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useGetPost, updatePost } from 'src/actions/blog';
 
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 
@@ -42,9 +43,21 @@ export function PostDetailsView({ title }: Props) {
 
   const [publish, setPublish] = useState('');
 
-  const handleChangePublish = useCallback((newValue: string) => {
-    setPublish(newValue);
-  }, []);
+  const handleChangePublish = useCallback(
+    async (newValue: string) => {
+      if (!post || newValue === post.publish) return;
+      // Optimistic: flip the toolbar right away, roll back if the PUT fails.
+      setPublish(newValue);
+      try {
+        await updatePost(post.id, { publish: newValue as 'published' | 'draft' });
+        toast.success(newValue === 'published' ? t('toast.published') : t('toast.draftSaved'));
+      } catch (error) {
+        setPublish(post.publish);
+        toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      }
+    },
+    [post, t]
+  );
 
   useEffect(() => {
     if (post) {

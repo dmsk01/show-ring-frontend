@@ -43,7 +43,6 @@
       "metaDescription": "Meta description",
       "metaKeywords": "Meta keywords",
       "metaKeywordsPlaceholder": "+ Keywords",
-      "enableComments": "Enable comments",
       "publish": "Publish"
     },
     "validation": {
@@ -83,6 +82,8 @@
   },
   "toast": {
     "created": "Create success!",
-    "updated": "Update success!"
+    "updated": "Update success!",
+    "published": "Post is now live",
+    "draftSaved": "Draft saved — not visible on the site"
   }
 }

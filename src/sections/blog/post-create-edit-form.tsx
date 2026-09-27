@@ -13,19 +13,19 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
-import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { _tags } from 'src/_mock';
 import { useTranslate } from 'src/locales';
+import { fileUrl, uploadFile } from 'src/actions/file';
+import { createPost, updatePost } from 'src/actions/blog';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
@@ -41,11 +41,19 @@ export const getPostSchema = (t: TFunction) =>
     description: z.string().min(1, { error: t('form.validation.descriptionRequired') }),
     content: schemaUtils.editor().min(100, { error: t('form.validation.contentMin') }),
     coverUrl: schemaUtils.file({ error: t('form.validation.coverRequired') }),
-    tags: z.string().array().min(2, { error: t('form.validation.tagsMin') }),
-    metaKeywords: z.string().array().min(1, { error: t('form.validation.metaKeywordsRequired') }),
+    tags: z
+      .string()
+      .array()
+      .min(2, { error: t('form.validation.tagsMin') }),
+    metaKeywords: z
+      .string()
+      .array()
+      .min(1, { error: t('form.validation.metaKeywordsRequired') }),
     // Not required
     metaTitle: z.string(),
     metaDescription: z.string(),
+    // true → published, false → draft (hidden from the public site).
+    publish: z.boolean(),
   });
 
 export type PostCreateSchemaType = z.infer<ReturnType<typeof getPostSchema>>;
@@ -75,13 +83,31 @@ export function PostCreateEditForm({ currentPost }: Props) {
     metaKeywords: [],
     metaTitle: '',
     metaDescription: '',
+    publish: true,
   };
+
+  // IPostItem keeps publish as 'published' | 'draft'; the form works with a boolean.
+  const currentValues = useMemo<PostCreateSchemaType | undefined>(
+    () =>
+      currentPost && {
+        title: currentPost.title,
+        description: currentPost.description,
+        content: currentPost.content,
+        coverUrl: currentPost.coverUrl || null,
+        tags: currentPost.tags,
+        metaKeywords: currentPost.metaKeywords,
+        metaTitle: currentPost.metaTitle,
+        metaDescription: currentPost.metaDescription,
+        publish: currentPost.publish === 'published',
+      },
+    [currentPost]
+  );
 
   const methods = useForm({
     mode: 'all',
     resolver: zodResolver(schema),
     defaultValues,
-    values: currentPost,
+    values: currentValues,
   });
 
   const {
@@ -96,14 +122,42 @@ export function PostCreateEditForm({ currentPost }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // A freshly picked cover is a File — upload it first; the backend stores
+      // the public URL string (Post.cover_url), not a file id.
+      const coverUrl =
+        data.coverUrl instanceof File
+          ? fileUrl((await uploadFile(data.coverUrl)).id)
+          : data.coverUrl;
+
+      const payload = {
+        title: data.title,
+        description: data.description,
+        content: data.content,
+        cover_url: coverUrl || null,
+        tags: data.tags,
+        meta_keywords: data.metaKeywords,
+        meta_title: data.metaTitle || null,
+        meta_description: data.metaDescription || null,
+        publish: data.publish ? ('published' as const) : ('draft' as const),
+      };
+
+      if (currentPost) {
+        await updatePost(currentPost.id, payload, currentPost.slug);
+      } else {
+        await createPost(payload);
+      }
+
       reset();
       showPreview.onFalse();
-      toast.success(currentPost ? t('toast.updated') : t('toast.created'));
+      if (!data.publish) {
+        toast.success(t('toast.draftSaved'));
+      } else {
+        toast.success(currentPost ? t('toast.updated') : t('toast.created'));
+      }
       router.push(paths.dashboard.post.root);
-      console.info('DATA', data);
     } catch (error) {
       console.error(error);
+      toast.error(error instanceof Error ? error.message : t('common:state.error'));
     }
   });
 
@@ -198,11 +252,6 @@ export function PostCreateEditForm({ currentPost }: Props) {
               chip: { color: 'info' },
             }}
           />
-
-          <FormControlLabel
-            label={t('form.properties.enableComments')}
-            control={<Switch defaultChecked slotProps={{ input: { id: 'comments-switch' } }} />}
-          />
         </Stack>
       </Collapse>
     </Card>
@@ -217,10 +266,10 @@ export function PostCreateEditForm({ currentPost }: Props) {
         justifyContent: 'flex-end',
       }}
     >
-      <FormControlLabel
+      <Field.Switch
+        name="publish"
         label={t('form.properties.publish')}
-        control={<Switch defaultChecked slotProps={{ input: { id: 'publish-switch' } }} />}
-        sx={{ pl: 3, flexGrow: 1 }}
+        slotProps={{ wrapper: { sx: { pl: 3, flexGrow: 1 } } }}
       />
 
       <div>

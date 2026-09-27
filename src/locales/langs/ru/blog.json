@@ -43,7 +43,6 @@
       "metaDescription": "Мета-описание",
       "metaKeywords": "Мета-ключевые слова",
       "metaKeywordsPlaceholder": "+ Ключевые слова",
-      "enableComments": "Разрешить комментарии",
       "publish": "Опубликовать"
     },
     "validation": {
@@ -83,6 +82,8 @@
   },
   "toast": {
     "created": "Публикация создана!",
-    "updated": "Изменения сохранены!"
+    "updated": "Изменения сохранены!",
+    "published": "Пост опубликован на сайте",
+    "draftSaved": "Черновик сохранён — на сайте не виден"
   }
 }

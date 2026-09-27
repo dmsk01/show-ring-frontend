@@ -15,6 +15,9 @@ const stamp = Date.now();
 const showName = `E2E Show ${stamp}`;
 const showCity = `E2E-City-${stamp}`;
 
+// Дата в будущем: публичный /shows по умолчанию показывает вкладку «Планируемые».
+const dateStart = new Date(Date.now() + 90 * 24 * 3600 * 1000).toISOString().slice(0, 10);
+
 let showId = '';
 
 test.describe.serial('Shows full lifecycle', () => {
@@ -27,7 +30,7 @@ test.describe.serial('Shows full lifecycle', () => {
     await page.getByRole('combobox', { name: t('show', 'form.fields.rank') }).click();
     await page.getByRole('option').filter({ hasNotText: '—' }).first().click();
 
-    await page.getByLabel(t('show', 'form.fields.dateStart')).fill('2026-09-01');
+    await page.getByLabel(t('show', 'form.fields.dateStart')).fill(dateStart);
     await page.getByLabel(t('show', 'form.fields.city')).fill(showCity);
 
     const createResp = page.waitForResponse(
@@ -42,21 +45,8 @@ test.describe.serial('Shows full lifecycle', () => {
     expect(showId).toBeTruthy();
 
     await expect(page.getByText(t('show', 'toast.created'))).toBeVisible();
-    await page.waitForURL('**/dashboard/shows');
-  });
-
-  test('navigate from list to edit (404 regression)', async ({ page }) => {
-    await page.goto('/dashboard/shows');
-    await page.getByPlaceholder(t('show', 'list.filters.city')).fill(showCity);
-
-    const rowLink = page.getByRole('link', { name: showName });
-    await expect(rowLink).toBeVisible();
-    await rowLink.click();
-
-    await page.waitForURL(`**/dashboard/shows/${showId}/edit`);
-    await expect(
-      page.getByRole('button', { name: t('show', 'form.submitUpdate') })
-    ).toBeVisible();
+    // Дашборд-список выставок удалён (fb01f08) — после сохранения редирект на публичный /shows.
+    await page.waitForURL((url) => url.pathname === '/shows');
   });
 
   test('edit show fields', async ({ page }) => {
@@ -80,6 +70,26 @@ test.describe.serial('Shows full lifecycle', () => {
       .click();
 
     await expect(page.getByText(t('show', 'toast.statusUpdated'))).toBeVisible();
+  });
+
+  // Публичный /shows скрывает черновики (classifyShow: draft → null), поэтому
+  // переход из списка проверяем уже после смены статуса на registration_open.
+  test('navigate from list to edit (404 regression)', async ({ page }) => {
+    await page.goto('/shows');
+    await page.getByPlaceholder(t('show', 'list.filters.city')).fill(showCity);
+
+    const cardLink = page.getByRole('link', { name: showName });
+    await expect(cardLink).toBeVisible();
+    await cardLink.click();
+
+    // Карточка ведёт на публичную страницу выставки, оттуда — «Редактировать».
+    await page.waitForURL(`**/shows/${showId}`);
+    await page.getByRole('link', { name: t('show', 'form.actions.edit') }).click();
+
+    await page.waitForURL(`**/dashboard/shows/${showId}/edit`);
+    await expect(
+      page.getByRole('button', { name: t('show', 'form.submitUpdate') })
+    ).toBeVisible();
   });
 
   test('publish show (soft assert)', async ({ page }) => {

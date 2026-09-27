@@ -70,7 +70,8 @@ test.describe.serial('Show entry — register a dog and manage the entry', () =>
     expect(resp.ok()).toBeTruthy();
     showId = (await resp.json()).id;
     expect(showId).toBeTruthy();
-    await page.waitForURL('**/dashboard/shows');
+    // Дашборд-список выставок удалён (fb01f08) — после сохранения редирект на публичный /shows.
+    await page.waitForURL((url) => url.pathname === '/shows');
 
     // Открываем регистрацию (запись разрешена только при status=registration_open).
     await page.goto(`/dashboard/shows/${showId}/edit`);

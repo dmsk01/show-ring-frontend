@@ -64,7 +64,8 @@ test.describe.serial('Show results entry (organizer)', () => {
     expect(r.ok()).toBeTruthy();
     showId = (await r.json()).id;
     expect(showId).toBeTruthy();
-    await page.waitForURL('**/dashboard/shows');
+    // Дашборд-список выставок удалён (fb01f08) — после сохранения редирект на публичный /shows.
+    await page.waitForURL((url) => url.pathname === '/shows');
 
     // Открыть регистрацию (ждём ответ PUT …/status, не транзиентный тост).
     await page.goto(`/dashboard/shows/${showId}/edit`);

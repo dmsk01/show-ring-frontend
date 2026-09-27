@@ -17,7 +17,8 @@ import { t } from './i18n';
 
 const SHOWS_NEW = '/dashboard/shows/new';
 const KENNELS_NEW = '/dashboard/kennels/new';
-const SHOWS_LIST = '/dashboard/shows';
+// Канонический список выставок — публичный /shows (дашборд-список удалён в fb01f08).
+const SHOWS_LIST = '/shows';
 const DOGS_LIST = '/dashboard/dogs';
 
 const roleState = (role: string) => `e2e/.auth/${role}.json`;

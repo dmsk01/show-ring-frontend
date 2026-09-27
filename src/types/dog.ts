@@ -80,6 +80,32 @@ export type IPedigreeNode = {
   mother: IPedigreeNode | null;
 };
 
+/**
+ * Родственник в списках «Потомки»/«Сибсы». Бэкенд выводит родство из
+ * father_id/mother_id — отдельно оно не хранится.
+ */
+export type IDogRelative = {
+  id: string;
+  name: string;
+  sex: DogSex;
+  date_of_birth: string | null;
+  breed_id: string;
+  rkf_number: string | null;
+  owner_id: string | null;
+  avatar_file_id: string | null;
+};
+
+export type IDogDescendant = IDogRelative & {
+  /** Второй родитель потомка (мать для отца и наоборот); null — неизвестен. */
+  other_parent: IDogRef | null;
+};
+
+export type IDogSibling = IDogRelative & {
+  /** full — оба родителя общие, half — один (какой — в shared_parent). */
+  kind: 'full' | 'half';
+  shared_parent: 'father' | 'mother' | 'both';
+};
+
 export type IDogTableFilters = {
   search: string;
   breed_id: string;

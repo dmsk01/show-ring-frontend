@@ -65,7 +65,9 @@
     "kennel": "Kennel",
     "father": "Father",
     "mother": "Mother",
-    "noAccess": "You don't have access to edit this dog."
+    "noAccess": "You don't have access to edit this dog.",
+    "tattoo": "Tattoo",
+    "relatives": "Relatives"
   },
   "pedigree": {
     "sire": "Sire",
@@ -76,6 +78,45 @@
     "empty": "You don't have any dogs yet",
     "error": "Failed to load dogs",
     "add": "Add dog"
+  },
+  "relatives": {
+    "descendants": "Descendants",
+    "siblings": "Siblings",
+    "noDescendants": "No descendants yet.",
+    "noSiblings": "No siblings.",
+    "noSiblingsNoParents": "Parents are not set — siblings are found through shared parents.",
+    "withMother": "dam:",
+    "withFather": "sire:",
+    "full": "Full sibling",
+    "half": {
+      "father": "Half sibling (sire)",
+      "mother": "Half sibling (dam)",
+      "both": "Full sibling"
+    },
+    "addDescendant": "Add descendant",
+    "removeDescendant": "Remove from descendants",
+    "addHintFather": "\"{{name}}\" will be set as the sire of the selected dog.",
+    "addHintMother": "\"{{name}}\" will be set as the dam of the selected dog.",
+    "pickDog": "Dog",
+    "noOptions": "No dogs found",
+    "optionNoAccess": "no access to this dog",
+    "optionHasFather": "sire already set",
+    "optionHasMother": "dam already set",
+    "add": "Add",
+    "cancel": "Cancel",
+    "removeTitle": "Remove from descendants?",
+    "removeContent": "\"{{parent}}\" will be cleared as a parent of \"{{child}}\". The dog itself is not deleted.",
+    "removeConfirm": "Remove",
+    "toast": {
+      "added": "Descendant added",
+      "removed": "Descendant removed"
+    },
+    "errors": {
+      "parent_already_set": "This dog already has another parent set. Change it on the dog's page.",
+      "pedigree_cycle": "Not allowed: this dog is an ancestor of the current one — the pedigree would loop.",
+      "self_parent_forbidden": "A dog cannot be its own descendant.",
+      "forbidden": "You have no rights to change this dog."
+    }
   },
   "enums": { "sex": { "male": "Male", "female": "Female" } },
   "toast": { "created": "Create success!", "updated": "Update success!", "photoDeleted": "Photo deleted" }

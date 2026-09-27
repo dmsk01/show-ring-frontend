@@ -30,6 +30,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { useAuthContext } from 'src/auth/hooks';
 
 import { PedigreeTree } from '../pedigree-tree';
+import { DogSiblings, DogDescendants } from '../dog-relatives';
 import { canManageDog, dogPlaceholderImage } from '../dog-utils';
 
 // ----------------------------------------------------------------------
@@ -87,6 +88,7 @@ export function DogDetailView({ id }: Props) {
         <Tab value="info" label={t('detail.info')} />
         <Tab value="titles" label={`${t('detail.titles')} (${titles.length})`} />
         <Tab value="pedigree" label={t('detail.pedigree')} />
+        <Tab value="relatives" label={t('detail.relatives')} />
       </Tabs>
 
       {tab === 'info' && (
@@ -164,6 +166,7 @@ export function DogDetailView({ id }: Props) {
               <Typography variant="body2">{t('detail.rkfNumber')}: {dog.rkf_number ?? '—'}</Typography>
               <Typography variant="body2">{t('detail.born')}: {dog.date_of_birth ?? '—'}</Typography>
               <Typography variant="body2">{t('detail.color')}: {dog.color ?? '—'}</Typography>
+              <Typography variant="body2">{t('detail.tattoo')}: {dog.tattoo ?? '—'}</Typography>
               <Typography variant="body2">{t('detail.microchip')}: {dog.microchip ?? '—'}</Typography>
               <Typography variant="body2">{t('detail.description')}: {dog.description ?? '—'}</Typography>
             </Stack>
@@ -199,6 +202,17 @@ export function DogDetailView({ id }: Props) {
             </Typography>
           )}
         </Card>
+      )}
+
+      {tab === 'relatives' && (
+        <Stack spacing={3}>
+          <Card sx={{ p: 3 }}>
+            <DogDescendants dog={dog} hrefFor={paths.dashboard.dogs.details} editable />
+          </Card>
+          <Card sx={{ p: 3 }}>
+            <DogSiblings dog={dog} hrefFor={paths.dashboard.dogs.details} />
+          </Card>
+        </Stack>
       )}
     </DashboardContent>
   );

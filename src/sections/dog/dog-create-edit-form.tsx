@@ -226,6 +226,9 @@ export function DogCreateEditForm({ currentDog }: Props) {
       console.error(error);
       if (error instanceof UploadError) {
         toast.error(uploadErrorMessage(error));
+      } else if (error instanceof Error && error.message === 'pedigree_cycle') {
+        // Выбранный отец/мать — потомок этой собаки: родословная замкнулась бы.
+        toast.error(t('relatives.errors.pedigree_cycle'));
       } else {
         toast.error(error instanceof Error ? error.message : t('common:state.error'));
       }

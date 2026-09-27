@@ -27,6 +27,7 @@ import { Lightbox, useLightbox } from 'src/components/lightbox';
 
 import { PedigreeTree } from '../pedigree-tree';
 import { dogPlaceholderImage } from '../dog-utils';
+import { DogSiblings, DogDescendants } from '../dog-relatives';
 
 // ----------------------------------------------------------------------
 
@@ -64,6 +65,7 @@ export function DogPublicDetailView({ id }: Props) {
     { label: t('detail.born'), value: dog.date_of_birth ? fDate(dog.date_of_birth) : '—' },
     { label: t('detail.color'), value: dog.color ?? '—' },
     { label: t('detail.rkfNumber'), value: dog.rkf_number ?? '—' },
+    { label: t('detail.tattoo'), value: dog.tattoo ?? '—' },
     { label: t('detail.microchip'), value: dog.microchip ?? '—' },
   ];
 
@@ -225,6 +227,12 @@ export function DogPublicDetailView({ id }: Props) {
             </Typography>
           )}
         </Card>
+
+        <Divider sx={{ borderStyle: 'dashed', my: 4 }} />
+        <DogDescendants dog={dog} hrefFor={paths.showcase.dog} />
+
+        <Divider sx={{ borderStyle: 'dashed', my: 4 }} />
+        <DogSiblings dog={dog} hrefFor={paths.showcase.dog} />
       </Box>
     </Container>
   );

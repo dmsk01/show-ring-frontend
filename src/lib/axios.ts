@@ -177,6 +177,9 @@ export const endpoints = {
     titles: (id: string) => `/dogs/${id}/titles`,
     images: (id: string) => `/dogs/${id}/images`,
     image: (id: string, fileId: string) => `/dogs/${id}/images/${fileId}`,
+    descendants: (id: string) => `/dogs/${id}/descendants`,
+    descendant: (id: string, childId: string) => `/dogs/${id}/descendants/${childId}`,
+    siblings: (id: string) => `/dogs/${id}/siblings`,
   },
   kennel: {
     list: '/kennels',

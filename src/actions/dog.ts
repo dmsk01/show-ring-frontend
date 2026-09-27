@@ -5,7 +5,9 @@ import type {
   IDogTitle,
   IDogCreate,
   IDogUpdate,
+  IDogSibling,
   IPedigreeNode,
+  IDogDescendant,
   IDogImageCreate,
 } from 'src/types/dog';
 
@@ -123,6 +125,65 @@ export function useGetDogPedigree(dogId?: string) {
 
 // ----------------------------------------------------------------------
 
+/** Прямые потомки собаки (выводятся из father_id/mother_id на бэкенде). */
+export function useGetDogDescendants(dogId?: string) {
+  const key = dogId ? endpoints.dog.descendants(dogId) : null;
+
+  const { data, isLoading, error } = useSWR<IDogDescendant[]>(key, fetcher, swrOptions);
+
+  return useMemo(
+    () => ({ descendants: data ?? [], descendantsLoading: isLoading, descendantsError: error }),
+    [data, error, isLoading]
+  );
+}
+
+/** Сибсы собаки: полнородные (оба родителя общие) и полукровные. */
+export function useGetDogSiblings(dogId?: string) {
+  const key = dogId ? endpoints.dog.siblings(dogId) : null;
+
+  const { data, isLoading, error } = useSWR<IDogSibling[]>(key, fetcher, swrOptions);
+
+  return useMemo(
+    () => ({ siblings: data ?? [], siblingsLoading: isLoading, siblingsError: error }),
+    [data, error, isLoading]
+  );
+}
+
+// ----------------------------------------------------------------------
+
+/**
+ * Смена родителя у собаки меняет родство сразу у многих карточек (потомки
+ * родителя, сибсы потомка и его новых/бывших братьев) — точечно их не
+ * вычислить, поэтому сбрасываем все кэши потомков/сибсов/родословных.
+ */
+async function mutateDogRelatives() {
+  await mutate(
+    (key) =>
+      typeof key === 'string' &&
+      key.startsWith('/dogs/') &&
+      /\/(descendants|siblings|pedigree)$/.test(key)
+  );
+}
+
+/** Сделать существующую собаку потомком: бэкенд ставит её father_id/mother_id. */
+export async function addDogDescendant(dogId: string, childId: string): Promise<IDogDescendant> {
+  const res = await axios.post<IDogDescendant>(endpoints.dog.descendants(dogId), {
+    child_id: childId,
+  });
+  await mutate(endpoints.dog.details(childId));
+  await mutateDogRelatives();
+  return res.data;
+}
+
+/** Убрать потомка: очищает у него ссылку на эту собаку (сам потомок остаётся). */
+export async function removeDogDescendant(dogId: string, childId: string): Promise<void> {
+  await axios.delete(endpoints.dog.descendant(dogId, childId));
+  await mutate(endpoints.dog.details(childId));
+  await mutateDogRelatives();
+}
+
+// ----------------------------------------------------------------------
+
 /** Инвалидация списочных SWR-кэшей собак: общий каталог + «Мои собаки». */
 async function mutateDogLists() {
   await mutate(
@@ -141,6 +202,7 @@ export async function updateDog(dogId: string, payload: IDogUpdate): Promise<IDo
   const res = await axios.put<IDogItem>(endpoints.dog.details(dogId), payload);
   await mutate(endpoints.dog.details(dogId));
   await mutateDogLists();
+  if ('father_id' in payload || 'mother_id' in payload) await mutateDogRelatives();
   return res.data;
 }
 

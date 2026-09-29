@@ -1,0 +1,64 @@
+{
+  "projectId": "3fe9ad41-4a0a-4354-b81e-2c681306061e",
+  "shape": "package",
+  "pkg": "show-ring-ds",
+  "globalName": "ShowRingDS",
+  "entry": ".design-sync/pkg/index.tsx",
+  "buildCmd": "node .design-sync/build-types.mjs",
+  "tsconfig": "../../tsconfig.json",
+  "extraFonts": [
+    "../../node_modules/@fontsource/onest/cyrillic-400.css",
+    "../../node_modules/@fontsource/onest/latin-400.css",
+    "../../node_modules/@fontsource/onest/cyrillic-500.css",
+    "../../node_modules/@fontsource/onest/latin-500.css",
+    "../../node_modules/@fontsource/onest/cyrillic-600.css",
+    "../../node_modules/@fontsource/onest/latin-600.css",
+    "../../node_modules/@fontsource/onest/cyrillic-700.css",
+    "../../node_modules/@fontsource/onest/latin-700.css",
+    "../../node_modules/@fontsource/onest/cyrillic-800.css",
+    "../../node_modules/@fontsource/onest/latin-800.css",
+    "../../node_modules/@fontsource/unbounded/cyrillic-600.css",
+    "../../node_modules/@fontsource/unbounded/latin-600.css",
+    "../../node_modules/@fontsource/unbounded/cyrillic-700.css",
+    "../../node_modules/@fontsource/unbounded/latin-700.css"
+  ],
+  "provider": {
+    "component": "ShowRingThemeProvider"
+  },
+  "docsDir": "../docs",
+  "overrides": {
+    "Table": {
+      "cardMode": "column"
+    },
+    "Tooltip": {
+      "cardMode": "single",
+      "viewport": "360x180"
+    },
+    "Dialog": {
+      "cardMode": "single",
+      "viewport": "560x360"
+    },
+    "CustomBreadcrumbs": {
+      "cardMode": "column"
+    },
+    "Card": {
+      "cardMode": "column"
+    },
+    "Label": {
+      "cardMode": "column"
+    },
+    "LinearProgress": {
+      "cardMode": "column"
+    },
+    "TextField": {
+      "cardMode": "column"
+    },
+    "Tabs": {
+      "cardMode": "column"
+    },
+    "Typography": {
+      "cardMode": "column"
+    }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}

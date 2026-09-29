@@ -24,7 +24,7 @@ export function menuItemStyles(theme: Theme): CSSObject {
   return {
     ...theme.typography.body2,
     padding: theme.spacing(0.75, 1),
-    borderRadius: Number(theme.shape.borderRadius) * 0.75,
+    borderRadius: theme.shape.borderRadius,
     '&:not(:last-of-type)': {
       marginBottom: 4,
     },
@@ -103,7 +103,7 @@ export function paperStyles(theme: Theme, options?: PaperStyleOptions): CSSObjec
     ...(dropdown && {
       padding: theme.spacing(0.5),
       boxShadow: theme.vars.customShadows.dropdown,
-      borderRadius: `${Number(theme.shape.borderRadius) * 1.25}px`,
+      borderRadius: `${theme.shape.borderRadius}px`,
     }),
   };
 }
@@ -263,7 +263,8 @@ export function softStyles(theme: Theme, colorKey: ColorKey, options?: StyleOpti
   const colorPalette: Record<'base' | 'hover', CSSObject> = {
     base: {
       boxShadow: 'none',
-      color: theme.vars.palette[colorKey].dark,
+      // warning.dark on its soft bg is ~3.7:1, darker keeps text ≥ 4.5:1
+      color: theme.vars.palette[colorKey][colorKey === 'warning' ? 'darker' : 'dark'],
       backgroundColor: varAlpha(
         theme.vars.palette[colorKey].mainChannel,
         theme.vars.opacity.soft.bg

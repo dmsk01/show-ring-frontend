@@ -12,7 +12,7 @@ const MuiDialog: Components<Theme>['MuiDialog'] = {
           style: ({ theme }) => ({
             margin: theme.spacing(2),
             boxShadow: theme.vars.customShadows.dialog,
-            borderRadius: Number(theme.shape.borderRadius) * 2,
+            borderRadius: theme.shape.borderRadius,
           }),
         },
       ],

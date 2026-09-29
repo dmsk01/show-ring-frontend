@@ -2,8 +2,10 @@ import type { Theme, Components } from '@mui/material/styles';
 
 import { varAlpha } from 'minimal-shared/utils';
 
+import { checkboxClasses } from '@mui/material/Checkbox';
 import { tableRowClasses } from '@mui/material/TableRow';
 import { tableCellClasses } from '@mui/material/TableCell';
+import { tableSortLabelClasses } from '@mui/material/TableSortLabel';
 
 // ----------------------------------------------------------------------
 
@@ -43,14 +45,25 @@ const MuiTableCell: Components<Theme>['MuiTableCell'] = {
       borderBottomStyle: 'dashed',
     },
     head: ({ theme }) => ({
-      fontSize: theme.typography.pxToRem(14),
-      color: theme.vars.palette.text.secondary,
-      fontWeight: theme.typography.fontWeightSemiBold,
-      backgroundColor: theme.vars.palette.background.neutral,
+      fontSize: theme.typography.pxToRem(11),
+      fontWeight: 800,
+      letterSpacing: '0.06em',
+      textTransform: 'uppercase',
+      color: theme.vars.palette.background.paper,
+      backgroundColor: theme.vars.palette.text.primary,
+      // Inverted head: MUI paints active sort label / unchecked checkbox with text colors
+      [`& .${tableSortLabelClasses.root}, & .${tableSortLabelClasses.root}:hover, & .${tableSortLabelClasses.active}`]:
+        {
+          color: 'inherit',
+          [`& .${tableSortLabelClasses.icon}`]: { color: 'inherit' },
+        },
+      [`& .${checkboxClasses.root}:not(.${checkboxClasses.checked}):not(.${checkboxClasses.indeterminate})`]:
+        {
+          color: 'inherit',
+        },
     }),
     stickyHeader: ({ theme }) => ({
-      backgroundColor: theme.vars.palette.background.paper,
-      backgroundImage: `linear-gradient(to bottom, ${theme.vars.palette.background.neutral}, ${theme.vars.palette.background.neutral})`,
+      backgroundColor: theme.vars.palette.text.primary,
     }),
     paddingCheckbox: ({ theme }) => ({
       paddingLeft: theme.spacing(1),

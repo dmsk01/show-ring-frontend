@@ -91,19 +91,37 @@ export const error = createPaletteChannel(themeConfig.palette.error);
 export const common = createPaletteChannel(themeConfig.palette.common);
 export const grey = createPaletteChannel(themeConfig.palette.grey);
 
+/** Dark scheme brand colors: brighter main, same white/black mixing ramp as light. */
+export const primaryDark = createPaletteChannel({
+  lighter: '#FFDED5',
+  light: '#FF9C80',
+  main: '#FF5A2C',
+  dark: '#B84120',
+  darker: '#7A2B15',
+  contrastText: '#FFFFFF',
+});
+export const secondaryDark = createPaletteChannel({
+  lighter: '#DBE1FF',
+  light: '#94A6FF',
+  main: '#4C6BFF',
+  dark: '#374DB8',
+  darker: '#24337A',
+  contrastText: '#FFFFFF',
+});
+
 /**
  * ➤
  * ➤ ➤ Text, background, action
  * ➤
  */
 export const text = {
-  light: createPaletteChannel({ primary: grey[800], secondary: grey[600], disabled: grey[500] }),
-  dark: createPaletteChannel({ primary: '#FFFFFF', secondary: grey[500], disabled: grey[600] }),
+  light: createPaletteChannel({ primary: grey[900], secondary: grey[600], disabled: grey[400] }),
+  dark: createPaletteChannel({ primary: grey[100], secondary: '#9AA1AD', disabled: grey[600] }),
 };
 
 export const background = {
-  light: createPaletteChannel({ paper: '#FFFFFF', default: '#FFFFFF', neutral: grey[200] }),
-  dark: createPaletteChannel({ paper: grey[800], default: grey[900], neutral: '#28323D' }),
+  light: createPaletteChannel({ paper: '#FFFFFF', default: grey[100], neutral: grey[200] }),
+  dark: createPaletteChannel({ paper: '#15181E', default: '#0B0D11', neutral: '#20242C' }),
 };
 
 export const action = (mode: 'light' | 'dark'): Partial<TypeAction> => ({
@@ -165,6 +183,9 @@ export const palette: SchemesRecord<ColorSystemOptions['palette']> = {
   },
   dark: {
     ...basePalette,
+    primary: primaryDark,
+    secondary: secondaryDark,
+    divider: 'rgba(255,255,255,0.08)',
     text: text.dark,
     background: background.dark,
     action: action('dark'),

@@ -17,6 +17,8 @@ export type TypographyVariantsExtend = {
   fontWeightSemiBold: React.CSSProperties['fontWeight'];
   fontWeightExtraBold: React.CSSProperties['fontWeight'];
   fontSecondaryFamily: React.CSSProperties['fontFamily'];
+  /** Participant numbers, amounts, scores: Unbounded with tabular figures. */
+  numeric: React.CSSProperties;
 };
 
 /**
@@ -74,42 +76,45 @@ export const typography: TypographyVariantsOptions = {
   ...baseTypography,
   h1: {
     fontFamily: secondaryFont,
-    fontWeight: baseTypography.fontWeightExtraBold,
+    fontWeight: baseTypography.fontWeightBold,
     lineHeight: 80 / 64,
-    fontSize: pxToRem(40),
-    ...responsiveFontSizes({ sm: 52, md: 58, lg: 64 }),
+    fontSize: pxToRem(37),
+    ...responsiveFontSizes({ sm: 48, md: 53, lg: 59 }),
   },
   h2: {
     fontFamily: secondaryFont,
-    fontWeight: baseTypography.fontWeightExtraBold,
+    fontWeight: baseTypography.fontWeightBold,
     lineHeight: 64 / 48,
-    fontSize: pxToRem(32),
-    ...responsiveFontSizes({ sm: 40, md: 44, lg: 48 }),
+    fontSize: pxToRem(29),
+    ...responsiveFontSizes({ sm: 37, md: 40, lg: 44 }),
   },
   h3: {
     fontFamily: secondaryFont,
     fontWeight: baseTypography.fontWeightBold,
     lineHeight: 1.5,
-    fontSize: pxToRem(24),
-    ...responsiveFontSizes({ sm: 26, md: 30, lg: 32 }),
+    fontSize: pxToRem(22),
+    ...responsiveFontSizes({ sm: 24, md: 28, lg: 29 }),
   },
   h4: {
-    fontWeight: baseTypography.fontWeightBold,
-    lineHeight: 1.5,
-    fontSize: pxToRem(20),
-    ...responsiveFontSizes({ md: 24 }),
-  },
-  h5: {
+    fontFamily: secondaryFont,
     fontWeight: baseTypography.fontWeightBold,
     lineHeight: 1.5,
     fontSize: pxToRem(18),
-    ...responsiveFontSizes({ sm: 19 }),
+    ...responsiveFontSizes({ md: 22 }),
+  },
+  h5: {
+    fontFamily: secondaryFont,
+    fontWeight: baseTypography.fontWeightBold,
+    lineHeight: 1.5,
+    fontSize: pxToRem(17),
+    ...responsiveFontSizes({ sm: 17 }),
   },
   h6: {
-    fontWeight: baseTypography.fontWeightSemiBold,
+    fontFamily: secondaryFont,
+    fontWeight: baseTypography.fontWeightBold,
     lineHeight: 28 / 18,
-    fontSize: pxToRem(17),
-    ...responsiveFontSizes({ sm: 18 }),
+    fontSize: pxToRem(16),
+    ...responsiveFontSizes({ sm: 17 }),
   },
   subtitle1: {
     fontWeight: baseTypography.fontWeightSemiBold,
@@ -144,5 +149,10 @@ export const typography: TypographyVariantsOptions = {
     lineHeight: 24 / 14,
     fontSize: pxToRem(14),
     textTransform: 'unset',
+  },
+  numeric: {
+    fontFamily: secondaryFont,
+    fontWeight: baseTypography.fontWeightBold,
+    fontVariantNumeric: 'tabular-nums',
   },
 };

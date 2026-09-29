@@ -115,7 +115,7 @@ export function ShowResultsTable({
 
                 {sortRows(group.rows, orderBy, order).map((row) => (
                   <TableRow key={row.entryId} hover>
-                    <TableCell>{row.catalogNumber ?? '—'}</TableCell>
+                    <TableCell sx={{ typography: 'numeric' }}>{row.catalogNumber ?? '—'}</TableCell>
                     <TableCell sx={{ fontWeight: 'fontWeightSemiBold' }}>{row.dogName}</TableCell>
                     <TableCell>{row.breedName}</TableCell>
                     <TableCell>{row.kennelName}</TableCell>

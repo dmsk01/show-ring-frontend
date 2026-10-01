@@ -59,8 +59,11 @@ describe('resolveOtpErrorKey', () => {
     );
   });
 
-  it('treats 422 as an invalid phone', () => {
+  it('treats 422 as an invalid phone by default, overridable per form', () => {
     expect(resolveOtpErrorKey(apiError('Request failed', 422))).toBe('auth:errors.phoneInvalid');
+    expect(
+      resolveOtpErrorKey(apiError('Request failed', 422), { on422: 'auth:errors.emailLoginInvalid' })
+    ).toBe('auth:errors.emailLoginInvalid');
   });
 
   it('falls back to a generic message for unknown codes', () => {

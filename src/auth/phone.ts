@@ -54,11 +54,18 @@ const OTP_ERROR_KEYS: Record<string, string> = {
   'network error': 'auth:errors.network',
 };
 
-/** i18n-ключ человекочитаемой ошибки для OTP-операций (вход, привязка, re-auth). */
-export function resolveOtpErrorKey(error: unknown): string {
-  // 422 — Pydantic отверг номер/код; detail там массив, а не строка.
+/**
+ * i18n-ключ человекочитаемой ошибки для OTP-операций (вход, привязка, re-auth).
+ * on422 — что показать, если Pydantic отверг тело запроса: в формах телефона
+ * это номер, а в подключении почты — email или пароль.
+ */
+export function resolveOtpErrorKey(
+  error: unknown,
+  { on422 = 'auth:errors.phoneInvalid' }: { on422?: string } = {}
+): string {
+  // 422 — detail там массив, а не строка: по тексту не сматчить.
   if ((error as { status?: number } | null)?.status === 422) {
-    return 'auth:errors.phoneInvalid';
+    return on422;
   }
   const raw = getErrorMessage(error).trim().toLowerCase();
   return OTP_ERROR_KEYS[raw] ?? 'auth:errors.generic';

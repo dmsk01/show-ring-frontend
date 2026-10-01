@@ -27,9 +27,9 @@ import { Iconify } from 'src/components/iconify';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
-import { useAuthContext } from 'src/auth/hooks';
 import { passwordPolicy } from 'src/auth/password-policy';
 import { resetRevokedSession } from 'src/auth/context/jwt';
+import { useAuthContext, useAuthMethods } from 'src/auth/hooks';
 
 import { PhoneCard, EmailLoginCard } from './profile-sign-in-methods';
 
@@ -85,6 +85,7 @@ export type PasswordSchemaType = z.infer<ReturnType<typeof getPasswordSchema>>;
 // адрес. Смена пароля имеет смысл, только если пароль есть.
 export function ProfileSecurityForm() {
   const { me, meLoading } = useGetMe();
+  const { canSignIn } = useAuthMethods();
 
   if (meLoading || !me) {
     return <LoadingScreen />;
@@ -93,7 +94,12 @@ export function ProfileSecurityForm() {
   return (
     <Stack spacing={3}>
       <PhoneCard me={me} />
-      {me.email ? <EmailCard /> : <EmailLoginCard me={me} />}
+      {me.email ? (
+        <EmailCard />
+      ) : (
+        // Нельзя предлагать настроить способ входа, которым потом не войти.
+        canSignIn('email_password') && <EmailLoginCard me={me} />
+      )}
       {me.has_password && <PasswordCard />}
     </Stack>
   );

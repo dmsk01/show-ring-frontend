@@ -147,6 +147,9 @@ export function EmailLoginCard({ me }: CardProps) {
   const [code, setCode] = useState('');
   const [codeError, setCodeError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  // Код уже ушёл в этой карточке: повторный запрос в пределах cooldown
+  // вернёт 429, но прежний код действует — ведём к его вводу.
+  const [codeSent, setCodeSent] = useState(false);
 
   const EmailLoginSchema = useMemo(() => getEmailLoginSchema(t), [t]);
   const CodeSchema = useMemo(
@@ -166,19 +169,28 @@ export function EmailLoginCard({ me }: CardProps) {
 
   const sendCode = async () => {
     await sendReauthCode();
+    setCodeSent(true);
     countdown.reset();
     countdown.start();
   };
 
+  const errorKey = (error: unknown) =>
+    resolveOtpErrorKey(error, { on422: 'auth:errors.emailLoginInvalid' });
+
   const onRequestCode = methods.handleSubmit(async (data) => {
     try {
       await sendCode();
-      setCode('');
-      setCodeError(null);
-      setPending(data);
     } catch (error) {
-      toast.error(t(resolveOtpErrorKey(error)));
+      const key = errorKey(error);
+      if (!(key === 'auth:errors.tooManyCodes' && codeSent)) {
+        toast.error(t(key));
+        return;
+      }
+      toast.info(t('auth:phone.codeStillValid'));
     }
+    setCode('');
+    setCodeError(null);
+    setPending(data);
   });
 
   const handleResend = async () => {
@@ -186,7 +198,7 @@ export function EmailLoginCard({ me }: CardProps) {
       await sendCode();
       setCode('');
     } catch (error) {
-      toast.error(t(resolveOtpErrorKey(error)));
+      toast.error(t(errorKey(error)));
     }
   };
 
@@ -209,7 +221,7 @@ export function EmailLoginCard({ me }: CardProps) {
       methods.reset({ email: pending.email, password: '', confirm_password: '' });
       setPending(null);
     } catch (error) {
-      const key = resolveOtpErrorKey(error);
+      const key = errorKey(error);
       if (key === 'auth:errors.invalidCode' || key === 'auth:errors.codeExpired') {
         setCodeError(t(key));
       } else {

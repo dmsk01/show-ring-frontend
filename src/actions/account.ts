@@ -17,9 +17,17 @@ export type IUserRole = { role: string; granted_at?: string };
 
 export type IMe = {
   id: string;
-  email: string;
+  // null у пользователя, зарегистрированного по телефону, пока он не
+  // подключил и не подтвердил вход по почте.
+  email: string | null;
+  phone: string | null;
   is_active: boolean;
   is_email_verified: boolean;
+  is_phone_verified: boolean;
+  // Подключён ли вход по почте (есть пароль).
+  has_password: boolean;
+  // Адрес, ожидающий подтверждения по ссылке из письма.
+  pending_email: string | null;
   roles: IUserRole[];
   created_at: string;
 };
@@ -138,5 +146,43 @@ export async function updateMyPassword(
 // письма: pending_email → email, отзыв refresh-токенов.
 export async function confirmEmailChange(token: string): Promise<IMessageResponse> {
   const res = await axios.post<IMessageResponse>(endpoints.auth.confirmEmailChange, { token });
+  return res.data;
+}
+
+// ----------------------------------------------------------------------
+// Способы входа: привязка телефона (аккаунты, созданные по email до перехода
+// на телефон) и подключение входа по почте (аккаунты, созданные по телефону).
+// Ошибки кода бэкенд отдаёт 400 (не 401) — интерсептор не разлогинит юзера.
+
+// POST /users/me/phone/send-code — SMS-код на новый номер (E.164).
+export async function sendLinkPhoneCode(phone: string): Promise<IMessageResponse> {
+  const res = await axios.post<IMessageResponse>(endpoints.auth.phoneSendCode, { phone });
+  return res.data;
+}
+
+// POST /users/me/phone/verify — номер записывается как подтверждённый.
+export async function verifyLinkPhone(phone: string, code: string): Promise<IMe> {
+  const res = await axios.post<IMe>(endpoints.auth.phoneVerify, { phone, code });
+  await mutate(endpoints.auth.me, res.data, { revalidate: false });
+  return res.data;
+}
+
+// POST /users/me/reauth/send-code — код подтверждения на номер аккаунта.
+export async function sendReauthCode(): Promise<IMessageResponse> {
+  const res = await axios.post<IMessageResponse>(endpoints.auth.reauthSendCode, {});
+  return res.data;
+}
+
+export type IEmailLoginCreate = {
+  email: string;
+  password: string;
+  code: string;
+};
+
+// POST /users/me/email-login — пароль ставится сразу, email ждёт подтверждения
+// по ссылке. me перечитываем: изменились has_password и pending_email.
+export async function addEmailLogin(payload: IEmailLoginCreate): Promise<IMessageResponse> {
+  const res = await axios.post<IMessageResponse>(endpoints.auth.emailLogin, payload);
+  await mutate(endpoints.auth.me);
   return res.data;
 }

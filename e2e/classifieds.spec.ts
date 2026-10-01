@@ -183,6 +183,8 @@ test.describe('Classifieds — no cross-user cache leak on re-login', () => {
     await page.waitForURL(/\/auth\/jwt\/sign-in/);
 
     // 3) Sign in as breeder; GuestGuard returns us to the dashboard list (returnTo).
+    //    Сид-юзеры — email-аккаунты: переключаемся с телефона (основной способ).
+    await page.getByRole('button', { name: t('auth', 'signIn.byEmail') }).click();
     await page.getByLabel(t('auth', 'fields.email')).fill(E2E_USERS.breeder);
     await page.getByLabel(t('auth', 'fields.password')).fill(E2E_PASSWORD);
     await page.getByRole('button', { name: t('auth', 'signIn.submit') }).click();

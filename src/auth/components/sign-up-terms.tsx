@@ -9,7 +9,13 @@ import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
-export function SignUpTerms({ sx, ...other }: BoxProps) {
+type SignUpTermsProps = BoxProps & {
+  // 'continue' — для экрана входа по телефону: вход по неизвестному номеру
+  // создаёт аккаунт, поэтому согласие нужно и там («Продолжая, я принимаю…»).
+  variant?: 'signUp' | 'continue';
+};
+
+export function SignUpTerms({ sx, variant = 'signUp', ...other }: SignUpTermsProps) {
   const { t } = useTranslate('auth');
 
   // Статические HTML в public/ — открываем в новой вкладке обычной ссылкой,
@@ -36,7 +42,7 @@ export function SignUpTerms({ sx, ...other }: BoxProps) {
       ]}
       {...other}
     >
-      {t('terms.prefix')}
+      {t(variant === 'continue' ? 'terms.continuePrefix' : 'terms.prefix')}
       <Link href={paths.legal.terms} {...linkProps}>
         {t('terms.terms')}
       </Link>

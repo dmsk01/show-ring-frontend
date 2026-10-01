@@ -5,7 +5,6 @@ import axios, { endpoints } from 'src/lib/axios';
 // ----------------------------------------------------------------------
 
 export type SignInParams = { email: string; password: string };
-export type SignUpParams = { email: string; password: string };
 
 // Cookie-режим: бэкенд кладёт access/refresh в httpOnly-куки (тело — null).
 // Фронт ничего не хранит сам — браузер шлёт куки автоматически (withCredentials
@@ -16,14 +15,31 @@ export const signInWithPassword = async ({ email, password }: SignInParams): Pro
   await axios.post(endpoints.auth.signIn, { email, password });
 };
 
+// Регистрации по email (POST /auth/register) на фронте нет: регистрироваться
+// можно только по телефону. На бэкенде email-регистрация закрыта флагом
+// AUTH_EMAIL_REGISTRATION_ENABLED (оставлен для отката).
+
 /**
- * Sign up — POST /auth/register. НЕ логинит пользователя: бэкенд создаёт аккаунт
- * и шлёт письмо для подтверждения email (ответ { message }, без токенов/кук).
- * Вьюха после успеха ведёт на /sign-in с уведомлением «проверьте почту».
+ * Вход/регистрация по телефону, шаг 1 — POST /auth/send-code. Бэкенд шлёт SMS
+ * с одноразовым кодом; ответ одинаков для нового и существующего номера.
  */
-export const signUp = async ({ email, password }: SignUpParams): Promise<string | undefined> => {
-  const res = await axios.post<{ message?: string }>(endpoints.auth.signUp, { email, password });
-  return res.data?.message;
+export const sendPhoneCode = async (phone: string): Promise<void> => {
+  await axios.post(endpoints.auth.sendCode, { phone });
+};
+
+/**
+ * Вход/регистрация по телефону, шаг 2 — POST /auth/verify-code. Бэкенд ставит
+ * httpOnly-куки сессии; неизвестный номер создаёт аккаунт (isNewUser=true).
+ */
+export const verifyPhoneCode = async (
+  phone: string,
+  code: string
+): Promise<{ isNewUser: boolean }> => {
+  const res = await axios.post<{ is_new_user?: boolean }>(endpoints.auth.verifyCode, {
+    phone,
+    code,
+  });
+  return { isNewUser: !!res.data?.is_new_user };
 };
 
 /** Sign out — POST /auth/logout. Бэкенд всегда чистит обе куки; тело не нужно. */

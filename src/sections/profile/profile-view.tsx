@@ -3,12 +3,16 @@
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { formatPhoneNumberIntl } from 'react-phone-number-input/input';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+
+import { useSearchParams } from 'src/routes/hooks';
 
 import { CONFIG } from 'src/global-config';
 import { useTranslate } from 'src/locales';
@@ -21,6 +25,8 @@ import { Form, Field } from 'src/components/hook-form';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import { ProfileCover } from 'src/sections/user/profile-cover';
+
+import { WELCOME_PARAM } from 'src/auth/view/jwt/phone-verified';
 
 import { ProfileSocialsList } from './profile-socials-list';
 
@@ -39,6 +45,9 @@ const COVER_URL = `${CONFIG.assetsDir}/assets/background/background-6.webp`;
 
 export function ProfileView() {
   const { t } = useTranslate(['profile', 'common']);
+
+  const searchParams = useSearchParams();
+  const welcome = searchParams.get(WELCOME_PARAM);
 
   const { me, meLoading } = useGetMe();
   const { profile, profileLoading } = useGetMyProfile();
@@ -79,9 +88,20 @@ export function ProfileView() {
 
   const { displayName } = getUserDisplay(me, profile);
   const primaryRole = me?.roles?.[0]?.role ?? '';
+  // Подтверждён хотя бы один контакт: телефон (основной способ) или почта.
+  const verified = !!(me?.is_phone_verified || me?.is_email_verified);
+  const contacts = [me?.phone ? formatPhoneNumberIntl(me.phone) || me.phone : null, me?.email]
+    .filter(Boolean)
+    .join(' · ');
 
   return (
     <>
+      {(welcome === 'sign-up' || welcome === 'sign-in') && (
+        <Alert severity={welcome === 'sign-in' ? 'warning' : 'success'} sx={{ mb: 3 }}>
+          {welcome === 'sign-in' ? t('profile:welcome.signIn') : t('profile:welcome.signUp')}
+        </Alert>
+      )}
+
       <Card sx={{ mb: 3, height: 290 }}>
         <ProfileCover name={displayName} role={primaryRole} avatarUrl="" coverUrl={COVER_URL} />
 
@@ -101,8 +121,8 @@ export function ProfileView() {
             justifyContent: { xs: 'center', md: 'flex-end' },
           }}
         >
-          <Label color={me?.is_email_verified ? 'success' : 'warning'}>
-            {me?.is_email_verified ? t('profile:view.verified') : t('profile:view.notVerified')}
+          <Label color={verified ? 'success' : 'warning'}>
+            {verified ? t('profile:view.verified') : t('profile:view.notVerified')}
           </Label>
           {me?.roles?.map((r) => (
             <Label key={r.role} color="info">
@@ -114,7 +134,7 @@ export function ProfileView() {
 
       <Card sx={{ p: 3 }}>
         <Typography variant="body2" sx={{ mb: 3, color: 'text.secondary' }}>
-          {me?.email}
+          {contacts}
         </Typography>
 
         <Box sx={{ mb: 3 }}>

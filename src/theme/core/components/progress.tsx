@@ -79,11 +79,12 @@ const MuiLinearProgress: Components<Theme>['MuiLinearProgress'] = {
   // ▼▼▼▼▼▼▼▼ 🎨 STYLE ▼▼▼▼▼▼▼▼
   styleOverrides: {
     root: {
-      borderRadius: 16,
+      height: 8,
+      borderRadius: 0,
       variants: [...colorVariants],
     },
     bar: {
-      borderRadius: 'inherit',
+      borderRadius: 0,
     },
   },
 };

@@ -43,7 +43,7 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
   const { user } = useAuthContext();
   const { profile } = useGetMyProfile();
 
-  const { displayName, initial, email } = getUserDisplay(user, profile);
+  const { displayName, initial, contact } = getUserDisplay(user, profile);
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
@@ -137,7 +137,7 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }} noWrap>
-              {email}
+              {contact}
             </Typography>
           </Box>
 

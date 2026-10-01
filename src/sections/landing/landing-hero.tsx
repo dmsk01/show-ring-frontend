@@ -35,7 +35,10 @@ const Stencil = ({ name, sx, duration = 9, delay = 0 }: StencilProps) => (
     initial={{ y: 0 }}
     animate={{ y: [0, -10, 0] }}
     transition={{ duration, repeat: Infinity, ease: 'easeInOut', delay }}
-    sx={[{ position: 'absolute', pointerEvents: 'none', opacity: 0.4 }, ...(Array.isArray(sx) ? sx : [sx])]}
+    sx={[
+      { position: 'absolute', pointerEvents: 'none', opacity: 0.4 },
+      ...(Array.isArray(sx) ? sx : [sx]),
+    ]}
   />
 );
 
@@ -55,12 +58,42 @@ export function LandingHero() {
       ]}
     >
       {/* Minimalist stencil decor — subtle, outline-only, must not pull focus */}
-      <Stencil name="circle" sx={{ top: '8%', right: '-4%', width: 220, opacity: 0.18 }} duration={11} />
-      <Stencil name="trophy" sx={{ top: 70, left: '7%', width: 64, display: { xs: 'none', md: 'block' } }} />
-      <Stencil name="medal" sx={{ top: 130, right: '9%', width: 52, opacity: 0.5, display: { xs: 'none', sm: 'block' } }} delay={1.2} />
-      <Stencil name="dog" sx={{ bottom: 56, left: '11%', width: 64, display: { xs: 'none', md: 'block' } }} delay={0.6} />
-      <Stencil name="cat" sx={{ bottom: 80, right: '12%', width: 56, display: { xs: 'none', md: 'block' } }} delay={1.8} />
-      <Stencil name="circle" sx={{ bottom: '-6%', left: '-3%', width: 160, opacity: 0.16 }} duration={13} delay={0.4} />
+      <Stencil
+        name="circle"
+        sx={{ top: '8%', right: '-4%', width: 220, opacity: 0.18 }}
+        duration={11}
+      />
+      <Stencil
+        name="trophy"
+        sx={{ top: 70, left: '7%', width: 64, display: { xs: 'none', md: 'block' } }}
+      />
+      <Stencil
+        name="medal"
+        sx={{
+          top: 130,
+          right: '9%',
+          width: 52,
+          opacity: 0.5,
+          display: { xs: 'none', sm: 'block' },
+        }}
+        delay={1.2}
+      />
+      <Stencil
+        name="dog"
+        sx={{ bottom: 56, left: '11%', width: 64, display: { xs: 'none', md: 'block' } }}
+        delay={0.6}
+      />
+      <Stencil
+        name="cat"
+        sx={{ bottom: 80, right: '12%', width: 56, display: { xs: 'none', md: 'block' } }}
+        delay={1.8}
+      />
+      <Stencil
+        name="circle"
+        sx={{ bottom: '-6%', left: '-3%', width: 160, opacity: 0.16 }}
+        duration={13}
+        delay={0.4}
+      />
 
       <Container component={MotionViewport} sx={{ position: 'relative', zIndex: 2 }}>
         <Stack sx={{ maxWidth: 760, mx: 'auto', textAlign: 'center', alignItems: 'center' }}>
@@ -70,7 +103,7 @@ export function LandingHero() {
               variant="soft"
               label={t.hero.badge}
               icon={<Iconify icon="solar:cup-star-bold" />}
-              sx={{ mb: 3, fontWeight: 600 }}
+              sx={{ mb: 3, fontWeight: 'fontWeightSemiBold' }}
             />
           </m.div>
 
@@ -81,7 +114,9 @@ export function LandingHero() {
           </m.div>
 
           <m.div variants={varFade('inUp', { distance: 24 })}>
-            <Typography sx={{ mt: 3, color: 'text.secondary', fontSize: { xs: 16, md: 20 }, maxWidth: 620 }}>
+            <Typography
+              sx={{ mt: 3, color: 'text.secondary', fontSize: { xs: 16, md: 20 }, maxWidth: 620 }}
+            >
               {t.hero.subtitle}
             </Typography>
           </m.div>

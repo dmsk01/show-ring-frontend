@@ -20,6 +20,13 @@ describe('getUserDisplay', () => {
     expect(r.initial).toBe('D');
   });
 
+  it('падает на телефон у аккаунта без почты', () => {
+    const r = getUserDisplay({ email: null, phone: '+79991234567' }, undefined);
+    expect(r.displayName).toBe('+79991234567');
+    expect(r.contact).toBe('+79991234567');
+    expect(r.email).toBe('');
+  });
+
   it('не падает на полностью пустых данных', () => {
     const r = getUserDisplay(null, null);
     expect(r.displayName).toBe('');

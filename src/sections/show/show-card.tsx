@@ -3,10 +3,8 @@
 import type { CardProps } from '@mui/material/Card';
 import type { IShowItem } from 'src/types/show';
 
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
@@ -16,7 +14,7 @@ import { fCurrency } from 'src/utils/format-number';
 import { useTranslate } from 'src/locales';
 
 import { Label } from 'src/components/label';
-import { Iconify } from 'src/components/iconify';
+import { MetaRow } from 'src/components/meta-row';
 import { CardLink, cardActionableSx } from 'src/components/card-link';
 
 import { SHOW_STATUS_COLOR, showStatusI18nKey } from './show-utils';
@@ -36,12 +34,7 @@ export function ShowCard({ show, sx, ...other }: Props) {
 
   return (
     <Card sx={[cardActionableSx, { p: 3 }, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
-      <Stack
-        direction="row"
-        alignItems="flex-start"
-        justifyContent="space-between"
-        sx={{ mb: 2 }}
-      >
+      <Stack direction="row" alignItems="flex-start" justifyContent="space-between" sx={{ mb: 2 }}>
         <CardLink href={detailsHref} variant="subtitle1">
           {show.name}
         </CardLink>
@@ -51,33 +44,15 @@ export function ShowCard({ show, sx, ...other }: Props) {
       </Stack>
 
       <Stack spacing={1}>
-        <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center', typography: 'body2' }}>
-          <Iconify icon="solar:calendar-date-bold" sx={{ color: 'text.secondary' }} />
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {dates}
-          </Typography>
-        </Box>
+        <MetaRow icon="solar:calendar-date-bold">{dates}</MetaRow>
 
-        <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center', typography: 'body2' }}>
-          <Iconify icon="mingcute:location-fill" sx={{ color: 'text.secondary' }} />
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {location}
-          </Typography>
-        </Box>
+        <MetaRow icon="mingcute:location-fill">{location}</MetaRow>
 
-        <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center', typography: 'body2' }}>
-          <Iconify icon="mingcute:location-fill" sx={{ color: 'text.secondary' }} />
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {show.venue ?? '—'}
-          </Typography>
-        </Box>
+        <MetaRow icon="mingcute:location-fill">{show.venue ?? '—'}</MetaRow>
 
-        <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center', typography: 'body2' }}>
-          <Iconify icon="solar:wad-of-money-bold" sx={{ color: 'text.secondary' }} />
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {show.entry_fee != null ? fCurrency(show.entry_fee) : '—'}
-          </Typography>
-        </Box>
+        <MetaRow icon="solar:wad-of-money-bold">
+          {show.entry_fee != null ? fCurrency(show.entry_fee) : '—'}
+        </MetaRow>
       </Stack>
     </Card>
   );

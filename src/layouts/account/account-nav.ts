@@ -6,17 +6,21 @@ type ProfileLike =
   | { first_name?: string | null; last_name?: string | null; [key: string]: unknown }
   | null
   | undefined;
-type UserLike = { email?: string | null } | null | undefined;
+type UserLike = { email?: string | null; phone?: string | null } | null | undefined;
 
-export type UserDisplay = { displayName: string; initial: string; email: string };
+// contact — вторая строка под именем: email, а у аккаунта без почты — телефон.
+export type UserDisplay = { displayName: string; initial: string; email: string; contact: string };
 
-/** Имя для шапки/аватара: "Имя Фамилия" из профиля, иначе email; инициал — первая буква. */
+/**
+ * Имя для шапки/аватара: "Имя Фамилия" из профиля, иначе email, иначе телефон
+ * (аккаунт, созданный по номеру, живёт без почты); инициал — первая буква.
+ */
 export function getUserDisplay(user: UserLike, profile: ProfileLike): UserDisplay {
   const email = user?.email ?? '';
   const name = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ').trim();
-  const displayName = name || email;
+  const displayName = name || email || user?.phone || '';
   const initial = (displayName.charAt(0) || '?').toUpperCase();
-  return { displayName, initial, email };
+  return { displayName, initial, email, contact: email || user?.phone || '' };
 }
 
 // ----------------------------------------------------------------------

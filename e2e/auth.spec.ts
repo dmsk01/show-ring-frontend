@@ -17,33 +17,36 @@ test.beforeEach(async ({ context }) => {
   await pinLocale(context, BASE_URL);
 });
 
-test.describe('Auth — sign-up', () => {
-  test('registration does NOT log in — redirects to sign-in with a notice', async ({ page }) => {
-    const email = `e2e+${Date.now()}@example.com`;
+test.describe('Auth — sign-up by phone', () => {
+  test('registration is phone-only: no email form, code is requested by SMS', async ({ page }) => {
+    // Уникальный номер: per-phone cooldown OTP не мешает повторным прогонам.
+    const phone = `999${String(Date.now()).slice(-7)}`;
 
     await page.goto('/auth/jwt/sign-up');
 
-    await page.getByLabel(t('auth', 'fields.email')).fill(email);
-    await page.getByLabel(t('auth', 'fields.password'), { exact: true }).fill('Password123!');
+    // Email-регистрации больше нет — только телефон.
+    await expect(page.locator('input[name="email"]')).toHaveCount(0);
 
-    const registerResp = page.waitForResponse(
-      (r) => /\/api\/auth\/register\/?$/.test(r.url()) && r.request().method() === 'POST'
+    await page.getByLabel(t('auth', 'phone.label')).fill(phone);
+
+    const sendResp = page.waitForResponse(
+      (r) => /\/api\/auth\/send-code\/?$/.test(r.url()) && r.request().method() === 'POST'
     );
-    await page.getByRole('button', { name: t('auth', 'signUp.submit') }).click();
-    await registerResp;
+    await page.getByRole('button', { name: t('auth', 'phone.sendCode') }).click();
+    expect((await sendResp).status()).toBe(200);
 
-    // Ведёт на /sign-in (НЕ в дашборд) — бэкенд требует подтверждения email.
-    await page.waitForURL('**/auth/jwt/sign-in');
-    expect(page.url()).toContain('/auth/jwt/sign-in');
-
-    // Подтверждающий тост (текст бэкенда либо дефолтный «проверьте email»).
-    await expect(page.locator('[data-sonner-toast]').first()).toBeVisible();
+    // Шаг ввода кода: кнопка подтверждения и ссылка смены номера.
+    await expect(page.getByRole('button', { name: t('auth', 'signUp.submit') })).toBeVisible();
+    await expect(page.getByRole('button', { name: t('auth', 'phone.changePhone') })).toBeVisible();
   });
 });
 
 test.describe('Auth — sign-in negative', () => {
   test('wrong credentials show an error and keep the user on /auth', async ({ page }) => {
     await page.goto('/auth/jwt/sign-in');
+
+    // Телефон — основной способ; почта открывается ссылкой.
+    await page.getByRole('button', { name: t('auth', 'signIn.byEmail') }).click();
 
     await page.getByLabel(t('auth', 'fields.email')).fill('nobody@example.com');
     await page

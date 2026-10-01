@@ -41,8 +41,17 @@ export function KennelTableRow({ row, editHref, onDeleteRow }: Props) {
       <TableRow hover>
         <TableCell>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Avatar src={fileUrl(row.avatar_file_id)} alt={row.name} sx={{ width: 32, height: 32 }} />
-            <Link component={RouterLink} href={editHref} color="inherit" sx={{ fontWeight: 600 }}>
+            <Avatar
+              src={fileUrl(row.avatar_file_id)}
+              alt={row.name}
+              sx={{ width: 32, height: 32 }}
+            />
+            <Link
+              component={RouterLink}
+              href={editHref}
+              color="inherit"
+              sx={{ fontWeight: 'fontWeightSemiBold' }}
+            >
               {row.name}
             </Link>
           </Box>
@@ -60,7 +69,11 @@ export function KennelTableRow({ row, editHref, onDeleteRow }: Props) {
         </TableCell>
       </TableRow>
 
-      <CustomPopover open={menuActions.open} anchorEl={menuActions.anchorEl} onClose={menuActions.onClose}>
+      <CustomPopover
+        open={menuActions.open}
+        anchorEl={menuActions.anchorEl}
+        onClose={menuActions.onClose}
+      >
         <MenuList>
           <li>
             <MenuItem component={RouterLink} href={editHref} onClick={menuActions.onClose}>

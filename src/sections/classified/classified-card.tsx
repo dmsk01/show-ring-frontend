@@ -13,10 +13,12 @@ import { paths } from 'src/routes/paths';
 import { useTranslate } from 'src/locales';
 import { CONFIG } from 'src/global-config';
 import { fileUrl } from 'src/actions/file';
+import { SEX_COLOR } from 'src/theme/semantic';
 
 import { Label } from 'src/components/label';
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
+import { MetaRow } from 'src/components/meta-row';
 import { CardLink, cardActionableSx } from 'src/components/card-link';
 
 import {
@@ -54,7 +56,7 @@ export function ClassifiedCard({ classified, sx, ...other }: Props) {
         >
           {classified.sex && (
             <Label
-              color={classified.sex === 'female' ? 'secondary' : 'info'}
+              color={SEX_COLOR[classified.sex]}
               startIcon={
                 <Iconify
                   icon={classified.sex === 'female' ? 'solar:women-bold' : 'solar:men-bold'}
@@ -71,10 +73,7 @@ export function ClassifiedCard({ classified, sx, ...other }: Props) {
             </Label>
           )}
         </Stack>
-        <Label
-          color="info"
-          sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}
-        >
+        <Label color="info" sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}>
           {t(classifiedCategoryI18nKey(classified.category))}
         </Label>
         <Image
@@ -95,19 +94,9 @@ export function ClassifiedCard({ classified, sx, ...other }: Props) {
         }}
       />
 
-      <Box
-        sx={{
-          p: 2.5,
-          gap: 0.5,
-          display: 'flex',
-          alignItems: 'center',
-          typography: 'body2',
-          color: 'text.secondary',
-        }}
-      >
-        <Iconify icon="mingcute:location-fill" sx={{ color: 'error.main' }} />
+      <MetaRow icon="mingcute:location-fill" sx={{ p: 2.5 }}>
         {classified.city ?? '—'}
-      </Box>
+      </MetaRow>
     </Card>
   );
 }

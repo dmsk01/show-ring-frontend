@@ -55,7 +55,7 @@ export function AdminUserRow({ row }: Props) {
   return (
     <>
       <TableRow hover>
-        <TableCell sx={{ fontWeight: 600 }}>{row.email}</TableCell>
+        <TableCell sx={{ fontWeight: 'fontWeightSemiBold' }}>{row.email}</TableCell>
 
         <TableCell>
           <Label color={row.is_email_verified ? 'success' : 'warning'}>
@@ -92,7 +92,11 @@ export function AdminUserRow({ row }: Props) {
         </TableCell>
       </TableRow>
 
-      <CustomPopover open={grantMenu.open} anchorEl={grantMenu.anchorEl} onClose={grantMenu.onClose}>
+      <CustomPopover
+        open={grantMenu.open}
+        anchorEl={grantMenu.anchorEl}
+        onClose={grantMenu.onClose}
+      >
         <MenuList>
           {ADMIN_ROLES.filter((r) => !heldRoles.includes(r)).map((role) => (
             <MenuItem

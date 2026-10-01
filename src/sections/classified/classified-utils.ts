@@ -3,6 +3,8 @@ import type { IClassifiedItem, IClassifiedImage, AnimalAvailability } from 'src/
 
 import { fCurrency } from 'src/utils/format-number';
 
+import { STATUS_TONE } from 'src/theme/semantic';
+
 /**
  * Can the user edit/delete this classified? Mirrors the backend `_check_owner`
  * (app/services/classified.py): author OR admin — and nobody else. Note this is
@@ -46,9 +48,9 @@ export function classifiedAvailabilityI18nKey(availability: string): string {
 // Shared Label colors for availability across card / detail / table.
 // `sold` is intentionally muted (default) — it's a terminal state.
 export const AVAILABILITY_COLOR: Record<AnimalAvailability, LabelColor> = {
-  available: 'success',
-  reserved: 'warning',
-  sold: 'default',
+  available: STATUS_TONE.active,
+  reserved: STATUS_TONE.pending,
+  sold: STATUS_TONE.neutral,
 };
 
 /**

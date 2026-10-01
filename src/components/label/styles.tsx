@@ -29,7 +29,7 @@ export const LabelRoot = styled('span', {
   padding: theme.spacing(0, 0.75),
   fontSize: theme.typography.pxToRem(12),
   fontWeight: theme.typography.fontWeightBold,
-  borderRadius: Number(theme.shape.borderRadius) * 0.75,
+  borderRadius: theme.shape.borderRadius,
   variants: [
     /**
      * @variant filled

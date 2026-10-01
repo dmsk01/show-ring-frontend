@@ -16,6 +16,7 @@ import { useTranslate } from 'src/locales';
 import { Image } from 'src/components/image';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
+import { MetaRow } from 'src/components/meta-row';
 import { CardLink, cardActionableSx } from 'src/components/card-link';
 
 // ----------------------------------------------------------------------
@@ -54,9 +55,7 @@ export function KennelCard({ kennel, sx, ...other }: Props) {
       <ListItemText
         sx={{ p: (theme) => theme.spacing(1, 2.5, 0, 2.5) }}
         primary={<CardLink href={detailsHref}>{kennel.name}</CardLink>}
-        secondary={
-          kennel.kennel_prefix ? `${t('card.prefix')}: ${kennel.kennel_prefix}` : ' '
-        }
+        secondary={kennel.kennel_prefix ? `${t('card.prefix')}: ${kennel.kennel_prefix}` : ' '}
         slotProps={{
           primary: { noWrap: true, sx: { typography: 'subtitle1' } },
           secondary: { sx: { mt: 0.5, typography: 'caption', color: 'text.disabled' } },
@@ -64,10 +63,7 @@ export function KennelCard({ kennel, sx, ...other }: Props) {
       />
 
       <Box sx={{ p: 2.5, pt: 0, display: 'flex', flexDirection: 'column', gap: 0.75 }}>
-        <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center', typography: 'body2' }}>
-          <Iconify icon="mingcute:location-fill" sx={{ color: 'error.main' }} />
-          {location}
-        </Box>
+        <MetaRow icon="mingcute:location-fill">{location}</MetaRow>
         <Box sx={{ typography: 'caption', color: 'text.disabled' }}>
           {t('card.stats', { dogs: kennel.dogs_count, litters: kennel.litters_count })}
         </Box>

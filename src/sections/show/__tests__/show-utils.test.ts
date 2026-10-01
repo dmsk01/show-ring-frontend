@@ -89,7 +89,7 @@ describe('SHOW_STATUS_COLOR', () => {
   it('returns correct colors for all statuses', () => {
     expect(SHOW_STATUS_COLOR.draft).toBe('default');
     expect(SHOW_STATUS_COLOR.registration_open).toBe('success');
-    expect(SHOW_STATUS_COLOR.registration_closed).toBe('info');
+    expect(SHOW_STATUS_COLOR.registration_closed).toBe('warning');
     expect(SHOW_STATUS_COLOR.in_progress).toBe('info');
     expect(SHOW_STATUS_COLOR.completed).toBe('default');
     expect(SHOW_STATUS_COLOR.cancelled).toBe('error');

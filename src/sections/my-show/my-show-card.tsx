@@ -3,10 +3,8 @@
 import type { CardProps } from '@mui/material/Card';
 import type { IMyShowItem } from 'src/types/show';
 
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
@@ -15,7 +13,7 @@ import { fDate } from 'src/utils/format-time';
 import { useTranslate } from 'src/locales';
 
 import { Label } from 'src/components/label';
-import { Iconify } from 'src/components/iconify';
+import { MetaRow } from 'src/components/meta-row';
 import { CardLink, cardActionableSx } from 'src/components/card-link';
 
 import { SHOW_STATUS_COLOR, showStatusI18nKey } from 'src/sections/show/show-utils';
@@ -44,24 +42,11 @@ export function MyShowCard({ show, sx, ...other }: Props) {
       </Stack>
 
       <Stack spacing={1}>
-        <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center', typography: 'body2' }}>
-          <Iconify icon="solar:calendar-date-bold" sx={{ color: 'text.secondary' }} />
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {dates}
-          </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center', typography: 'body2' }}>
-          <Iconify icon="mingcute:location-fill" sx={{ color: 'text.secondary' }} />
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {location}
-          </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center', typography: 'body2' }}>
-          <Iconify icon="solar:users-group-rounded-bold" sx={{ color: 'text.secondary' }} />
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {t('myShows.card.entriesCount', { count: show.my_entries_count })}
-          </Typography>
-        </Box>
+        <MetaRow icon="solar:calendar-date-bold">{dates}</MetaRow>
+        <MetaRow icon="mingcute:location-fill">{location}</MetaRow>
+        <MetaRow icon="solar:users-group-rounded-bold">
+          {t('myShows.card.entriesCount', { count: show.my_entries_count })}
+        </MetaRow>
       </Stack>
     </Card>
   );

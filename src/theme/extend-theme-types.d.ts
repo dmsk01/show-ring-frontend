@@ -201,3 +201,13 @@ declare module '@mui/material/Rating' {
 declare module '@mui/material/Tabs' {
   interface TabsPropsIndicatorColorOverrides extends TabsExtendIndicatorColor {}
 }
+
+/**
+ * ➤➤ Typography (https://mui.com/components/typography/)
+ * @from {@link file://./core/typography.ts}
+ */
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    numeric: true;
+  }
+}

@@ -9,6 +9,7 @@ import { CONFIG } from 'src/global-config';
 import { SplashScreen } from 'src/components/loading-screen';
 
 import { useAuthContext } from '../hooks';
+import { safeReturnTo } from '../view/jwt/phone-verified';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +23,8 @@ export function GuestGuard({ children }: GuestGuardProps) {
 
   const { loading, authenticated } = useAuthContext();
 
-  const returnTo = searchParams.get('returnTo') ?? CONFIG.auth.redirectPath;
+  // Только внутренний путь — иначе ?returnTo=https://evil… даёт open redirect.
+  const returnTo = safeReturnTo(searchParams.get('returnTo')) ?? CONFIG.auth.redirectPath;
 
   const [isChecking, setIsChecking] = useState(true);
 

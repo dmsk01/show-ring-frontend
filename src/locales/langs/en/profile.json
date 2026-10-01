@@ -17,7 +17,8 @@
     },
     "verified": "Verified",
     "notVerified": "Not verified",
-    "saveChanges": "Save changes"
+    "saveChanges": "Save changes",
+    "phone": "Phone"
   },
   "security": {
     "email": {
@@ -38,6 +39,30 @@
         "confirmPassword": "Confirm new password"
       },
       "submit": "Change password"
+    },
+    "phone": {
+      "heading": "Phone number",
+      "verified": "Verified",
+      "linkDescription": "Link your phone number — it is the primary way to sign in. We will send an SMS with a confirmation code.",
+      "changeHint": "Primary sign-in method. To change the number, please contact support.",
+      "submit": "Link number",
+      "linked": "Phone number linked"
+    },
+    "emailLogin": {
+      "heading": "Email sign-in",
+      "description": "An additional way to sign in. Enter an email and a password — we will send a confirmation link; email sign-in starts working after you follow it.",
+      "pending": "Awaiting confirmation: {{email}}. Follow the link in the email — or enter another address below.",
+      "phoneFirst": "Link a phone number first to set up email sign-in.",
+      "fields": {
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Repeat password"
+      },
+      "sendCode": "Get SMS code",
+      "codeSent": "We sent a confirmation code to {{phone}}",
+      "submit": "Set up",
+      "back": "Back",
+      "requested": "Check your email to confirm"
     }
   },
   "socials": {
@@ -75,5 +100,13 @@
   },
   "placeholder": {
     "comingSoon": "This section will be available after server support is added."
+  },
+  "banner": {
+    "phoneRequired": "Link your phone number — it is now the primary way to sign in.",
+    "phoneRequiredAction": "Link"
+  },
+  "welcome": {
+    "signUp": "Your account is ready! Fill in your profile — your full name is needed for show entries and documents.",
+    "signIn": "A new account was created for this number. If you previously signed up with email, sign out, sign in with email and link your phone under Security."
   }
 }

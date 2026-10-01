@@ -15,13 +15,13 @@ export const notificationIcons = {
               fillRule="evenodd"
               clipRule="evenodd"
               d="M19.1996 5.57765V12.8111C17.4829 12.8113 15.897 13.7281 15.0402 15.2157C14.1834 16.7033 14.1862 18.5352 15.0476 20.0201L9.59959 23.1651V11.1191L19.1986 5.57715L19.1996 5.57765Z"
-              fill="#FFD666"
+              fill="var(--palette-warning-light)"
             />
             <path
               fillRule="evenodd"
               clipRule="evenodd"
               d="M9.59998 0.0351562L13.4095 2.23466L3.81048 7.77666L0.000976562 5.57716L9.59998 0.0351562Z"
-              fill="#FFD666"
+              fill="var(--palette-warning-light)"
             />
           </g>
           <g id="Vector_2">
@@ -29,13 +29,13 @@ export const notificationIcons = {
               fillRule="evenodd"
               clipRule="evenodd"
               d="M9.6 11.1191L6.257 9.18909L15.8565 3.64709L19.199 5.57709L9.6 11.1191Z"
-              fill="#FFAB00"
+              fill="var(--palette-warning-main)"
             />
             <path
               fillRule="evenodd"
               clipRule="evenodd"
               d="M9.6 11.1191V23.1651L0 17.6226V5.57759L0.001 5.5771L3.81 7.7766V15.7641L4.9725 15.2841L6.24 16.7241V9.19909L6.257 9.18909L9.6 11.1191Z"
-              fill="#FFAB00"
+              fill="var(--palette-warning-main)"
             />
           </g>
           <g id="Vector_3">
@@ -57,50 +57,50 @@ export const notificationIcons = {
               fillRule="evenodd"
               clipRule="evenodd"
               d="M1.24148 17.7187C1.04818 17.7187 0.891479 17.562 0.891479 17.3687V16.0727C0.891479 15.8794 1.04818 15.7227 1.24148 15.7227C1.43478 15.7227 1.59148 15.8794 1.59148 16.0727V17.3687C1.59148 17.562 1.43478 17.7187 1.24148 17.7187Z"
-              fill="#FFD666"
+              fill="var(--palette-warning-light)"
             />
             <path
               fillRule="evenodd"
               clipRule="evenodd"
               d="M2.66248 18.5502C2.46918 18.5502 2.31248 18.3935 2.31248 18.2002V17.0327C2.31248 16.8394 2.46918 16.6827 2.66248 16.6827C2.85578 16.6827 3.01248 16.8394 3.01248 17.0327V18.2002C3.01248 18.3935 2.85578 18.5502 2.66248 18.5502Z"
-              fill="#FFD666"
+              fill="var(--palette-warning-light)"
             />
             <path
               fillRule="evenodd"
               clipRule="evenodd"
               d="M4.08435 19.3707C3.89105 19.3707 3.73435 19.214 3.73435 19.0207V17.9927C3.73435 17.7994 3.89105 17.6427 4.08435 17.6427C4.27765 17.6427 4.43435 17.7994 4.43435 17.9927V19.0207C4.43435 19.214 4.27765 19.3707 4.08435 19.3707Z"
-              fill="#FFD666"
+              fill="var(--palette-warning-light)"
             />
             <path
               fillRule="evenodd"
               clipRule="evenodd"
               d="M5.50525 20.1912C5.31195 20.1912 5.15525 20.0345 5.15525 19.8412V18.9527C5.15525 18.7594 5.31195 18.6027 5.50525 18.6027C5.69855 18.6027 5.85525 18.7594 5.85525 18.9527V19.8412C5.85525 20.0345 5.69855 20.1912 5.50525 20.1912Z"
-              fill="#FFD666"
+              fill="var(--palette-warning-light)"
             />
             <path
               fillRule="evenodd"
               clipRule="evenodd"
               d="M6.92598 21.0307C6.73268 21.0307 6.57598 20.874 6.57598 20.6807V19.9127C6.57598 19.7194 6.73268 19.5627 6.92598 19.5627C7.11928 19.5627 7.27598 19.7194 7.27598 19.9127V20.6807C7.27598 20.874 7.11928 21.0307 6.92598 21.0307Z"
-              fill="#FFD666"
+              fill="var(--palette-warning-light)"
             />
           </g>
           <path
             id="Path_2"
             d="M18.1105 19.32C18.008 19.3201 17.9106 19.2752 17.8441 19.1972L16.6841 17.8382C16.6018 17.7433 16.5768 17.6115 16.6185 17.493C16.6602 17.3744 16.7622 17.2874 16.8858 17.2648C17.0094 17.2422 17.1356 17.2876 17.2165 17.3838L18.1545 18.4827L21.2295 15.981C21.3264 15.9012 21.4587 15.8793 21.5761 15.9238C21.6935 15.9683 21.7781 16.0723 21.7977 16.1963C21.8174 16.3203 21.7692 16.4453 21.6713 16.5239L18.3313 19.2415C18.269 19.2924 18.1909 19.3201 18.1105 19.32Z"
-            fill="#007867"
+            fill="var(--palette-primary-dark)"
           />
           <g id="Vector_5">
             <path
               fillRule="evenodd"
               clipRule="evenodd"
               d="M11.5888 18.0471C11.4302 18.0473 11.2914 17.941 11.2503 17.7879C11.2092 17.6347 11.2761 17.4731 11.4135 17.3939L13.008 16.4734C13.1163 16.4109 13.2497 16.4109 13.358 16.4734C13.4663 16.536 13.533 16.6515 13.533 16.7766C13.533 16.9016 13.4663 17.0172 13.358 17.0797L11.7635 18.0001C11.7104 18.0309 11.6501 18.0471 11.5888 18.0471Z"
-              fill="#B76E00"
+              fill="var(--palette-warning-dark)"
             />
             <path
               fillRule="evenodd"
               clipRule="evenodd"
               d="M12.5425 11.3318C12.4653 11.25 12.3535 11.2103 12.242 11.2251C12.1305 11.2398 12.0329 11.3073 11.9797 11.4063L11.1347 12.9783C11.0763 13.0868 11.0793 13.2179 11.1424 13.3236C11.2055 13.4293 11.3195 13.4941 11.4427 13.4941C11.5732 13.4944 11.6937 13.4239 11.7573 13.3098L11.95 12.9624V15.9711C11.95 16.1644 12.1067 16.3211 12.3 16.3211C12.4933 16.3211 12.65 16.1644 12.65 15.9711V12.4526L12.9345 12.7604C12.9976 12.8278 13.0851 12.8673 13.1774 12.87C13.2697 12.8726 13.3593 12.8383 13.4263 12.7746C13.4936 12.7107 13.5328 12.6226 13.5352 12.5297C13.5376 12.4369 13.5029 12.3469 13.439 12.2796L12.5425 11.3318Z"
-              fill="#B76E00"
+              fill="var(--palette-warning-dark)"
             />
           </g>
         </g>
@@ -114,8 +114,8 @@ export const notificationIcons = {
           y2="22.4115"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#77ED8B" />
-          <stop offset="1" stopColor="#22C55E" />
+          <stop stopColor="var(--palette-success-light)" />
+          <stop offset="1" stopColor="var(--palette-success-main)" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_0_8848"
@@ -125,8 +125,8 @@ export const notificationIcons = {
           y2="14.0791"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#FFAB00" />
-          <stop offset="1" stopColor="#B76E00" />
+          <stop stopColor="var(--palette-warning-main)" />
+          <stop offset="1" stopColor="var(--palette-warning-dark)" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_0_8848"
@@ -136,8 +136,8 @@ export const notificationIcons = {
           y2="14.0791"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#FFAB00" />
-          <stop offset="1" stopColor="#B76E00" />
+          <stop stopColor="var(--palette-warning-main)" />
+          <stop offset="1" stopColor="var(--palette-warning-dark)" />
         </linearGradient>
       </defs>
     </svg>
@@ -165,19 +165,19 @@ export const notificationIcons = {
               fillRule="evenodd"
               clipRule="evenodd"
               d="M6.19693 9.17512C5.9243 8.88543 5.53843 8.70351 5.10915 8.70351C4.28354 8.70351 3.61426 9.37279 3.61426 10.1984C3.61426 10.6276 3.79613 11.0135 4.08587 11.2862L7.31059 14.5109C7.58326 14.8006 7.96913 14.9825 8.39837 14.9825C9.22398 14.9825 9.89326 14.3132 9.89326 13.4876C9.89326 13.0584 9.71134 12.6725 9.42165 12.3998L6.19693 9.17512Z"
-              fill="#006C9C"
+              fill="var(--palette-info-dark)"
             />
             <path
               fillRule="evenodd"
               clipRule="evenodd"
               d="M10.4245 9.17512C10.1518 8.88543 9.76597 8.70351 9.33669 8.70351C8.51108 8.70351 7.8418 9.37279 7.8418 10.1984C7.8418 10.6276 8.02367 11.0135 8.31341 11.2862L11.5381 14.5109C11.8108 14.8006 12.1967 14.9825 12.6259 14.9825C13.4515 14.9825 14.1208 14.3132 14.1208 13.4876C14.1208 13.0584 13.9389 12.6725 13.6492 12.3998L10.4245 9.17512Z"
-              fill="#006C9C"
+              fill="var(--palette-info-dark)"
             />
             <path
               fillRule="evenodd"
               clipRule="evenodd"
               d="M14.6518 9.1751C14.3792 8.88541 13.9933 8.70349 13.564 8.70349C12.7384 8.70349 12.0692 9.37277 12.0692 10.1984C12.0692 10.6276 12.2511 11.0135 12.5408 11.2862L15.7655 14.5109C16.0382 14.8006 16.424 14.9825 16.8533 14.9825C17.6789 14.9825 18.3482 14.3132 18.3482 13.4876C18.3482 13.0584 18.1662 12.6725 17.8765 12.3998L14.6518 9.1751Z"
-              fill="#006C9C"
+              fill="var(--palette-info-dark)"
             />
           </g>
           <g id="Vector_2">
@@ -205,8 +205,8 @@ export const notificationIcons = {
           y2="23.1149"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#77ED8B" />
-          <stop offset="1" stopColor="#22C55E" />
+          <stop stopColor="var(--palette-success-light)" />
+          <stop offset="1" stopColor="var(--palette-success-main)" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_0_8824"
@@ -216,8 +216,8 @@ export const notificationIcons = {
           y2="19.3437"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#00B8D9" />
-          <stop offset="1" stopColor="#006C9C" />
+          <stop stopColor="var(--palette-info-main)" />
+          <stop offset="1" stopColor="var(--palette-info-dark)" />
         </linearGradient>
       </defs>
     </svg>
@@ -228,17 +228,17 @@ export const notificationIcons = {
         <path
           id="Vector"
           d="M0 8.99999L11.556 16.3545C11.688 16.452 11.844 16.5 12 16.5C12.156 16.5 12.312 16.452 12.444 16.3545L24 8.99999L12.45 0.149992C12.3201 0.052856 12.1622 0.000366211 12 0.000366211C11.8378 0.000366211 11.6799 0.052856 11.55 0.149992L0 8.99999Z"
-          fill="#FFE9D5"
+          fill="var(--palette-error-lighter)"
         />
         <path
           id="Vector_2"
           d="M19.5 0H4.5C3.6735 0 3 0.6735 3 1.5V18C3 18.414 3.336 18.75 3.75 18.75H20.25C20.664 18.75 21 18.414 21 18V1.5C21 0.6735 20.328 0 19.5 0Z"
-          fill="#61F3F3"
+          fill="var(--palette-info-light)"
         />
         <path
           id="Vector_3"
           d="M6.75 4.5H17.25C17.664 4.5 18 4.164 18 3.75C18 3.336 17.664 3 17.25 3H6.75C6.336 3 6 3.336 6 3.75C6 4.164 6.336 4.5 6.75 4.5ZM17.25 6H6.75C6.336 6 6 6.336 6 6.75C6 7.164 6.336 7.5 6.75 7.5H17.25C17.664 7.5 18 7.164 18 6.75C18 6.336 17.664 6 17.25 6ZM12.75 9H6.75C6.336 9 6 9.336 6 9.75C6 10.164 6.336 10.5 6.75 10.5H12.75C13.164 10.5 13.5 10.164 13.5 9.75C13.5 9.336 13.164 9 12.75 9Z"
-          fill="#006C9C"
+          fill="var(--palette-info-dark)"
         />
         <path
           id="Vector_4"
@@ -248,7 +248,7 @@ export const notificationIcons = {
         <path
           id="Vector_5"
           d="M22.5 24H1.5C0.6585 24 0 23.3415 0 22.5C6.7075e-05 22.3823 0.0277958 22.2663 0.0809492 22.1613C0.134103 22.0563 0.211192 21.9652 0.306 21.8955L11.556 14.3955C11.688 14.298 11.844 14.25 12 14.25C12.156 14.25 12.312 14.298 12.444 14.3955L23.694 21.8955C23.7888 21.9652 23.8659 22.0563 23.9191 22.1613C23.9722 22.2663 23.9999 22.3823 24 22.5C24 23.3415 23.3415 24 22.5 24Z"
-          fill="#FF5630"
+          fill="var(--palette-error-main)"
         />
       </g>
       <defs>
@@ -260,8 +260,8 @@ export const notificationIcons = {
           y2="30.573"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#FFAC82" />
-          <stop offset="1" stopColor="#FF5630" />
+          <stop stopColor="var(--palette-error-light)" />
+          <stop offset="1" stopColor="var(--palette-error-main)" />
         </linearGradient>
       </defs>
     </svg>
@@ -280,25 +280,25 @@ export const notificationIcons = {
             fillRule="evenodd"
             clipRule="evenodd"
             d="M15.1111 13.5665V19.7724H7.85246C7.85246 18.4551 6.78457 17.3872 5.46725 17.3872C4.14994 17.3872 3.08204 18.4551 3.08204 19.7724H1.3786C1.0171 19.7725 0.670387 19.6289 0.414766 19.3733C0.159146 19.1177 0.0155658 18.7709 0.015625 18.4094V7.03009C0.0155658 6.66859 0.159146 6.32188 0.414766 6.06626C0.670387 5.81063 1.0171 5.66706 1.3786 5.66711H2.85711C2.94212 8.0702 4.91485 9.97439 7.31944 9.97439C9.72402 9.97439 11.6968 8.0702 11.7818 5.66711H13.7481C14.5008 5.66718 15.111 6.27737 15.1111 7.03009V13.5665Z"
-            fill="#FFAB00"
+            fill="var(--palette-warning-main)"
           />
           <path
             id="Path_2"
             fillRule="evenodd"
             clipRule="evenodd"
             d="M11.7846 5.517C11.7846 5.56723 11.784 5.61746 11.7818 5.66714C11.6968 8.07022 9.72407 9.97441 7.31949 9.97441C4.9149 9.97441 2.94216 8.07022 2.85716 5.66714C2.85493 5.61746 2.85437 5.56723 2.85437 5.517C2.85437 3.05098 4.85347 1.05188 7.31949 1.05188C9.7855 1.05188 11.7846 3.05098 11.7846 5.517V5.517Z"
-            fill="#61F3F3"
+            fill="var(--palette-info-light)"
           />
           <g id="Vector">
             <path
               d="M21.5481 19.7724C21.5481 21.0895 20.4803 22.1573 19.1631 22.1573C17.846 22.1573 16.7782 21.0895 16.7782 19.7724C16.7782 18.4552 17.846 17.3875 19.1631 17.3875C20.4803 17.3875 21.5481 18.4552 21.5481 19.7724Z"
-              fill="#B76E00"
+              fill="var(--palette-warning-dark)"
             />
             <path
               fillRule="evenodd"
               clipRule="evenodd"
               d="M5.46696 17.3875C6.78412 17.3875 7.85189 18.4552 7.85189 19.7724C7.85189 21.0895 6.78412 22.1573 5.46696 22.1573C4.1498 22.1573 3.08203 21.0895 3.08203 19.7724C3.08206 18.4552 4.14981 17.3875 5.46696 17.3875Z"
-              fill="#B76E00"
+              fill="var(--palette-warning-dark)"
             />
           </g>
           <path
@@ -306,7 +306,7 @@ export const notificationIcons = {
             fillRule="evenodd"
             clipRule="evenodd"
             d="M8.80965 7.30308C8.71048 7.30321 8.61499 7.26548 8.54269 7.1976L7.05246 5.80225C6.97358 5.72837 6.92882 5.62512 6.92883 5.51704V2.62141C6.92883 2.40563 7.10375 2.23071 7.31953 2.23071C7.53531 2.23071 7.71023 2.40563 7.71023 2.62141V5.34792L9.07678 6.62746C9.19385 6.73707 9.23205 6.90709 9.17312 7.05624C9.11418 7.20539 8.97008 7.30338 8.80971 7.30336L8.80965 7.30308Z"
-            fill="#006C9C"
+            fill="var(--palette-info-dark)"
           />
         </g>
       </g>
@@ -319,8 +319,8 @@ export const notificationIcons = {
           y2="18.0528"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#FFD666" />
-          <stop offset="1" stopColor="#FFAB00" />
+          <stop stopColor="var(--palette-warning-light)" />
+          <stop offset="1" stopColor="var(--palette-warning-main)" />
         </linearGradient>
       </defs>
     </svg>

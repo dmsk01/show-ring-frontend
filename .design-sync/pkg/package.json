@@ -1,0 +1,8 @@
+{
+  "name": "show-ring-ds",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Show Ring design-system entry for claude.ai/design sync (re-exports app theme + components).",
+  "module": "./index.tsx",
+  "types": "./types/index.d.ts"
+}

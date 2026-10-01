@@ -14,6 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
+import { SEX_COLOR } from 'src/theme/semantic';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -37,7 +38,12 @@ export function DogTableRow({ row, breedName, detailsHref, editHref, canEdit }: 
     <>
       <TableRow hover>
         <TableCell>
-          <Link component={RouterLink} href={detailsHref} color="inherit" sx={{ fontWeight: 600 }}>
+          <Link
+            component={RouterLink}
+            href={detailsHref}
+            color="inherit"
+            sx={{ fontWeight: 'fontWeightSemiBold' }}
+          >
             {row.name}
           </Link>
         </TableCell>
@@ -47,7 +53,7 @@ export function DogTableRow({ row, breedName, detailsHref, editHref, canEdit }: 
         </TableCell>
 
         <TableCell>
-          <Label color={row.sex === 'male' ? 'info' : 'secondary'}>
+          <Label color={SEX_COLOR[row.sex]}>
             {row.sex === 'female' ? t('enums.sex.female') : t('enums.sex.male')}
           </Label>
         </TableCell>

@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import { usePermissions } from 'src/hooks/use-permissions';
 
 import { useTranslate } from 'src/locales';
+import { STATUS_TONE } from 'src/theme/semantic';
 import { useGetShowRings } from 'src/actions/show-result';
 import { useGetTask, downloadTask, generateOfficial } from 'src/actions/document';
 
@@ -28,10 +29,10 @@ import { Iconify } from 'src/components/iconify';
 type GeneratedTask = { id: string; label: string; filename: string };
 
 const STATUS_COLOR = {
-  pending: 'warning',
-  processing: 'info',
-  done: 'success',
-  failed: 'error',
+  pending: STATUS_TONE.pending,
+  processing: STATUS_TONE.progress,
+  done: STATUS_TONE.active,
+  failed: STATUS_TONE.danger,
 } as const;
 
 type TaskItemProps = { task: GeneratedTask };

@@ -21,7 +21,9 @@ setup('authenticate as admin', async ({ page, request }) => {
   // локаль для всех спеков, переиспользующих эту сессию.
   await pinLocale(page.context(), BASE_URL);
 
-  await page.goto('/auth/jwt/sign-in');
+  // Телефон — основной способ входа; сид-админ — email-аккаунт, поэтому
+  // сразу открываем дополнительный способ (deep-link ?method=email).
+  await page.goto('/auth/jwt/sign-in?method=email');
   // Локаль-независимые селекторы: дефолтный язык — RU, поэтому таргетим поля по
   // атрибуту name и сабмит по type, а не по видимым (переводимым) подписям.
   await page.locator('input[name="email"]').fill('admin@admin.com');

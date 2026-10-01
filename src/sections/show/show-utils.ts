@@ -2,6 +2,8 @@ import type { LabelColor } from 'src/components/label';
 import type { IShowResult } from 'src/types/show-result';
 import type { IShowItem, ShowStatus } from 'src/types/show';
 
+import { STATUS_TONE } from 'src/theme/semantic';
+
 export const SHOW_UPCOMING_STATUSES: ShowStatus[] = [
   'registration_open',
   'registration_closed',
@@ -29,12 +31,12 @@ export function showStatusI18nKey(status: string): string {
 }
 
 export const SHOW_STATUS_COLOR: Record<string, LabelColor> = {
-  draft: 'default',
-  registration_open: 'success',
-  registration_closed: 'info',
-  in_progress: 'info',
-  completed: 'default',
-  cancelled: 'error',
+  draft: STATUS_TONE.neutral,
+  registration_open: STATUS_TONE.active,
+  registration_closed: STATUS_TONE.pending,
+  in_progress: STATUS_TONE.progress,
+  completed: STATUS_TONE.neutral,
+  cancelled: STATUS_TONE.danger,
 };
 
 // ----------------------------------------------------------------------

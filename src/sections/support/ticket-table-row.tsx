@@ -10,24 +10,20 @@ import TableCell from '@mui/material/TableCell';
 import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
+import { STATUS_TONE, PRIORITY_TONE } from 'src/theme/semantic';
 
 import { Label } from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
 const STATUS_COLOR: Record<TicketStatus, LabelColor> = {
-  open: 'info',
-  in_progress: 'warning',
-  resolved: 'success',
-  closed: 'default',
+  open: STATUS_TONE.pending,
+  in_progress: STATUS_TONE.progress,
+  resolved: STATUS_TONE.active,
+  closed: STATUS_TONE.neutral,
 };
 
-const PRIORITY_COLOR: Record<TicketPriority, LabelColor> = {
-  low: 'default',
-  normal: 'info',
-  high: 'warning',
-  urgent: 'error',
-};
+const PRIORITY_COLOR: Record<TicketPriority, LabelColor> = PRIORITY_TONE;
 
 type Props = {
   row: ITicket;
@@ -40,7 +36,12 @@ export function TicketTableRow({ row, detailsHref }: Props) {
   return (
     <TableRow hover>
       <TableCell>
-        <Link component={RouterLink} href={detailsHref} color="inherit" sx={{ fontWeight: 600 }}>
+        <Link
+          component={RouterLink}
+          href={detailsHref}
+          color="inherit"
+          sx={{ fontWeight: 'fontWeightSemiBold' }}
+        >
           {row.subject}
         </Link>
       </TableCell>

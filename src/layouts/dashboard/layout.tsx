@@ -10,7 +10,6 @@ import { merge } from 'es-toolkit';
 import { useBoolean } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
-import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 import { iconButtonClasses } from '@mui/material/IconButton';
 
@@ -37,6 +36,7 @@ import { LanguagePopover } from '../components/language-popover';
 import { navData as dashboardNavData } from '../nav-config-dashboard';
 import { dashboardLayoutVars, dashboardNavColorVars } from './css-vars';
 import { NotificationsDrawer } from '../components/notifications-drawer';
+import { PhoneRequiredBanner } from '../components/phone-required-banner';
 import { MainSection, layoutClasses, HeaderSection, LayoutSection } from '../core';
 
 // ----------------------------------------------------------------------
@@ -134,11 +134,7 @@ export function DashboardLayout({
     };
 
     const headerSlots: HeaderSectionProps['slots'] = {
-      topArea: (
-        <Alert severity="info" sx={{ display: 'none', borderRadius: 0 }}>
-          This is an info Alert.
-        </Alert>
-      ),
+      topArea: <PhoneRequiredBanner />,
       bottomArea: isNavHorizontal ? (
         <NavHorizontal data={navData} layoutQuery={layoutQuery} cssVars={navVars.section} />
       ) : null,

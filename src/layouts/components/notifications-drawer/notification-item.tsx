@@ -72,7 +72,8 @@ export function NotificationItem({ notification, onClick }: NotificationItemProp
 
   const renderText = () => (
     <ListItemText
-      primary={readerContent(notification.title)}
+      // Заголовок — текст, не HTML: React экранирует его сам (см. to-drawer-item.ts).
+      primary={notification.title}
       secondary={
         <>
           {fToNow(notification.createdAt)}
@@ -85,7 +86,7 @@ export function NotificationItem({ notification, onClick }: NotificationItemProp
       }
       slotProps={{
         primary: {
-          sx: { mb: 0.5 },
+          sx: { mb: 0.5, typography: 'body2' },
         },
         secondary: {
           sx: {

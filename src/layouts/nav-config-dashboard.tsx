@@ -5,7 +5,6 @@ import { paths } from 'src/routes/paths';
 
 import { CONFIG } from 'src/global-config';
 
-import { Label } from 'src/components/label';
 import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -137,25 +136,6 @@ export function navData(t: TFunction): NavSectionProps['data'] {
           title: t('show_ring.profile'),
           path: paths.dashboard.profile,
           icon: ICONS.user,
-        },
-      ],
-    },
-    /**
-     * Demo — страницы шаблона Minimal. Видны только admin, припаркованы тут до чистки.
-     */
-    {
-      subheader: 'Demo',
-      items: [
-        {
-          title: 'Minimal demo',
-          path: paths.dashboard.demo,
-          icon: ICONS.menuItem,
-          permission: 'admin',
-          info: (
-            <Label color="warning" variant="inverted">
-              DEMO
-            </Label>
-          ),
         },
       ],
     },

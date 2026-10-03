@@ -20,8 +20,6 @@ import { detectSettings } from 'src/components/settings/server';
 import { detectCookieConsent } from 'src/components/cookie-consent/server';
 import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/components/settings';
 
-import { CheckoutProvider } from 'src/sections/checkout/context';
-
 import { AuthProvider } from 'src/auth/context/jwt';
 
 // ----------------------------------------------------------------------
@@ -99,13 +97,11 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                       defaultMode={themeConfig.defaultMode}
                     >
                       <MotionLazy>
-                        <CheckoutProvider>
-                          <Snackbar />
-                          <ProgressBar />
-                          <SettingsDrawer defaultSettings={defaultSettings} />
-                          {children}
-                          <CookieConsent consented={appConfig.cookieConsent} />
-                        </CheckoutProvider>
+                        <Snackbar />
+                        <ProgressBar />
+                        <SettingsDrawer defaultSettings={defaultSettings} />
+                        {children}
+                        <CookieConsent consented={appConfig.cookieConsent} />
                       </MotionLazy>
                     </ThemeProvider>
                   </AppRouterCacheProvider>

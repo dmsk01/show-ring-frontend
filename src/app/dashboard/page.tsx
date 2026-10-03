@@ -1,13 +1,12 @@
-import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
-import { CONFIG } from 'src/global-config';
-
-import { OverviewAppView } from 'src/sections/overview/app/view';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = { title: `Dashboard - ${CONFIG.appName}` };
-
+// Своей главной у кабинета пока нет: шаблонный обзор Minimal (виджеты на
+// моках) удалён. Вход ведёт сюда (CONFIG.auth.redirectPath) — отправляем
+// в профиль, как и только что зарегистрированных пользователей.
 export default function Page() {
-  return <OverviewAppView />;
+  redirect(paths.dashboard.profile);
 }

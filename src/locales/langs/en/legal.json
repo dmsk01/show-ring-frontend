@@ -1,0 +1,62 @@
+{
+  "gate": {
+    "title": "Legal documents updated",
+    "description": "To keep using the service, please confirm the current versions of the documents.",
+    "termsPrefix": "By clicking “Accept”, you accept the ",
+    "terms": "Terms of Service",
+    "termsSuffix": " and confirm that you are 18 or older.",
+    "personalDataPrefix": "I give my ",
+    "personalData": "consent to personal data processing",
+    "accept": "Accept",
+    "signOut": "Sign out",
+    "saveFailed": "Could not save. Please try again."
+  },
+  "consents": {
+    "title": "Consents",
+    "subheader": "Documents you have accepted and your rights under Russian data protection law.",
+    "personalData": "Consent to personal data processing",
+    "givenAt": "Given {{date}}",
+    "notGiven": "Not given",
+    "revoke": "Withdraw",
+    "revokeTitle": "Withdraw consent?",
+    "revokeText": "Processing required to perform the Terms of Service continues until the account is deleted. To stop it completely, delete your account.",
+    "revoked": "Consent withdrawn",
+    "publicHint": "Contact visibility for kennels and ads is controlled by the “Show contacts to everyone” switch in their settings.",
+    "documents": "Legal documents"
+  },
+  "deletion": {
+    "title": "Delete account",
+    "description": "We will delete your phone, email, profile, ads, support requests, subscriptions and dog document scans, and remove kennel contacts. Dogs and past show results remain without a link to you. This cannot be undone.",
+    "button": "Delete account",
+    "dialogTitle": "Delete account permanently?",
+    "codeHint": "We will send a confirmation code to the account phone number.",
+    "sendCode": "Send code",
+    "codeSent": "Code sent",
+    "codeLabel": "SMS code",
+    "passwordLabel": "Current password",
+    "confirm": "Delete",
+    "cancel": "Cancel",
+    "done": "Account deleted",
+    "errors": {
+      "active_shows": "You organize a show that has not taken place yet. Finish or cancel it first.",
+      "active_ad_campaigns": "You have active ad campaigns. Stop them first.",
+      "invalid_password": "Wrong password",
+      "code_required": "Enter the SMS code",
+      "invalid_code": "Wrong code",
+      "code_expired": "The code has expired. Request a new one.",
+      "generic": "Could not delete the account. Please try later."
+    }
+  },
+  "contacts": {
+    "label": "Show contacts to everyone",
+    "helper": "By turning this on, you consent to your phone, email and website being shown to anyone. Otherwise only you can see them.",
+    "link": "Consent terms"
+  },
+  "ad": {
+    "advertiserName": "Advertiser (for the “Ad” label)",
+    "advertiserInn": "Advertiser tax ID (INN)",
+    "erid": "erid token",
+    "eridHelper": "Ad identifier issued by an ad data operator (Russian Advertising Law, art. 18.1). Banners without it are not shown.",
+    "innInvalid": "INN must be 10 or 12 digits"
+  }
+}

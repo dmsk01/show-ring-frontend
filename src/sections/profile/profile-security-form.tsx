@@ -31,6 +31,7 @@ import { passwordPolicy } from 'src/auth/password-policy';
 import { resetRevokedSession } from 'src/auth/context/jwt';
 import { useAuthContext, useAuthMethods } from 'src/auth/hooks';
 
+import { ConsentsCard, DeleteAccountCard } from './profile-privacy';
 import { PhoneCard, EmailLoginCard } from './profile-sign-in-methods';
 
 // ----------------------------------------------------------------------
@@ -43,9 +44,7 @@ export function getEmailSchema(t: TFunction<['profile', 'common']>) {
         invalid: t('profile:validation.emailInvalid'),
       },
     }),
-    current_password: z
-      .string()
-      .min(1, { error: t('profile:validation.currentPasswordRequired') }),
+    current_password: z.string().min(1, { error: t('profile:validation.currentPasswordRequired') }),
   });
 }
 
@@ -101,6 +100,8 @@ export function ProfileSecurityForm() {
         canSignIn('email_password') && <EmailLoginCard me={me} />
       )}
       {me.has_password && <PasswordCard />}
+      <ConsentsCard />
+      <DeleteAccountCard me={me} />
     </Stack>
   );
 }

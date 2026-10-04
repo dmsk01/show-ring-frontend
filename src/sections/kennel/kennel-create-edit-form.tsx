@@ -22,6 +22,8 @@ import { createKennel, updateKennel } from 'src/actions/kennel';
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
 
+import { PublicContactsSwitch } from 'src/sections/legal/public-contacts-switch';
+
 // ----------------------------------------------------------------------
 
 // Mirrors backend KennelCreate constraints (name/prefix/city/country/phone maxLength,
@@ -32,11 +34,23 @@ export const getKennelSchema = (t: TFunction) =>
       .string()
       .min(1, { error: t('form.validation.nameRequired') })
       .max(255, { error: t('form.validation.tooLong', { max: 255 }) }),
-    kennel_prefix: z.string().max(128, { error: t('form.validation.tooLong', { max: 128 }) }).nullable(),
+    kennel_prefix: z
+      .string()
+      .max(128, { error: t('form.validation.tooLong', { max: 128 }) })
+      .nullable(),
     description: z.string().nullable(),
-    city: z.string().max(128, { error: t('form.validation.tooLong', { max: 128 }) }).nullable(),
-    country: z.string().max(64, { error: t('form.validation.tooLong', { max: 64 }) }).nullable(),
-    contact_phone: z.string().max(32, { error: t('form.validation.tooLong', { max: 32 }) }).nullable(),
+    city: z
+      .string()
+      .max(128, { error: t('form.validation.tooLong', { max: 128 }) })
+      .nullable(),
+    country: z
+      .string()
+      .max(64, { error: t('form.validation.tooLong', { max: 64 }) })
+      .nullable(),
+    contact_phone: z
+      .string()
+      .max(32, { error: t('form.validation.tooLong', { max: 32 }) })
+      .nullable(),
     contact_email: z
       .string()
       .refine((val) => !val || z.email().safeParse(val).success, {
@@ -50,6 +64,7 @@ export const getKennelSchema = (t: TFunction) =>
         error: t('form.validation.websiteUrl'),
       })
       .nullable(),
+    contacts_public: z.boolean(),
   });
 
 export type KennelSchemaType = z.infer<ReturnType<typeof getKennelSchema>>;
@@ -73,6 +88,7 @@ export function KennelCreateEditForm({ currentKennel }: Props) {
     contact_phone: null,
     contact_email: null,
     website: null,
+    contacts_public: false,
   };
 
   const methods = useForm({
@@ -89,6 +105,7 @@ export function KennelCreateEditForm({ currentKennel }: Props) {
           contact_phone: currentKennel.contact_phone,
           contact_email: currentKennel.contact_email,
           website: currentKennel.website,
+          contacts_public: currentKennel.contacts_public ?? false,
         }
       : undefined,
   });
@@ -132,6 +149,10 @@ export function KennelCreateEditForm({ currentKennel }: Props) {
           <Field.Text name="contact_phone" label={t('form.fields.phone')} />
           <Field.Text name="contact_email" label={t('form.fields.email')} />
           <Field.Text name="website" label={t('form.fields.website')} />
+        </Box>
+
+        <Box sx={{ mt: 2 }}>
+          <PublicContactsSwitch />
         </Box>
 
         <Box sx={{ mt: 3 }}>

@@ -53,6 +53,23 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  // Правовые документы раньше были статикой public/legal/*.html — на эти
+  // адреса могли ссылаться письма и внешние сайты. Постоянный редирект.
+  async redirects() {
+    return [
+      {
+        source: '/legal/privacy-policy.html',
+        destination: '/legal/privacy-policy/',
+        permanent: true,
+      },
+      {
+        source: '/legal/terms-of-service.html',
+        destination: '/legal/terms-of-service/',
+        permanent: true,
+      },
+      { source: '/legal/consent.html', destination: '/legal/consent/', permanent: true },
+    ];
+  },
   async rewrites() {
     return [
       {

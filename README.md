@@ -65,6 +65,27 @@ npm run test:e2e       # Playwright e2e (нужен живой бэкенд)
 - `e2e` — Playwright-сценарии
 - `docs` — планы, спеки и дизайн-документы
 
+## Правовые документы и персональные данные
+
+Пользовательское соглашение, Политика конфиденциальности, Согласие на обработку ПДн и Согласие
+на распространение ПДн — страницы `/legal/*` (`src/app/legal`).
+
+- **Тексты** — `src/sections/legal/documents/*.tsx`, общий рендерер — `src/sections/legal/view`.
+- **Реквизиты оператора** — одно место: `src/sections/legal/operator.ts`. Незаполненное поле
+  (`null`) выводится жёлтой плашкой «[заполнить: …]» — до публикации в проде их быть не должно.
+- **Новая редакция документа** — поменять дату в `LEGAL_REVISIONS` (`operator.ts`) **и**
+  `CURRENT_REVISIONS` в бэкенде (`app/services/consent.py`). Тогда у всех пользователей появится
+  диалог подтверждения (`src/sections/legal/consent-gate.tsx`).
+- **Согласия в интерфейсе:** отдельный чекбокс в форме входа (`PhoneOtpForm requireConsent`),
+  переключатель «Показывать контакты всем» у питомника и объявления
+  (`src/sections/legal/public-contacts-switch.tsx`), отзыв согласия и удаление аккаунта —
+  «Профиль → Безопасность» (`src/sections/profile/profile-privacy.tsx`).
+- **Не грузить ничего с зарубежных серверов** без правки Политики: шрифты и иконки — только
+  локальные (незарегистрированная иконка Iconify не рендерится, а не догружается из сети).
+
+Аудит и статус доработок — `docs/plans/legal-compliance-plan.md`, бэкенд —
+`show-ring-backend/docs/plans/stages/stage-20-personal-data.md`.
+
 ## Деплой
 
 Собирается в `standalone` Docker-образ (`Dockerfile`, non-root, порт 8082, healthcheck `/healthz`)

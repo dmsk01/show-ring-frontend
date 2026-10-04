@@ -2,9 +2,7 @@
 
 import { AboutHero } from '../about-hero';
 import { AboutWhat } from '../about-what';
-import { AboutTeam } from '../about-team';
 import { AboutVision } from '../about-vision';
-import { AboutTestimonials } from '../about-testimonials';
 
 // ----------------------------------------------------------------------
 
@@ -17,9 +15,9 @@ export function AboutView() {
 
       <AboutVision />
 
-      <AboutTeam />
-
-      <AboutTestimonials />
+      {/* Блоки «Команда» и «Отзывы» шаблона убраны: там вымышленные люди и
+          отзывы со стоковыми фото (ст. 5 Закона «О рекламе» — недостоверная
+          реклама). Вернуть только с реальными людьми и их согласия. */}
     </>
   );
 }

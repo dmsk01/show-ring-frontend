@@ -55,6 +55,7 @@ export function JwtSignUpView() {
       <PhoneOtpForm
         submitLabel={t('auth:signUp.submit')}
         verifyCode={verifyPhoneCode}
+        requireConsent
         onVerified={handleVerified}
         phoneFooter={<SignUpTerms sx={{ mt: 0 }} />}
       />

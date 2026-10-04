@@ -19,9 +19,10 @@ export const paths = {
   page404: '/error/404',
   page500: '/error/500',
   legal: {
-    privacy: '/legal/privacy-policy.html',
-    terms: '/legal/terms-of-service.html',
-    consent: '/legal/consent.html',
+    privacy: '/legal/privacy-policy',
+    terms: '/legal/terms-of-service',
+    consent: '/legal/consent',
+    publicConsent: '/legal/public-data-consent',
   },
   post: {
     root: `/post`,

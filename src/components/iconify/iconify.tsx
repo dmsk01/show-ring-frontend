@@ -7,6 +7,7 @@ import { useId } from 'react';
 import { Icon } from '@iconify/react';
 import { mergeClasses } from 'minimal-shared/utils';
 
+import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
 import { iconifyClasses } from './classes';
@@ -22,17 +23,28 @@ export type IconifyProps = React.ComponentProps<typeof IconRoot> &
 export function Iconify({ className, icon, width = 20, height, sx, ...other }: IconifyProps) {
   const uniqueId = useId();
 
+  registerIcons();
+
+  // Незарегистрированную иконку @iconify/react догрузил бы с api.iconify.design —
+  // это запрос с IP посетителя на зарубежный сервер (трансграничная передача,
+  // ст. 12 152-ФЗ; Политика обещает, что её нет). Поэтому вместо онлайн-загрузки —
+  // пустое место того же размера и предупреждение разработчику.
   if (!allIconNames.includes(icon)) {
     console.warn(
-      [
-        `Icon "${icon}" is currently loaded online, which may cause flickering effects.`,
-        `To ensure a smoother experience, please register your icon collection for offline use.`,
-        `More information is available at: https://docs.minimals.cc/icons/`,
-      ].join('\n')
+      `Icon "${icon}" is not registered offline (src/components/iconify/icon-sets.ts) and is not rendered.`
+    );
+    return (
+      <Box
+        component="span"
+        aria-hidden
+        className={mergeClasses([iconifyClasses.root, className])}
+        sx={[
+          { width, height: height ?? width, flexShrink: 0, display: 'inline-flex' },
+          ...(Array.isArray(sx) ? sx : [sx]),
+        ]}
+      />
     );
   }
-
-  registerIcons();
 
   return (
     <IconRoot

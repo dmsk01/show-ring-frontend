@@ -73,7 +73,6 @@ export function CookieConsent({ consented }: CookieConsentProps) {
         >
           <Typography variant="body2" sx={{ flexGrow: 1, color: 'text.secondary' }}>
             {t('message')}{' '}
-            {/* Статический HTML в public/ — обычный <a>, не клиентский роутинг Next. */}
             <Link href={paths.legal.privacy} target="_blank" rel="noopener" color="primary">
               {t('privacyLink')}
             </Link>

@@ -171,6 +171,9 @@ export const endpoints = {
     phoneSendCode: '/users/me/phone/send-code',
     phoneVerify: '/users/me/phone/verify',
     reauthSendCode: '/users/me/reauth/send-code',
+    // 152-ФЗ: журнал согласий и удаление (обезличивание) аккаунта.
+    consents: '/users/me/consents',
+    deleteAccount: '/users/me/delete',
     emailLogin: '/users/me/email-login',
     signIn: '/auth/login',
     refresh: '/auth/refresh',

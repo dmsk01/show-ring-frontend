@@ -50,6 +50,15 @@ export function getCampaignSchema(t: TFunction) {
       .nullable(),
     description: z.string().nullable(),
     status: z.enum(['draft', 'active', 'paused', 'completed', 'cancelled']),
+    // Маркировка рекламы (ст. 18.1 Закона «О рекламе»).
+    advertiser_name: z
+      .string()
+      .max(255, { error: t('form.validation.tooLong', { max: 255 }) })
+      .nullable(),
+    advertiser_inn: z
+      .string()
+      .refine((v) => !v || /^\d{10}(\d{2})?$/.test(v), { error: t('legal:ad.innInvalid') })
+      .nullable(),
   });
 }
 
@@ -59,7 +68,7 @@ type Props = { currentCampaign?: ICampaign };
 
 export function CampaignCreateEditForm({ currentCampaign }: Props) {
   const router = useRouter();
-  const { t } = useTranslate(['ad', 'common']);
+  const { t } = useTranslate(['ad', 'common', 'legal']);
 
   const CampaignSchema = useMemo(() => getCampaignSchema(t), [t]);
 
@@ -71,6 +80,8 @@ export function CampaignCreateEditForm({ currentCampaign }: Props) {
     cost_per_impression: null,
     description: null,
     status: 'draft',
+    advertiser_name: null,
+    advertiser_inn: null,
   };
 
   const methods = useForm<CampaignSchemaType>({
@@ -86,6 +97,8 @@ export function CampaignCreateEditForm({ currentCampaign }: Props) {
           cost_per_impression: currentCampaign.cost_per_impression,
           description: currentCampaign.description,
           status: currentCampaign.status,
+          advertiser_name: currentCampaign.advertiser_name,
+          advertiser_inn: currentCampaign.advertiser_inn,
         }
       : undefined,
   });
@@ -104,6 +117,8 @@ export function CampaignCreateEditForm({ currentCampaign }: Props) {
         date_end: data.date_end,
         description: data.description || null,
         cost_per_impression: data.cost_per_impression ? Number(data.cost_per_impression) : null,
+        advertiser_name: data.advertiser_name || null,
+        advertiser_inn: data.advertiser_inn || null,
       };
 
       if (currentCampaign) {
@@ -143,6 +158,8 @@ export function CampaignCreateEditForm({ currentCampaign }: Props) {
           )}
 
           <Field.Text name="budget" label={t('form.fields.budget')} type="number" />
+          <Field.Text name="advertiser_name" label={t('legal:ad.advertiserName')} />
+          <Field.Text name="advertiser_inn" label={t('legal:ad.advertiserInn')} />
           <Field.Text
             name="cost_per_impression"
             label={t('form.fields.costPerImpression')}
@@ -154,11 +171,7 @@ export function CampaignCreateEditForm({ currentCampaign }: Props) {
             label={t('form.fields.dateStart')}
             placeholder="YYYY-MM-DD"
           />
-          <Field.Text
-            name="date_end"
-            label={t('form.fields.dateEnd')}
-            placeholder="YYYY-MM-DD"
-          />
+          <Field.Text name="date_end" label={t('form.fields.dateEnd')} placeholder="YYYY-MM-DD" />
         </Box>
 
         <Box sx={{ mt: 3 }}>

@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
@@ -105,9 +106,19 @@ export function KennelDetailView({ id }: Props) {
             </Typography>
           </Stack>
           {kennel.is_verified && (
-            <Label color="success" startIcon={<Iconify icon="solar:verified-check-bold" />}>
-              {t('detail.verified')}
-            </Label>
+            // Отметка — не гарантия (п. 3.3 Пользовательского соглашения).
+            <Tooltip title={t('detail.verifiedHint')}>
+              <Label color="success" startIcon={<Iconify icon="solar:verified-check-bold" />}>
+                {t('detail.verified')}
+              </Label>
+            </Tooltip>
+          )}
+          {contacts.length === 0 && (
+            // Без согласия на распространение (ст. 10.1 152-ФЗ) API отдаёт
+            // контакты пустыми — объясняем, а не показываем пустоту.
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {t('detail.contactsHidden')}
+            </Typography>
           )}
           {contacts.map((c) => (
             <Stack key={c.icon} direction="row" spacing={0.5} alignItems="center">

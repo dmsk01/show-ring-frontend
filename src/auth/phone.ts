@@ -42,6 +42,8 @@ const OTP_ERROR_KEYS: Record<string, string> = {
   // ...а это IP-лимитер (progressive_ban) — общая «слишком много попыток».
   'too many requests': 'auth:errors.tooManyRequests',
   sms_delivery_failed: 'auth:errors.smsFailed',
+  // Новый номер без отметки согласия (ч. 1 ст. 9 152-ФЗ) — код уже сожжён.
+  consent_required: 'auth:errors.consentRequired',
   user_blocked: 'auth:errors.userBlocked',
   phone_taken: 'auth:errors.phoneTaken',
   phone_already_set: 'auth:errors.phoneAlreadySet',

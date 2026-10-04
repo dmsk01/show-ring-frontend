@@ -1,12 +1,7 @@
 import type { DogSex } from './dog';
 
 export type ClassifiedCategory =
-  | 'puppy_sale'
-  | 'adult_sale'
-  | 'mating'
-  | 'handler'
-  | 'grooming'
-  | 'other';
+  'puppy_sale' | 'adult_sale' | 'mating' | 'handler' | 'grooming' | 'other';
 
 export type ClassifiedPriceKind = 'fixed' | 'free' | 'negotiable';
 
@@ -58,6 +53,8 @@ export type IClassifiedItem = {
   city: string | null;
   contact_phone: string | null;
   contact_email: string | null;
+  // Согласие автора на распространение контактов (ст. 10.1 152-ФЗ).
+  contacts_public: boolean;
   status: ClassifiedStatus;
   availability: AnimalAvailability;
   views_count: number;
@@ -76,6 +73,7 @@ export type IClassifiedCreate = {
   city?: string | null;
   contact_phone?: string | null;
   contact_email?: string | null;
+  contacts_public?: boolean;
   images?: IClassifiedImage[];
 };
 

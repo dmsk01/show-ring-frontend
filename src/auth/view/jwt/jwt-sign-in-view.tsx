@@ -139,6 +139,7 @@ export function JwtSignInView() {
           <PhoneOtpForm
             submitLabel={t('auth:signIn.submit')}
             verifyCode={verifyPhoneCode}
+            requireConsent
             onVerified={handlePhoneVerified}
             phoneFooter={
               <>

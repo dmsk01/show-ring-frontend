@@ -44,9 +44,7 @@ export function ClassifiedDetailView({ id }: Props) {
     const notFound = classifiedError?.response?.status === 404;
     return (
       <Container sx={{ pt: { xs: 8, md: 12 }, pb: 10 }}>
-        <Typography>
-          {notFound ? t('detail.notFound') : t('detail.loadError')}
-        </Typography>
+        <Typography>{notFound ? t('detail.notFound') : t('detail.loadError')}</Typography>
       </Container>
     );
   }
@@ -106,9 +104,7 @@ export function ClassifiedDetailView({ id }: Props) {
           <Label color={AVAILABILITY_COLOR[availability]} variant="filled">
             {t(classifiedAvailabilityI18nKey(availability))}
           </Label>
-          <Label color="info">
-            {t(classifiedCategoryI18nKey(classified.category))}
-          </Label>
+          <Label color="info">{t(classifiedCategoryI18nKey(classified.category))}</Label>
         </Stack>
 
         <Typography variant="h5" sx={{ color: 'primary.main', mb: 2 }}>
@@ -141,6 +137,14 @@ export function ClassifiedDetailView({ id }: Props) {
 
         <Markdown children={classified.description} />
 
+        {!classified.contact_phone && !classified.contact_email && (
+          // Без согласия на распространение (ст. 10.1 152-ФЗ) API отдаёт
+          // контакты пустыми — объясняем, а не показываем пустоту.
+          <Typography variant="body2" sx={{ mt: 4, color: 'text.secondary' }}>
+            {t('detail.contactsHidden')}
+          </Typography>
+        )}
+
         {(classified.contact_phone || classified.contact_email) && (
           <>
             <Divider sx={{ borderStyle: 'dashed', my: 4 }} />
@@ -152,9 +156,7 @@ export function ClassifiedDetailView({ id }: Props) {
                 <Link href={`tel:${classified.contact_phone}`}>{classified.contact_phone}</Link>
               )}
               {classified.contact_email && (
-                <Link href={`mailto:${classified.contact_email}`}>
-                  {classified.contact_email}
-                </Link>
+                <Link href={`mailto:${classified.contact_email}`}>{classified.contact_email}</Link>
               )}
             </Stack>
           </>

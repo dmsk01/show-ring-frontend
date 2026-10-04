@@ -30,6 +30,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { useAuthContext } from 'src/auth/hooks';
 
 import { PedigreeTree } from '../pedigree-tree';
+import { DogDocuments } from '../dog-documents';
 import { DogSiblings, DogDescendants } from '../dog-relatives';
 import { canManageDog, dogPlaceholderImage } from '../dog-utils';
 
@@ -38,7 +39,7 @@ import { canManageDog, dogPlaceholderImage } from '../dog-utils';
 type Props = { id: string };
 
 export function DogDetailView({ id }: Props) {
-  const { t } = useTranslate(['dog', 'common']);
+  const { t } = useTranslate(['dog', 'common', 'checkin']);
   const { user } = useAuthContext();
   const { can } = usePermissions();
   const [tab, setTab] = useState('info');
@@ -60,6 +61,8 @@ export function DogDetailView({ id }: Props) {
   if (dogLoading) return <LoadingScreen />;
   if (!dog) return <DashboardContent>{t('detail.notFound')}</DashboardContent>;
 
+  const canManage = canManageDog(dog, user?.id, can);
+
   return (
     <DashboardContent>
       <CustomBreadcrumbs
@@ -70,7 +73,7 @@ export function DogDetailView({ id }: Props) {
           { name: dog.name },
         ]}
         action={
-          canManageDog(dog, user?.id, can) ? (
+          canManage ? (
             <Button
               component={RouterLink}
               href={paths.dashboard.dogs.edit(dog.id)}
@@ -89,6 +92,7 @@ export function DogDetailView({ id }: Props) {
         <Tab value="titles" label={`${t('detail.titles')} (${titles.length})`} />
         <Tab value="pedigree" label={t('detail.pedigree')} />
         <Tab value="relatives" label={t('detail.relatives')} />
+        {canManage && <Tab value="documents" label={t('checkin:documents.tab')} />}
       </Tabs>
 
       {tab === 'info' && (
@@ -173,6 +177,8 @@ export function DogDetailView({ id }: Props) {
           </Stack>
         </Card>
       )}
+
+      {tab === 'documents' && canManage && <DogDocuments dogId={dog.id} />}
 
       {tab === 'titles' && (
         <Card sx={{ p: 3 }}>

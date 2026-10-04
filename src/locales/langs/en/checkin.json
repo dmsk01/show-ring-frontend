@@ -1,0 +1,154 @@
+{
+  "kinds": {
+    "vet_passport": "Vet passport",
+    "pedigree": "Pedigree",
+    "puppy_card": "Puppy card",
+    "working_certificate": "Working certificate",
+    "other": "Other"
+  },
+  "problems": {
+    "vet_passport_missing": "Vet passport is not uploaded",
+    "rabies_date_missing": "Rabies vaccination expiry date is missing",
+    "rabies_expired": "Rabies vaccination expires before the show ends",
+    "pedigree_missing": "Pedigree or puppy card is not uploaded",
+    "working_certificate_missing": "Working class requires a working certificate"
+  },
+  "attendance": {
+    "registered": "Expected",
+    "arrived": "Arrived",
+    "admitted": "Admitted",
+    "rejected": "Not admitted",
+    "absent": "Absent"
+  },
+  "checkKinds": {
+    "docs_precheck": "Documents pre-check",
+    "arrival": "Arrival",
+    "vet": "Vet check",
+    "docs_onsite": "On-site documents"
+  },
+  "checkResults": {
+    "passed": "passed",
+    "failed": "failed"
+  },
+  "documents": {
+    "tab": "Documents",
+    "hint": "Documents are required for show admission. Only the owner and organizers of shows the dog is entered in can see them.",
+    "kind": "Document type",
+    "validUntil": "Rabies vaccination valid until",
+    "chooseFile": "Choose file (PDF or photo)",
+    "upload": "Upload",
+    "current": "Current",
+    "validUntilShort": "valid until {{date}}",
+    "uploadedAt": "uploaded {{date}}",
+    "open": "Open",
+    "delete": "Delete",
+    "deleteTitle": "Delete document?",
+    "deleteMessage": "The scan will be deleted. Check history at shows is kept.",
+    "empty": "No documents uploaded yet",
+    "uploaded": "Document uploaded",
+    "deleted": "Document deleted",
+    "failed": "Action failed",
+    "needFile": "Choose a file",
+    "needValidUntil": "Enter the vaccination expiry date"
+  },
+  "ticket": {
+    "button": "My ticket",
+    "heading": "Ticket: {{name}}",
+    "hint": "Show this QR code at the registration desk — it finds all your dogs.",
+    "fullscreen": "Full screen",
+    "close": "Close",
+    "catalogNumber": "No. {{n}}",
+    "noNumber": "number is assigned after registration closes",
+    "toDocuments": "Upload documents",
+    "allGood": "Documents are fine",
+    "unavailable": "Ticket unavailable: check-in is not enabled for this show or the show is over."
+  },
+  "organizer": {
+    "toggle": "Arrival check-in",
+    "toggleHint": "Participants get QR tickets; the desk records arrival, vet check and documents. When the show starts, unmarked entries become “absent”.",
+    "staff": "Staff",
+    "precheck": "Pre-check",
+    "desk": "Desk",
+    "toggleFailed": "Failed to change the setting"
+  },
+  "staff": {
+    "heading": "Staff: {{name}}",
+    "headingFallback": "Show staff",
+    "hint": "A registrar scans tickets and marks dogs at the desk — for this show only.",
+    "contact": "Email or phone (+1…)",
+    "add": "Add",
+    "empty": "No registrars assigned",
+    "remove": "Remove",
+    "added": "Registrar added",
+    "removed": "Registrar removed",
+    "notFound": "No user with this email or phone",
+    "already": "User is already on staff",
+    "failed": "Action failed"
+  },
+  "precheck": {
+    "heading": "Documents pre-check: {{name}}",
+    "headingFallback": "Documents pre-check",
+    "hint": "Check scans in advance — at the desk only the chip check and number remain.",
+    "empty": "No documents awaiting review",
+    "approve": "Approve",
+    "reject": "Reject",
+    "rejectTitle": "Reject documents",
+    "comment": "Reason",
+    "approved": "Documents approved",
+    "rejected": "Documents rejected",
+    "failed": "Action failed"
+  },
+  "desk": {
+    "heading": "Registration desk: {{name}}",
+    "headingFallback": "Registration desk",
+    "scan": "Scan QR",
+    "searchPlaceholder": "Catalog number, phone (+…), chip or name",
+    "summary": {
+      "total": "Total",
+      "registered": "Expected",
+      "arrived": "Arrived",
+      "admitted": "Admitted",
+      "rejected": "Not admitted",
+      "absent": "Absent"
+    },
+    "notAvailable": "The desk works when check-in is enabled and registration is closed or the show is running.",
+    "admit": "Admit",
+    "reject": "Reject",
+    "arrivalOnly": "Arrival only",
+    "history": "History",
+    "historyTitle": "Check history",
+    "historyEmpty": "No checks yet",
+    "prechecked": "Documents pre-approved",
+    "precheckFailed": "Pre-check: rejected",
+    "rabies": "Vaccinated until {{date}}",
+    "rabiesExpired": "Vaccination expired ({{date}})",
+    "rabiesUnknown": "No vaccination data",
+    "rejectTitle": "Reject the dog",
+    "reason": "Reason",
+    "reasons": {
+      "vet": "Vet check",
+      "docs_onsite": "Documents"
+    },
+    "comment": "Comment",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "saved": "Check saved",
+    "noResults": "Nothing found",
+    "chip": "Chip",
+    "tattoo": "Tattoo",
+    "noDocuments": "No documents uploaded",
+    "scannerTitle": "Point the camera at the QR code",
+    "errors": {
+      "invalidToken": "QR not recognized — find the participant manually",
+      "otherShow": "Ticket is for another show",
+      "noEntries": "No entries for this show",
+      "generic": "Action failed",
+      "camera": "No camera access — use search"
+    }
+  },
+  "staffShows": {
+    "title": "Show check-in",
+    "empty": "You are not assigned as a registrar for any show yet.",
+    "open": "Open desk"
+  }
+}

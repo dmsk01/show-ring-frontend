@@ -134,6 +134,12 @@ export function navData(t: TFunction): NavSectionProps['data'] {
           permission: 'dogs:view',
         },
         {
+          title: t('show_ring.checkin'),
+          path: paths.dashboard.checkin,
+          icon: ICONS.job,
+          permission: 'dashboard:view',
+        },
+        {
           title: t('show_ring.profile'),
           path: paths.dashboard.profile,
           icon: ICONS.user,

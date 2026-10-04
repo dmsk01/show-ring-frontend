@@ -29,6 +29,8 @@ export type IShowItem = {
   entry_fee: number | null;
   registration_deadline: string | null;
   status: ShowStatus;
+  // Включена ли регистрация прибытия (чек-ин).
+  checkin_enabled: boolean;
   created_at: string;
   updated_at: string;
 };

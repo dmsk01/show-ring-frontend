@@ -1,3 +1,5 @@
+import type { AttendanceStatus } from './checkin';
+
 // Запись собаки на выставку (Show Ring: /shows/{id}/entries).
 
 export type IShowEntry = {
@@ -9,6 +11,8 @@ export type IShowEntry = {
   registered_by: string;
   catalog_number: number | null;
   notes: string | null;
+  // Статус явки на стойке (чек-ин); по умолчанию registered.
+  attendance_status?: AttendanceStatus;
   created_at: string;
   // enriched by GET /shows/{id}/entries/my and PATCH
   dog_name: string;

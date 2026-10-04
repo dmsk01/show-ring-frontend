@@ -187,6 +187,22 @@ export const endpoints = {
     descendants: (id: string) => `/dogs/${id}/descendants`,
     descendant: (id: string, childId: string) => `/dogs/${id}/descendants/${childId}`,
     siblings: (id: string) => `/dogs/${id}/siblings`,
+    documents: (id: string) => `/dogs/${id}/documents`,
+    document: (id: string, docId: string) => `/dogs/${id}/documents/${docId}`,
+    documentDownload: (id: string, docId: string) => `/dogs/${id}/documents/${docId}/download`,
+  },
+  // Чек-ин выставок (регистрация прибытия) — app/routers/checkin.py.
+  checkin: {
+    settings: (showId: string) => `/shows/${showId}/checkin/settings`,
+    staff: (showId: string) => `/shows/${showId}/staff`,
+    staffMember: (showId: string, userId: string) => `/shows/${showId}/staff/${userId}`,
+    staffMy: '/shows/staff/my',
+    ticket: (showId: string) => `/shows/${showId}/my-ticket`,
+    scan: (showId: string) => `/shows/${showId}/checkin/scan`,
+    search: (showId: string) => `/shows/${showId}/checkin/search`,
+    summary: (showId: string) => `/shows/${showId}/checkin/summary`,
+    precheckQueue: (showId: string) => `/shows/${showId}/checkin/precheck-queue`,
+    checks: (showId: string, entryId: string) => `/shows/${showId}/entries/${entryId}/checks`,
   },
   kennel: {
     list: '/kennels',

@@ -1,8 +1,6 @@
 'use client';
 
 import type { IconButtonProps } from '@mui/material/IconButton';
-import type { INotification } from 'src/types/notification';
-import type { NotificationItemProps } from './notification-item';
 
 import { m } from 'framer-motion';
 import { useBoolean } from 'minimal-shared/hooks';
@@ -33,24 +31,11 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { varTap, varHover, transitionTap } from 'src/components/animate';
 
+import { toDrawerItem } from './to-drawer-item';
 import { NotificationItem } from './notification-item';
 
 // ----------------------------------------------------------------------
 
-type DrawerNotification = NotificationItemProps['notification'];
-
-// Map a backend notification to the template's notification-item shape.
-function toItem(n: INotification): DrawerNotification {
-  return {
-    id: n.id,
-    type: 'mail',
-    title: `<p>${n.subject}</p>`,
-    category: n.event_type,
-    isUnRead: !n.is_read,
-    avatarUrl: null,
-    createdAt: n.created_at,
-  };
-}
 
 // ----------------------------------------------------------------------
 
@@ -64,7 +49,7 @@ export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) 
   const { notifications } = useGetNotifications();
   const { unreadCount } = useGetUnreadCount();
 
-  const items = useMemo(() => notifications.map(toItem), [notifications]);
+  const items = useMemo(() => notifications.map(toDrawerItem), [notifications]);
 
   const totalUnRead = items.filter((item) => item.isUnRead).length;
 

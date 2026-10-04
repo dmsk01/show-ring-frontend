@@ -288,15 +288,6 @@ export const endpoints = {
     breeds: '/references/breeds',
     kennels: '/kennels',
   },
-  // --- Minimal Kit demo endpoints (parked; kept so demo actions keep compiling) ---
-  chat: '/api/chat',
-  kanban: '/api/kanban',
-  calendar: '/api/calendar',
-  mail: {
-    list: '/api/mail/list',
-    details: '/api/mail/details',
-    labels: '/api/mail/labels',
-  },
   // Blog — backed by Show Ring (see docs/specs). baseURL '/api' + these →
   // proxied to the backend (e.g. /api/posts → :8000/posts). Posts are keyed
   // by `slug`; full-text search folds into the list endpoint via `?query=`.
@@ -306,10 +297,5 @@ export const endpoints = {
     related: (slug: string) => `/posts/${slug}/related`,
     // Writes are keyed by id (PUT/DELETE /posts/{post_id}), reads by slug.
     update: (id: string) => `/posts/${id}`,
-  },
-  product: {
-    list: '/api/product/list',
-    details: '/api/product/details',
-    search: '/api/product/search',
   },
 } as const;

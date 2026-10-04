@@ -5,14 +5,17 @@ import type { ShowStatus } from 'src/types/show';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
+import { setCheckinEnabled } from 'src/actions/checkin';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetShow, publishShow, setShowStatus } from 'src/actions/show';
 
@@ -31,7 +34,7 @@ import { ShowCreateEditForm } from '../show-create-edit-form';
 type Props = { id: string };
 
 export function ShowEditView({ id }: Props) {
-  const { t } = useTranslate(['show', 'common']);
+  const { t } = useTranslate(['show', 'common', 'checkin']);
   const { show, showLoading } = useGetShow(id);
 
   if (showLoading) return <LoadingScreen />;
@@ -54,6 +57,16 @@ export function ShowEditView({ id }: Props) {
       toast.error(error instanceof Error ? error.message : t('toast.publishFailed'));
     }
   };
+
+  const handleCheckin = async (enabled: boolean) => {
+    try {
+      await setCheckinEnabled(id, enabled);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t('checkin:organizer.toggleFailed'));
+    }
+  };
+
+  const checkinLocked = show.status === 'completed' || show.status === 'cancelled';
 
   return (
     <DashboardContent>
@@ -114,6 +127,52 @@ export function ShowEditView({ id }: Props) {
             {t('form.actions.documents')}
           </Button>
         </Box>
+      </Card>
+
+      <Card sx={{ p: 3, mb: 3 }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={show.checkin_enabled}
+              disabled={checkinLocked}
+              onChange={(e) => handleCheckin(e.target.checked)}
+            />
+          }
+          label={t('checkin:organizer.toggle')}
+        />
+        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+          {t('checkin:organizer.toggleHint')}
+        </Typography>
+        {show.checkin_enabled && (
+          <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', mt: 2 }}>
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.shows.staff(id)}
+              variant="outlined"
+              color="inherit"
+              startIcon={<Iconify icon="solar:users-group-rounded-bold" />}
+            >
+              {t('checkin:organizer.staff')}
+            </Button>
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.shows.precheck(id)}
+              variant="outlined"
+              color="inherit"
+              startIcon={<Iconify icon="solar:file-check-bold-duotone" />}
+            >
+              {t('checkin:organizer.precheck')}
+            </Button>
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.shows.checkin(id)}
+              variant="contained"
+              startIcon={<Iconify icon="solar:user-id-bold" />}
+            >
+              {t('checkin:organizer.desk')}
+            </Button>
+          </Box>
+        )}
       </Card>
 
       <ShowCreateEditForm currentShow={show} />

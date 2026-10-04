@@ -160,11 +160,17 @@ export const paths = {
       edit: (id: string) => `${ROOTS.DASHBOARD}/shows/${id}/edit`,
       results: (id: string) => `${ROOTS.DASHBOARD}/shows/${id}/results`,
       documents: (id: string) => `${ROOTS.DASHBOARD}/shows/${id}/documents`,
+      staff: (id: string) => `${ROOTS.DASHBOARD}/shows/${id}/staff`,
+      precheck: (id: string) => `${ROOTS.DASHBOARD}/shows/${id}/precheck`,
+      checkin: (id: string) => `${ROOTS.DASHBOARD}/shows/${id}/checkin`,
     },
     myShows: {
       root: `${ROOTS.DASHBOARD}/my-shows`,
       details: (id: string) => `${ROOTS.DASHBOARD}/my-shows/${id}`,
+      ticket: (id: string) => `${ROOTS.DASHBOARD}/my-shows/${id}/ticket`,
     },
+    // Выставки, где пользователь — регистратор стойки.
+    checkin: `${ROOTS.DASHBOARD}/checkin`,
     myDogs: {
       root: `${ROOTS.DASHBOARD}/my-dogs`,
     },

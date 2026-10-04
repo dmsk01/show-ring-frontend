@@ -30,6 +30,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
+import { isTicketAvailable } from 'src/sections/checkin/checkin-utils';
 import { SHOW_STATUS_COLOR, showStatusI18nKey } from 'src/sections/show/show-utils';
 
 import { isEntryEditable } from '../my-show-utils';
@@ -40,7 +41,7 @@ import { MyShowEntryEditDialog } from '../my-show-entry-edit-dialog';
 type Props = { id: string };
 
 export function MyShowDetailView({ id }: Props) {
-  const { t } = useTranslate('show');
+  const { t } = useTranslate(['show', 'checkin']);
   const { show, showLoading } = useGetShow(id);
   const { entries, entriesLoading, entriesError } = useMyShowEntries(id);
 
@@ -118,6 +119,18 @@ export function MyShowDetailView({ id }: Props) {
             sx={{ mt: 3 }}
           >
             {t('myShows.detail.addDog')}
+          </Button>
+        )}
+
+        {isTicketAvailable(show) && entries.length > 0 && (
+          <Button
+            component={RouterLink}
+            href={paths.dashboard.myShows.ticket(show.id)}
+            variant="contained"
+            startIcon={<Iconify icon="solar:user-id-bold" />}
+            sx={{ mt: 3, ml: editable ? 1 : 0 }}
+          >
+            {t('checkin:ticket.button')}
           </Button>
         )}
       </Card>

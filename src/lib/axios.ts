@@ -180,6 +180,10 @@ export const endpoints = {
     logout: '/auth/logout',
     confirmEmailChange: '/auth/confirm-email-change',
   },
+  // Капча ALTCHA (src/auth/captcha.ts).
+  captcha: {
+    challenge: '/captcha/challenge',
+  },
   dog: {
     list: '/dogs',
     details: (id: string) => `/dogs/${id}`,

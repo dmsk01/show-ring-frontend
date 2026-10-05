@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
 
-import { AuthCenteredLayout } from 'src/layouts/auth-centered';
-
 // ----------------------------------------------------------------------
 
-// Не индексировать: здесь нет публичного контента (план защиты 2026-10-05).
+// Страницы входа и регистрации не индексируются (план защиты 2026-10-05).
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 type Props = {
@@ -12,5 +10,5 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  return <AuthCenteredLayout>{children}</AuthCenteredLayout>;
+  return children;
 }

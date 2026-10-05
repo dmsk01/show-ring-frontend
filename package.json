@@ -60,6 +60,7 @@
     "@tiptap/react": "^3.31.4",
     "@tiptap/starter-kit": "^3.31.4",
     "accept-language": "^3.0.20",
+    "altcha": "^3.3.0",
     "apexcharts": "5.3.2",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.20.0",

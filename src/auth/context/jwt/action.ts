@@ -2,6 +2,9 @@
 
 import axios, { endpoints } from 'src/lib/axios';
 
+import { solveCaptcha } from '../../captcha';
+import { getErrorMessage } from '../../utils/error-message';
+
 // ----------------------------------------------------------------------
 
 export type SignInParams = { email: string; password: string };
@@ -10,9 +13,21 @@ export type SignInParams = { email: string; password: string };
 // Фронт ничего не хранит сам — браузер шлёт куки автоматически (withCredentials
 // в src/lib/axios.ts).
 
-/** Sign in — POST /auth/login. Бэкенд ставит httpOnly-куки сессии в ответе. */
+/**
+ * Sign in — POST /auth/login. Бэкенд ставит httpOnly-куки сессии в ответе.
+ *
+ * После нескольких неудачных попыток бэкенд требует капчу (400
+ * captcha_required) — решаем невидимую задачу и повторяем запрос один раз.
+ * Пользователь видит только чуть более долгую загрузку кнопки.
+ */
 export const signInWithPassword = async ({ email, password }: SignInParams): Promise<void> => {
-  await axios.post(endpoints.auth.signIn, { email, password });
+  try {
+    await axios.post(endpoints.auth.signIn, { email, password });
+  } catch (error) {
+    if (getErrorMessage(error) !== 'captcha_required') throw error;
+    const captcha = await solveCaptcha();
+    await axios.post(endpoints.auth.signIn, { email, password, captcha });
+  }
 };
 
 // Регистрации по email (POST /auth/register) на фронте нет: регистрироваться
@@ -24,7 +39,10 @@ export const signInWithPassword = async ({ email, password }: SignInParams): Pro
  * с одноразовым кодом; ответ одинаков для нового и существующего номера.
  */
 export const sendPhoneCode = async (phone: string): Promise<void> => {
-  await axios.post(endpoints.auth.sendCode, { phone });
+  // Каждое SMS стоит денег — бэкенд требует решённую капчу на каждую
+  // отправку (план защиты 2026-10-05). Решение одноразовое.
+  const captcha = await solveCaptcha();
+  await axios.post(endpoints.auth.sendCode, { phone, captcha });
 };
 
 /**

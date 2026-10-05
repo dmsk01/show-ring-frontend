@@ -6,6 +6,8 @@ import packageJson from '../package.json';
 
 export type ConfigValue = {
   appName: string;
+  /** Публичный адрес сайта — для sitemap.xml и robots.txt. */
+  siteUrl: string;
   appVersion: string;
   serverUrl: string;
   assetsDir: string;
@@ -23,6 +25,7 @@ export type ConfigValue = {
 
 export const CONFIG: ConfigValue = {
   appName: 'Show Ring',
+  siteUrl: (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://showring.app').replace(/\/$/, ''),
   appVersion: packageJson.version,
   serverUrl: process.env.NEXT_PUBLIC_SERVER_URL ?? '/api',
   assetsDir: process.env.NEXT_PUBLIC_ASSETS_DIR ?? '',

@@ -48,6 +48,10 @@ const OTP_ERROR_KEYS: Record<string, string> = {
   // списка стран и исчерпанный суточный бюджет SMS сервиса.
   country_not_supported: 'auth:errors.countryNotSupported',
   sms_unavailable: 'auth:errors.smsUnavailable',
+  // Капча ALTCHA: решение не принято или не найдено за таймаут.
+  captcha_required: 'auth:errors.captchaFailed',
+  captcha_invalid: 'auth:errors.captchaFailed',
+  captcha_unsolved: 'auth:errors.captchaFailed',
   user_blocked: 'auth:errors.userBlocked',
   phone_taken: 'auth:errors.phoneTaken',
   phone_already_set: 'auth:errors.phoneAlreadySet',

@@ -1,7 +1,6 @@
 import type { TextFieldProps } from '@mui/material/TextField';
 import type { PhoneValue, PhoneCountry, PhoneInputProps } from './types';
 
-import { debounce } from 'es-toolkit';
 import { useMemo, useState, useCallback } from 'react';
 import PhoneNumberInput, { parsePhoneNumber } from 'react-phone-number-input/input';
 
@@ -53,16 +52,14 @@ export function PhoneInput({
     return parsedCountry ?? country ?? selectedCountry ?? defaultCountry;
   }, [country, selectedCountry, normalizedValue, defaultCountry]);
 
-  const debouncedChange = useMemo(
-    () => debounce((inputValue: PhoneValue) => onChange(inputValue), 200),
-    [onChange]
-  );
-
+  // Без debounce: значение сразу уходит в форму. Задержка в 200 мс (из
+  // шаблона) приводила к тому, что Enter сразу после ввода отправлял форму
+  // с пустым номером — «Укажите номер телефона».
   const handleChangeInput = useCallback(
     (inputValue: PhoneValue) => {
-      debouncedChange(inputValue ?? '');
+      onChange(inputValue ?? '');
     },
-    [debouncedChange]
+    [onChange]
   );
 
   const handleClearInput = useCallback(() => {

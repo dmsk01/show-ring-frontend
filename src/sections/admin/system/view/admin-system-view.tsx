@@ -12,6 +12,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { FeatureFlagsPanel } from '../feature-flags-panel';
 import { UploadQuotasPanel } from '../upload-quotas-panel';
+import { SecurityMetricsPanel } from '../security-metrics-panel';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +33,7 @@ export function AdminSystemView() {
       />
 
       <Stack spacing={3}>
+        <SecurityMetricsPanel />
         <UploadQuotasPanel quotas={quotas} loading={quotasLoading} />
         <FeatureFlagsPanel />
       </Stack>

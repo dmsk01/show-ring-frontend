@@ -28,6 +28,26 @@
       "empty": "No flags configured",
       "updated": "Flag updated",
       "saveFailed": "Could not update the flag"
+    },
+    "security": {
+      "heading": "Security",
+      "description": "Event counters for 10 minutes, an hour and a day. On spikes the backend sends an alert (Telegram or email, see .env).",
+      "event": "Event",
+      "windows": {
+        "10m": "10 min",
+        "1h": "1 hour",
+        "24h": "Day"
+      },
+      "events": {
+        "rate_limited": "Rate-limit refusals (429)",
+        "http_5xx": "Server errors (5xx)",
+        "slow_request": "Slow requests (> 2 s)",
+        "sms_sent": "SMS sent",
+        "otp_verified": "Valid codes entered",
+        "captcha_failed": "Rejected captchas",
+        "login_failed": "Wrong passwords",
+        "account_locked": "Accounts locked"
+      }
     }
   },
   "reference": {

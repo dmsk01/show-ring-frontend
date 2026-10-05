@@ -288,6 +288,7 @@ export const endpoints = {
     analyticsAds: '/admin/analytics/ads',
     analyticsTopBreeds: '/admin/analytics/top-breeds',
     analyticsTopCampaigns: '/admin/analytics/top-campaigns',
+    securityMetrics: '/admin/security/metrics',
     uploadQuotas: '/admin/upload-quotas',
     uploadQuota: (tier: string) => `/admin/upload-quotas/${tier}`,
   },

@@ -55,6 +55,8 @@ export type IClassifiedItem = {
   contact_email: string | null;
   // Согласие автора на распространение контактов (ст. 10.1 152-ФЗ).
   contacts_public: boolean;
+  // См. IKennelItem.has_public_contacts.
+  has_public_contacts: boolean;
   status: ClassifiedStatus;
   availability: AnimalAvailability;
   views_count: number;

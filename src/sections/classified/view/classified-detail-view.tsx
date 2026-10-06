@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
+import { endpoints } from 'src/lib/axios';
 import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
 import { useGetBreeds } from 'src/actions/reference';
@@ -18,6 +19,7 @@ import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { Lightbox, useLightbox } from 'src/components/lightbox';
+import { RevealContacts } from 'src/components/reveal-contacts';
 
 import {
   AVAILABILITY_COLOR,
@@ -137,13 +139,24 @@ export function ClassifiedDetailView({ id }: Props) {
 
         <Markdown children={classified.description} />
 
-        {!classified.contact_phone && !classified.contact_email && (
-          // Без согласия на распространение (ст. 10.1 152-ФЗ) API отдаёт
-          // контакты пустыми — объясняем, а не показываем пустоту.
-          <Typography variant="body2" sx={{ mt: 4, color: 'text.secondary' }}>
-            {t('detail.contactsHidden')}
-          </Typography>
-        )}
+        {!classified.contact_phone &&
+          !classified.contact_email &&
+          (classified.has_public_contacts ? (
+            // Открытые контакты — только по кнопке (защита от сборщиков).
+            <>
+              <Divider sx={{ borderStyle: 'dashed', my: 4 }} />
+              <Typography variant="h6" sx={{ mb: 1.5 }}>
+                {t('detail.contacts')}
+              </Typography>
+              <RevealContacts url={endpoints.classified.contacts(classified.id)} />
+            </>
+          ) : (
+            // Без согласия на распространение (ст. 10.1 152-ФЗ) контактов
+            // нет — объясняем, а не показываем пустоту.
+            <Typography variant="body2" sx={{ mt: 4, color: 'text.secondary' }}>
+              {t('detail.contactsHidden')}
+            </Typography>
+          ))}
 
         {(classified.contact_phone || classified.contact_email) && (
           <>

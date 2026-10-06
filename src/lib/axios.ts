@@ -214,6 +214,8 @@ export const endpoints = {
   kennel: {
     list: '/kennels',
     details: (id: string) => `/kennels/${id}`,
+    // «Показать контакты» — отдельный запрос с лимитом (план защиты, этап 4).
+    contacts: (id: string) => `/kennels/${id}/contacts`,
   },
   litter: {
     list: '/litters',
@@ -229,6 +231,7 @@ export const endpoints = {
     mine: '/classifieds/mine',
     search: '/classifieds/search',
     details: (id: string) => `/classifieds/${id}`,
+    contacts: (id: string) => `/classifieds/${id}/contacts`,
   },
   show: {
     list: '/shows',

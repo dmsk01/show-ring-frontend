@@ -4,6 +4,8 @@ import { mergeClasses } from 'minimal-shared/utils';
 
 import { styled } from '@mui/material/styles';
 
+import { CONFIG } from 'src/global-config';
+
 import { flagIconClasses } from './classes';
 
 // ----------------------------------------------------------------------
@@ -22,7 +24,9 @@ export function FlagIcon({ code, className, sx, ...other }: FlagIconProps) {
       <FlagImg
         loading="lazy"
         alt={code}
-        src={`https://purecatamphetamine.github.io/country-flag-icons/3x2/${code?.toUpperCase()}.svg`}
+        // Локальная копия country-flag-icons (public/assets/icons/flags): внешний
+        // GitHub Pages передавал бы IP посетителя за границу и блокировался CSP.
+        src={`${CONFIG.assetsDir}/assets/icons/flags/${code.toUpperCase()}.svg`}
         className={flagIconClasses.img}
       />
     </FlagRoot>

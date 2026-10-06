@@ -14,6 +14,8 @@ import { useTranslate } from 'src/locales';
 
 import { varFade, AnimateText, MotionContainer, animateTextClasses } from 'src/components/animate';
 
+import { LEGAL_OPERATOR } from 'src/sections/legal/operator';
+
 // ----------------------------------------------------------------------
 
 type Channel = { label: string; value: string };
@@ -21,7 +23,18 @@ type Channel = { label: string; value: string };
 export function ContactHero({ sx, ...other }: BoxProps) {
   const { t } = useTranslate('contact');
 
-  const channels = t('hero.channels', { returnObjects: true }) as Channel[];
+  // Каналы — из единого источника реквизитов (src/sections/legal/operator.ts):
+  // раньше здесь были вымышленные адреса и телефон из демо-текста шаблона.
+  const channels = [
+    LEGAL_OPERATOR.supportEmail && {
+      label: t('info.support'),
+      value: LEGAL_OPERATOR.supportEmail,
+    },
+    LEGAL_OPERATOR.privacyEmail && {
+      label: t('info.privacy'),
+      value: LEGAL_OPERATOR.privacyEmail,
+    },
+  ].filter(Boolean) as Channel[];
 
   return (
     <Box

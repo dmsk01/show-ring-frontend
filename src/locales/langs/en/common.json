@@ -66,5 +66,9 @@
       "sold_out": "Sold out",
       "archived": "Archived"
     }
+  },
+  "contacts": {
+    "reveal": "Show contacts",
+    "revealFailed": "Could not load contacts. Please try later."
   }
 }

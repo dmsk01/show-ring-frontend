@@ -12,6 +12,9 @@ export type IKennelItem = {
   // Согласие владельца на распространение контактов (ст. 10.1 152-ФЗ).
   // false → посторонним бэкенд отдаёт contact_*/website = null.
   contacts_public: boolean;
+  // Есть открытые контакты: посторонним они не приходят в карточке, а
+  // запрашиваются по кнопке «Показать контакты» (endpoints.kennel.contacts).
+  has_public_contacts: boolean;
   avatar_file_id: string | null;
   is_verified: boolean;
   dogs_count: number;

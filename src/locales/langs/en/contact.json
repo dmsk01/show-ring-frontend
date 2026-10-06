@@ -1,11 +1,8 @@
 {
   "hero": {
-    "title": ["How to", "reach us?"],
-    "channels": [
-      { "label": "Email", "value": "info@showring.ru" },
-      { "label": "Support", "value": "support@showring.ru" },
-      { "label": "Phone", "value": "+7 (495) 000-00-00" },
-      { "label": "Hours", "value": "Mon–Fri, 10:00–19:00" }
+    "title": [
+      "How to",
+      "reach us?"
     ]
   },
   "form": {
@@ -13,13 +10,16 @@
   },
   "info": {
     "title": "Contact information",
-    "subtitle": "Write to us — we usually reply within one business day.",
-    "items": [
-      { "label": "Email", "value": "info@showring.ru", "href": "mailto:info@showring.ru" },
-      { "label": "Support", "value": "support@showring.ru", "href": "mailto:support@showring.ru" },
-      { "label": "Phone", "value": "+7 (495) 000-00-00", "href": "tel:+74950000000" },
-      { "label": "Support hours", "value": "Mon–Fri, 10:00–19:00 (MSK)", "href": "" }
-    ],
-    "socialsTitle": "We're on social media"
+    "subtitle": "The fastest way is a support request from your account: the whole conversation stays there.",
+    "support": "Support",
+    "privacy": "Personal data",
+    "address": "Postal address"
+  },
+  "cta": {
+    "textAuthenticated": "Describe your question in a request — the answer will arrive in your account and by email.",
+    "textGuest": "To reply and keep the conversation, we accept requests from your account. You can sign in with your phone number.",
+    "newTicket": "Contact support",
+    "signInToWrite": "Sign in and write",
+    "orEmail": "or by email"
   }
 }

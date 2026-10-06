@@ -10,6 +10,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
+import { endpoints } from 'src/lib/axios';
 import { CONFIG } from 'src/global-config';
 import { fileUrl } from 'src/actions/file';
 import { useTranslate } from 'src/locales';
@@ -22,6 +23,7 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { EmptyContent } from 'src/components/empty-content';
 import { LoadingScreen } from 'src/components/loading-screen';
+import { RevealContacts } from 'src/components/reveal-contacts';
 
 import { DogCardGrid } from 'src/sections/dog/dog-card-grid';
 import { ProfileCover } from 'src/sections/user/profile-cover';
@@ -113,13 +115,17 @@ export function KennelDetailView({ id }: Props) {
               </Label>
             </Tooltip>
           )}
-          {contacts.length === 0 && (
-            // Без согласия на распространение (ст. 10.1 152-ФЗ) API отдаёт
-            // контакты пустыми — объясняем, а не показываем пустоту.
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {t('detail.contactsHidden')}
-            </Typography>
-          )}
+          {contacts.length === 0 &&
+            (kennel.has_public_contacts ? (
+              // Открытые контакты — только по кнопке (защита от сборщиков).
+              <RevealContacts url={endpoints.kennel.contacts(kennel.id)} />
+            ) : (
+              // Без согласия на распространение (ст. 10.1 152-ФЗ) контактов
+              // нет — объясняем, а не показываем пустоту.
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {t('detail.contactsHidden')}
+              </Typography>
+            ))}
           {contacts.map((c) => (
             <Stack key={c.icon} direction="row" spacing={0.5} alignItems="center">
               <Iconify icon={c.icon} sx={{ color: 'text.secondary' }} />

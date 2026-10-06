@@ -2,6 +2,8 @@ import 'src/global.css';
 
 import type { Metadata, Viewport } from 'next';
 
+import { headers } from 'next/headers';
+
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
 
@@ -73,11 +75,15 @@ async function getAppConfig() {
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   const appConfig = await getAppConfig();
+  // Nonce из src/proxy.ts (CSP): inline-скрипт темы MUI без него будет
+  // заблокирован. Скрипты самого Next.js получают nonce автоматически.
+  const nonce = CONFIG.isStaticExport ? undefined : ((await headers()).get('x-nonce') ?? undefined);
 
   return (
     <html lang={appConfig.lang} dir={appConfig.dir} suppressHydrationWarning>
       <body>
         <InitColorSchemeScript
+          nonce={nonce}
           modeStorageKey={themeConfig.modeStorageKey}
           attribute={themeConfig.cssVariables.colorSchemeSelector}
           defaultMode={themeConfig.defaultMode}

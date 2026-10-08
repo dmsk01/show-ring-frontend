@@ -27,6 +27,8 @@ import { createClassified, updateClassified } from 'src/actions/classified';
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
 
+import { PublicContactsSwitch } from 'src/sections/legal/public-contacts-switch';
+
 import {
   CLASSIFIED_CATEGORIES,
   ANIMAL_AVAILABILITIES,
@@ -82,6 +84,8 @@ export const getClassifiedSchema = (t: TFunction) =>
         error: t('form.validation.emailInvalid'),
       })
       .nullish(),
+    // Согласие на распространение контактов (ст. 10.1 152-ФЗ), см. PublicContactsSwitch.
+    contacts_public: z.boolean(),
   })
   .check((ctx) => {
     // Backend rule: price_kind=fixed requires price > 0 (422 otherwise). Cross-field,
@@ -125,6 +129,7 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
     city: null,
     contact_phone: null,
     contact_email: null,
+    contacts_public: false,
   };
 
   const methods = useForm<ClassifiedSchemaType>({
@@ -144,6 +149,7 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
           city: currentClassified.city,
           contact_phone: currentClassified.contact_phone,
           contact_email: currentClassified.contact_email,
+          contacts_public: currentClassified.contacts_public ?? false,
         }
       : undefined,
   });
@@ -165,6 +171,7 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
         city: data.city || null,
         contact_phone: data.contact_phone || null,
         contact_email: data.contact_email || null,
+        contacts_public: data.contacts_public,
       };
 
       if (currentClassified) {
@@ -243,6 +250,10 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
             defaultCountry="RU"
           />
           <Field.Text name="contact_email" label={t('form.fields.contactEmail')} />
+
+          <Box sx={{ gridColumn: '1 / -1' }}>
+            <PublicContactsSwitch />
+          </Box>
 
           {/* Backend accepts availability only on update — hidden when creating. */}
           {currentClassified && (

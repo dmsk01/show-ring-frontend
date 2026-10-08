@@ -34,7 +34,8 @@
       "cpiInvalid": "Cost per impression cannot be negative"
     },
     "submitCreate": "Create campaign",
-    "submitUpdate": "Save changes"
+    "submitUpdate": "Save changes",
+    "statusModerationHint": "A campaign goes live for the first time after admin review"
   },
   "stats": {
     "impressions": "Impressions",
@@ -72,5 +73,11 @@
     "created": "Create success!",
     "updated": "Update success!",
     "bannerAdded": "Banner added!"
+  },
+  "errors": {
+    "moderationRequired": "The campaign will go live after admin review",
+    "invalidDates": "End date is before start date",
+    "budgetBelowSpent": "Budget cannot be lower than the amount already spent",
+    "forbidden": "You do not have access to this campaign"
   }
 }

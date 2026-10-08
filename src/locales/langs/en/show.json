@@ -191,7 +191,11 @@
   "myShows": {
     "title": "My shows",
     "breadcrumb": "My shows",
-    "tabs": { "all": "All", "active": "Active", "past": "Past" },
+    "tabs": {
+      "all": "All",
+      "active": "Active",
+      "past": "Past"
+    },
     "card": {
       "entriesCount_one": "{{count}} entry",
       "entriesCount_other": "{{count}} entries"
@@ -205,7 +209,10 @@
     "editDialog": {
       "title": "Edit entry",
       "dogReadonly": "Dog",
-      "fields": { "class": "Class", "notes": "Notes" },
+      "fields": {
+        "class": "Class",
+        "notes": "Notes"
+      },
       "submit": "Save"
     },
     "delete": {
@@ -223,5 +230,24 @@
       "description": "Shows you have registered your dogs for will appear here."
     },
     "error": "Failed to load shows"
+  },
+  "errors": {
+    "placementTaken": "This placement in the class is already taken by another dog",
+    "showNotInProgress": "Results can only be entered after registration closes and before publication",
+    "entryNotAdmitted": "The dog was not admitted at check-in — no result can be recorded",
+    "winnerMustBeBob": "Best in Group must be a Best of Breed winner",
+    "winnerMustBeBig": "Best in Show must be a Best in Group winner",
+    "entriesClassMismatch": "After the date change some dogs no longer fit their class by age — update their entries or pick another date",
+    "invalidDates": "Check the dates: end not before start, registration deadline not after start",
+    "showLocked": "The show cannot be changed after registration closes",
+    "registrationLocked": "Registration is closed — only the organizer can cancel an entry",
+    "invalidStatusTransition": "This status change is not allowed",
+    "forbidden": "You do not have permission",
+    "dogAlreadyRegistered": "This dog is already entered in the show",
+    "registrationNotOpen": "Registration for this show is not open",
+    "registrationDeadlinePassed": "The registration deadline has passed",
+    "breedNotAllowed": "This breed is not allowed at the show",
+    "classNotAvailableForAge": "This class does not fit the dog’s age on the show date",
+    "dogBirthDateMissing": "Add the dog’s date of birth to choose a class"
   }
 }

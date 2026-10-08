@@ -32,8 +32,15 @@ export function getCampaignBannerSchema(t: TFunction) {
       .min(1, { error: t('form.validation.targetUrlRequired') })
       .max(2048, { error: t('form.validation.tooLong', { max: 2048 }) }),
     placement: z.enum(['sidebar', 'top', 'inline', 'footer']),
-    title: z.string().max(255, { error: t('form.validation.tooLong', { max: 255 }) }).nullable(),
+    title: z
+      .string()
+      .max(255, { error: t('form.validation.tooLong', { max: 255 }) })
+      .nullable(),
     is_active: z.boolean(),
+    erid: z
+      .string()
+      .max(128, { error: t('form.validation.tooLong', { max: 128 }) })
+      .nullable(),
   });
 }
 
@@ -42,13 +49,19 @@ export type CampaignBannerSchemaType = z.infer<ReturnType<typeof getCampaignBann
 type Props = { campaignId: string };
 
 export function CampaignBannerForm({ campaignId }: Props) {
-  const { t } = useTranslate(['ad', 'common']);
+  const { t } = useTranslate(['ad', 'common', 'legal']);
 
   const BannerSchema = useMemo(() => getCampaignBannerSchema(t), [t]);
 
   const methods = useForm<CampaignBannerSchemaType>({
     resolver: zodResolver(BannerSchema),
-    defaultValues: { target_url: '', placement: 'sidebar', title: null, is_active: true },
+    defaultValues: {
+      target_url: '',
+      placement: 'sidebar',
+      title: null,
+      is_active: true,
+      erid: null,
+    },
   });
 
   const {
@@ -64,6 +77,7 @@ export function CampaignBannerForm({ campaignId }: Props) {
         placement: data.placement,
         title: data.title || null,
         is_active: data.is_active,
+        erid: data.erid || null,
       });
       toast.success(t('toast.bannerAdded'));
       reset();
@@ -96,6 +110,11 @@ export function CampaignBannerForm({ campaignId }: Props) {
             ))}
           </Field.Select>
           <Field.Text name="title" label={t('banner.fields.title')} />
+          <Field.Text
+            name="erid"
+            label={t('legal:ad.erid')}
+            helperText={t('legal:ad.eridHelper')}
+          />
           <Field.Switch name="is_active" label={t('banner.fields.isActive')} />
         </Box>
 

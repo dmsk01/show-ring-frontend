@@ -61,6 +61,11 @@ const SIGN_IN_ERROR_KEYS: Record<string, string> = {
   invalid_credentials: 'auth:errors.invalidCredentials',
   user_blocked: 'auth:errors.userBlocked',
   login_method_disabled: 'auth:errors.methodDisabled',
+  // Блокировка аккаунта после серии неверных паролей (план защиты 2026-10-05).
+  account_locked: 'auth:errors.accountLocked',
+  captcha_required: 'auth:errors.captchaFailed',
+  captcha_invalid: 'auth:errors.captchaFailed',
+  captcha_unsolved: 'auth:errors.captchaFailed',
   'too many requests': 'auth:errors.tooManyRequests',
   'rate limit subsystem unavailable': 'auth:errors.serviceUnavailable',
   'network error': 'auth:errors.network',
@@ -139,6 +144,7 @@ export function JwtSignInView() {
           <PhoneOtpForm
             submitLabel={t('auth:signIn.submit')}
             verifyCode={verifyPhoneCode}
+            requireConsent
             onVerified={handlePhoneVerified}
             phoneFooter={
               <>

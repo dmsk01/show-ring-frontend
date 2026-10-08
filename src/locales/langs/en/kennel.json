@@ -47,7 +47,9 @@
       "born": "Born",
       "puppies": "Puppies",
       "price": "Price"
-    }
+    },
+    "verifiedHint": "The administration checked the kennel details on the verification date. This is not a guarantee of the animals' quality or a recommendation.",
+    "contactsHidden": "The owner has not made the contacts public."
   },
   "showcase": {
     "title": "Kennels",

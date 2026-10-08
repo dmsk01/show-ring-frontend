@@ -27,6 +27,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { useAuthContext } from 'src/auth/hooks';
 
 import { canEnterResults } from '../show-utils';
+import { showErrorMessage } from '../show-errors';
 import { ShowResultDialog } from '../show-result-dialog';
 import { ShowResultsTable } from '../show-results-table';
 import { ShowDocumentsPanel } from '../show-documents-panel';
@@ -71,7 +72,7 @@ export function ShowResultsView({ id }: Props) {
       if (status !== 'done') throw new Error(t('toast.documentNotReady'));
       await downloadTask(task.id, `diploma-${row.entryId}.docx`);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      toast.error(showErrorMessage(error, t, 'common:state.error'));
     } finally {
       setDownloadingId(null);
     }

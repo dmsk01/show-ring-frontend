@@ -18,8 +18,7 @@ type SignUpTermsProps = BoxProps & {
 export function SignUpTerms({ sx, variant = 'signUp', ...other }: SignUpTermsProps) {
   const { t } = useTranslate('auth');
 
-  // Статические HTML в public/ — открываем в новой вкладке обычной ссылкой,
-  // чтобы не терять заполненную форму регистрации.
+  // Новая вкладка — чтобы не терять заполненную форму входа/регистрации.
   const linkProps = {
     target: '_blank',
     rel: 'noopener',
@@ -50,11 +49,33 @@ export function SignUpTerms({ sx, variant = 'signUp', ...other }: SignUpTermsPro
       <Link href={paths.legal.privacy} {...linkProps}>
         {t('terms.privacy')}
       </Link>
-      {t('terms.consentMid')}
-      <Link href={paths.legal.consent} {...linkProps}>
-        {t('terms.consent')}
-      </Link>
       {t('terms.suffix')}
+    </Box>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+/**
+ * Подпись к отдельному чекбоксу согласия на обработку ПДн. Согласие — не
+ * часть фразы о принятии Соглашения (ч. 1 ст. 9 152-ФЗ в ред. 156-ФЗ).
+ */
+export function PersonalDataConsentLabel() {
+  const { t } = useTranslate('auth');
+
+  return (
+    <Box component="span" sx={{ typography: 'body2', color: 'text.secondary' }}>
+      {t('consent.prefix')}
+      <Link
+        href={paths.legal.consent}
+        target="_blank"
+        rel="noopener"
+        underline="always"
+        color="text.primary"
+        onClick={(event) => event.stopPropagation()}
+      >
+        {t('consent.link')}
+      </Link>
     </Box>
   );
 }

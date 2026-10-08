@@ -21,6 +21,8 @@ import { allLangs, useTranslate } from 'src/locales';
 import { Logo } from 'src/components/logo';
 import { useSettingsContext } from 'src/components/settings';
 
+import { ConsentGate } from 'src/sections/legal/consent-gate';
+
 import { Footer } from '../main/footer';
 import { NavMobile } from './nav-mobile';
 import { VerticalDivider } from './content';
@@ -134,7 +136,13 @@ export function DashboardLayout({
     };
 
     const headerSlots: HeaderSectionProps['slots'] = {
-      topArea: <PhoneRequiredBanner />,
+      topArea: (
+        <>
+          <PhoneRequiredBanner />
+          {/* Диалог недостающих согласий (152-ФЗ) — поверх любой страницы кабинета. */}
+          <ConsentGate />
+        </>
+      ),
       bottomArea: isNavHorizontal ? (
         <NavHorizontal data={navData} layoutQuery={layoutQuery} cssVars={navVars.section} />
       ) : null,

@@ -18,6 +18,7 @@ import { useTranslate } from 'src/locales';
 import { Form, Field } from 'src/components/hook-form';
 
 import { sendPhoneCode } from '../context/jwt';
+import { PersonalDataConsentLabel } from './sign-up-terms';
 import {
   phoneSchema,
   otpCodeSchema,
@@ -35,10 +36,17 @@ type PhoneOtpFormProps<T> = {
   /** Текст кнопки подтверждения кода: «Войти», «Зарегистрироваться», «Привязать». */
   submitLabel: string;
   sendCode?: (phone: string) => Promise<unknown>;
-  verifyCode: (phone: string, code: string) => Promise<T>;
+  /** consent — отметка согласия на обработку ПДн (только при requireConsent). */
+  verifyCode: (phone: string, code: string, consent: boolean) => Promise<T>;
   onVerified: (result: T, phone: string) => Promise<void> | void;
   /** Под формой номера (согласие с условиями, подсказки). */
   phoneFooter?: React.ReactNode;
+  /**
+   * Обязательная отдельная отметка «Даю согласие на обработку ПДн» на шаге
+   * номера (вход/регистрация). Не отмечена по умолчанию — согласие должно
+   * быть активным действием.
+   */
+  requireConsent?: boolean;
 };
 
 export function PhoneOtpForm<T>({
@@ -47,11 +55,13 @@ export function PhoneOtpForm<T>({
   verifyCode,
   onVerified,
   phoneFooter,
+  requireConsent = false,
 }: PhoneOtpFormProps<T>) {
   const { t } = useTranslate(['auth']);
 
   const [step, setStep] = useState<'phone' | 'code'>('phone');
   const [phone, setPhone] = useState('');
+  const [consent, setConsent] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [resending, setResending] = useState(false);
@@ -68,8 +78,11 @@ export function PhoneOtpForm<T>({
           required: t('auth:validation.phoneRequired'),
           invalid: t('auth:validation.phoneInvalid'),
         }),
+        consent: requireConsent
+          ? z.boolean().refine((v) => v, { message: t('auth:consent.required') })
+          : z.boolean(),
       }),
-    [t]
+    [t, requireConsent]
   );
 
   const CodeSchema = useMemo(
@@ -85,7 +98,7 @@ export function PhoneOtpForm<T>({
 
   const phoneMethods = useForm<z.infer<typeof PhoneSchema>>({
     resolver: zodResolver(PhoneSchema),
-    defaultValues: { phone: '' },
+    defaultValues: { phone: '', consent: false },
   });
 
   const codeMethods = useForm<z.infer<typeof CodeSchema>>({
@@ -107,6 +120,7 @@ export function PhoneOtpForm<T>({
   const onSubmitPhone = phoneMethods.handleSubmit(async (data) => {
     setErrorMessage(null);
     setInfoMessage(null);
+    setConsent(data.consent);
     try {
       await sendCode(data.phone);
       lastSentPhone.current = data.phone;
@@ -127,7 +141,7 @@ export function PhoneOtpForm<T>({
     setErrorMessage(null);
     setInfoMessage(null);
     try {
-      const result = await verifyCode(phone, data.code);
+      const result = await verifyCode(phone, data.code, consent);
       await onVerified(result, phone);
     } catch (error) {
       const key = resolveOtpErrorKey(error);
@@ -179,6 +193,15 @@ export function PhoneOtpForm<T>({
             placeholder={t('auth:phone.placeholder')}
             defaultCountry="RU"
           />
+
+          {requireConsent && (
+            <Field.Checkbox
+              name="consent"
+              label={<PersonalDataConsentLabel />}
+              slotProps={{ checkbox: { size: 'small' } }}
+              sx={{ alignItems: 'flex-start', '& .MuiCheckbox-root': { pt: 0.25 } }}
+            />
+          )}
 
           <Button
             fullWidth

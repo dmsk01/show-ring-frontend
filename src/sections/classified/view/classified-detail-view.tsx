@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
+import { endpoints } from 'src/lib/axios';
 import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
 import { useGetBreeds } from 'src/actions/reference';
@@ -18,6 +19,7 @@ import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { Lightbox, useLightbox } from 'src/components/lightbox';
+import { RevealContacts } from 'src/components/reveal-contacts';
 
 import {
   AVAILABILITY_COLOR,
@@ -44,9 +46,7 @@ export function ClassifiedDetailView({ id }: Props) {
     const notFound = classifiedError?.response?.status === 404;
     return (
       <Container sx={{ pt: { xs: 8, md: 12 }, pb: 10 }}>
-        <Typography>
-          {notFound ? t('detail.notFound') : t('detail.loadError')}
-        </Typography>
+        <Typography>{notFound ? t('detail.notFound') : t('detail.loadError')}</Typography>
       </Container>
     );
   }
@@ -106,9 +106,7 @@ export function ClassifiedDetailView({ id }: Props) {
           <Label color={AVAILABILITY_COLOR[availability]} variant="filled">
             {t(classifiedAvailabilityI18nKey(availability))}
           </Label>
-          <Label color="info">
-            {t(classifiedCategoryI18nKey(classified.category))}
-          </Label>
+          <Label color="info">{t(classifiedCategoryI18nKey(classified.category))}</Label>
         </Stack>
 
         <Typography variant="h5" sx={{ color: 'primary.main', mb: 2 }}>
@@ -141,6 +139,25 @@ export function ClassifiedDetailView({ id }: Props) {
 
         <Markdown children={classified.description} />
 
+        {!classified.contact_phone &&
+          !classified.contact_email &&
+          (classified.has_public_contacts ? (
+            // Открытые контакты — только по кнопке (защита от сборщиков).
+            <>
+              <Divider sx={{ borderStyle: 'dashed', my: 4 }} />
+              <Typography variant="h6" sx={{ mb: 1.5 }}>
+                {t('detail.contacts')}
+              </Typography>
+              <RevealContacts url={endpoints.classified.contacts(classified.id)} />
+            </>
+          ) : (
+            // Без согласия на распространение (ст. 10.1 152-ФЗ) контактов
+            // нет — объясняем, а не показываем пустоту.
+            <Typography variant="body2" sx={{ mt: 4, color: 'text.secondary' }}>
+              {t('detail.contactsHidden')}
+            </Typography>
+          ))}
+
         {(classified.contact_phone || classified.contact_email) && (
           <>
             <Divider sx={{ borderStyle: 'dashed', my: 4 }} />
@@ -152,9 +169,7 @@ export function ClassifiedDetailView({ id }: Props) {
                 <Link href={`tel:${classified.contact_phone}`}>{classified.contact_phone}</Link>
               )}
               {classified.contact_email && (
-                <Link href={`mailto:${classified.contact_email}`}>
-                  {classified.contact_email}
-                </Link>
+                <Link href={`mailto:${classified.contact_email}`}>{classified.contact_email}</Link>
               )}
             </Stack>
           </>

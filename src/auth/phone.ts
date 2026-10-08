@@ -42,6 +42,16 @@ const OTP_ERROR_KEYS: Record<string, string> = {
   // ...а это IP-лимитер (progressive_ban) — общая «слишком много попыток».
   'too many requests': 'auth:errors.tooManyRequests',
   sms_delivery_failed: 'auth:errors.smsFailed',
+  // Новый номер без отметки согласия (ч. 1 ст. 9 152-ФЗ) — код уже сожжён.
+  consent_required: 'auth:errors.consentRequired',
+  // Анти SMS pumping (бэкенд, план защиты 2026-10-05): номер вне белого
+  // списка стран и исчерпанный суточный бюджет SMS сервиса.
+  country_not_supported: 'auth:errors.countryNotSupported',
+  sms_unavailable: 'auth:errors.smsUnavailable',
+  // Капча ALTCHA: решение не принято или не найдено за таймаут.
+  captcha_required: 'auth:errors.captchaFailed',
+  captcha_invalid: 'auth:errors.captchaFailed',
+  captcha_unsolved: 'auth:errors.captchaFailed',
   user_blocked: 'auth:errors.userBlocked',
   phone_taken: 'auth:errors.phoneTaken',
   phone_already_set: 'auth:errors.phoneAlreadySet',

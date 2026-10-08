@@ -1,33 +1,45 @@
 'use client';
 
 import type { BoxProps } from '@mui/material/Box';
+import type { IconifyName } from 'src/components/iconify';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 
-import { _socials } from 'src/_mock';
 import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
 
+import { LEGAL_OPERATOR } from 'src/sections/legal/operator';
+
 // ----------------------------------------------------------------------
+// Контакты — из единого источника реквизитов (src/sections/legal/operator.ts),
+// а не из демо-текста шаблона: раньше здесь были вымышленные адреса,
+// телефон +7 (495) 000-00-00 и чужие соцсети. Незаполненное не показываем.
 
-type InfoItem = { label: string; value: string; href: string };
-
-const ITEM_ICONS = [
-  'solar:letter-bold',
-  'solar:headphones-round-bold',
-  'solar:phone-bold',
-  'solar:clock-circle-bold',
-] as const;
+type Item = { label: string; value: string; href?: string; icon: IconifyName };
 
 export function ContactInfo({ sx, ...other }: BoxProps) {
   const { t } = useTranslate('contact');
+  const o = LEGAL_OPERATOR;
 
-  const items = t('info.items', { returnObjects: true }) as InfoItem[];
+  const items = [
+    o.supportEmail && {
+      label: t('info.support'),
+      value: o.supportEmail,
+      href: `mailto:${o.supportEmail}`,
+      icon: 'solar:chat-round-dots-bold',
+    },
+    o.privacyEmail && {
+      label: t('info.privacy'),
+      value: o.privacyEmail,
+      href: `mailto:${o.privacyEmail}`,
+      icon: 'solar:letter-bold',
+    },
+    o.address && { label: t('info.address'), value: o.address, icon: 'mingcute:location-fill' },
+  ].filter(Boolean) as Item[];
 
   return (
     <Box sx={sx} {...other}>
@@ -36,14 +48,9 @@ export function ContactInfo({ sx, ...other }: BoxProps) {
       <Typography sx={{ mt: 2, mb: 5, color: 'text.secondary' }}>{t('info.subtitle')}</Typography>
 
       <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-        {items.map((item, index) => (
+        {items.map((item) => (
           <Box key={item.label} sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-            <Iconify
-              icon={ITEM_ICONS[index] ?? 'solar:letter-bold'}
-              width={28}
-              sx={{ flexShrink: 0, color: 'primary.main' }}
-            />
-
+            <Iconify icon={item.icon} width={28} sx={{ flexShrink: 0, color: 'primary.main' }} />
             <ListItemText
               primary={item.label}
               secondary={
@@ -61,21 +68,6 @@ export function ContactInfo({ sx, ...other }: BoxProps) {
               }}
             />
           </Box>
-        ))}
-      </Box>
-
-      <Typography variant="overline" sx={{ mt: 5, mb: 1, display: 'block', color: 'text.disabled' }}>
-        {t('info.socialsTitle')}
-      </Typography>
-
-      <Box sx={{ display: 'flex' }}>
-        {_socials.map((social) => (
-          <IconButton key={social.label}>
-            {social.value === 'twitter' && <Iconify icon="socials:twitter" />}
-            {social.value === 'facebook' && <Iconify icon="socials:facebook" />}
-            {social.value === 'instagram' && <Iconify icon="socials:instagram" />}
-            {social.value === 'linkedin' && <Iconify icon="socials:linkedin" />}
-          </IconButton>
         ))}
       </Box>
     </Box>

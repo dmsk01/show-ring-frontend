@@ -23,6 +23,8 @@ import { createShowResult, updateShowResult } from 'src/actions/show-result';
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
 
+import { showErrorMessage } from './show-errors';
+
 // ----------------------------------------------------------------------
 
 export function getShowResultSchema(_t: TFunction<['show', 'common']>) {
@@ -80,7 +82,7 @@ export function ShowResultDialog({ showId, entry, result, gradeOptions, open, on
       }
       onClose();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      toast.error(showErrorMessage(error, t, 'common:state.error'));
     }
   });
 

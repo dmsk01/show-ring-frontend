@@ -5,6 +5,7 @@ import type { IKennelItem } from 'src/types/kennel';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Tooltip from '@mui/material/Tooltip';
 import ListItemText from '@mui/material/ListItemText';
 
 import { paths } from 'src/routes/paths';
@@ -36,13 +37,16 @@ export function KennelCard({ kennel, sx, ...other }: Props) {
     <Card sx={[cardActionableSx, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       <Box sx={{ p: 1, position: 'relative' }}>
         {kennel.is_verified && (
-          <Label
-            color="success"
-            startIcon={<Iconify icon="solar:verified-check-bold" />}
-            sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}
-          >
-            {t('card.verified')}
-          </Label>
+          // Отметка — не гарантия (п. 3.3 Пользовательского соглашения).
+          <Tooltip title={t('detail.verifiedHint')}>
+            <Label
+              color="success"
+              startIcon={<Iconify icon="solar:verified-check-bold" />}
+              sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}
+            >
+              {t('card.verified')}
+            </Label>
+          </Tooltip>
         )}
         <Image
           alt={kennel.name}

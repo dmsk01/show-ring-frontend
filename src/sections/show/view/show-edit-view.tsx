@@ -26,6 +26,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { SHOW_STATUSES } from 'src/types/show';
 
+import { showErrorMessage } from '../show-errors';
 import { showStatusI18nKey } from '../show-utils';
 import { ShowCreateEditForm } from '../show-create-edit-form';
 
@@ -45,7 +46,7 @@ export function ShowEditView({ id }: Props) {
       await setShowStatus(id, status);
       toast.success(t('toast.statusUpdated'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('toast.statusFailed'));
+      toast.error(showErrorMessage(error, t, 'toast.statusFailed'));
     }
   };
 
@@ -54,7 +55,7 @@ export function ShowEditView({ id }: Props) {
       await publishShow(id);
       toast.success(t('toast.published'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('toast.publishFailed'));
+      toast.error(showErrorMessage(error, t, 'toast.publishFailed'));
     }
   };
 

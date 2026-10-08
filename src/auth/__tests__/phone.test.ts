@@ -52,6 +52,13 @@ describe('resolveOtpErrorKey', () => {
     expect(resolveOtpErrorKey(apiError('phone_taken', 409))).toBe('auth:errors.phoneTaken');
   });
 
+  it('maps anti SMS-pumping refusals', () => {
+    expect(resolveOtpErrorKey(apiError('country_not_supported', 400))).toBe(
+      'auth:errors.countryNotSupported'
+    );
+    expect(resolveOtpErrorKey(apiError('sms_unavailable', 503))).toBe('auth:errors.smsUnavailable');
+  });
+
   it('distinguishes OTP cooldown from the IP rate limiter', () => {
     expect(resolveOtpErrorKey(apiError('too_many_requests', 429))).toBe('auth:errors.tooManyCodes');
     expect(resolveOtpErrorKey(apiError('Too many requests', 429))).toBe(

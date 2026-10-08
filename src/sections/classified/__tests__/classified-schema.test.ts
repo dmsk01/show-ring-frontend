@@ -21,6 +21,7 @@ const base = {
   city: null,
   contact_phone: null,
   contact_email: null,
+  contacts_public: false,
 };
 
 function issueAt(result: ReturnType<typeof ClassifiedSchema.safeParse>, field: string) {

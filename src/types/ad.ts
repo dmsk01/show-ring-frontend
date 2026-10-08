@@ -23,6 +23,9 @@ export type ICampaign = {
   date_start: string;
   date_end: string;
   status: CampaignStatus;
+  // Рекламодатель для пометки «Реклама» (ст. 18.1 Закона «О рекламе»).
+  advertiser_name: string | null;
+  advertiser_inn: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -34,6 +37,8 @@ export type ICampaignCreate = {
   date_end: string;
   description?: string | null;
   cost_per_impression?: number | null;
+  advertiser_name?: string | null;
+  advertiser_inn?: string | null;
 };
 
 export type ICampaignUpdate = Partial<ICampaignCreate> & { status?: CampaignStatus };
@@ -55,4 +60,6 @@ export type IBannerCreate = {
   image_file_id?: string | null;
   target_region?: string | null;
   is_active?: boolean;
+  // Идентификатор рекламы из ОРД; без него бэкенд не показывает баннер.
+  erid?: string | null;
 };

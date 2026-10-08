@@ -24,6 +24,8 @@ import { useReferenceList } from 'src/actions/admin-reference';
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
 
+import { showErrorMessage } from './show-errors';
+
 // ----------------------------------------------------------------------
 
 export function getShowSchema(t: TFunction<['show', 'common']>) {
@@ -155,7 +157,7 @@ export function ShowCreateEditForm({ currentShow }: Props) {
       router.push(paths.showcase.shows);
     } catch (error) {
       console.error(error);
-      toast.error(error instanceof Error ? error.message : t('toast.saveFailed'));
+      toast.error(showErrorMessage(error, t, 'toast.saveFailed'));
     }
   });
 

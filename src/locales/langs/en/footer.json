@@ -17,7 +17,8 @@
     "title": "Legal",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "consent": "Personal Data Consent"
+    "consent": "Personal Data Consent",
+    "publicConsent": "Public Data Consent"
   },
   "contact": {
     "title": "Get in touch"

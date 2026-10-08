@@ -79,14 +79,19 @@ function flushQueue(error: unknown, success: boolean): void {
   pendingQueue = [];
 }
 
-async function refreshSession(): Promise<boolean> {
+export async function refreshSession(): Promise<boolean> {
   try {
     // Тело пустое — refresh-кука уходит автоматически (withCredentials).
     // Бэкенд ставит свежие access/refresh куки в ответе.
     await axios.post(`${CONFIG.serverUrl}${endpoints.auth.refresh}`, {}, { withCredentials: true });
     return true;
-  } catch {
-    return false;
+  } catch (error) {
+    // Другая вкладка уже обновила сессию этой же кукой, и браузер получил
+    // новые куки от неё (бэкенд: 401 refresh_superseded, куки не трогает).
+    // Это не провал — исходный запрос достаточно повторить.
+    const detail = (error as { response?: { data?: { detail?: unknown } } })?.response?.data
+      ?.detail;
+    return detail === 'refresh_superseded';
   }
 }
 
@@ -171,11 +176,18 @@ export const endpoints = {
     phoneSendCode: '/users/me/phone/send-code',
     phoneVerify: '/users/me/phone/verify',
     reauthSendCode: '/users/me/reauth/send-code',
+    // 152-ФЗ: журнал согласий и удаление (обезличивание) аккаунта.
+    consents: '/users/me/consents',
+    deleteAccount: '/users/me/delete',
     emailLogin: '/users/me/email-login',
     signIn: '/auth/login',
     refresh: '/auth/refresh',
     logout: '/auth/logout',
     confirmEmailChange: '/auth/confirm-email-change',
+  },
+  // Капча ALTCHA (src/auth/captcha.ts).
+  captcha: {
+    challenge: '/captcha/challenge',
   },
   dog: {
     list: '/dogs',
@@ -207,6 +219,8 @@ export const endpoints = {
   kennel: {
     list: '/kennels',
     details: (id: string) => `/kennels/${id}`,
+    // «Показать контакты» — отдельный запрос с лимитом (план защиты, этап 4).
+    contacts: (id: string) => `/kennels/${id}/contacts`,
   },
   litter: {
     list: '/litters',
@@ -222,6 +236,7 @@ export const endpoints = {
     mine: '/classifieds/mine',
     search: '/classifieds/search',
     details: (id: string) => `/classifieds/${id}`,
+    contacts: (id: string) => `/classifieds/${id}/contacts`,
   },
   show: {
     list: '/shows',
@@ -281,6 +296,7 @@ export const endpoints = {
     analyticsAds: '/admin/analytics/ads',
     analyticsTopBreeds: '/admin/analytics/top-breeds',
     analyticsTopCampaigns: '/admin/analytics/top-campaigns',
+    securityMetrics: '/admin/security/metrics',
     uploadQuotas: '/admin/upload-quotas',
     uploadQuota: (tier: string) => `/admin/upload-quotas/${tier}`,
   },

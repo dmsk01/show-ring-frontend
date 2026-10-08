@@ -79,14 +79,19 @@ function flushQueue(error: unknown, success: boolean): void {
   pendingQueue = [];
 }
 
-async function refreshSession(): Promise<boolean> {
+export async function refreshSession(): Promise<boolean> {
   try {
     // Тело пустое — refresh-кука уходит автоматически (withCredentials).
     // Бэкенд ставит свежие access/refresh куки в ответе.
     await axios.post(`${CONFIG.serverUrl}${endpoints.auth.refresh}`, {}, { withCredentials: true });
     return true;
-  } catch {
-    return false;
+  } catch (error) {
+    // Другая вкладка уже обновила сессию этой же кукой, и браузер получил
+    // новые куки от неё (бэкенд: 401 refresh_superseded, куки не трогает).
+    // Это не провал — исходный запрос достаточно повторить.
+    const detail = (error as { response?: { data?: { detail?: unknown } } })?.response?.data
+      ?.detail;
+    return detail === 'refresh_superseded';
   }
 }
 

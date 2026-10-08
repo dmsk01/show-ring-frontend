@@ -17,6 +17,8 @@ import MenuItem from '@mui/material/MenuItem';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { apiErrorKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { createCampaign, updateCampaign } from 'src/actions/ad';
 
@@ -29,7 +31,8 @@ import { CAMPAIGN_STATUSES } from 'src/types/ad';
 
 export function getCampaignSchema(t: TFunction) {
   return z.object({
-    // Mirror backend CampaignCreate: name maxLength 255, budget > 0, cost_per_impression ≥ 0.
+    // Mirror backend CampaignCreate: name maxLength 255, budget > 0, cost_per_impression > 0
+    // (бесплатный показ запрещён — ревью бэкенда 2026-10-06, BE-05).
     name: z
       .string()
       .min(1, { error: t('form.validation.nameRequired') })
@@ -44,7 +47,7 @@ export function getCampaignSchema(t: TFunction) {
     date_end: z.string().min(1, { error: t('form.validation.dateEndRequired') }),
     cost_per_impression: z
       .string()
-      .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
+      .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) > 0), {
         error: t('form.validation.cpiInvalid'),
       })
       .nullable(),
@@ -63,6 +66,31 @@ export function getCampaignSchema(t: TFunction) {
 }
 
 export type CampaignSchemaType = z.infer<ReturnType<typeof getCampaignSchema>>;
+
+/**
+ * Тело create/update. Пустую стоимость показа НЕ отправляем: null бэкенд
+ * отвергает (422), а без поля применяет значение по умолчанию.
+ */
+export function buildCampaignPayload(data: CampaignSchemaType) {
+  return {
+    name: data.name,
+    budget: Number(data.budget),
+    date_start: data.date_start,
+    date_end: data.date_end,
+    description: data.description || null,
+    ...(data.cost_per_impression ? { cost_per_impression: Number(data.cost_per_impression) } : {}),
+    advertiser_name: data.advertiser_name || null,
+    advertiser_inn: data.advertiser_inn || null,
+  };
+}
+
+// Коды ошибок бэкенда → i18n-ключи (ревью бэкенда 2026-10-06, BE-05).
+const CAMPAIGN_ERRORS: Record<string, string> = {
+  moderation_required: 'ad:errors.moderationRequired',
+  invalid_dates: 'ad:errors.invalidDates',
+  budget_below_spent: 'ad:errors.budgetBelowSpent',
+  forbidden: 'ad:errors.forbidden',
+};
 
 type Props = { currentCampaign?: ICampaign };
 
@@ -110,16 +138,7 @@ export function CampaignCreateEditForm({ currentCampaign }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const common = {
-        name: data.name,
-        budget: Number(data.budget),
-        date_start: data.date_start,
-        date_end: data.date_end,
-        description: data.description || null,
-        cost_per_impression: data.cost_per_impression ? Number(data.cost_per_impression) : null,
-        advertiser_name: data.advertiser_name || null,
-        advertiser_inn: data.advertiser_inn || null,
-      };
+      const common = buildCampaignPayload(data);
 
       if (currentCampaign) {
         await updateCampaign(currentCampaign.id, { ...common, status: data.status });
@@ -131,7 +150,7 @@ export function CampaignCreateEditForm({ currentCampaign }: Props) {
       router.push(paths.dashboard.ads.root);
     } catch (error) {
       console.error(error);
-      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      toast.error(t(apiErrorKey(error, CAMPAIGN_ERRORS) ?? 'common:state.error'));
     }
   });
 
@@ -148,7 +167,11 @@ export function CampaignCreateEditForm({ currentCampaign }: Props) {
         >
           <Field.Text name="name" label={t('form.fields.name')} />
           {currentCampaign && (
-            <Field.Select name="status" label={t('form.fields.status')}>
+            <Field.Select
+              name="status"
+              label={t('form.fields.status')}
+              helperText={t('form.statusModerationHint')}
+            >
               {CAMPAIGN_STATUSES.map((s) => (
                 <MenuItem key={s} value={s}>
                   {t(`enums.status.${s}`)}

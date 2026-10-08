@@ -34,6 +34,7 @@ import { Form, Field } from 'src/components/hook-form';
 import { EmptyContent } from 'src/components/empty-content';
 import { LoadingScreen } from 'src/components/loading-screen';
 
+import { showErrorMessage } from '../show-errors';
 import { canRegisterForShow } from '../show-utils';
 
 // ----------------------------------------------------------------------
@@ -164,7 +165,7 @@ function RegisterForm({ show, dogs, entries }: FormProps) {
       toast.success(t('register.toast.success'));
       router.push(paths.showcase.show(show.id));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('register.toast.failed'));
+      toast.error(showErrorMessage(error, t, 'register.toast.failed'));
     }
   });
 

@@ -9,8 +9,10 @@ export const en: LandingContent = {
     title: 'Step into the ring — without the paperwork',
     subtitle:
       'Show Ring brings breeders, handlers and organizers together: show registration, dog records, entries and results — all in one place.',
-    ctaPrimary: 'Enter the ring',
-    ctaSecondary: 'Sign in',
+    ctaSignUp: 'Join Show Ring',
+    signUpHint: 'Sign up with your phone number in under a minute',
+    haveAccount: 'Already have an account?',
+    signInLink: 'Sign in',
   },
   advantages: {
     caption: 'Why Show Ring',

@@ -9,7 +9,18 @@ export type StatText = { label: string };
 export type FaqItem = { q: string; a: string };
 export type LandingContent = {
   nav: { signIn: string };
-  hero: { badge: string; title: string; subtitle: string; ctaPrimary: string; ctaSecondary: string };
+  hero: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    /** Главная кнопка — регистрация. */
+    ctaSignUp: string;
+    /** Подпись под кнопкой: как и сколько займёт регистрация. */
+    signUpHint: string;
+    /** Строка под ней для тех, у кого уже есть аккаунт: «Уже есть аккаунт? Войти». */
+    haveAccount: string;
+    signInLink: string;
+  };
   advantages: { caption: string; title: string; items: CardText[] };
   stats: { caption: string; title: string; items: StatText[] };
   roadmap: { caption: string; title: string; steps: StepItem[] };

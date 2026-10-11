@@ -5,6 +5,7 @@ import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
+import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -122,7 +123,9 @@ export function LandingHero() {
           </m.div>
 
           <m.div variants={varFade('inUp', { distance: 24 })}>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 5 }}>
+            {/* Одно главное действие — регистрация; вход — ссылкой для тех, у кого
+                уже есть аккаунт. Две кнопки «Войти в ринг» и «Войти» путали. */}
+            <Stack spacing={2} sx={{ mt: 5, alignItems: 'center' }}>
               <Button
                 component={RouterLink}
                 href={paths.auth.jwt.signUp}
@@ -131,17 +134,24 @@ export function LandingHero() {
                 color="primary"
                 endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
               >
-                {t.hero.ctaPrimary}
+                {t.hero.ctaSignUp}
               </Button>
-              <Button
-                component={RouterLink}
-                href={paths.auth.jwt.signIn}
-                size="large"
-                variant="outlined"
-                color="inherit"
-              >
-                {t.hero.ctaSecondary}
-              </Button>
+              <Stack spacing={0.5} sx={{ alignItems: 'center' }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  {t.hero.signUpHint}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  {t.hero.haveAccount}{' '}
+                  <Link
+                    component={RouterLink}
+                    href={paths.auth.jwt.signIn}
+                    underline="always"
+                    sx={{ fontWeight: 'fontWeightSemiBold' }}
+                  >
+                    {t.hero.signInLink}
+                  </Link>
+                </Typography>
+              </Stack>
             </Stack>
           </m.div>
 

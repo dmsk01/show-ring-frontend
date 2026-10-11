@@ -18,6 +18,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { isIsoDate } from 'src/utils/iso-date';
+import { nullableNumberInput } from 'src/utils/number-input';
 
 import { useTranslate } from 'src/locales';
 import { createShow, updateShow } from 'src/actions/show';
@@ -55,12 +56,14 @@ export function getShowSchema(t: TFunction<['show', 'common']>) {
       city: z.string().max(128, { error: t('show:form.validation.tooLong', { max: 128 }) }).nullable(),
       country: z.string().max(64, { error: t('show:form.validation.tooLong', { max: 64 }) }).nullable(),
       venue: z.string().max(255, { error: t('show:form.validation.tooLong', { max: 255 }) }).nullable(),
-      entry_fee: z
-        .string()
-        .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
-          error: t('show:form.validation.entryFeeInvalid'),
-        })
-        .nullable(),
+      entry_fee: nullableNumberInput(
+        z
+          .string()
+          .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
+            error: t('show:form.validation.entryFeeInvalid'),
+          })
+          .nullable()
+      ),
       description: z.string().nullable(),
     })
     // Кросс-валидация дат — зеркало бэкендовых правил ShowBase (теперь они
@@ -112,7 +115,7 @@ export function ShowCreateEditForm({ currentShow }: Props) {
     description: null,
   };
 
-  const methods = useForm<ShowSchemaType>({
+  const methods = useForm<z.input<ReturnType<typeof getShowSchema>>, unknown, ShowSchemaType>({
     mode: 'onSubmit',
     resolver: zodResolver(ShowSchema),
     defaultValues,

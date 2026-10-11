@@ -19,6 +19,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { isIsoDate } from 'src/utils/iso-date';
 import { apiErrorKey } from 'src/utils/api-error';
+import { numberInput, nullableNumberInput } from 'src/utils/number-input';
 
 import { useTranslate } from 'src/locales';
 import { createCampaign, updateCampaign } from 'src/actions/ad';
@@ -40,12 +41,14 @@ export function getCampaignSchema(t: TFunction) {
           .string()
           .min(1, { error: t('form.validation.nameRequired') })
           .max(255, { error: t('form.validation.tooLong', { max: 255 }) }),
-        budget: z
-          .string()
-          .min(1, { error: t('form.validation.budgetRequired') })
-          .refine((v) => !Number.isNaN(Number(v)) && Number(v) > 0, {
-            error: t('form.validation.budgetPositive'),
-          }),
+        budget: numberInput(
+          z
+            .string()
+            .min(1, { error: t('form.validation.budgetRequired') })
+            .refine((v) => !Number.isNaN(Number(v)) && Number(v) > 0, {
+              error: t('form.validation.budgetPositive'),
+            })
+        ),
         date_start: z
           .string()
           .min(1, { error: t('form.validation.dateStartRequired') })
@@ -54,12 +57,14 @@ export function getCampaignSchema(t: TFunction) {
           .string()
           .min(1, { error: t('form.validation.dateEndRequired') })
           .refine(isIsoDate, { error: t('form.validation.dateInvalid') }),
-        cost_per_impression: z
-          .string()
-          .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) > 0), {
-            error: t('form.validation.cpiInvalid'),
-          })
-          .nullable(),
+        cost_per_impression: nullableNumberInput(
+          z
+            .string()
+            .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) > 0), {
+              error: t('form.validation.cpiInvalid'),
+            })
+            .nullable()
+        ),
         description: z.string().nullable(),
         status: z.enum(['draft', 'active', 'paused', 'completed', 'cancelled']),
         // Маркировка рекламы (ст. 18.1 Закона «О рекламе»).
@@ -136,7 +141,7 @@ export function CampaignCreateEditForm({ currentCampaign }: Props) {
     advertiser_inn: null,
   };
 
-  const methods = useForm<CampaignSchemaType>({
+  const methods = useForm<z.input<typeof CampaignSchema>, unknown, CampaignSchemaType>({
     mode: 'onSubmit',
     resolver: zodResolver(CampaignSchema),
     defaultValues,

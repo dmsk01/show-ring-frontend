@@ -17,6 +17,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
+import { nullableNumberInput } from 'src/utils/number-input';
+
 import { useTranslate } from 'src/locales';
 import { createShowResult, updateShowResult } from 'src/actions/show-result';
 
@@ -30,7 +32,7 @@ import { showErrorMessage } from './show-errors';
 export function getShowResultSchema(_t: TFunction<['show', 'common']>) {
   return z.object({
     grade_id: z.string().nullable(),
-    placement: z.string().nullable(),
+    placement: nullableNumberInput(z.string().nullable()),
     critique: z.string().nullable(),
   });
 }
@@ -51,7 +53,11 @@ export function ShowResultDialog({ showId, entry, result, gradeOptions, open, on
 
   const ResultSchema = useMemo(() => getShowResultSchema(t), [t]);
 
-  const methods = useForm<ShowResultSchemaType>({
+  const methods = useForm<
+    z.input<ReturnType<typeof getShowResultSchema>>,
+    unknown,
+    ShowResultSchemaType
+  >({
     resolver: zodResolver(ResultSchema),
     defaultValues: {
       grade_id: result?.grade_id ?? '',

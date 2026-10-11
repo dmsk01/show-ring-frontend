@@ -114,7 +114,7 @@ export function Logo({
     <svg
       width="100%"
       height="100%"
-      viewBox="0 0 1500 512"
+      viewBox="0 0 1720 512"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -123,6 +123,8 @@ export function Logo({
       <text
         x="580"
         y="330"
+        textLength="1100"
+        lengthAdjust="spacingAndGlyphs"
         fill={TEXT_PRIMARY}
         fontSize="240"
         fontWeight="800"
@@ -144,7 +146,7 @@ export function Logo({
         {
           width: 40,
           height: 40,
-          ...(!isSingle && { width: 102, height: 36 }),
+          ...(!isSingle && { width: 120, height: 36 }),
           ...(disabled && { pointerEvents: 'none' }),
         },
         ...(Array.isArray(sx) ? sx : [sx]),

@@ -16,14 +16,18 @@ import TableCell from '@mui/material/TableCell';
 
 import { paths } from 'src/routes/paths';
 
+import { fDate } from 'src/utils/format-time';
+import { fCurrency } from 'src/utils/format-number';
 import { apiErrorMessageKey } from 'src/utils/api-error';
 
 import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
   verifyKennel,
+  decideCampaign,
   decideClassified,
   useGetModerationKennels,
+  useGetModerationCampaigns,
   useGetModerationClassifieds,
 } from 'src/actions/admin';
 
@@ -89,6 +93,78 @@ function ClassifiedsModeration() {
                     onClick={() => decide(row.id, false)}
                   >
                     {t('moderation.classifieds.actions.reject')}
+                  </Button>
+                </Stack>
+              </TableCell>
+            </TableRow>
+          ))}
+          <TableNoData notFound={!loading && items.length === 0} />
+        </TableBody>
+      </Table>
+    </Scrollbar>
+  );
+}
+
+/**
+ * Рекламные кампании до первого одобрения (FE-37). Одобрение запускает
+ * кампанию в показ, отказ — отменяет её.
+ */
+function CampaignsModeration() {
+  const { t } = useTranslate(['admin', 'common']);
+  const { items, loading } = useGetModerationCampaigns();
+
+  const decide = async (id: string, approve: boolean) => {
+    try {
+      await decideCampaign(id, approve);
+      toast.success(approve ? t('moderation.toast.approved') : t('moderation.toast.rejected'));
+    } catch (error) {
+      toast.error(t(apiErrorMessageKey(error, {}, 'moderation.toast.failed')));
+    }
+  };
+
+  return (
+    <Scrollbar>
+      <Table sx={{ minWidth: 900 }}>
+        <TableHeadCustom
+          headCells={[
+            { id: 'name', label: t('moderation.campaigns.columns.name') },
+            { id: 'advertiser', label: t('moderation.campaigns.columns.advertiser'), width: 220 },
+            { id: 'budget', label: t('moderation.campaigns.columns.budget'), width: 140 },
+            { id: 'period', label: t('moderation.campaigns.columns.period'), width: 200 },
+            {
+              id: '',
+              label: t('moderation.classifieds.columns.decision'),
+              width: 240,
+              align: 'right',
+            },
+          ]}
+        />
+        <TableBody>
+          {items.map((row) => (
+            <TableRow key={row.id} hover>
+              <TableCell sx={{ fontWeight: 'fontWeightSemiBold' }}>{row.name}</TableCell>
+              <TableCell>{row.advertiser_name || row.advertiser_email || '—'}</TableCell>
+              <TableCell>{fCurrency(row.budget)}</TableCell>
+              <TableCell>
+                {fDate(row.date_start)} — {fDate(row.date_end)}
+              </TableCell>
+              <TableCell align="right">
+                <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
+                  <Button
+                    size="small"
+                    color="success"
+                    variant="soft"
+                    onClick={() => decide(row.id, true)}
+                  >
+                    {t('moderation.campaigns.actions.approve')}
+                  </Button>
+                  <Button
+                    size="small"
+                    color="error"
+                    variant="soft"
+                    onClick={() => decide(row.id, false)}
+                  >
+                    {t('moderation.campaigns.actions.reject')}
                   </Button>
                 </Stack>
               </TableCell>
@@ -168,11 +244,14 @@ export function ModerationView() {
       <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 3 }}>
         <Tab value="classifieds" label={t('moderation.tabs.classifieds')} />
         <Tab value="kennels" label={t('moderation.tabs.kennels')} />
+        <Tab value="campaigns" label={t('moderation.tabs.campaigns')} />
       </Tabs>
 
       <Card>
         <Box sx={{ position: 'relative' }}>
-          {tab === 'classifieds' ? <ClassifiedsModeration /> : <KennelsModeration />}
+          {tab === 'classifieds' && <ClassifiedsModeration />}
+          {tab === 'kennels' && <KennelsModeration />}
+          {tab === 'campaigns' && <CampaignsModeration />}
         </Box>
       </Card>
     </DashboardContent>

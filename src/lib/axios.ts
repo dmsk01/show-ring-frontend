@@ -375,6 +375,8 @@ export const endpoints = {
     moderationClassifieds: '/admin/moderation/classifieds',
     moderationClassified: (id: string) => `/admin/moderation/classifieds/${id}`,
     moderationKennels: '/admin/moderation/kennels',
+    moderationCampaigns: '/admin/moderation/campaigns',
+    moderationCampaign: (id: string) => `/admin/moderation/campaigns/${id}`,
     kennelVerify: (id: string) => `/admin/moderation/kennels/${id}/verify`,
     analyticsDashboard: '/admin/analytics/dashboard',
     analyticsAds: '/admin/analytics/ads',

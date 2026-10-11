@@ -18,6 +18,21 @@ export type IKennelModeration = {
   is_verified: boolean;
 };
 
+/** Кампания в очереди модерации (GET /admin/moderation/campaigns, FE-37). */
+export type ICampaignModeration = {
+  id: string;
+  advertiser_id: string;
+  advertiser_email: string | null;
+  advertiser_name: string | null;
+  name: string;
+  budget: string;
+  cost_per_impression: string;
+  date_start: string;
+  date_end: string;
+  status: string;
+  created_at: string;
+};
+
 export type IClassifiedModeration = {
   id: string;
   author_id: string;

@@ -168,7 +168,8 @@
     },
     "tabs": {
       "classifieds": "Classifieds",
-      "kennels": "Kennels"
+      "kennels": "Kennels",
+      "campaigns": "Campaigns"
     },
     "classifieds": {
       "columns": {
@@ -211,6 +212,18 @@
       "verified": "Verified",
       "unverified": "Unverified",
       "failed": "Failed"
+    },
+    "campaigns": {
+      "columns": {
+        "name": "Campaign",
+        "advertiser": "Advertiser",
+        "budget": "Budget",
+        "period": "Period"
+      },
+      "actions": {
+        "approve": "Approve",
+        "reject": "Reject"
+      }
     }
   },
   "analytics": {

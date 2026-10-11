@@ -136,17 +136,22 @@ export function LandingHero() {
               >
                 {t.hero.ctaSignUp}
               </Button>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {t.hero.haveAccount}{' '}
-                <Link
-                  component={RouterLink}
-                  href={paths.auth.jwt.signIn}
-                  underline="always"
-                  sx={{ fontWeight: 'fontWeightSemiBold' }}
-                >
-                  {t.hero.signInLink}
-                </Link>
-              </Typography>
+              <Stack spacing={0.5} sx={{ alignItems: 'center' }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  {t.hero.signUpHint}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  {t.hero.haveAccount}{' '}
+                  <Link
+                    component={RouterLink}
+                    href={paths.auth.jwt.signIn}
+                    underline="always"
+                    sx={{ fontWeight: 'fontWeightSemiBold' }}
+                  >
+                    {t.hero.signInLink}
+                  </Link>
+                </Typography>
+              </Stack>
             </Stack>
           </m.div>
 

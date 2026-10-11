@@ -15,6 +15,8 @@ export type LandingContent = {
     subtitle: string;
     /** Главная кнопка — регистрация. */
     ctaSignUp: string;
+    /** Подпись под кнопкой: как и сколько займёт регистрация. */
+    signUpHint: string;
     /** Строка под ней для тех, у кого уже есть аккаунт: «Уже есть аккаунт? Войти». */
     haveAccount: string;
     signInLink: string;

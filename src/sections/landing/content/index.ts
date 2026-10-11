@@ -7,8 +7,6 @@ export type CardText = { title: string; text: string };
 export type StepItem = { title: string; text: string };
 export type StatText = { label: string };
 export type FaqItem = { q: string; a: string };
-export type NewsItem = { title: string; date: string; excerpt: string };
-
 export type LandingContent = {
   nav: { signIn: string };
   hero: { badge: string; title: string; subtitle: string; ctaPrimary: string; ctaSecondary: string };
@@ -23,7 +21,6 @@ export type LandingContent = {
     contactText: string;
     contactCta: string;
   };
-  news: { caption: string; title: string; items: NewsItem[] };
   seo: { title: string; paragraphs: string[] };
 };
 

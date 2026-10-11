@@ -4,7 +4,6 @@ import { BackToTopButton } from 'src/components/animate/back-to-top-button';
 import { ScrollProgress, useScrollProgress } from 'src/components/animate/scroll-progress';
 
 import { LandingSeo } from '../landing-seo';
-import { LandingNews } from '../landing-news';
 import { LandingHero } from '../landing-hero';
 import { LandingFAQs } from '../landing-faqs';
 import { LandingStats } from '../landing-stats';
@@ -31,7 +30,6 @@ export function LandingView() {
       <LandingStats />
       <LandingRoadmap />
       <LandingFAQs />
-      <LandingNews />
       <LandingSeo />
     </>
   );

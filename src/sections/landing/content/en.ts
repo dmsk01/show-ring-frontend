@@ -5,10 +5,10 @@ import type { LandingContent } from './index';
 export const en: LandingContent = {
   nav: { signIn: 'Sign in' },
   hero: {
-    badge: 'Animal show platform',
+    badge: 'Dog show platform',
     title: 'Step into the ring — without the paperwork',
     subtitle:
-      'Show Ring brings breeders, handlers and organizers together: show registration, dog and cat records, entries and results — all in one place.',
+      'Show Ring brings breeders, handlers and organizers together: show registration, dog records, entries and results — all in one place.',
     ctaPrimary: 'Enter the ring',
     ctaSecondary: 'Sign in',
   },
@@ -72,7 +72,7 @@ export const en: LandingContent = {
       },
       {
         q: 'Which animals can I register?',
-        a: 'At launch — dogs and cats under RKF / FCI rules. The architecture is multi-species, so the list of breeds and grading systems will keep expanding.',
+        a: 'Dogs under RKF / FCI rules for now. We plan to add other species, such as cats, later.',
       },
       {
         q: 'How do I enter a show?',
@@ -91,34 +91,10 @@ export const en: LandingContent = {
     contactText: 'Describe your case and we’ll help you sort it out.',
     contactCta: 'Contact us',
   },
-  news: {
-    caption: 'News & events',
-    title: 'The platform lives for shows',
-    items: [
-      {
-        title: 'National all-breed dog show',
-        date: 'Moscow · May 2026',
-        excerpt:
-          'Over 1,200 entrants and 40 rings: entries, catalog and results ran fully online through Show Ring.',
-      },
-      {
-        title: 'RKF Championship',
-        date: 'Saint Petersburg · April 2026',
-        excerpt:
-          'Experts graded directly in the system, and handlers received diplomas in their dashboard on show day.',
-      },
-      {
-        title: 'International cat show',
-        date: 'Kazan · March 2026',
-        excerpt:
-          'The first multi-species show on the platform: online kennel registration and fast title tracking.',
-      },
-    ],
-  },
   seo: {
-    title: 'Show Ring — dog and cat shows online',
+    title: 'Show Ring — dog shows online',
     paragraphs: [
-      'Show Ring is a modern platform for taking part in dog and cat shows under RKF and FCI rules. Show registration, kennel profiles, pedigree and title records, entry submission and result viewing all live in a single dashboard.',
+      'Show Ring is a modern platform for taking part in dog shows under RKF and FCI rules. Show registration, kennel profiles, pedigree and title records, entry submission and result viewing all live in a single dashboard.',
       'Browse the calendar of shows across Russia, pick events in your region and submit entries online. Breeders run kennel and litter pages, handlers prepare animals for the ring, and organizers publish schedules, ring line-ups and final results — with no paperwork and no queues.',
     ],
   },

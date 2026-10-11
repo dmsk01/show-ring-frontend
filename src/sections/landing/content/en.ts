@@ -91,24 +91,6 @@ export const en: LandingContent = {
     contactText: 'Describe your case and we’ll help you sort it out.',
     contactCta: 'Contact us',
   },
-  news: {
-    caption: 'News & events',
-    title: 'The platform lives for shows',
-    items: [
-      {
-        title: 'National all-breed dog show',
-        date: 'Moscow · May 2026',
-        excerpt:
-          'Over 1,200 entrants and 40 rings: entries, catalog and results ran fully online through Show Ring.',
-      },
-      {
-        title: 'RKF Championship',
-        date: 'Saint Petersburg · April 2026',
-        excerpt:
-          'Experts graded directly in the system, and handlers received diplomas in their dashboard on show day.',
-      },
-    ],
-  },
   seo: {
     title: 'Show Ring — dog shows online',
     paragraphs: [

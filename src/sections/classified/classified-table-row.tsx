@@ -108,7 +108,11 @@ export function ClassifiedTableRow({ row, editHref, onDeleteRow, onChangeAvailab
         </TableCell>
 
         <TableCell align="right">
-          <IconButton color={menuActions.open ? 'inherit' : 'default'} onClick={menuActions.onOpen}>
+          <IconButton
+            color={menuActions.open ? 'inherit' : 'default'}
+            onClick={menuActions.onOpen}
+            aria-label={t('common:a11y.rowActions')}
+          >
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>

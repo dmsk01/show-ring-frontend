@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -19,11 +20,13 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const { t } = useTranslate('blog');
+
   return (
     <DashboardContent maxWidth={false} sx={{ pt: 5 }}>
       <EmptyContent
         filled
-        title="Post not found!"
+        title={t('detail.notFound')}
         action={
           <Button
             component={RouterLink}
@@ -31,7 +34,7 @@ export default function Error({
             startIcon={<Iconify width={16} icon="eva:arrow-ios-back-fill" />}
             sx={{ mt: 3 }}
           >
-            Back to list
+            {t('detail.backToList')}
           </Button>
         }
         sx={{ py: 10, height: 'auto', flexGrow: 'unset' }}

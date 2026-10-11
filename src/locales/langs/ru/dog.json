@@ -44,7 +44,8 @@
       "confirm": "Удалить"
     },
     "submitCreate": "Создать собаку",
-    "submitUpdate": "Сохранить изменения"
+    "submitUpdate": "Сохранить изменения",
+    "parentSearch": "Начните вводить кличку"
   },
   "detail": {
     "pedigree": "Родословная",
@@ -119,5 +120,5 @@
     }
   },
   "enums": { "sex": { "male": "Кобель", "female": "Сука" } },
-  "toast": { "created": "Создано!", "updated": "Сохранено!", "photoDeleted": "Фото удалено" }
+  "toast": { "created": "Создано!", "updated": "Сохранено!", "photoDeleted": "Фото удалено", "savedWithoutPhotos": "Собака сохранена, но фото не загрузились — добавьте их ещё раз" }
 }

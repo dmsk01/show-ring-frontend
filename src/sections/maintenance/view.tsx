@@ -6,25 +6,26 @@ import Typography from '@mui/material/Typography';
 
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { MaintenanceIllustration } from 'src/assets/illustrations';
 
 // ----------------------------------------------------------------------
 
 export function MaintenanceView() {
+  const { t } = useTranslate('common');
+
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-      <Typography variant="h3" sx={{ mb: 2 }}>
-        Website currently under maintenance
+      <Typography variant="h3" component="h1" sx={{ mb: 2 }}>
+        {t('errorPages.maintenanceTitle')}
       </Typography>
 
-      <Typography sx={{ color: 'text.secondary' }}>
-        We are currently working hard on this page!
-      </Typography>
+      <Typography sx={{ color: 'text.secondary' }}>{t('errorPages.maintenanceText')}</Typography>
 
       <MaintenanceIllustration sx={{ my: { xs: 5, sm: 10 } }} />
 
       <Button component={RouterLink} href="/" size="large" variant="contained">
-        Go to home
+        {t('errorPages.goHome')}
       </Button>
     </Box>
   );

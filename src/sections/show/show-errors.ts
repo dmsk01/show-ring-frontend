@@ -1,4 +1,4 @@
-import { apiErrorKey } from 'src/utils/api-error';
+import { apiErrorMessageKey } from 'src/utils/api-error';
 
 // Коды ошибок бэкенда (detail) для выставок, записей и результатов →
 // i18n-ключи. Используется с apiErrorKey (src/utils/api-error.ts):
@@ -28,14 +28,13 @@ export const SHOW_ERRORS: Record<string, string> = {
 
 /**
  * Текст ошибки для тоста: известный код бэкенда — переведённое сообщение,
- * иначе — текст ошибки как есть (человекочитаемые detail бэкенда) или fallback.
+ * иначе общий текст по статусу или fallback. Сырой текст бэкенда не
+ * показываем (ревью 2026-10-09, FE-14).
  */
 export function showErrorMessage(
   error: unknown,
   t: (key: string) => string,
   fallbackKey: string
 ): string {
-  const key = apiErrorKey(error, SHOW_ERRORS);
-  if (key) return t(key);
-  return error instanceof Error && error.message ? error.message : t(fallbackKey);
+  return t(apiErrorMessageKey(error, SHOW_ERRORS, fallbackKey));
 }

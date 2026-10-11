@@ -229,7 +229,14 @@ function EmailSignInForm() {
               input: {
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={showPassword.onToggle} edge="end">
+                    <IconButton
+                      onClick={showPassword.onToggle}
+                      edge="end"
+                      aria-label={t(
+                        showPassword.value ? 'common:a11y.hidePassword' : 'common:a11y.showPassword'
+                      )}
+                      aria-pressed={showPassword.value}
+                    >
                       <Iconify
                         icon={showPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'}
                       />

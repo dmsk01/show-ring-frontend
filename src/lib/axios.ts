@@ -1,9 +1,12 @@
 import type { AxiosResponse, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
+import type { Page } from 'src/utils/fetch-all-pages';
 
 import axios from 'axios';
 import i18next from 'i18next';
 
 import { paths } from 'src/routes/paths';
+
+import { fetchAllPages } from 'src/utils/fetch-all-pages';
 
 import { CONFIG } from 'src/global-config';
 import { fallbackLng } from 'src/locales/locales-config';
@@ -73,25 +76,63 @@ type QueuedRequest = {
 
 let isRefreshing = false;
 let pendingQueue: QueuedRequest[] = [];
+// Итог последнего refresh для запросов из очереди: после superseded им тоже
+// нужен повтор с паузой (FE-04).
+let lastRefreshSuperseded = false;
 
 function flushQueue(error: unknown, success: boolean): void {
   pendingQueue.forEach(({ resolve, reject }) => (success ? resolve() : reject(error)));
   pendingQueue = [];
 }
 
-export async function refreshSession(): Promise<boolean> {
+/**
+ * Итог обновления сессии:
+ * - ok — куки обновлены этим запросом;
+ * - superseded — сессию этой же кукой уже обновила другая вкладка, новые
+ *   куки приходят от неё (возможно, чуть позже);
+ * - dead — refresh-токен недействителен, нужен повторный вход;
+ * - transient — лимит запросов, сбой сервера или сети: сессия, скорее всего,
+ *   жива, выкидывать пользователя на вход нельзя (ревью 2026-10-09, FE-03).
+ */
+export type RefreshResult =
+  { outcome: 'ok' | 'superseded' } | { outcome: 'dead' | 'transient'; error: unknown };
+
+/** Пауза перед повтором, если куки другой вкладки ещё не применились (FE-04). */
+const SUPERSEDED_RETRY_DELAY_MS = 400;
+
+const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Повтор исходного запроса после refresh_superseded. Ответ на наш refresh мог
+ * прийти раньше, чем браузер применил Set-Cookie из ответа другой вкладки, —
+ * тогда первый повтор уходит со старой access-кукой и получает 401. Даём
+ * кукам время и повторяем ещё раз; дальше — обычная ошибка.
+ */
+async function replayAfterSuperseded(config: InternalAxiosRequestConfig) {
+  try {
+    return await axiosInstance(config);
+  } catch (error) {
+    if ((error as ApiError)?.status !== 401) throw error;
+    await delay(SUPERSEDED_RETRY_DELAY_MS);
+    return axiosInstance(config);
+  }
+}
+
+export async function refreshSession(): Promise<RefreshResult> {
   try {
     // Тело пустое — refresh-кука уходит автоматически (withCredentials).
     // Бэкенд ставит свежие access/refresh куки в ответе.
     await axios.post(`${CONFIG.serverUrl}${endpoints.auth.refresh}`, {}, { withCredentials: true });
-    return true;
+    return { outcome: 'ok' };
   } catch (error) {
-    // Другая вкладка уже обновила сессию этой же кукой, и браузер получил
+    const response = (error as { response?: { status?: number; data?: { detail?: unknown } } })
+      ?.response;
+    // Другая вкладка уже обновила сессию этой же кукой, и браузер получает
     // новые куки от неё (бэкенд: 401 refresh_superseded, куки не трогает).
     // Это не провал — исходный запрос достаточно повторить.
-    const detail = (error as { response?: { data?: { detail?: unknown } } })?.response?.data
-      ?.detail;
-    return detail === 'refresh_superseded';
+    if (response?.data?.detail === 'refresh_superseded') return { outcome: 'superseded' };
+    const dead = response?.status === 400 || response?.status === 401 || response?.status === 403;
+    return { outcome: dead ? 'dead' : 'transient', error };
   }
 }
 
@@ -111,39 +152,62 @@ axiosInstance.interceptors.response.use(
       if (isRefreshing) {
         return new Promise<void>((resolve, reject) => {
           pendingQueue.push({ resolve, reject });
-        }).then(() => axiosInstance(original));
+        }).then(() =>
+          lastRefreshSuperseded ? replayAfterSuperseded(original) : axiosInstance(original)
+        );
       }
 
       // This request owns the refresh for the current wave of 401s.
       isRefreshing = true;
       try {
-        const ok = await refreshSession();
-        if (!ok) {
-          // Refresh failed — release the queue with the error and re-auth.
-          flushQueue(error, false);
-          if (!original._skipAuthRedirect) redirectToSignIn();
-        } else {
+        const result = await refreshSession();
+        if (result.outcome === 'ok' || result.outcome === 'superseded') {
+          lastRefreshSuperseded = result.outcome === 'superseded';
           flushQueue(null, true);
-          return await axiosInstance(original);
+          return await (lastRefreshSuperseded
+            ? replayAfterSuperseded(original)
+            : axiosInstance(original));
         }
+        if (result.outcome === 'transient') {
+          // Лимит/сбой/сеть: сессия, скорее всего, жива — не редиректим, а
+          // отдаём вызывающему ошибку самого refresh (429/503/сеть), а не
+          // исходный 401: иначе проверка сессии сочтёт пользователя анонимом.
+          const refreshError = toApiError(result.error);
+          flushQueue(refreshError, false);
+          return Promise.reject(refreshError);
+        }
+        // Refresh-токен мёртв — release the queue with the error and re-auth.
+        flushQueue(error, false);
+        if (!original._skipAuthRedirect) redirectToSignIn();
       } finally {
         isRefreshing = false;
       }
     }
 
-    const message =
-      error?.response?.data?.detail || error?.response?.data?.message || error?.message || 'Something went wrong!';
-
-    // Keep the raw status + response on the rejected Error (additive — `message`
-    // is unchanged, so existing `error.message` readers are unaffected). Lets
-    // callers read structured bodies/headers the flattening would otherwise drop
-    // (e.g. upload 429 `reset_at` / 503 `Retry-After`).
-    const apiError: ApiError = new Error(typeof message === 'string' ? message : 'Request failed');
-    apiError.status = status;
-    apiError.response = error?.response;
-    return Promise.reject(apiError);
+    return Promise.reject(toApiError(error));
   }
 );
+
+// Keep the raw status + response on the rejected Error (additive — `message`
+// is unchanged, so existing `error.message` readers are unaffected). Lets
+// callers read structured bodies/headers the flattening would otherwise drop
+// (e.g. upload 429 `reset_at` / 503 `Retry-After`).
+function toApiError(error: unknown): ApiError {
+  const raw = error as {
+    message?: string;
+    response?: AxiosResponse<{ detail?: unknown; message?: unknown }>;
+  } | null;
+  const message =
+    raw?.response?.data?.detail ||
+    raw?.response?.data?.message ||
+    raw?.message ||
+    'Something went wrong!';
+
+  const apiError: ApiError = new Error(typeof message === 'string' ? message : 'Request failed');
+  apiError.status = raw?.response?.status;
+  apiError.response = raw?.response;
+  return apiError;
+}
 
 export default axiosInstance;
 
@@ -155,6 +219,24 @@ export const fetcher = async <T = unknown>(
   const [url, config] = Array.isArray(args) ? args : [args, {}];
   const res = await axiosInstance.get<T>(url, config);
   return res.data;
+};
+
+/**
+ * SWR-фетчер для справочников и коротких списков: собирает ВСЕ страницы
+ * (см. fetchAllPages). Ключ — `[url, ALL_PAGES]` или `[url, ALL_PAGES, params]`.
+ */
+export const ALL_PAGES = 'all-pages';
+
+export const allPagesFetcher = async <T = unknown>(
+  args: [string, typeof ALL_PAGES, Record<string, unknown>?]
+): Promise<T[]> => {
+  const [url, , params] = args;
+  return fetchAllPages<T>(async (page, perPage) => {
+    const res = await axiosInstance.get<Page<T> | T[]>(url, {
+      params: { ...params, page, per_page: perPage },
+    });
+    return res.data;
+  });
 };
 
 // ----------------------------------------------------------------------
@@ -244,6 +326,7 @@ export const endpoints = {
     status: (id: string) => `/shows/${id}/status`,
     publish: (id: string) => `/shows/${id}/publish`,
     entries: (id: string) => `/shows/${id}/entries`,
+    entriesTable: (id: string) => `/shows/${id}/entries/table`,
     myEntries: (id: string) => `/shows/${id}/entries/my`,
     myShowsList: '/shows/entries/my',
     entryItem: (id: string, entryId: string) => `/shows/${id}/entries/${entryId}`,
@@ -254,6 +337,7 @@ export const endpoints = {
     catalogGenerate: (id: string) => `/shows/${id}/catalog/generate`,
     diplomasGenerate: (id: string) => `/shows/${id}/diplomas/generate`,
     rings: (id: string) => `/shows/${id}/rings`,
+    judges: (id: string) => `/shows/${id}/judges`,
     documentsReadiness: (id: string) => `/shows/${id}/documents/readiness`,
     officialDoc: (id: string, kind: string) => `/shows/${id}/official/${kind}`,
     officialContext: (id: string, kind: string) => `/shows/${id}/official/${kind}/context`,

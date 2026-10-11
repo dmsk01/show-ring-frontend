@@ -18,6 +18,8 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { deleteReference, useReferenceList } from 'src/actions/admin-reference';
 
@@ -58,6 +60,7 @@ function ReferenceRow({
   confirmTitle,
   confirmAction,
 }: RowProps) {
+  const { t } = useTranslate('common');
   const menu = usePopover();
   const confirm = useBoolean();
 
@@ -76,7 +79,11 @@ function ReferenceRow({
           return <TableCell key={col}>{renderValue(field!, row[col])}</TableCell>;
         })}
         <TableCell align="right">
-          <IconButton color={menu.open ? 'inherit' : 'default'} onClick={menu.onOpen}>
+          <IconButton
+            color={menu.open ? 'inherit' : 'default'}
+            onClick={menu.onOpen}
+            aria-label={t('common:a11y.rowActions')}
+          >
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>
@@ -166,7 +173,7 @@ export function ReferenceCrud({ config }: Props) {
       await deleteReference(config.adminUrl, config.listUrl, id);
       toast.success(t('reference.toast.deleted'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('reference.toast.deleteFailed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'reference.toast.deleteFailed')));
     }
   };
 

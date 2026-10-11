@@ -1,6 +1,6 @@
 import { it, expect, describe } from 'vitest';
 
-import { getClassifiedSchema } from '../classified-create-edit-form';
+import { getClassifiedSchema, buildClassifiedBase } from '../classified-create-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -64,5 +64,35 @@ describe('getClassifiedSchema — fixed price requires amount > 0 (mirrors backe
     const res = ClassifiedSchema.safeParse({ ...base, price_kind: 'negotiable', price: '-5' });
     expect(res.success).toBe(false);
     expect(issueAt(res, 'price')).toBe('form.validation.priceInvalid');
+  });
+});
+
+// Ревью фронтенда 2026-10-09, FE-31: при смене типа цены на «договорная»
+// старая цена уходила в запросе, и бэкенд отвечал 422.
+describe('buildClassifiedBase', () => {
+  it('drops the price unless price_kind is fixed', () => {
+    expect(
+      buildClassifiedBase({ ...base, price_kind: 'negotiable', price: '15000' }).price
+    ).toBeNull();
+    expect(buildClassifiedBase({ ...base, price_kind: 'free', price: '15000' }).price).toBeNull();
+    expect(buildClassifiedBase({ ...base, price_kind: 'fixed', price: '15000' }).price).toBe(15000);
+  });
+});
+
+describe('price limits mirror the backend (≤ 10 000 000, 2 decimals)', () => {
+  it('rejects a price above the maximum', () => {
+    expect(issueAt(ClassifiedSchema.safeParse({ ...base, price: '10000001' }), 'price')).toBe(
+      'form.validation.priceInvalid'
+    );
+  });
+
+  it('rejects more than two decimals', () => {
+    expect(issueAt(ClassifiedSchema.safeParse({ ...base, price: '10.555' }), 'price')).toBe(
+      'form.validation.priceInvalid'
+    );
+  });
+
+  it('accepts the maximum with kopecks', () => {
+    expect(ClassifiedSchema.safeParse({ ...base, price: '10000000.00' }).success).toBe(true);
   });
 });

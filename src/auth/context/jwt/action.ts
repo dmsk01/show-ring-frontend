@@ -85,8 +85,8 @@ export const signOut = async (): Promise<void> => {
  * до перезагрузки и пользователя молча выкинет при ближайшем refresh.
  */
 export const resetRevokedSession = async (
-  checkUserSession?: () => Promise<void>
+  checkUserSession?: (options?: { afterLogout?: boolean }) => Promise<void>
 ): Promise<void> => {
   await signOut();
-  await checkUserSession?.();
+  await checkUserSession?.({ afterLogout: true });
 };

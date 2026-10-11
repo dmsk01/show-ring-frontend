@@ -114,6 +114,22 @@
     "passwordSameAsOld": "New password must be different than old password",
     "passwordMismatch": "Passwords do not match!"
   },
+  "errors": {
+    "currentPasswordInvalid": "The current password is incorrect",
+    "emailTaken": "This email is already taken",
+    "passwordSameAsCurrent": "The new password matches the current one",
+    "invalidOrExpiredToken": "The link is invalid or has expired",
+    "generic": "The operation failed. Please try again later."
+  },
+  "confirmEmail": {
+    "title": "Confirm email change",
+    "description": "Press the button to finish changing your address.\nYou will be signed out on all devices after confirmation.",
+    "submit": "Confirm email change",
+    "doneTitle": "Email changed",
+    "doneDescription": "Sign in again with your new address.",
+    "signIn": "Sign in",
+    "backToSignIn": "Back to sign in"
+  },
   "toast": {
     "updated": "Update success!"
   },

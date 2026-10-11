@@ -178,7 +178,7 @@ test.describe('Classifieds — no cross-user cache leak on re-login', () => {
 
     // 2) Sign out via the account drawer (client transition, no full reload —
     //    so SWR's in-memory cache survives, which is exactly the leak surface).
-    await page.getByRole('button', { name: 'Account button' }).click();
+    await page.getByRole('button', { name: t('common', 'a11y.account') }).click();
     await page.getByRole('button', { name: t('account', 'drawer.logout') }).click();
     await page.waitForURL(/\/auth\/jwt\/sign-in/);
 
@@ -186,8 +186,8 @@ test.describe('Classifieds — no cross-user cache leak on re-login', () => {
     //    Сид-юзеры — email-аккаунты: переключаемся с телефона (основной способ).
     await page.getByRole('button', { name: t('auth', 'signIn.byEmail') }).click();
     await page.getByLabel(t('auth', 'fields.email')).fill(E2E_USERS.breeder);
-    await page.getByLabel(t('auth', 'fields.password')).fill(E2E_PASSWORD);
-    await page.getByRole('button', { name: t('auth', 'signIn.submit') }).click();
+    await page.getByLabel(t('auth', 'fields.password'), { exact: true }).fill(E2E_PASSWORD);
+    await page.getByRole('button', { name: t('auth', 'signIn.submit'), exact: true }).click();
     await page.waitForURL(/\/dashboard\/classifieds/);
 
     // 4) Breeder's OWN listing proves their data loaded (positive signal, no

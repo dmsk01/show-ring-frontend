@@ -55,7 +55,8 @@ const ItemRoot = styled('div', {
   ...(disabled && {
     cursor: 'default',
     pointerEvents: 'none',
-    color: theme.vars.palette.text.disabled,
+    // Текущая страница — не «неактивный» элемент: нужен читаемый контраст (FE-28).
+    color: theme.vars.palette.text.secondary,
   }),
 }));
 

@@ -1,3 +1,5 @@
+'use client';
+
 import type { BoxProps } from '@mui/material/Box';
 import type { Breakpoint } from '@mui/material/styles';
 
@@ -10,6 +12,7 @@ import Typography from '@mui/material/Typography';
 
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { CONFIG } from 'src/global-config';
 
 // ----------------------------------------------------------------------
@@ -32,11 +35,15 @@ export function AuthSplitSection({
   method,
   methods,
   layoutQuery = 'md',
-  title = 'Manage the job',
+  title: titleProp,
   imgUrl = `${CONFIG.assetsDir}/assets/illustrations/illustration-dashboard.webp`,
-  subtitle = 'More effectively with optimized workflows.',
+  subtitle: subtitleProp,
   ...other
 }: AuthSplitSectionProps) {
+  // Тексты по умолчанию — из словаря, а не английские из шаблона (FE-27).
+  const { t } = useTranslate('auth');
+  const title = titleProp ?? t('split.title');
+  const subtitle = subtitleProp ?? t('split.subtitle');
   return (
     <Box
       sx={[

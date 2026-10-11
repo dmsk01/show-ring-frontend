@@ -16,6 +16,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { createReference, updateReference, useReferenceList } from 'src/actions/admin-reference';
 
@@ -115,7 +117,7 @@ export function ReferenceFormDialog({ config, currentItem, open, onClose }: Prop
       }
       onClose();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('reference.toast.saveFailed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'reference.toast.saveFailed')));
     }
   });
 

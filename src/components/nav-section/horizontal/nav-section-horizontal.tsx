@@ -6,6 +6,8 @@ import { mergeClasses } from 'minimal-shared/utils';
 
 import { useTheme } from '@mui/material/styles';
 
+import { useTranslate } from 'src/locales';
+
 import { NavList } from './nav-list';
 import { Scrollbar } from '../../scrollbar';
 import { Nav, NavUl, NavLi } from '../components';
@@ -25,6 +27,7 @@ export function NavSectionHorizontal({
   ...other
 }: NavSectionProps) {
   const theme = useTheme();
+  const { t } = useTranslate('common');
 
   const cssVars = { ...navSectionCssVars.horizontal(theme), ...overridesVars };
 
@@ -34,6 +37,7 @@ export function NavSectionHorizontal({
       slotProps={{ contentSx: { height: 1, display: 'flex', alignItems: 'center' } }}
     >
       <Nav
+        aria-label={t('a11y.navigation')}
         className={mergeClasses([navSectionClasses.horizontal, className])}
         sx={[
           () => ({

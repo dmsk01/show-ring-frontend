@@ -23,18 +23,21 @@ import { usePermissions } from 'src/hooks/use-permissions';
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 
+import { endpoints } from 'src/lib/axios';
 import { useTranslate } from 'src/locales';
-import { useGetShow } from 'src/actions/show';
 import { useShowResultRows } from 'src/actions/show-result';
+import { useGetShow, useGetShowJudges } from 'src/actions/show';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { LoadingScreen } from 'src/components/loading-screen';
+import { DetailLoadError } from 'src/components/detail-load-error';
 
 import { useAuthContext } from 'src/auth/hooks';
 
 import { ShowResultsTable } from '../show-results-table';
 import {
+  isShowJudge,
   canEnterResults,
   SHOW_STATUS_COLOR,
   showStatusI18nKey,
@@ -50,7 +53,8 @@ export function ShowPublicDetailView({ id }: Props) {
   const router = useRouter();
   const { authenticated, user } = useAuthContext();
   const { can } = usePermissions();
-  const { show, showLoading } = useGetShow(id);
+  const { show, showLoading, showError } = useGetShow(id);
+  const { judges } = useGetShowJudges(authenticated ? id : undefined);
 
   const isCompleted = show?.status === 'completed';
   const [groupBy, setGroupBy] = useState<GroupBy>('class');
@@ -59,9 +63,11 @@ export function ShowPublicDetailView({ id }: Props) {
   if (showLoading) return <LoadingScreen />;
   if (!show) {
     return (
-      <Container sx={{ pt: { xs: 8, md: 12 }, pb: 10 }}>
-        <Typography>{t('detail.notFound')}</Typography>
-      </Container>
+      <DetailLoadError
+        error={showError}
+        notFoundText={t('detail.notFound')}
+        swrKey={endpoints.show.details(id)}
+      />
     );
   }
 
@@ -82,6 +88,8 @@ export function ShowPublicDetailView({ id }: Props) {
   ];
 
   const canRegister = canRegisterForShow(show.status, show.registration_deadline);
+  // Назначенный судья вносит результаты своих пород (FE-09).
+  const canJudge = isShowJudge(user?.id, judges);
 
   const handleRegister = () => {
     const target = paths.showcase.showRegister(id);
@@ -121,7 +129,7 @@ export function ShowPublicDetailView({ id }: Props) {
         </Tooltip>
       </Stack>
 
-      {(can('shows:edit') || canEnterResults(show, user?.id, can)) && (
+      {(can('shows:edit') || canEnterResults(show, user?.id, can) || canJudge) && (
         <Stack direction="row" spacing={1.5} flexWrap="wrap" sx={{ mb: 3 }}>
           {can('shows:edit') && (
             <Button
@@ -135,7 +143,7 @@ export function ShowPublicDetailView({ id }: Props) {
             </Button>
           )}
 
-          {canEnterResults(show, user?.id, can) && (
+          {(canEnterResults(show, user?.id, can) || canJudge) && (
             <Button
               component={RouterLink}
               href={paths.dashboard.shows.results(id)}

@@ -14,6 +14,7 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 
+import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { fileUrl } from 'src/actions/file';
@@ -28,10 +29,12 @@ import { CustomPopover } from 'src/components/custom-popover';
 type Props = {
   row: IKennelItem;
   editHref: string;
+  /** Владелец или admin (FE-33): иначе — ссылка на витрину и без меню действий. */
+  canManage: boolean;
   onDeleteRow: () => void;
 };
 
-export function KennelTableRow({ row, editHref, onDeleteRow }: Props) {
+export function KennelTableRow({ row, editHref, canManage, onDeleteRow }: Props) {
   const { t } = useTranslate(['kennel', 'common']);
   const menuActions = usePopover();
   const confirmDialog = useBoolean();
@@ -48,7 +51,7 @@ export function KennelTableRow({ row, editHref, onDeleteRow }: Props) {
             />
             <Link
               component={RouterLink}
-              href={editHref}
+              href={canManage ? editHref : paths.showcase.kennel(row.id)}
               color="inherit"
               sx={{ fontWeight: 'fontWeightSemiBold' }}
             >
@@ -63,9 +66,15 @@ export function KennelTableRow({ row, editHref, onDeleteRow }: Props) {
         <TableCell>{row.contact_email ?? '—'}</TableCell>
 
         <TableCell align="right">
-          <IconButton color={menuActions.open ? 'inherit' : 'default'} onClick={menuActions.onOpen}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
+          {canManage && (
+            <IconButton
+              color={menuActions.open ? 'inherit' : 'default'}
+              onClick={menuActions.onOpen}
+              aria-label={t('common:a11y.rowActions')}
+            >
+              <Iconify icon="eva:more-vertical-fill" />
+            </IconButton>
+          )}
         </TableCell>
       </TableRow>
 

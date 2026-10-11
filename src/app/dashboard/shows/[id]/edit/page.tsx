@@ -6,7 +6,7 @@ import { PermissionGuard } from 'src/auth/guard';
 
 // ----------------------------------------------------------------------
 
-export const metadata = { title: `Edit show | Dashboard - ${CONFIG.appName}` };
+export const metadata = { title: `Редактирование выставки | Кабинет - ${CONFIG.appName}` };
 
 type Props = { params: Promise<{ id: string }> };
 

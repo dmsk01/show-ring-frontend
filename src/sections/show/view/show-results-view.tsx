@@ -14,10 +14,10 @@ import { paths } from 'src/routes/paths';
 import { usePermissions } from 'src/hooks/use-permissions';
 
 import { useTranslate } from 'src/locales';
-import { useGetShow } from 'src/actions/show';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useReferenceList } from 'src/actions/admin-reference';
-import { useShowResultRows, useGetShowEntries } from 'src/actions/show-result';
+import { useGetShow, useGetShowJudges } from 'src/actions/show';
+import { useShowEntryRows, useShowResultRows } from 'src/actions/show-result';
 import { pollTask, downloadTask, generateEntryDocument } from 'src/actions/document';
 
 import { toast } from 'src/components/snackbar';
@@ -26,7 +26,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { useAuthContext } from 'src/auth/hooks';
 
-import { canEnterResults } from '../show-utils';
+import { canEditResultRow } from '../show-utils';
 import { showErrorMessage } from '../show-errors';
 import { ShowResultDialog } from '../show-result-dialog';
 import { ShowResultsTable } from '../show-results-table';
@@ -43,10 +43,13 @@ export function ShowResultsView({ id }: Props) {
   const canGenerate = can('documents:create');
 
   const { show } = useGetShow(id);
-  // Внесение/правка результатов — по владению выставкой (organizer_id) или admin,
-  // как на бэкенде. Судья и не-владельцы видят результаты read-only.
-  const canEdit = canEnterResults(show, user?.id, can);
-  const { entries } = useGetShowEntries(id);
+  // Внесение/правка результатов — как на бэкенде: организатор и admin — все
+  // строки, назначенный судья — строки своих пород/групп (FE-09).
+  const { judges } = useGetShowJudges(id);
+  const canEditRow = (row: IShowResultRow) =>
+    canEditResultRow(row, { show, userId: user?.id, can, judges });
+  // Все записи (все страницы) — для правки результата любой из них (FE-08).
+  const { entryRows: entries } = useShowEntryRows(id);
   const { rows, loading } = useShowResultRows(id);
   const { items: grades } = useReferenceList('/references/grades');
 
@@ -82,7 +85,7 @@ export function ShowResultsView({ id }: Props) {
     const isOwner = !!user && row.registeredBy === user.id;
     return (
       <Stack direction="row" spacing={0.5} justifyContent="flex-end">
-        {canEdit && (
+        {canEditRow(row) && (
           <Button
             size="small"
             color="inherit"

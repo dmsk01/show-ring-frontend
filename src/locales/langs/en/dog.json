@@ -44,7 +44,8 @@
       "confirm": "Delete"
     },
     "submitCreate": "Create dog",
-    "submitUpdate": "Save changes"
+    "submitUpdate": "Save changes",
+    "parentSearch": "Start typing a name"
   },
   "detail": {
     "pedigree": "Pedigree",
@@ -119,5 +120,5 @@
     }
   },
   "enums": { "sex": { "male": "Male", "female": "Female" } },
-  "toast": { "created": "Create success!", "updated": "Update success!", "photoDeleted": "Photo deleted" }
+  "toast": { "created": "Create success!", "updated": "Update success!", "photoDeleted": "Photo deleted", "savedWithoutPhotos": "The dog is saved, but the photos were not uploaded — add them again" }
 }

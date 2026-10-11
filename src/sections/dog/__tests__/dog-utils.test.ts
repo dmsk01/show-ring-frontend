@@ -27,12 +27,27 @@ describe('canManageDog', () => {
     expect(canManageDog({ owner_id: 'u2' }, 'u1', canNothing)).toBe(false);
   });
 
-  it('dogs:edit (breeder/admin) даёт доступ независимо от владения', () => {
-    expect(canManageDog({ owner_id: 'u2' }, 'u1', canDogsEdit)).toBe(true);
-    expect(canManageDog({ owner_id: null }, 'u1', canDogsEdit)).toBe(true);
+  // Ревью фронтенда 2026-10-09, FE-33: право dogs:edit есть у любого
+  // заводчика, а бэкенд пускает только владельца собаки, владельца её
+  // питомника и admin — кнопка «Изменить» у чужих собак давала 403.
+  it('dogs:edit (роль заводчика) НЕ даёт доступа к чужой собаке', () => {
+    expect(canManageDog({ owner_id: 'u2', kennel_id: null }, 'u1', canDogsEdit)).toBe(false);
   });
 
-  it('легаси-собака (owner_id=null) — только по праву', () => {
+  it('admin управляет любой собакой', () => {
+    const canAll = (p: string) => p === '*';
+    expect(canManageDog({ owner_id: 'u2', kennel_id: null }, 'u1', canAll)).toBe(true);
+    expect(canManageDog({ owner_id: null, kennel_id: null }, 'u1', canAll)).toBe(true);
+  });
+
+  it('владелец питомника собаки управляет ею', () => {
+    const mine = new Set(['k1']);
+    expect(canManageDog({ owner_id: 'u2', kennel_id: 'k1' }, 'u1', canNothing, mine)).toBe(true);
+    expect(canManageDog({ owner_id: null, kennel_id: 'k1' }, 'u1', canNothing, mine)).toBe(true);
+    expect(canManageDog({ owner_id: 'u2', kennel_id: 'k2' }, 'u1', canNothing, mine)).toBe(false);
+  });
+
+  it('легаси-собака (owner_id=null) без питомника — только admin', () => {
     expect(canManageDog({ owner_id: null }, 'u1', canNothing)).toBe(false);
   });
 

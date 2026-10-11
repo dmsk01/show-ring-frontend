@@ -14,6 +14,7 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { usePermissions } from 'src/hooks/use-permissions';
+import { useMyKennelIds } from 'src/hooks/use-my-kennel-ids';
 
 import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
@@ -42,6 +43,7 @@ export function DogDetailView({ id }: Props) {
   const { t } = useTranslate(['dog', 'common', 'checkin']);
   const { user } = useAuthContext();
   const { can } = usePermissions();
+  const ownKennelIds = useMyKennelIds();
   const [tab, setTab] = useState('info');
 
   const { dog, dogLoading } = useGetDog(id);
@@ -61,7 +63,7 @@ export function DogDetailView({ id }: Props) {
   if (dogLoading) return <LoadingScreen />;
   if (!dog) return <DashboardContent>{t('detail.notFound')}</DashboardContent>;
 
-  const canManage = canManageDog(dog, user?.id, can);
+  const canManage = canManageDog(dog, user?.id, can, ownKennelIds);
 
   return (
     <DashboardContent>

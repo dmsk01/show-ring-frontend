@@ -63,7 +63,11 @@ export function DogTableRow({ row, breedName, detailsHref, editHref, canEdit }: 
         <TableCell>{row.color ?? '—'}</TableCell>
 
         <TableCell align="right">
-          <IconButton color={menuActions.open ? 'inherit' : 'default'} onClick={menuActions.onOpen}>
+          <IconButton
+            color={menuActions.open ? 'inherit' : 'default'}
+            onClick={menuActions.onOpen}
+            aria-label={t('common:a11y.rowActions')}
+          >
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>

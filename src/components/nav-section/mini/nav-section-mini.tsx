@@ -6,6 +6,8 @@ import { mergeClasses } from 'minimal-shared/utils';
 
 import { useTheme } from '@mui/material/styles';
 
+import { useTranslate } from 'src/locales';
+
 import { NavList } from './nav-list';
 import { Nav, NavUl, NavLi } from '../components';
 import { navSectionClasses, navSectionCssVars } from '../styles';
@@ -24,11 +26,13 @@ export function NavSectionMini({
   ...other
 }: NavSectionProps) {
   const theme = useTheme();
+  const { t } = useTranslate('common');
 
   const cssVars = { ...navSectionCssVars.mini(theme), ...overridesVars };
 
   return (
     <Nav
+      aria-label={t('a11y.navigation')}
       className={mergeClasses([navSectionClasses.mini, className])}
       sx={[{ ...cssVars }, ...(Array.isArray(sx) ? sx : [sx])]}
       {...other}

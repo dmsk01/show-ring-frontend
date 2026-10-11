@@ -14,6 +14,8 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { postMessage, useGetTicket, setTicketStatus, useGetTicketMessages } from 'src/actions/support';
@@ -46,7 +48,7 @@ export function TicketDetailView({ id }: Props) {
       await setTicketStatus(id, status);
       toast.success(t('toast.statusUpdated'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'common:state.error')));
     }
   };
 
@@ -57,7 +59,7 @@ export function TicketDetailView({ id }: Props) {
       await postMessage(id, text.trim());
       setText('');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'common:state.error')));
     } finally {
       setSending(false);
     }
@@ -135,6 +137,8 @@ export function TicketDetailView({ id }: Props) {
             maxRows={4}
             value={text}
             onChange={(e) => setText(e.target.value)}
+            // MessageCreate.body: max_length=10 000.
+            slotProps={{ htmlInput: { maxLength: 10_000 } }}
             placeholder={t('detail.messagePlaceholder')}
           />
           <Button

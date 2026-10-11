@@ -55,6 +55,7 @@
     "title": "Kennels",
     "searchPlaceholder": "Search by name...",
     "cityPlaceholder": "City",
+    "sortLabel": "Sort by",
     "empty": "No kennels found",
     "sort": {
       "newest": "Newest first",

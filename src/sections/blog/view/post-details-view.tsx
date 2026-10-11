@@ -5,30 +5,22 @@ import { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import Checkbox from '@mui/material/Checkbox';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
 
 import { paths } from 'src/routes/paths';
 
-import { fShortenNumber } from 'src/utils/format-number';
+import { apiErrorMessageKey } from 'src/utils/api-error';
 
 import { useTranslate } from 'src/locales';
-import { POST_PUBLISH_OPTIONS } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetPost, updatePost } from 'src/actions/blog';
 
 import { toast } from 'src/components/snackbar';
-import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 
+import { POST_PUBLISH_OPTIONS } from '../constants';
 import { PostDetailsHero } from '../post-details-hero';
-import { PostCommentList } from '../post-comment-list';
-import { PostCommentForm } from '../post-comment-form';
 import { PostDetailsToolbar } from '../post-details-toolbar';
 
 // ----------------------------------------------------------------------
@@ -53,7 +45,7 @@ export function PostDetailsView({ title }: Props) {
         toast.success(newValue === 'published' ? t('toast.published') : t('toast.draftSaved'));
       } catch (error) {
         setPublish(post.publish);
-        toast.error(error instanceof Error ? error.message : t('common:state.error'));
+        toast.error(t(apiErrorMessageKey(error, {}, 'common:state.error')));
       }
     },
     [post, t]
@@ -108,56 +100,7 @@ export function PostDetailsView({ title }: Props) {
               <Chip key={tag} label={tag} variant="soft" />
             ))}
           </Box>
-
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <FormControlLabel
-              label={fShortenNumber(post?.totalFavorites)}
-              control={
-                <Checkbox
-                  defaultChecked
-                  size="small"
-                  color="error"
-                  icon={<Iconify icon="solar:heart-bold" />}
-                  checkedIcon={<Iconify icon="solar:heart-bold" />}
-                  slotProps={{
-                    input: {
-                      id: 'favorite-checkbox',
-                      'aria-label': 'Favorite checkbox',
-                    },
-                  }}
-                />
-              }
-              sx={{ mr: 1 }}
-            />
-
-            <AvatarGroup
-              sx={{
-                [`& .${avatarGroupClasses.avatar}`]: {
-                  width: 32,
-                  height: 32,
-                },
-              }}
-            >
-              {post?.favoritePerson.map((person) => (
-                <Avatar key={person.name} alt={person.name} src={person.avatarUrl} />
-              ))}
-            </AvatarGroup>
-          </Box>
         </Stack>
-
-        <Box sx={{ mb: 3, mt: 5, display: 'flex' }}>
-          <Typography variant="h4">{t('detail.comments')}</Typography>
-
-          <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
-            ({post?.comments.length})
-          </Typography>
-        </Box>
-
-        <PostCommentForm />
-
-        <Divider sx={{ mt: 5, mb: 2 }} />
-
-        <PostCommentList comments={post?.comments ?? []} />
       </Box>
     </DashboardContent>
   );

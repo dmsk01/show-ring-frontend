@@ -6,6 +6,8 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 
+import { useTranslate } from 'src/locales';
+
 // ----------------------------------------------------------------------
 
 export type TableSelectedActionProps = BoxProps & {
@@ -25,6 +27,8 @@ export function TableSelectedAction({
   onSelectAllRows,
   ...other
 }: TableSelectedActionProps) {
+  const { t } = useTranslate('common');
+
   if (!numSelected) {
     return null;
   }
@@ -59,7 +63,7 @@ export function TableSelectedAction({
         slotProps={{
           input: {
             id: 'deselect-all-checkbox',
-            'aria-label': 'Deselect all checkbox',
+            'aria-label': t('a11y.deselectAll'),
           },
         }}
       />
@@ -73,7 +77,7 @@ export function TableSelectedAction({
           ...(dense && { ml: 3 }),
         }}
       >
-        {numSelected} selected
+        {numSelected} {t('table.selected')}
       </Typography>
 
       {action && action}

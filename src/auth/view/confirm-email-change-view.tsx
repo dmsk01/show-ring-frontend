@@ -9,9 +9,10 @@ import Button from '@mui/material/Button';
 import { paths } from 'src/routes/paths';
 import { useRouter, useSearchParams } from 'src/routes/hooks';
 
+import { useTranslate } from 'src/locales';
 import { confirmEmailChange } from 'src/actions/account';
 import { SentIcon, EmailInboxIcon } from 'src/assets/icons';
-import { accountErrorMessage } from 'src/actions/account-errors';
+import { accountErrorKey } from 'src/actions/account-errors';
 
 import { useAuthContext } from '../hooks';
 import { FormHead } from '../components/form-head';
@@ -26,6 +27,7 @@ export function ConfirmEmailChangeView() {
   const token = searchParams.get('token');
 
   const { checkUserSession } = useAuthContext();
+  const { t } = useTranslate('account');
 
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -33,7 +35,7 @@ export function ConfirmEmailChangeView() {
 
   const onConfirm = async () => {
     if (!token) {
-      setErrorMessage('Ссылка недействительна или устарела');
+      setErrorMessage('account:errors.invalidOrExpiredToken');
       return;
     }
 
@@ -48,7 +50,7 @@ export function ConfirmEmailChangeView() {
       setSuccess(true);
     } catch (error) {
       console.error(error);
-      setErrorMessage(accountErrorMessage(error));
+      setErrorMessage(accountErrorKey(error));
     } finally {
       setIsSubmitting(false);
     }
@@ -59,8 +61,8 @@ export function ConfirmEmailChangeView() {
       <>
         <FormHead
           icon={<SentIcon />}
-          title="Email изменён"
-          description="Войдите заново, используя новый адрес."
+          title={t('confirmEmail.doneTitle')}
+          description={t('confirmEmail.doneDescription')}
         />
 
         <Button
@@ -69,7 +71,7 @@ export function ConfirmEmailChangeView() {
           variant="contained"
           onClick={() => router.push(paths.auth.jwt.signIn)}
         >
-          Войти
+          {t('confirmEmail.signIn')}
         </Button>
       </>
     );
@@ -79,13 +81,13 @@ export function ConfirmEmailChangeView() {
     <>
       <FormHead
         icon={<EmailInboxIcon />}
-        title="Подтверждение смены email"
-        description={`Нажмите кнопку, чтобы завершить смену адреса.\nПосле подтверждения вы выйдете из аккаунта на всех устройствах.`}
+        title={t('confirmEmail.title')}
+        description={t('confirmEmail.description')}
       />
 
       {!!errorMessage && (
         <Alert severity="error" sx={{ mb: 3 }}>
-          {errorMessage}
+          {t(errorMessage)}
         </Alert>
       )}
 
@@ -98,11 +100,11 @@ export function ConfirmEmailChangeView() {
           disabled={!token}
           onClick={onConfirm}
         >
-          Подтвердить смену email
+          {t('confirmEmail.submit')}
         </Button>
       </Box>
 
-      <FormReturnLink href={paths.auth.jwt.signIn} label="Вернуться ко входу" />
+      <FormReturnLink href={paths.auth.jwt.signIn} label={t('confirmEmail.backToSignIn')} />
     </>
   );
 }

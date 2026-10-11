@@ -7,6 +7,8 @@ import { setFont } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
 import Slider, { sliderClasses } from '@mui/material/Slider';
 
+import { useTranslate } from 'src/locales';
+
 import { OptionButton } from './styles';
 
 // ----------------------------------------------------------------------
@@ -78,13 +80,15 @@ export function FontSizeOptions({
   onChangeOption,
   ...other
 }: FontSizeOptionsProps) {
+  const { t } = useTranslate('common');
+
   return (
     <Slider
       marks
       step={1}
       size="small"
       valueLabelDisplay="on"
-      aria-label="Change font size"
+      aria-label={t('settings.fontSize')}
       valueLabelFormat={(val) => `${val}px`}
       value={value}
       min={options[0]}

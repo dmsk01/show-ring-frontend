@@ -30,7 +30,7 @@ export type LanguagePopoverProps = IconButtonProps & {
 export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProps) {
   const { open, anchorEl, onClose, onOpen } = usePopover();
 
-  const { onChangeLang, currentLang } = useTranslate();
+  const { t, onChangeLang, currentLang } = useTranslate('common');
 
   const handleChangeLang = useCallback(
     (lang: LangCode) => {
@@ -64,7 +64,7 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
         whileTap={varTap(0.96)}
         whileHover={varHover(1.04)}
         transition={transitionTap()}
-        aria-label="Languages button"
+        aria-label={t('a11y.language')}
         onClick={onOpen}
         sx={[
           (theme) => ({

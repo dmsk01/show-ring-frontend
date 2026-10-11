@@ -4,28 +4,18 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import Checkbox from '@mui/material/Checkbox';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
 
 import { paths } from 'src/routes/paths';
-
-import { fShortenNumber } from 'src/utils/format-number';
 
 import { useTranslate } from 'src/locales';
 import { useGetPost, useGetLatestPosts } from 'src/actions/blog';
 
-import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { PostItem } from '../post-item';
-import { PostCommentList } from '../post-comment-list';
-import { PostCommentForm } from '../post-comment-form';
 import { PostDetailsHero } from '../post-details-hero';
 
 // ----------------------------------------------------------------------
@@ -85,56 +75,7 @@ export function PostDetailsHomeView({ title }: Props) {
                 <Chip key={tag} label={tag} variant="soft" />
               ))}
             </Box>
-
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <FormControlLabel
-                label={fShortenNumber(post?.totalFavorites)}
-                control={
-                  <Checkbox
-                    defaultChecked
-                    size="small"
-                    color="error"
-                    icon={<Iconify icon="solar:heart-bold" />}
-                    checkedIcon={<Iconify icon="solar:heart-bold" />}
-                    slotProps={{
-                      input: {
-                        id: 'favorite-checkbox',
-                        'aria-label': 'Favorite checkbox',
-                      },
-                    }}
-                  />
-                }
-                sx={{ mr: 1 }}
-              />
-
-              <AvatarGroup
-                sx={{
-                  [`& .${avatarGroupClasses.avatar}`]: {
-                    width: 32,
-                    height: 32,
-                  },
-                }}
-              >
-                {post?.favoritePerson.map((person) => (
-                  <Avatar key={person.name} alt={person.name} src={person.avatarUrl} />
-                ))}
-              </AvatarGroup>
-            </Box>
           </Stack>
-
-          <Box sx={{ mb: 3, mt: 5, display: 'flex' }}>
-            <Typography variant="h4">{t('detail.comments')}</Typography>
-
-            <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
-              ({post?.comments.length})
-            </Typography>
-          </Box>
-
-          <PostCommentForm />
-
-          <Divider sx={{ mt: 5, mb: 2 }} />
-
-          <PostCommentList comments={post?.comments} />
         </Stack>
       </Container>
 

@@ -15,6 +15,8 @@ import Typography from '@mui/material/Typography';
 
 import { usePermissions } from 'src/hooks/use-permissions';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { STATUS_TONE } from 'src/theme/semantic';
 import { useGetShowRings } from 'src/actions/show-result';
@@ -45,7 +47,7 @@ function TaskItem({ task }: TaskItemProps) {
     try {
       await downloadTask(task.id, task.filename);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('toast.downloadFailed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'toast.downloadFailed')));
     }
   };
 
@@ -112,7 +114,7 @@ export function ShowDocumentsPanel({ showId }: Props) {
       setTasks((prev) => [{ id: task.id, label, filename: `${kind}-${showId}.docx` }, ...prev]);
       toast.success(t('toast.generationStarted'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('toast.generationFailed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'toast.generationFailed')));
     } finally {
       setBusy(false);
     }

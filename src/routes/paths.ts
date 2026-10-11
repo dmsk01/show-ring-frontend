@@ -1,5 +1,3 @@
-import { kebabCase } from 'es-toolkit';
-
 // ----------------------------------------------------------------------
 
 const ROOTS = {
@@ -10,7 +8,6 @@ const ROOTS = {
 // ----------------------------------------------------------------------
 
 export const paths = {
-  comingSoon: '/coming-soon',
   maintenance: '/maintenance',
   about: '/about-us',
   contact: '/contact-us',
@@ -26,7 +23,7 @@ export const paths = {
   },
   post: {
     root: `/post`,
-    details: (title: string) => `/post/${kebabCase(title)}`,
+    details: (slug: string) => `/post/${encodeURIComponent(slug)}`,
   },
   showcase: {
     kennels: `/kennels`,
@@ -110,8 +107,8 @@ export const paths = {
     post: {
       root: `${ROOTS.DASHBOARD}/post`,
       new: `${ROOTS.DASHBOARD}/post/new`,
-      details: (title: string) => `${ROOTS.DASHBOARD}/post/${kebabCase(title)}`,
-      edit: (title: string) => `${ROOTS.DASHBOARD}/post/${kebabCase(title)}/edit`,
+      details: (slug: string) => `${ROOTS.DASHBOARD}/post/${encodeURIComponent(slug)}`,
+      edit: (slug: string) => `${ROOTS.DASHBOARD}/post/${encodeURIComponent(slug)}/edit`,
     },
   },
 };

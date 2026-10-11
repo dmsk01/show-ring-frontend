@@ -14,6 +14,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 
+import { latestOnly } from 'src/utils/latest-only';
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { useGetShow } from 'src/actions/show';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -45,24 +48,32 @@ export function CheckinDeskView({ id }: Props) {
   const [participant, setParticipant] = useState<IParticipantCard | null>(null);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<IEntryCard[] | null>(null);
+  // Ответы поиска, пришедшие не по порядку, отбрасываем (FE-21).
+  const [runLatestSearch] = useState(latestOnly);
 
   // Поиск с задержкой: не дёргаем API на каждую букву (и rate limit).
   useEffect(() => {
     const q = query.trim();
     if (!q) {
+      // Сдвигаем очередь: ответ на уже отправленный запрос не должен
+      // вернуть карточки после очистки поля.
+      void runLatestSearch(async () => null);
       setResults(null);
       return undefined;
     }
     const timer = setTimeout(async () => {
       try {
-        setResults(await searchCheckin(id, q));
+        const found = await runLatestSearch(() => searchCheckin(id, q));
+        // Пока шёл запрос, ввод изменили или очистили — результат устарел.
+        if (!found.ok) return;
+        setResults(found.value);
         setParticipant(null);
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : t('desk.errors.generic'));
+        toast.error(t(apiErrorMessageKey(error, {}, 'desk.errors.generic')));
       }
     }, SEARCH_DEBOUNCE_MS);
     return () => clearTimeout(timer);
-  }, [id, query, t]);
+  }, [id, query, t, runLatestSearch]);
 
   if (showLoading) return <LoadingScreen />;
   if (!show) return <DashboardContent>{t('desk.headingFallback')}</DashboardContent>;

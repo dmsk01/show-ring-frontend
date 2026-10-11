@@ -61,7 +61,7 @@ export function ConsentGate() {
 
   const handleSignOut = async () => {
     await signOut();
-    await checkUserSession?.();
+    await checkUserSession?.({ afterLogout: true });
     router.refresh();
   };
 

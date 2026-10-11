@@ -55,6 +55,7 @@
     "title": "Питомники",
     "searchPlaceholder": "Поиск по названию...",
     "cityPlaceholder": "Город",
+    "sortLabel": "Сортировка",
     "empty": "Питомники не найдены",
     "sort": {
       "newest": "Сначала новые",

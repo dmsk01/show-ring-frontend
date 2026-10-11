@@ -23,6 +23,7 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { fDate } from 'src/utils/format-time';
+import { apiErrorMessageKey } from 'src/utils/api-error';
 
 import { useTranslate } from 'src/locales';
 import { sendReauthCode } from 'src/actions/account';
@@ -57,7 +58,7 @@ export function ConsentsCard() {
       toast.success(t('consents.revoked'));
       confirm.onFalse();
     } catch (error) {
-      toast.error(getErrorMessage(error));
+      toast.error(t(apiErrorMessageKey(error, {}, 'common:state.error')));
     } finally {
       setRevoking(false);
     }
@@ -165,7 +166,7 @@ export function DeleteAccountCard({ me }: { me: IMe }) {
       setCodeSent(true);
       toast.success(t('deletion.codeSent'));
     } catch (err) {
-      setError(getErrorMessage(err));
+      setError(toMessage(err));
     }
   };
 
@@ -177,7 +178,7 @@ export function DeleteAccountCard({ me }: { me: IMe }) {
       toast.success(t('deletion.done'));
       // Сессия на бэкенде уже недействительна: чистим куки и контекст.
       await signOut();
-      await checkUserSession?.();
+      await checkUserSession?.({ afterLogout: true });
       router.replace('/');
     } catch (err) {
       setError(toMessage(err));

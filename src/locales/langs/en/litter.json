@@ -40,7 +40,9 @@
       "kennelRequired": "Kennel is required!",
       "breedRequired": "Breed is required!",
       "puppiesRange": "Puppies count must be an integer from 0 to 30",
-      "priceInvalid": "Enter a valid price"
+      "priceInvalid": "Enter a valid price",
+      "priceRange": "“Price to” cannot be lower than “price from”",
+      "dateInvalid": "Enter the date as YYYY-MM-DD"
     },
     "submitCreate": "Create litter",
     "submitUpdate": "Save changes"

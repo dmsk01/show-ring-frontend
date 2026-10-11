@@ -8,6 +8,7 @@ export type IBreed = {
 
 export type IKennel = {
   id: string;
+  owner_id?: string | null;
   name: string;
   kennel_prefix: string | null;
   city: string | null;

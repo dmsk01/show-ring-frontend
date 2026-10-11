@@ -24,6 +24,7 @@ import { Iconify } from 'src/components/iconify';
 import { EmptyContent } from 'src/components/empty-content';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { RevealContacts } from 'src/components/reveal-contacts';
+import { DetailLoadError } from 'src/components/detail-load-error';
 
 import { DogCardGrid } from 'src/sections/dog/dog-card-grid';
 import { ProfileCover } from 'src/sections/user/profile-cover';
@@ -39,7 +40,7 @@ type Props = { id: string };
 export function KennelDetailView({ id }: Props) {
   const { t } = useTranslate(['kennel', 'common']);
 
-  const { kennel, kennelLoading } = useGetKennel(id);
+  const { kennel, kennelLoading, kennelError } = useGetKennel(id);
   const { litters, littersLoading } = useGetLittersList({ kennel_id: id });
   const { dogs, dogsLoading } = useGetDogs({ kennel_id: id });
   const { breeds } = useGetBreeds();
@@ -49,9 +50,11 @@ export function KennelDetailView({ id }: Props) {
   if (kennelLoading) return <LoadingScreen />;
   if (!kennel) {
     return (
-      <Container sx={{ pt: { xs: 8, md: 12 }, pb: 10 }}>
-        <Typography>{t('detail.notFound')}</Typography>
-      </Container>
+      <DetailLoadError
+        error={kennelError}
+        notFoundText={t('detail.notFound')}
+        swrKey={endpoints.kennel.details(id)}
+      />
     );
   }
 

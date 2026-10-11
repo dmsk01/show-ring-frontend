@@ -2,14 +2,20 @@
 
 import { useState, useEffect } from 'react';
 
+import Button from '@mui/material/Button';
+
 import { paths } from 'src/routes/paths';
 import { useRouter, usePathname } from 'src/routes/hooks';
 
 import { CONFIG } from 'src/global-config';
+import { useTranslate } from 'src/locales';
 
+import { EmptyContent } from 'src/components/empty-content';
 import { SplashScreen } from 'src/components/loading-screen';
 
 import { useAuthContext } from '../hooks';
+import { signInRedirectPath } from './sign-in-redirect';
+import { authGuardDecision } from '../context/jwt/session-probe';
 
 // ----------------------------------------------------------------------
 
@@ -25,23 +31,23 @@ export function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { authenticated, loading } = useAuthContext();
+  const { t } = useTranslate('common');
+  const { authenticated, loading, sessionUnknown, checkUserSession } = useAuthContext();
+  const decision = authGuardDecision({ loading, authenticated, sessionUnknown });
 
   const [isChecking, setIsChecking] = useState(true);
 
-  const createRedirectPath = (currentPath: string) => {
-    const queryString = new URLSearchParams({ returnTo: pathname }).toString();
-    return `${currentPath}?${queryString}`;
-  };
+  const createRedirectPath = (currentPath: string) =>
+    signInRedirectPath(currentPath, pathname, window.location.search);
 
   // Проверяет только аутентификацию (есть ли сессия). Права на конкретные
   // ресурсы проверяет отдельный PermissionGuard.
   const checkAuth = async (): Promise<void> => {
-    if (loading) {
+    if (decision === 'wait' || decision === 'retry') {
       return;
     }
 
-    if (!authenticated) {
+    if (decision === 'redirect') {
       const { method } = CONFIG.auth;
 
       const signInPath = signInPaths[method];
@@ -58,7 +64,24 @@ export function AuthGuard({ children }: AuthGuardProps) {
   useEffect(() => {
     checkAuth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authenticated, loading]);
+  }, [decision]);
+
+  // Проверка сессии упала временно (сеть, 5xx, лимит refresh) — не уводим
+  // на вход: сессия, скорее всего, жива (ревью 2026-10-09, FE-03).
+  if (decision === 'retry') {
+    return (
+      <EmptyContent
+        filled
+        title={t('errors.network')}
+        action={
+          <Button variant="contained" sx={{ mt: 3 }} onClick={() => checkUserSession?.()}>
+            {t('actions.retry')}
+          </Button>
+        }
+        sx={{ m: 3, py: 10 }}
+      />
+    );
+  }
 
   if (isChecking) {
     return <SplashScreen />;

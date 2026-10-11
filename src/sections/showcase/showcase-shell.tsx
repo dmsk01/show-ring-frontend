@@ -22,7 +22,11 @@ export function ShowcaseShell({ title, action, children }: Props) {
           justifyContent="space-between"
           sx={{ mb: { xs: 3, md: 5 } }}
         >
-          {title && <Typography variant="h3">{title}</Typography>}
+          {title && (
+            <Typography variant="h3" component="h1">
+              {title}
+            </Typography>
+          )}
           {action}
         </Stack>
       )}

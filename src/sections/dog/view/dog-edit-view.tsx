@@ -3,6 +3,7 @@
 import { paths } from 'src/routes/paths';
 
 import { usePermissions } from 'src/hooks/use-permissions';
+import { useMyKennelIds } from 'src/hooks/use-my-kennel-ids';
 
 import { useTranslate } from 'src/locales';
 import { useGetDog } from 'src/actions/dog';
@@ -26,6 +27,7 @@ export function DogEditView({ id }: Props) {
   const { dog, dogLoading } = useGetDog(id);
   const { user, loading: authLoading } = useAuthContext();
   const { can } = usePermissions();
+  const ownKennelIds = useMyKennelIds();
 
   // authLoading: не решаем «нет доступа», пока сессия не загружена (актуально
   // при CONFIG.auth.skip, когда AuthGuard не дожидается checkUserSession).
@@ -34,8 +36,8 @@ export function DogEditView({ id }: Props) {
   // Avoid silently falling into "create" mode when the dog id is missing/deleted.
   if (!dog) return <DashboardContent>{t('detail.notFound')}</DashboardContent>;
 
-  // Зеркало бэкендовских прав: владелец по owner_id ИЛИ dogs:edit (breeder/admin).
-  if (!canManageDog(dog, user?.id, can)) {
+  // Зеркало бэкендовских прав: владелец собаки, владелец её питомника или admin (FE-33).
+  if (!canManageDog(dog, user?.id, can, ownKennelIds)) {
     return (
       <DashboardContent>
         <EmptyContent filled title={t('detail.noAccess')} sx={{ py: 10 }} />

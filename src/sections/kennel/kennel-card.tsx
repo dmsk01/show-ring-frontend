@@ -62,13 +62,13 @@ export function KennelCard({ kennel, sx, ...other }: Props) {
         secondary={kennel.kennel_prefix ? `${t('card.prefix')}: ${kennel.kennel_prefix}` : ' '}
         slotProps={{
           primary: { noWrap: true, sx: { typography: 'subtitle1' } },
-          secondary: { sx: { mt: 0.5, typography: 'caption', color: 'text.disabled' } },
+          secondary: { sx: { mt: 0.5, typography: 'caption', color: 'text.secondary' } },
         }}
       />
 
       <Box sx={{ p: 2.5, pt: 0, display: 'flex', flexDirection: 'column', gap: 0.75 }}>
         <MetaRow icon="mingcute:location-fill">{location}</MetaRow>
-        <Box sx={{ typography: 'caption', color: 'text.disabled' }}>
+        <Box sx={{ typography: 'caption', color: 'text.secondary' }}>
           {t('card.stats', { dogs: kennel.dogs_count, litters: kennel.litters_count })}
         </Box>
       </Box>

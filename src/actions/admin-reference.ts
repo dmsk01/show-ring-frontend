@@ -3,7 +3,7 @@ import type { SWRConfiguration } from 'swr';
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 
-import axios, { fetcher } from 'src/lib/axios';
+import axios, { ALL_PAGES, allPagesFetcher } from 'src/lib/axios';
 
 // ----------------------------------------------------------------------
 
@@ -15,21 +15,21 @@ const swrOptions: SWRConfiguration = {
 
 export type ReferenceRecord = { id: string; name: string } & Record<string, unknown>;
 
-type ListResponse = ReferenceRecord[] | { items?: ReferenceRecord[] };
-
-// Reference lists are small — fetch a large page (some endpoints are paginated).
-const LIST_KEY = (url: string): [string, { params: { per_page: number } }] => [
-  url,
-  { params: { per_page: 200 } },
-];
+// Справочники собираются со всех страниц (ревью 2026-10-09, FE-07). key[0] —
+// URL списка: по нему revalidate ниже находит кэш после правок.
+const LIST_KEY = (url: string): [string, typeof ALL_PAGES] => [url, ALL_PAGES];
 
 export function useReferenceList(url: string) {
-  const { data, isLoading, error } = useSWR<ListResponse>(LIST_KEY(url), fetcher, swrOptions);
+  const { data, isLoading, error } = useSWR<ReferenceRecord[]>(
+    LIST_KEY(url),
+    allPagesFetcher<ReferenceRecord>,
+    swrOptions
+  );
 
-  return useMemo(() => {
-    const items: ReferenceRecord[] = Array.isArray(data) ? data : (data?.items ?? []);
-    return { items, loading: isLoading, error };
-  }, [data, isLoading, error]);
+  return useMemo(
+    () => ({ items: data ?? [], loading: isLoading, error }),
+    [data, isLoading, error]
+  );
 }
 
 const revalidate = (listUrl: string) =>

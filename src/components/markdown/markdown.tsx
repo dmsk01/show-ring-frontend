@@ -9,6 +9,7 @@ import remarkGfm from 'remark-gfm';
 import { useId, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import { mergeClasses, isExternalLink } from 'minimal-shared/utils';
 
 import Link from '@mui/material/Link';
@@ -24,6 +25,13 @@ import { htmlToMarkdown, isMarkdownContent } from './html-to-markdown';
 
 export type MarkdownProps = React.ComponentProps<typeof MarkdownRoot> & Options;
 
+/** HTML из редактора блога переводится в markdown; markdown остаётся как есть. */
+export function prepareMarkdownContent(children: unknown): string {
+  const cleanedContent = String(children).trim();
+
+  return isMarkdownContent(cleanedContent) ? cleanedContent : htmlToMarkdown(cleanedContent);
+}
+
 export function Markdown({
   sx,
   children,
@@ -32,14 +40,10 @@ export function Markdown({
   rehypePlugins,
   ...other
 }: MarkdownProps) {
-  const content = useMemo(() => {
-    const cleanedContent = String(children).trim();
-
-    return isMarkdownContent(cleanedContent) ? cleanedContent : htmlToMarkdown(cleanedContent);
-  }, [children]);
+  const content = useMemo(() => prepareMarkdownContent(children), [children]);
 
   const allRehypePlugins = useMemo(
-    () => [...defaultRehypePlugins, ...(rehypePlugins ?? [])],
+    () => [...markdownRehypePlugins, ...(rehypePlugins ?? [])],
     [rehypePlugins]
   );
 
@@ -63,8 +67,21 @@ export function Markdown({
 /** **************************************
  * @rehypePlugins
  *************************************** */
-const defaultRehypePlugins: NonNullable<Options['rehypePlugins']> = [
+// rehype-raw превращает HTML из контента в настоящие элементы, поэтому сразу
+// за ним — санитизация по allowlist (схема GitHub + u/span из allowlist
+// бэкенда, app/utils/html_sanitize.py). Без неё <meta http-equiv="refresh">,
+// <style> и <form> из текста попадали на страницу (ревью 2026-10-09, FE-01).
+// input (чекбоксы task-list) бэкенд не пропускает — убираем; style вырезаем
+// вместе с содержимым, чтобы CSS не всплывал текстом.
+const sanitizeSchema = {
+  ...defaultSchema,
+  tagNames: [...(defaultSchema.tagNames ?? []).filter((tag) => tag !== 'input'), 'u', 'span'],
+  strip: [...(defaultSchema.strip ?? []), 'style'],
+};
+
+export const markdownRehypePlugins: NonNullable<Options['rehypePlugins']> = [
   rehypeRaw,
+  [rehypeSanitize, sanitizeSchema],
   rehypeHighlight,
   [remarkGfm, { singleTilde: false }],
 ];

@@ -21,7 +21,9 @@
     "comments": "Comments",
     "recentPosts": "Recent Posts",
     "sharePost": "Share post",
-    "home": "Home"
+    "home": "Home",
+    "notFound": "Post not found",
+    "backToList": "Back to list"
   },
   "form": {
     "headingCreate": "Create a new post",

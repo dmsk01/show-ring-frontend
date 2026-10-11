@@ -26,7 +26,8 @@ const MuiInputLabel: Components<Theme>['MuiInputLabel'] = {
           props: (props) => !props.shrink,
           style: {
             ...getInputTypography(theme, ['fontSize', 'lineHeight']),
-            color: theme.vars.palette.text.disabled,
+            // Подпись поля — его доступное имя: text.disabled давал 2,08:1 (axe, FE-28).
+            color: theme.vars.palette.text.secondary,
           },
         },
         {

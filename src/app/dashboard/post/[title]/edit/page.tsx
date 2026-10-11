@@ -6,7 +6,7 @@ import { PostEditView } from 'src/sections/blog/view';
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = { title: `Post edit | Dashboard - ${CONFIG.appName}` };
+export const metadata: Metadata = { title: `Редактирование поста | Кабинет - ${CONFIG.appName}` };
 
 type Props = {
   params: Promise<{ title: string }>;

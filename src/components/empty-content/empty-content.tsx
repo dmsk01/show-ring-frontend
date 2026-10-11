@@ -62,7 +62,7 @@ export function EmptyContent({
             {
               mt: 1,
               textAlign: 'center',
-              color: 'text.disabled',
+              color: 'text.secondary',
             },
             ...(Array.isArray(slotProps?.title?.sx) ? slotProps.title.sx : [slotProps?.title?.sx]),
           ]}
@@ -79,7 +79,7 @@ export function EmptyContent({
             {
               mt: 1,
               textAlign: 'center',
-              color: 'text.disabled',
+              color: 'text.secondary',
             },
             ...(Array.isArray(slotProps?.description?.sx)
               ? slotProps.description.sx

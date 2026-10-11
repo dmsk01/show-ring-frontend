@@ -21,6 +21,7 @@ import DialogContent from '@mui/material/DialogContent';
 import { RouterLink } from 'src/routes/components';
 
 import { usePermissions } from 'src/hooks/use-permissions';
+import { useMyKennelIds } from 'src/hooks/use-my-kennel-ids';
 
 import { fDate } from 'src/utils/format-time';
 
@@ -124,6 +125,7 @@ export function DogDescendants({ dog, hrefFor, editable = false }: DescendantsPr
   const { t } = useTranslate('dog');
   const { user } = useAuthContext();
   const { can } = usePermissions();
+  const ownKennelIds = useMyKennelIds();
   const errorMessage = useRelativeErrorMessage();
 
   const { descendants, descendantsLoading } = useGetDogDescendants(dog.id);
@@ -190,7 +192,7 @@ export function DogDescendants({ dog, hrefFor, editable = false }: DescendantsPr
               }
               action={
                 canEdit &&
-                canManageDog(child, user?.id, can) && (
+                canManageDog(child, user?.id, can, ownKennelIds) && (
                   <Tooltip title={t('relatives.removeDescendant')}>
                     <IconButton color="error" onClick={() => setRemoveId(child.id)}>
                       <Iconify icon="solar:trash-bin-trash-bold" />
@@ -243,6 +245,7 @@ function AddDescendantDialog({ open, onClose, parent, existingIds }: AddDialogPr
   const { t } = useTranslate('dog');
   const { user } = useAuthContext();
   const { can } = usePermissions();
+  const ownKennelIds = useMyKennelIds();
   const errorMessage = useRelativeErrorMessage();
 
   const [search, setSearch] = useState('');
@@ -262,7 +265,7 @@ function AddDescendantDialog({ open, onClose, parent, existingIds }: AddDialogPr
 
   // Бэкенд не перезаписывает чужого родителя (409) — предупреждаем заранее.
   const disabledReason = (option: IDogItem): string | null => {
-    if (!canManageDog(option, user?.id, can)) return t('relatives.optionNoAccess');
+    if (!canManageDog(option, user?.id, can, ownKennelIds)) return t('relatives.optionNoAccess');
     if (option[slot]) {
       return parent.sex === 'male'
         ? t('relatives.optionHasFather')

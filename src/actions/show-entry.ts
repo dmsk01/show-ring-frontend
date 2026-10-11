@@ -54,12 +54,23 @@ export function useAvailableClasses(showId?: string, dogId?: string) {
 
 // ----------------------------------------------------------------------
 
+/**
+ * Список записей выставки ([entries(showId), {params}]) читают страницы
+ * результатов и документов организатора — сбрасываем его после любой правки
+ * записи (ревью 2026-10-09, FE-21).
+ */
+function revalidateShowEntries(showId: string) {
+  const lists = [endpoints.show.entries(showId), endpoints.show.entriesTable(showId)];
+  return mutate((key) => Array.isArray(key) && lists.includes(key[0]));
+}
+
 export async function createShowEntry(
   showId: string,
   payload: IShowEntryCreate
 ): Promise<IShowEntry> {
   const res = await axios.post<IShowEntry>(endpoints.show.entries(showId), payload);
   await mutate(endpoints.show.myEntries(showId));
+  await revalidateShowEntries(showId);
   // Ключ агрегата — массив [url, {params}]; вьюха в этот момент размонтирована,
   // поэтому чистим кэш (data=undefined, revalidate=false) — remount перезапросит.
   await mutate((key) => Array.isArray(key) && key[0] === endpoints.show.myShowsList, undefined, {
@@ -77,6 +88,7 @@ export async function updateShowEntry(
 ): Promise<IShowEntry> {
   const res = await axios.patch<IShowEntry>(endpoints.show.entryItem(showId, entryId), payload);
   await mutate(endpoints.show.myEntries(showId));
+  await revalidateShowEntries(showId);
   // Ключ агрегата — массив [url, {params}]; вьюха в этот момент размонтирована,
   // поэтому чистим кэш (data=undefined, revalidate=false) — remount перезапросит.
   await mutate((key) => Array.isArray(key) && key[0] === endpoints.show.myShowsList, undefined, {
@@ -88,6 +100,7 @@ export async function updateShowEntry(
 export async function deleteShowEntry(showId: string, entryId: string): Promise<void> {
   await axios.delete(endpoints.show.entryItem(showId, entryId));
   await mutate(endpoints.show.myEntries(showId));
+  await revalidateShowEntries(showId);
   // Чистим кэш агрегата (вьюха размонтирована) — remount перезапросит.
   await mutate((key) => Array.isArray(key) && key[0] === endpoints.show.myShowsList, undefined, {
     revalidate: false,

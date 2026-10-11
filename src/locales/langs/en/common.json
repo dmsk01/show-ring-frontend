@@ -7,7 +7,8 @@
     "fileTooLarge": "File is larger than 10 MB.",
     "unsupportedType": "Unsupported format. Allowed: JPEG, PNG, WebP, GIF.",
     "storageBusy": "Storage is temporarily busy, please try again.",
-    "generic": "Could not upload the file. Please try again later."
+    "generic": "Could not upload the file. Please try again later.",
+    "removeAll": "Remove all"
   },
   "demo": {
     "lang": "English",
@@ -28,7 +29,9 @@
     "clear": "Clear",
     "apply": "Apply",
     "view": "View",
-    "more": "More"
+    "more": "More",
+    "retry": "Retry",
+    "signIn": "Sign in"
   },
   "form": {
     "name": "Name",
@@ -45,7 +48,78 @@
     "results": "results",
     "dense": "Dense",
     "rowsPerPage": "Rows per page",
-    "selected": "selected"
+    "selected": "selected",
+    "resultsFound_one": "result",
+    "resultsFound_other": "results",
+    "sortedAsc": "sorted ascending",
+    "sortedDesc": "sorted descending"
+  },
+  "help": "Need help?",
+  "a11y": {
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "rowActions": "Actions",
+    "addRole": "Grant a role",
+    "openMenu": "Open menu",
+    "toggleNav": "Collapse or expand the menu",
+    "chooseFiles": "Choose files",
+    "account": "Account",
+    "settings": "Settings",
+    "language": "Language",
+    "close": "Close",
+    "backToTop": "Back to top",
+    "home": "Show Ring — home",
+    "slide": "Slide {{n}}",
+    "deselectAll": "Deselect all",
+    "selectAll": "Select all",
+    "navigation": "Navigation",
+    "scrollArea": "Scrollable area",
+    "siteNav": "Site sections",
+    "breadcrumbs": "Breadcrumbs",
+    "menuScroll": "Menu"
+  },
+  "editor": {
+    "addImage": "Insert image",
+    "chooseImage": "Choose a file",
+    "altText": "Image description",
+    "insert": "Insert",
+    "paragraph": "Paragraph",
+    "heading": "Heading {{level}}",
+    "headingMenu": "Text style",
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "strike": "Strikethrough",
+    "uppercase": "Uppercase",
+    "lowercase": "Lowercase",
+    "capitalize": "Capitalize",
+    "clearFormat": "Clear formatting",
+    "bulletList": "Bullet list",
+    "orderedList": "Numbered list",
+    "alignLeft": "Align left",
+    "alignCenter": "Align center",
+    "alignRight": "Align right",
+    "alignJustify": "Justify",
+    "code": "Code",
+    "codeBlock": "Code block",
+    "blockquote": "Quote",
+    "horizontalRule": "Horizontal rule",
+    "hardBreak": "Line break",
+    "undo": "Undo",
+    "redo": "Redo",
+    "fullscreen": "Fullscreen",
+    "insertLink": "Insert link",
+    "removeLink": "Remove link",
+    "linkUrl": "Link address",
+    "enterUrl": "Enter address"
+  },
+  "errors": {
+    "validation": "Please check the form fields",
+    "forbidden": "You do not have permission for this action",
+    "notFound": "Not found — it may have been deleted",
+    "tooManyRequests": "Too many requests — try again in a minute",
+    "server": "The service is temporarily unavailable — try again later",
+    "network": "No connection to the server — check your internet and retry"
   },
   "state": {
     "loading": "Loading...",
@@ -70,5 +144,43 @@
   "contacts": {
     "reveal": "Show contacts",
     "revealFailed": "Could not load contacts. Please try later."
+  },
+  "searchNotFound": {
+    "title": "Nothing found",
+    "enterKeywords": "Enter a search query",
+    "noResults": "No results for",
+    "hint": "Check the spelling or try other words."
+  },
+  "errorPages": {
+    "goHome": "Go to home",
+    "forbiddenTitle": "No access",
+    "forbiddenText": "You don't have access to this page. If this is a mistake, contact the administrator.",
+    "notFoundTitle": "Page not found",
+    "notFoundText": "There is no such page. Perhaps the address has a typo.",
+    "serverTitle": "Server error",
+    "serverText": "Something went wrong. Please try again later.",
+    "maintenanceTitle": "Maintenance in progress",
+    "maintenanceText": "We're working on it — please check back soon."
+  },
+  "settings": {
+    "title": "Settings",
+    "resetAll": "Reset all",
+    "exitFullscreen": "Exit fullscreen",
+    "darkMode": "Dark mode",
+    "system": "System",
+    "contrast": "Contrast",
+    "rtl": "Right to left",
+    "compact": "Compact",
+    "compactTooltip": "Dashboard only, on screens wider than 1600 px",
+    "presets": "Theme color",
+    "nav": "Navigation",
+    "dashboardOnly": "Dashboard only",
+    "layout": "Layout",
+    "color": "Color",
+    "integrate": "Integrated",
+    "apparent": "Highlighted",
+    "font": "Font",
+    "size": "Size",
+    "fontSize": "Font size"
   }
 }

@@ -6,7 +6,7 @@ import { PostDetailsHomeView } from 'src/sections/blog/view';
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = { title: `Post details - ${CONFIG.appName}` };
+export const metadata: Metadata = { title: `Пост - ${CONFIG.appName}` };
 
 type Props = {
   params: Promise<{ title: string }>;

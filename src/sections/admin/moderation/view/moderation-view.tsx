@@ -16,6 +16,8 @@ import TableCell from '@mui/material/TableCell';
 
 import { paths } from 'src/routes/paths';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
@@ -42,7 +44,7 @@ function ClassifiedsModeration() {
       await decideClassified(id, approve);
       toast.success(approve ? t('moderation.toast.approved') : t('moderation.toast.rejected'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('moderation.toast.failed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'moderation.toast.failed')));
     }
   };
 
@@ -108,7 +110,7 @@ function KennelsModeration() {
       await verifyKennel(id, isVerified);
       toast.success(isVerified ? t('moderation.toast.verified') : t('moderation.toast.unverified'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('moderation.toast.failed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'moderation.toast.failed')));
     }
   };
 

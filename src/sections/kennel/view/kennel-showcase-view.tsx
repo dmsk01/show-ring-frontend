@@ -93,6 +93,7 @@ export function KennelShowcaseView() {
         />
         <TextField
           select
+          label={t('showcase.sortLabel')}
           value={sort}
           onChange={(e) => {
             setPage(0);

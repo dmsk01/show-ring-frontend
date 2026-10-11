@@ -16,6 +16,8 @@ import DialogContent from '@mui/material/DialogContent';
 
 import { paths } from 'src/routes/paths';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { useGetShow } from 'src/actions/show';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -51,7 +53,7 @@ export function PrecheckView({ id }: Props) {
       setRejecting(null);
       setComment('');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('precheck.failed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'precheck.failed')));
     } finally {
       setBusy(false);
     }

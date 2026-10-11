@@ -9,6 +9,8 @@ import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 
+import { useTranslate } from 'src/locales';
+
 import { carouselClasses } from '../classes';
 
 // ----------------------------------------------------------------------
@@ -28,6 +30,7 @@ export function CarouselDotButtons({
   variant = 'circular',
   ...other
 }: CarouselDotButtonsProps) {
+  const { t } = useTranslate('common');
   const dotGap = gap ?? DOT_GAPS[variant];
   const dotSize = slotProps?.dot?.size ?? DOT_SIZES[variant];
   const listItemHeight = variant === 'number' ? dotSize : dotSize + OUTER_PADDING;
@@ -55,7 +58,7 @@ export function CarouselDotButtons({
           <li key={index}>
             <DotItem
               disableRipple
-              aria-label={`dot-${index}`}
+              aria-label={t('a11y.slide', { n: index + 1 })}
               size={dotSize}
               variant={variant}
               selected={isSelected}

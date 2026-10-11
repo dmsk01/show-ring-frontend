@@ -1,6 +1,7 @@
 import { test as setup, expect } from '@playwright/test';
 
 import { pinLocale } from './i18n';
+import { acceptConsents } from './users';
 
 // ----------------------------------------------------------------------
 
@@ -42,5 +43,6 @@ setup('authenticate as admin', async ({ page, request }) => {
     )
     .toBe(true);
 
+  await acceptConsents(page.context());
   await page.context().storageState({ path: AUTH_FILE });
 });

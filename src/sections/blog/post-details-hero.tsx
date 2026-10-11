@@ -8,18 +8,11 @@ import { varAlpha } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Container from '@mui/material/Container';
-import SpeedDial from '@mui/material/SpeedDial';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import SpeedDialAction from '@mui/material/SpeedDialAction';
 
 import { fDate } from 'src/utils/format-time';
 
-import { _socials } from 'src/_mock';
-import { useTranslate } from 'src/locales';
-
-import { Iconify } from 'src/components/iconify';
 import { useFilePreview } from 'src/components/file-thumbnail';
 
 // ----------------------------------------------------------------------
@@ -32,9 +25,7 @@ export function PostDetailsHero({
   createdAt,
   ...other
 }: BoxProps & IPostHero) {
-  const smUp = useMediaQuery((theme) => theme.breakpoints.up('sm'));
   const { previewUrl } = useFilePreview(coverUrl);
-  const { t } = useTranslate(['blog', 'common']);
 
   return (
     <Box
@@ -102,35 +93,6 @@ export function PostDetailsHero({
               />
             </Box>
           )}
-
-          <SpeedDial
-            direction={smUp ? 'left' : 'up'}
-            ariaLabel={t('detail.sharePost')}
-            icon={<Iconify icon="solar:share-bold" />}
-            FabProps={{ size: 'medium' }}
-            sx={{ position: 'absolute', bottom: { xs: 32, md: 64 }, right: { xs: 16, md: 24 } }}
-          >
-            {_socials.map((social) => (
-              <SpeedDialAction
-                key={social.label}
-                icon={
-                  <>
-                    {social.value === 'twitter' && <Iconify icon="socials:twitter" />}
-                    {social.value === 'facebook' && <Iconify icon="socials:facebook" />}
-                    {social.value === 'instagram' && <Iconify icon="socials:instagram" />}
-                    {social.value === 'linkedin' && <Iconify icon="socials:linkedin" />}
-                  </>
-                }
-                slotProps={{
-                  fab: { color: 'default' },
-                  tooltip: {
-                    placement: 'top',
-                    title: social.label,
-                  },
-                }}
-              />
-            ))}
-          </SpeedDial>
         </Box>
       </Container>
     </Box>

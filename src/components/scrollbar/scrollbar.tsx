@@ -7,6 +7,8 @@ import { mergeClasses } from 'minimal-shared/utils';
 
 import { styled } from '@mui/material/styles';
 
+import { useTranslate } from 'src/locales';
+
 import { scrollbarClasses } from './classes';
 
 // ----------------------------------------------------------------------
@@ -20,10 +22,14 @@ export function Scrollbar({
   fillContent = true,
   ...other
 }: ScrollbarProps) {
+  const { t } = useTranslate('common');
+
   return (
     <ScrollbarRoot
       scrollableNodeProps={{ ref }}
       clickOnTrack={false}
+      // simplebar по умолчанию озвучивает область как «scrollable content».
+      ariaLabel={t('a11y.scrollArea')}
       fillContent={fillContent}
       className={mergeClasses([scrollbarClasses.root, className])}
       sx={[

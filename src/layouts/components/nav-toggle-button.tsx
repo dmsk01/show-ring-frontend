@@ -4,6 +4,8 @@ import { varAlpha } from 'minimal-shared/utils';
 
 import IconButton from '@mui/material/IconButton';
 
+import { useTranslate } from 'src/locales';
+
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -13,9 +15,12 @@ export type NavToggleButtonProps = IconButtonProps & {
 };
 
 export function NavToggleButton({ isNavMini, sx, ...other }: NavToggleButtonProps) {
+  const { t } = useTranslate('common');
+
   return (
     <IconButton
       size="small"
+      aria-label={t('a11y.toggleNav')}
       sx={[
         (theme) => ({
           p: 0.5,

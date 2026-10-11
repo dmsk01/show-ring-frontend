@@ -1,25 +1,19 @@
-import { getErrorMessage } from 'src/auth/utils/error-message';
+import { apiErrorMessageKey } from 'src/utils/api-error';
 
 // ----------------------------------------------------------------------
 // Бэкенд (Этап 19) отдаёт машиночитаемый код в FastAPI `detail`; axios-
 // интерсептор (src/lib/axios.ts) сводит ответ к Error(detail), поэтому
-// error.message === код. Переводим известные коды в RU; иначе — как есть.
+// error.message === код. Известные коды → i18n-ключи; остальное — общий
+// текст по статусу (apiErrorMessageKey). Сырой текст не показываем
+// (ревью 2026-10-09, FE-15/FE-27).
 
-const ACCOUNT_ERROR_MESSAGES: Record<string, string> = {
-  current_password_invalid: 'Неверный текущий пароль',
-  email_taken: 'Этот email уже занят',
-  password_same_as_current: 'Новый пароль совпадает с текущим',
-  invalid_or_expired_token: 'Ссылка недействительна или устарела',
+const ACCOUNT_ERRORS: Record<string, string> = {
+  current_password_invalid: 'account:errors.currentPasswordInvalid',
+  email_taken: 'account:errors.emailTaken',
+  password_same_as_current: 'account:errors.passwordSameAsCurrent',
+  invalid_or_expired_token: 'account:errors.invalidOrExpiredToken',
 };
 
-// Незнакомый машинный код (snake_case, без пробелов) — это внутренний
-// идентификатор бэкенда, юзеру его показывать нельзя. Человекочитаемый текст
-// (есть пробел/не латиница — напр. сетевые ошибки axios) пропускаем как есть.
-const MACHINE_CODE = /^[a-z][a-z0-9_]*$/;
-const GENERIC_ERROR = 'Не удалось выполнить операцию. Попробуйте позже.';
-
-export function accountErrorMessage(error: unknown): string {
-  const raw = getErrorMessage(error);
-  if (raw in ACCOUNT_ERROR_MESSAGES) return ACCOUNT_ERROR_MESSAGES[raw];
-  return MACHINE_CODE.test(raw) ? GENERIC_ERROR : raw;
+export function accountErrorKey(error: unknown): string {
+  return apiErrorMessageKey(error, ACCOUNT_ERRORS, 'account:errors.generic');
 }

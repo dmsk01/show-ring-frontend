@@ -51,7 +51,7 @@ export function LandingRoadmap() {
 
               <TimelineContent sx={{ pb: 5, pl: 3 }}>
                 <Box component={m.div} variants={varFade('inUp', { distance: 24 })}>
-                  <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+                  <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                     {`0${index + 1}`}
                   </Typography>
                   <Typography variant="h5" sx={{ mt: 0.5 }}>

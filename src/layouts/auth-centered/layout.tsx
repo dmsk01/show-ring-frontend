@@ -8,11 +8,11 @@ import { merge } from 'es-toolkit';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import Alert from '@mui/material/Alert';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { CONFIG } from 'src/global-config';
 
 import { Logo } from 'src/components/logo';
@@ -41,15 +41,12 @@ export function AuthCenteredLayout({
   slotProps,
   layoutQuery = 'md',
 }: AuthCenteredLayoutProps) {
+  const { t } = useTranslate('common');
+
   const renderHeader = () => {
     const headerSlotProps: HeaderSectionProps['slotProps'] = { container: { maxWidth: false } };
 
     const headerSlots: HeaderSectionProps['slots'] = {
-      topArea: (
-        <Alert severity="info" sx={{ display: 'none', borderRadius: 0 }}>
-          This is an info Alert.
-        </Alert>
-      ),
       leftArea: (
         <>
           {/** @slot Logo */}
@@ -65,7 +62,7 @@ export function AuthCenteredLayout({
             color="inherit"
             sx={{ typography: 'subtitle2' }}
           >
-            Need help?
+            {t('help')}
           </Link>
 
           {/** @slot Settings button */}

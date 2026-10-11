@@ -7,6 +7,8 @@ import type { BreadcrumbsLinkProps } from './breadcrumb-link';
 
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 
+import { useTranslate } from 'src/locales';
+
 import { BackLink } from './back-link';
 import { MoreLinks } from './more-links';
 import { BreadcrumbsLink } from './breadcrumb-link';
@@ -56,6 +58,7 @@ export function CustomBreadcrumbs({
   activeLast = false,
   ...other
 }: CustomBreadcrumbsProps) {
+  const { t } = useTranslate('common');
   const lastLink = links[links.length - 1]?.name;
 
   const renderHeading = () => (
@@ -66,7 +69,11 @@ export function CustomBreadcrumbs({
 
   const renderLinks = () =>
     slots?.breadcrumbs ?? (
-      <Breadcrumbs separator={<BreadcrumbsSeparator />} {...slotProps?.breadcrumbs}>
+      <Breadcrumbs
+        aria-label={t('a11y.breadcrumbs')}
+        separator={<BreadcrumbsSeparator />}
+        {...slotProps?.breadcrumbs}
+      >
         {links.map((link, index) => (
           <BreadcrumbsLink
             key={link.name ?? index}

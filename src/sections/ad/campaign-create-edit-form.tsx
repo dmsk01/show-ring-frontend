@@ -17,6 +17,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { isIsoDate } from 'src/utils/iso-date';
 import { apiErrorKey } from 'src/utils/api-error';
 
 import { useTranslate } from 'src/locales';
@@ -30,39 +31,62 @@ import { CAMPAIGN_STATUSES } from 'src/types/ad';
 // ----------------------------------------------------------------------
 
 export function getCampaignSchema(t: TFunction) {
-  return z.object({
-    // Mirror backend CampaignCreate: name maxLength 255, budget > 0, cost_per_impression > 0
-    // (бесплатный показ запрещён — ревью бэкенда 2026-10-06, BE-05).
-    name: z
-      .string()
-      .min(1, { error: t('form.validation.nameRequired') })
-      .max(255, { error: t('form.validation.tooLong', { max: 255 }) }),
-    budget: z
-      .string()
-      .min(1, { error: t('form.validation.budgetRequired') })
-      .refine((v) => !Number.isNaN(Number(v)) && Number(v) > 0, {
-        error: t('form.validation.budgetPositive'),
-      }),
-    date_start: z.string().min(1, { error: t('form.validation.dateStartRequired') }),
-    date_end: z.string().min(1, { error: t('form.validation.dateEndRequired') }),
-    cost_per_impression: z
-      .string()
-      .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) > 0), {
-        error: t('form.validation.cpiInvalid'),
+  return (
+    z
+      .object({
+        // Mirror backend CampaignCreate: name maxLength 255, budget > 0, cost_per_impression > 0
+        // (бесплатный показ запрещён — ревью бэкенда 2026-10-06, BE-05).
+        name: z
+          .string()
+          .min(1, { error: t('form.validation.nameRequired') })
+          .max(255, { error: t('form.validation.tooLong', { max: 255 }) }),
+        budget: z
+          .string()
+          .min(1, { error: t('form.validation.budgetRequired') })
+          .refine((v) => !Number.isNaN(Number(v)) && Number(v) > 0, {
+            error: t('form.validation.budgetPositive'),
+          }),
+        date_start: z
+          .string()
+          .min(1, { error: t('form.validation.dateStartRequired') })
+          .refine(isIsoDate, { error: t('form.validation.dateInvalid') }),
+        date_end: z
+          .string()
+          .min(1, { error: t('form.validation.dateEndRequired') })
+          .refine(isIsoDate, { error: t('form.validation.dateInvalid') }),
+        cost_per_impression: z
+          .string()
+          .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) > 0), {
+            error: t('form.validation.cpiInvalid'),
+          })
+          .nullable(),
+        description: z.string().nullable(),
+        status: z.enum(['draft', 'active', 'paused', 'completed', 'cancelled']),
+        // Маркировка рекламы (ст. 18.1 Закона «О рекламе»).
+        advertiser_name: z
+          .string()
+          .max(255, { error: t('form.validation.tooLong', { max: 255 }) })
+          .nullable(),
+        advertiser_inn: z
+          .string()
+          .refine((v) => !v || /^\d{10}(\d{2})?$/.test(v), { error: t('legal:ad.innInvalid') })
+          .nullable(),
       })
-      .nullable(),
-    description: z.string().nullable(),
-    status: z.enum(['draft', 'active', 'paused', 'completed', 'cancelled']),
-    // Маркировка рекламы (ст. 18.1 Закона «О рекламе»).
-    advertiser_name: z
-      .string()
-      .max(255, { error: t('form.validation.tooLong', { max: 255 }) })
-      .nullable(),
-    advertiser_inn: z
-      .string()
-      .refine((v) => !v || /^\d{10}(\d{2})?$/.test(v), { error: t('legal:ad.innInvalid') })
-      .nullable(),
-  });
+      // Зеркало бэкенда: date_end не раньше date_start (invalid_dates), FE-10.
+      .superRefine((data, ctx) => {
+        if (
+          isIsoDate(data.date_start) &&
+          isIsoDate(data.date_end) &&
+          data.date_end < data.date_start
+        ) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['date_end'],
+            message: t('form.validation.dateEndBeforeStart'),
+          });
+        }
+      })
+  );
 }
 
 export type CampaignSchemaType = z.infer<ReturnType<typeof getCampaignSchema>>;

@@ -7,6 +7,8 @@ import { useBackToTop } from 'minimal-shared/hooks';
 
 import Fab from '@mui/material/Fab';
 
+import { useTranslate } from 'src/locales';
+
 import { Iconify } from '../iconify';
 
 // ----------------------------------------------------------------------
@@ -24,6 +26,7 @@ export function BackToTopButton({
   scrollThreshold = '90%',
   ...other
 }: BackToTopProps) {
+  const { t } = useTranslate('common');
   const { onBackToTop, isVisible } = useBackToTop(scrollThreshold, isDebounce);
 
   if (renderButton) {
@@ -34,7 +37,7 @@ export function BackToTopButton({
 
   return (
     <Fab
-      aria-label="Back to top"
+      aria-label={t('a11y.backToTop')}
       onClick={onBackToTop}
       sx={[
         (theme) => ({

@@ -143,7 +143,10 @@
       "otherShow": "Ticket is for another show",
       "noEntries": "No entries for this show",
       "generic": "Action failed",
-      "camera": "No camera access — use search"
+      "camera": "No camera access — use search",
+      "cameraInsecure": "The camera only works on a secure (https://) address — open the site over https or use search",
+      "cameraDenied": "Camera access is blocked — allow it in the browser settings or use search",
+      "cameraNotFound": "No camera found — use search"
     }
   },
   "staffShows": {

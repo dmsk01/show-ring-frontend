@@ -7,6 +7,8 @@ import { mergeClasses } from 'minimal-shared/utils';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import { useTranslate } from 'src/locales';
+
 import { Iconify } from 'src/components/iconify';
 
 import { uploadClasses } from '../classes';
@@ -34,6 +36,8 @@ export function UploadAvatar({
   hideFilesRejected = false,
   ...dropzoneOptions
 }: UploadProps) {
+  const { t } = useTranslate('common');
+
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     disabled,
     multiple: false,
@@ -82,7 +86,7 @@ export function UploadAvatar({
         })}
         sx={sx}
       >
-        <input {...getInputProps()} />
+        <input {...getInputProps({ 'aria-label': t('a11y.chooseFiles') })} />
         <UploadContent>
           {renderPreview()}
           {renderPlaceholder()}

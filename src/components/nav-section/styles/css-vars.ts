@@ -14,9 +14,11 @@ function colorVars(theme: Theme, variant?: 'vertical' | 'mini' | 'horizontal') {
   return {
     '--nav-item-color': palette.text.secondary,
     '--nav-item-hover-bg': palette.action.hover,
-    '--nav-item-caption-color': palette.text.disabled,
+    // text.disabled давал 1,9:1 на фоне навигации (axe, FE-28).
+    '--nav-item-caption-color': palette.text.secondary,
     // root
-    '--nav-item-root-active-color': palette.primary.main,
+    // primary.main на подложке primary 8% — 4,25:1; primary.dark — выше 4,5:1.
+    '--nav-item-root-active-color': palette.primary.dark,
     '--nav-item-root-active-color-on-dark': palette.primary.light,
     '--nav-item-root-active-bg': varAlpha(palette.primary.mainChannel, 0.08),
     '--nav-item-root-active-hover-bg': varAlpha(palette.primary.mainChannel, 0.16),
@@ -29,7 +31,7 @@ function colorVars(theme: Theme, variant?: 'vertical' | 'mini' | 'horizontal') {
     '--nav-item-sub-open-bg': palette.action.hover,
     ...(variant === 'vertical' && {
       '--nav-item-sub-active-bg': palette.action.hover,
-      '--nav-subheader-color': palette.text.disabled,
+      '--nav-subheader-color': palette.text.secondary,
       '--nav-subheader-hover-color': palette.text.primary,
     }),
   };

@@ -26,7 +26,8 @@ export type IShowItem = {
   city: string | null;
   country: string | null;
   venue: string | null;
-  entry_fee: number | null;
+  // Decimal на бэкенде — приходит строкой (FE-13).
+  entry_fee: string | null;
   registration_deadline: string | null;
   status: ShowStatus;
   // Включена ли регистрация прибытия (чек-ин).

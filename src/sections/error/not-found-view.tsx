@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { SimpleLayout } from 'src/layouts/simple';
 import { PageNotFoundIllustration } from 'src/assets/illustrations';
 
@@ -16,6 +17,8 @@ import { varBounce, MotionContainer } from 'src/components/animate';
 // ----------------------------------------------------------------------
 
 export function NotFoundView() {
+  const { t } = useTranslate('common');
+
   return (
     <SimpleLayout
       slotProps={{
@@ -24,16 +27,13 @@ export function NotFoundView() {
     >
       <Container component={MotionContainer}>
         <m.div variants={varBounce('in')}>
-          <Typography variant="h3" sx={{ mb: 2 }}>
-            Sorry, page not found!
+          <Typography variant="h3" component="h1" sx={{ mb: 2 }}>
+            {t('errorPages.notFoundTitle')}
           </Typography>
         </m.div>
 
         <m.div variants={varBounce('in')}>
-          <Typography sx={{ color: 'text.secondary' }}>
-            Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve mistyped the URL? Be
-            sure to check your spelling.
-          </Typography>
+          <Typography sx={{ color: 'text.secondary' }}>{t('errorPages.notFoundText')}</Typography>
         </m.div>
 
         <m.div variants={varBounce('in')}>
@@ -41,7 +41,7 @@ export function NotFoundView() {
         </m.div>
 
         <Button component={RouterLink} href="/" size="large" variant="contained">
-          Go to home
+          {t('errorPages.goHome')}
         </Button>
       </Container>
     </SimpleLayout>

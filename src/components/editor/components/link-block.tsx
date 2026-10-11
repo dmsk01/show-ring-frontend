@@ -10,6 +10,8 @@ import Popover from '@mui/material/Popover';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import { useTranslate } from 'src/locales';
+
 import { editorClasses } from '../classes';
 import { ToolbarItem } from './toolbar-item';
 
@@ -23,6 +25,7 @@ type LinkBlockProps = {
 };
 
 export function LinkBlock({ editor, linkIcon, unlinkIcon, active }: LinkBlockProps) {
+  const { t } = useTranslate('common');
   const [linkUrl, setLinkUrl] = useState('');
   const { anchorEl, open, onOpen, onClose } = usePopover();
 
@@ -54,7 +57,7 @@ export function LinkBlock({ editor, linkIcon, unlinkIcon, active }: LinkBlockPro
     <>
       <ToolbarItem
         aria-describedby={popoverId}
-        aria-label="Insert link"
+        aria-label={t('editor.insertLink')}
         active={active}
         className={editorClasses.toolbar.link}
         onClick={handleOpenPopover}
@@ -62,7 +65,7 @@ export function LinkBlock({ editor, linkIcon, unlinkIcon, active }: LinkBlockPro
       />
 
       <ToolbarItem
-        aria-label="Remove link"
+        aria-label={t('editor.removeLink')}
         disabled={!active}
         className={editorClasses.toolbar.unlink}
         onClick={() => editor.chain().focus().unsetLink().run()}
@@ -88,18 +91,18 @@ export function LinkBlock({ editor, linkIcon, unlinkIcon, active }: LinkBlockPro
           },
         }}
       >
-        <Typography variant="subtitle2">Link URL</Typography>
+        <Typography variant="subtitle2">{t('editor.linkUrl')}</Typography>
 
         <Box sx={{ gap: 1, display: 'flex', alignItems: 'center' }}>
           <TextField
             fullWidth
             size="small"
-            placeholder="Enter URL"
+            placeholder={t('editor.enterUrl')}
             value={linkUrl}
             onChange={(event) => setLinkUrl(event.target.value)}
           />
           <Button variant="contained" disabled={!linkUrl} onClick={handleApply}>
-            Apply
+            {t('actions.apply')}
           </Button>
         </Box>
       </Popover>

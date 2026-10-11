@@ -1,10 +1,12 @@
 import type { IShowItem } from 'src/types/show';
 
-import { it, expect, describe } from 'vitest';
+import { it, expect, describe, afterEach } from 'vitest';
 
 import {
+  isShowJudge,
   classifyShow,
   canEnterResults,
+  canEditResultRow,
   showStatusI18nKey,
   SHOW_STATUS_COLOR,
   canRegisterForShow,
@@ -61,6 +63,27 @@ describe('canRegisterForShow', () => {
     expect(canRegisterForShow('draft', null, now)).toBe(false);
     expect(canRegisterForShow('completed', null, now)).toBe(false);
   });
+
+  // Ревью фронтенда 2026-10-09, FE-18: бэкенд закрывает регистрацию по
+  // московской дате (today_local), а фронт считал конец дня в поясе браузера.
+  describe('uses the Moscow date regardless of the browser time zone', () => {
+    const originalTz = process.env.TZ;
+    afterEach(() => {
+      process.env.TZ = originalTz;
+    });
+
+    it.each(['Asia/Vladivostok', 'America/New_York', 'Europe/Kaliningrad'])('in %s', (tz) => {
+      process.env.TZ = tz;
+      // 18:00 МСК 10 октября — регистрация ещё открыта (во Владивостоке уже 11-е).
+      expect(
+        canRegisterForShow('registration_open', '2026-10-10', new Date('2026-10-10T15:00:00Z'))
+      ).toBe(true);
+      // 00:30 МСК 11 октября — закрыта (в Нью-Йорке и Калининграде ещё 10-е).
+      expect(
+        canRegisterForShow('registration_open', '2026-10-10', new Date('2026-10-10T21:30:00Z'))
+      ).toBe(false);
+    });
+  });
 });
 
 describe('canEnterResults', () => {
@@ -93,5 +116,55 @@ describe('SHOW_STATUS_COLOR', () => {
     expect(SHOW_STATUS_COLOR.in_progress).toBe('info');
     expect(SHOW_STATUS_COLOR.completed).toBe('default');
     expect(SHOW_STATUS_COLOR.cancelled).toBe('error');
+  });
+});
+
+// Ревью фронтенда 2026-10-09, FE-09: бэкенд разрешает судье вносить и
+// править результаты пород, на которые он назначен (_can_modify_results),
+// а UI показывал кнопки только организатору и админу.
+describe('canEditResultRow', () => {
+  const show = { organizer_id: 'org' } as unknown as IShowItem;
+  const can = (granted: string[]) => (perm: string) => granted.includes(perm);
+  const row = { breedId: 'b1', groupId: 'g1' };
+  const judges = [
+    { judge_id: 'j-breed', breed_id: 'b1', breed_group_id: null },
+    { judge_id: 'j-group', breed_id: null, breed_group_id: 'g1' },
+    { judge_id: 'j-all', breed_id: null, breed_group_id: null },
+    { judge_id: 'j-other', breed_id: 'b2', breed_group_id: null },
+  ];
+  const check = (userId: string, granted: string[] = []) =>
+    canEditResultRow(row, { show, userId, can: can(granted), judges });
+
+  it('allows the organizer and admin', () => {
+    expect(check('org')).toBe(true);
+    expect(check('someone', ['*'])).toBe(true);
+  });
+
+  it('allows a judge assigned to the breed, its group or the whole show', () => {
+    expect(check('j-breed')).toBe(true);
+    expect(check('j-group')).toBe(true);
+    expect(check('j-all')).toBe(true);
+  });
+
+  it('denies a judge of another breed and other users', () => {
+    expect(check('j-other')).toBe(false);
+    expect(check('buyer')).toBe(false);
+  });
+
+  it('denies everyone when the show or the user is unknown', () => {
+    expect(canEditResultRow(row, { show: undefined, userId: 'org', can: can([]), judges })).toBe(
+      false
+    );
+    expect(canEditResultRow(row, { show, userId: undefined, can: can([]), judges })).toBe(false);
+  });
+});
+
+describe('isShowJudge', () => {
+  const judges = [{ judge_id: 'j1', breed_id: 'b1', breed_group_id: null }];
+
+  it('is true only for a user assigned as a judge of the show', () => {
+    expect(isShowJudge('j1', judges)).toBe(true);
+    expect(isShowJudge('j2', judges)).toBe(false);
+    expect(isShowJudge(undefined, judges)).toBe(false);
   });
 });

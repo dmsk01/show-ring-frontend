@@ -63,7 +63,7 @@ export function DogCard({ dog, breedName, sx, ...other }: Props) {
         secondary={dog.rkf_number ? `${t('detail.rkfNumber')}: ${dog.rkf_number}` : ' '}
         slotProps={{
           primary: { noWrap: true, sx: { typography: 'subtitle1' } },
-          secondary: { sx: { mt: 0.5, typography: 'caption', color: 'text.disabled' } },
+          secondary: { sx: { mt: 0.5, typography: 'caption', color: 'text.secondary' } },
         }}
       />
 

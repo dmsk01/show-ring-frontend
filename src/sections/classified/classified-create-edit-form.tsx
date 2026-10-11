@@ -19,6 +19,8 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
 import { useGetBreeds } from 'src/actions/reference';
@@ -44,6 +46,9 @@ import {
 
 // ----------------------------------------------------------------------
 
+// app/schemas/classified.py: MAX_PRICE.
+const MAX_CLASSIFIED_PRICE = 10_000_000;
+
 export const getClassifiedSchema = (t: TFunction) =>
   z.object({
     category: z.enum(['puppy_sale', 'adult_sale', 'mating', 'handler', 'grooming', 'other']),
@@ -66,9 +71,14 @@ export const getClassifiedSchema = (t: TFunction) =>
     price: z
       .union([z.string(), z.number()])
       .nullable()
-      .refine((val) => val == null || val === '' || (!Number.isNaN(Number(val)) && Number(val) >= 0), {
-        error: t('form.validation.priceInvalid'),
-      }),
+      // Зеркало бэкенда: 0..10 000 000, не больше 2 знаков после запятой (FE-31).
+      .refine(
+        (val) =>
+          val == null ||
+          val === '' ||
+          (/^\d+(\.\d{1,2})?$/.test(String(val)) && Number(val) <= MAX_CLASSIFIED_PRICE),
+        { error: t('form.validation.priceInvalid') }
+      ),
     city: z.string().max(128, { error: t('form.validation.cityMax') }).nullable(),
     // Optional, but must be a valid number with country code when provided.
     contact_phone: z
@@ -106,6 +116,25 @@ export const getClassifiedSchema = (t: TFunction) =>
 
 export type ClassifiedSchemaType = z.infer<ReturnType<typeof getClassifiedSchema>>;
 
+/**
+ * Общая часть тела create/update. Цена — только для price_kind=fixed: для
+ * «договорной» и «бесплатно» бэкенд требует price=null, иначе 422 (FE-31).
+ */
+export function buildClassifiedBase(data: ClassifiedSchemaType) {
+  return {
+    category: data.category,
+    title: data.title,
+    description: data.description,
+    price_kind: data.price_kind,
+    breed_id: data.breed_id || null,
+    price: data.price_kind === 'fixed' && data.price ? Number(data.price) : null,
+    city: data.city || null,
+    contact_phone: data.contact_phone || null,
+    contact_email: data.contact_email || null,
+    contacts_public: data.contacts_public,
+  };
+}
+
 type Props = { currentClassified?: IClassifiedItem };
 
 export function ClassifiedCreateEditForm({ currentClassified }: Props) {
@@ -114,6 +143,8 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
   const { breeds } = useGetBreeds();
 
   const [imageIds, setImageIds] = useState<string[]>([]);
+  // Пока фото грузятся, отправка заблокирована: иначе объявление уходило без них (FE-32).
+  const [imagesUploading, setImagesUploading] = useState(false);
 
   const schema = useMemo(() => getClassifiedSchema(t), [t]);
 
@@ -155,24 +186,15 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
   });
 
   const {
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+  const priceKind = watch('price_kind');
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const base = {
-        category: data.category,
-        title: data.title,
-        description: data.description,
-        price_kind: data.price_kind,
-        breed_id: data.breed_id || null,
-        price: data.price ? Number(data.price) : null,
-        city: data.city || null,
-        contact_phone: data.contact_phone || null,
-        contact_email: data.contact_email || null,
-        contacts_public: data.contacts_public,
-      };
+      const base = buildClassifiedBase(data);
 
       if (currentClassified) {
         // Send `status` only when the publish toggle actually changed, so a plain save never
@@ -200,7 +222,7 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
       router.push(paths.dashboard.classifieds.root);
     } catch (error) {
       console.error(error);
-      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'common:state.error')));
     }
   });
 
@@ -242,7 +264,12 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
               </MenuItem>
             ))}
           </Field.Select>
-          <Field.Text name="price" label={t('form.fields.price')} type="number" />
+          <Field.Text
+            name="price"
+            label={t('form.fields.price')}
+            type="number"
+            disabled={priceKind !== 'fixed'}
+          />
 
           <Field.Phone
             name="contact_phone"
@@ -294,7 +321,7 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
               )}
             </Box>
           ) : (
-            <ClassifiedImagesUpload onChange={setImageIds} />
+            <ClassifiedImagesUpload onChange={setImageIds} onUploadingChange={setImagesUploading} />
           )}
         </Box>
 
@@ -324,7 +351,12 @@ export function ClassifiedCreateEditForm({ currentClassified }: Props) {
             </Box>
           )}
 
-          <Button type="submit" variant="contained" loading={isSubmitting}>
+          <Button
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+            disabled={imagesUploading}
+          >
             {currentClassified ? t('form.submitUpdate') : t('form.submitCreate')}
           </Button>
         </Stack>

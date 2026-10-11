@@ -34,6 +34,20 @@ export const E2E_USERS = {
  * Retry-After, в пределах бюджета. Долгосрочно лучше ослабить лимит для теста на
  * бэке (env-флаг / exemption для localhost), чтобы не платить 32с ожидания.
  */
+/**
+ * Принять актуальные согласия (условия + ПДн) за вошедшего пользователя.
+ * Иначе кабинет закрыт диалогом ConsentGate «Обновлены правовые документы»,
+ * и все сценарии кабинета падают по таймауту (ревью 2026-10-09, FE-30).
+ */
+export async function acceptConsents(context: BrowserContext): Promise<void> {
+  const res = await context.request.post('/api/users/me/consents', {
+    data: { kinds: ['terms', 'personal_data'] },
+  });
+  if (!res.ok()) {
+    throw new Error(`Accepting consents failed: HTTP ${res.status()} ${await res.text()}`);
+  }
+}
+
 export async function apiLogin(
   context: BrowserContext,
   email: string,
@@ -50,7 +64,10 @@ export async function apiLogin(
     const res = await context.request.post('/api/auth/login', {
       data: { email, password: E2E_PASSWORD },
     });
-    if (res.ok()) return;
+    if (res.ok()) {
+      await acceptConsents(context);
+      return;
+    }
 
     lastStatus = res.status();
     lastBody = await res.text();

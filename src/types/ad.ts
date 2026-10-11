@@ -23,6 +23,8 @@ export type ICampaign = {
   date_start: string;
   date_end: string;
   status: CampaignStatus;
+  // Когда админ одобрил кампанию; null — ещё на модерации (FE-13).
+  approved_at: string | null;
   // Рекламодатель для пометки «Реклама» (ст. 18.1 Закона «О рекламе»).
   advertiser_name: string | null;
   advertiser_inn: string | null;

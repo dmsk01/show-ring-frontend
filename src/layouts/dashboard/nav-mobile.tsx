@@ -8,6 +8,8 @@ import Drawer from '@mui/material/Drawer';
 
 import { usePathname } from 'src/routes/hooks';
 
+import { useTranslate } from 'src/locales';
+
 import { Logo } from 'src/components/logo';
 import { Scrollbar } from 'src/components/scrollbar';
 import { NavSectionVertical } from 'src/components/nav-section';
@@ -35,6 +37,7 @@ export function NavMobile({
   checkPermissions,
   ...other
 }: NavMobileProps) {
+  const { t } = useTranslate('common');
   const pathname = usePathname();
 
   useEffect(() => {
@@ -68,7 +71,7 @@ export function NavMobile({
         </Box>
       )}
 
-      <Scrollbar fillContent>
+      <Scrollbar fillContent ariaLabel={t('a11y.menuScroll')}>
         <NavSectionVertical
           data={data}
           checkPermissions={checkPermissions}

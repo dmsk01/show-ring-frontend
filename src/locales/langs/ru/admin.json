@@ -168,7 +168,8 @@
     },
     "tabs": {
       "classifieds": "Объявления",
-      "kennels": "Питомники"
+      "kennels": "Питомники",
+      "campaigns": "Кампании"
     },
     "classifieds": {
       "columns": {
@@ -211,6 +212,18 @@
       "verified": "Верифицировано",
       "unverified": "Верификация снята",
       "failed": "Ошибка"
+    },
+    "campaigns": {
+      "columns": {
+        "name": "Кампания",
+        "advertiser": "Рекламодатель",
+        "budget": "Бюджет",
+        "period": "Период"
+      },
+      "actions": {
+        "approve": "Одобрить",
+        "reject": "Отклонить"
+      }
     }
   },
   "analytics": {

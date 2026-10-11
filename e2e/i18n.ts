@@ -19,6 +19,7 @@ import kennelRu from '../src/locales/langs/ru/kennel.json';
 import commonRu from '../src/locales/langs/ru/common.json';
 import accountRu from '../src/locales/langs/ru/account.json';
 import adRu from '../src/locales/langs/ru/ad.json';
+import adminRu from '../src/locales/langs/ru/admin.json';
 import legalRu from '../src/locales/langs/ru/legal.json';
 import checkinRu from '../src/locales/langs/ru/checkin.json';
 import classifiedRu from '../src/locales/langs/ru/classified.json';
@@ -34,6 +35,7 @@ const DICTS: Record<string, unknown> = {
   account: accountRu,
   classified: classifiedRu,
   ad: adRu,
+  admin: adminRu,
   legal: legalRu,
   checkin: checkinRu,
 };

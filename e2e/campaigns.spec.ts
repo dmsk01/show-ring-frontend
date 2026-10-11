@@ -58,23 +58,37 @@ test.describe.serial('Ad campaign — create and moderate', () => {
     await context.close();
   });
 
-  // Интерфейса модерации кампаний у админа пока нет: страница правки ищет
-  // кампанию среди «моих» (GET /ads/campaigns), а чужую не находит, и списка
-  // кампаний на модерации на бэкенде нет. Одобряем тем же запросом, что
-  // делал бы такой интерфейс: admin запускает кампанию в показ.
-  test('admin approves the campaign by starting it (API)', async () => {
-    const ctx = await apiRequest.newContext({ storageState: ADMIN });
-    try {
-      const res = await ctx.put(`${BASE_URL}/api/ads/campaigns/${campaignId}`, {
-        data: { status: 'active' },
-      });
-      expect(res.ok()).toBeTruthy();
-      const campaign = await res.json();
-      expect(campaign.status).toBe('active');
-      expect(campaign.approved_at).toBeTruthy();
-    } finally {
-      await ctx.dispose();
-    }
+  // FE-37: раньше одобрить чужую кампанию через интерфейс было нельзя —
+  // страница правки искала её среди «моих». Теперь — вкладка «Кампании»
+  // в модерации.
+  test('admin approves the campaign in the moderation queue', async ({ browser }) => {
+    const context = await browser.newContext({ storageState: ADMIN });
+    const page = await context.newPage();
+
+    await page.goto('/dashboard/admin/moderation');
+    await page.getByRole('tab', { name: t('admin', 'moderation.tabs.campaigns') }).click();
+
+    const row = page.getByRole('row').filter({ hasText: campaignName });
+    await expect(row).toBeVisible();
+
+    const decided = page.waitForResponse(
+      (r) =>
+        /\/api\/admin\/moderation\/campaigns\/[^/]+\/?$/.test(r.url()) &&
+        r.request().method() === 'PUT'
+    );
+    await row
+      .getByRole('button', { name: t('admin', 'moderation.campaigns.actions.approve') })
+      .click();
+    const res = await decided;
+    expect(res.ok()).toBeTruthy();
+    const campaign = await res.json();
+    expect(campaign.status).toBe('active');
+    expect(campaign.approved_at).toBeTruthy();
+
+    // Одобренная кампания уходит из очереди.
+    await expect(row).toHaveCount(0);
+
+    await context.close();
   });
 
   test('organizer no longer sees the moderation badge', async ({ browser }) => {

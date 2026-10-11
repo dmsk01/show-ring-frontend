@@ -1,6 +1,11 @@
 import type { SWRConfiguration } from 'swr';
 import type { Role } from 'src/types/permissions';
-import type { IAdminUser, IKennelModeration, IClassifiedModeration } from 'src/types/admin';
+import type {
+  IAdminUser,
+  IKennelModeration,
+  ICampaignModeration,
+  IClassifiedModeration,
+} from 'src/types/admin';
 
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -61,6 +66,24 @@ export async function decideClassified(id: string, approve: boolean, reason?: st
   await axios.put(endpoints.admin.moderationClassified(id), { approve, reason: reason ?? null });
   // Ключ — массив [url, {params}]: ревалидируем по предикату, а не по строке.
   await mutate((key) => Array.isArray(key) && key[0] === endpoints.admin.moderationClassifieds);
+}
+
+/** Кампании, ждущие первого одобрения админом (FE-37). */
+export function useGetModerationCampaigns() {
+  const key: [string, { params: { per_page: number } }] = [
+    endpoints.admin.moderationCampaigns,
+    { params: { per_page: 200 } },
+  ];
+  const { data, isLoading } = useSWR<ICampaignModeration[]>(key, fetcher, swrOptions);
+  return useMemo(() => ({ items: data ?? [], loading: isLoading }), [data, isLoading]);
+}
+
+/** Одобрить (запуск в показ) или отклонить кампанию. */
+export async function decideCampaign(id: string, approve: boolean, reason?: string): Promise<void> {
+  await axios.put(endpoints.admin.moderationCampaign(id), { approve, reason: reason ?? null });
+  await mutate((key) => Array.isArray(key) && key[0] === endpoints.admin.moderationCampaigns);
+  // Статус и бейдж «На модерации» в списке кампаний.
+  await mutate(endpoints.ad.campaigns);
 }
 
 export function useGetModerationKennels() {

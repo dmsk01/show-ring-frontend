@@ -22,6 +22,7 @@ import { useMyKennelIds } from 'src/hooks/use-my-kennel-ids';
 
 import { isIsoDate } from 'src/utils/iso-date';
 import { apiErrorMessageKey } from 'src/utils/api-error';
+import { nullableNumberInput } from 'src/utils/number-input';
 
 import { useTranslate } from 'src/locales';
 import { createLitter, updateLitter } from 'src/actions/litter';
@@ -49,24 +50,30 @@ export const getLitterSchema = (t: TFunction) =>
         .nullable()
         .refine((v) => !v || isIsoDate(v), { error: t('form.validation.dateInvalid') }),
       // Mirror backend LitterCreate: puppies_count 0..30, price_from/price_to ≥ 0.
-      puppies_count: z
-        .string()
-        .refine((v) => !v || (Number.isInteger(Number(v)) && Number(v) >= 0 && Number(v) <= 30), {
-          error: t('form.validation.puppiesRange'),
-        })
-        .nullable(),
-      price_from: z
-        .string()
-        .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
-          error: t('form.validation.priceInvalid'),
-        })
-        .nullable(),
-      price_to: z
-        .string()
-        .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
-          error: t('form.validation.priceInvalid'),
-        })
-        .nullable(),
+      puppies_count: nullableNumberInput(
+        z
+          .string()
+          .refine((v) => !v || (Number.isInteger(Number(v)) && Number(v) >= 0 && Number(v) <= 30), {
+            error: t('form.validation.puppiesRange'),
+          })
+          .nullable()
+      ),
+      price_from: nullableNumberInput(
+        z
+          .string()
+          .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
+            error: t('form.validation.priceInvalid'),
+          })
+          .nullable()
+      ),
+      price_to: nullableNumberInput(
+        z
+          .string()
+          .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
+            error: t('form.validation.priceInvalid'),
+          })
+          .nullable()
+      ),
       description: z.string().nullable(),
     })
     // Зеркало бэкендового _validate_price_range (FE-34).

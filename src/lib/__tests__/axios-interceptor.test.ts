@@ -110,6 +110,50 @@ describe('401 interceptor', () => {
     expect(calls).toBe(3);
   });
 
+  // FE-30: волна 401 от нескольких запросов сразу — ровно один refresh,
+  // остальные ждут в очереди и повторяются после него.
+  it('runs a single refresh for parallel 401s and replays every request', async () => {
+    let resolveRefresh: (value: unknown) => void = () => {};
+    const post = vi
+      .spyOn(axios, 'post')
+      .mockImplementation(() => new Promise((resolve) => (resolveRefresh = resolve)));
+    const seen = new Set<string>();
+    const adapter: AxiosAdapter = async (config) => {
+      const url = config.url ?? '';
+      if (!seen.has(url)) {
+        seen.add(url);
+        throw httpError(config, 401, 'Not authenticated');
+      }
+      return { data: { url }, status: 200, statusText: 'OK', headers: {}, config };
+    };
+
+    const requests = ['/users/me', '/dogs', '/kennels'].map((url) =>
+      axiosInstance.get(url, { adapter })
+    );
+    // Дать всем трём получить 401 и встать в очередь, пока refresh висит.
+    await vi.waitFor(() => expect(seen.size).toBe(3));
+    resolveRefresh({ status: 200, data: {} });
+
+    const responses = await Promise.all(requests);
+    expect(responses.map((r) => r.data.url)).toEqual(['/users/me', '/dogs', '/kennels']);
+    expect(post).toHaveBeenCalledTimes(1);
+    expect(location.href).toBe('');
+  });
+
+  // Загрузочная проверка сессии у анонима: мёртвый refresh — не повод
+  // уводить со страницы, вызывающий сам решит, что показать.
+  it('does not redirect when the request opted out (_skipAuthRedirect)', async () => {
+    vi.spyOn(axios, 'post').mockRejectedValue(
+      httpError(undefined, 401, 'invalid_or_expired_token')
+    );
+    const { adapter } = expiredThenOk();
+
+    await expect(
+      axiosInstance.get('/users/me', { adapter, _skipAuthRedirect: true })
+    ).rejects.toMatchObject({ status: 401 });
+    expect(location.href).toBe('');
+  });
+
   it('keeps the user on the page when the network is down during refresh', async () => {
     vi.spyOn(axios, 'post').mockRejectedValue(new AxiosError('Network Error', 'ERR_NETWORK'));
     const { adapter } = expiredThenOk();

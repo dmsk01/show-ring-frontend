@@ -10,6 +10,7 @@
       "dates": "Период"
     }
   },
+  "moderation": { "pending": "На модерации" },
   "form": {
     "headingNew": "Создать кампанию",
     "headingEdit": "Редактирование кампании",
@@ -27,8 +28,11 @@
       "nameRequired": "Укажите название!",
       "budgetRequired": "Укажите бюджет!",
       "dateStartRequired": "Укажите дату начала!",
+      "dateInvalid": "Введите дату в формате ГГГГ-ММ-ДД",
+      "dateEndBeforeStart": "Дата окончания не может быть раньше даты начала",
       "dateEndRequired": "Укажите дату окончания!",
       "targetUrlRequired": "Укажите целевой URL!",
+      "targetUrlHttps": "Ссылка должна начинаться с https:// и вести на сайт с доменом",
       "tooLong": "Не длиннее {{max}} символов",
       "budgetPositive": "Бюджет должен быть больше 0",
       "cpiInvalid": "Стоимость показа не может быть отрицательной"

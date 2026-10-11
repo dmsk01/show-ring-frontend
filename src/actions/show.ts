@@ -1,4 +1,5 @@
 import type { SWRConfiguration } from 'swr';
+import type { ShowJudgeAssignment } from 'src/sections/show/show-utils';
 import type { IShowItem, IShowPage, ShowStatus, IShowCreate, IShowUpdate } from 'src/types/show';
 
 import { useMemo } from 'react';
@@ -58,6 +59,18 @@ export function useGetShow(showId?: string) {
 
   return useMemo(
     () => ({ show: data, showLoading: isLoading, showError: error }),
+    [data, error, isLoading]
+  );
+}
+
+/** Назначения судей выставки — для прав судьи на результаты (FE-09). */
+export function useGetShowJudges(showId?: string) {
+  const key = showId ? endpoints.show.judges(showId) : null;
+
+  const { data, isLoading, error } = useSWR<ShowJudgeAssignment[]>(key, fetcher, swrOptions);
+
+  return useMemo(
+    () => ({ judges: data ?? [], judgesLoading: isLoading, judgesError: error }),
     [data, error, isLoading]
   );
 }

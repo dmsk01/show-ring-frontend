@@ -17,6 +17,8 @@ import MenuItem from '@mui/material/MenuItem';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { isIsoDate } from 'src/utils/iso-date';
+
 import { useTranslate } from 'src/locales';
 import { createShow, updateShow } from 'src/actions/show';
 import { useReferenceList } from 'src/actions/admin-reference';
@@ -37,9 +39,19 @@ export function getShowSchema(t: TFunction<['show', 'common']>) {
         .min(1, { error: t('show:form.validation.nameRequired') })
         .max(255, { error: t('show:form.validation.tooLong', { max: 255 }) }),
       rank_id: z.string().min(1, { error: t('show:form.validation.rankRequired') }),
-      date_start: z.string().min(1, { error: t('show:form.validation.dateStartRequired') }),
-      date_end: z.string().nullable(),
-      registration_deadline: z.string().nullable(),
+      // Даты — строго 'YYYY-MM-DD' и существующие, иначе бэкенд отдаст 422 (FE-10).
+      date_start: z
+        .string()
+        .min(1, { error: t('show:form.validation.dateStartRequired') })
+        .refine(isIsoDate, { error: t('show:form.validation.dateInvalid') }),
+      date_end: z
+        .string()
+        .nullable()
+        .refine((v) => !v || isIsoDate(v), { error: t('show:form.validation.dateInvalid') }),
+      registration_deadline: z
+        .string()
+        .nullable()
+        .refine((v) => !v || isIsoDate(v), { error: t('show:form.validation.dateInvalid') }),
       city: z.string().max(128, { error: t('show:form.validation.tooLong', { max: 128 }) }).nullable(),
       country: z.string().max(64, { error: t('show:form.validation.tooLong', { max: 64 }) }).nullable(),
       venue: z.string().max(255, { error: t('show:form.validation.tooLong', { max: 255 }) }).nullable(),

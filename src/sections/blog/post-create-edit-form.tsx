@@ -22,7 +22,8 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { _tags } from 'src/_mock';
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { fileUrl, uploadFile } from 'src/actions/file';
 import { createPost, updatePost } from 'src/actions/blog';
@@ -157,7 +158,7 @@ export function PostCreateEditForm({ currentPost }: Props) {
       router.push(paths.dashboard.post.root);
     } catch (error) {
       console.error(error);
-      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'common:state.error')));
     }
   });
 
@@ -222,7 +223,7 @@ export function PostCreateEditForm({ currentPost }: Props) {
             multiple
             freeSolo
             disableCloseOnSelect
-            options={_tags.map((option) => option)}
+            options={[]}
             getOptionLabel={(option) => option}
             slotProps={{
               chip: { color: 'info' },
@@ -246,7 +247,7 @@ export function PostCreateEditForm({ currentPost }: Props) {
             multiple
             freeSolo
             disableCloseOnSelect
-            options={_tags.map((option) => option)}
+            options={[]}
             getOptionLabel={(option) => option}
             slotProps={{
               chip: { color: 'info' },

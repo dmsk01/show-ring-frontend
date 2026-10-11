@@ -7,6 +7,8 @@ import Drawer from '@mui/material/Drawer';
 
 import { usePathname } from 'src/routes/hooks';
 
+import { useTranslate } from 'src/locales';
+
 import { Logo } from 'src/components/logo';
 import { Scrollbar } from 'src/components/scrollbar';
 
@@ -26,6 +28,7 @@ export type NavMobileProps = NavMainProps & {
 };
 
 export function NavMobile({ data, open, onClose, slots, sx }: NavMobileProps) {
+  const { t } = useTranslate('common');
   const pathname = usePathname();
 
   useEffect(() => {
@@ -67,6 +70,7 @@ export function NavMobile({ data, open, onClose, slots, sx }: NavMobileProps) {
 
       <Scrollbar fillContent>
         <Nav
+          aria-label={t('a11y.siteNav')}
           sx={{
             pb: 3,
             display: 'flex',

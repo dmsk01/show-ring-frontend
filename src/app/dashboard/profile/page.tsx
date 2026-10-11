@@ -4,7 +4,7 @@ import { ProfileView } from 'src/sections/profile';
 
 // ----------------------------------------------------------------------
 
-export const metadata = { title: `My profile | Dashboard - ${CONFIG.appName}` };
+export const metadata = { title: `Мой профиль | Кабинет - ${CONFIG.appName}` };
 
 export default function Page() {
   return <ProfileView />;

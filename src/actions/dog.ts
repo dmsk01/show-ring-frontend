@@ -14,7 +14,7 @@ import type {
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 
-import axios, { fetcher, endpoints } from 'src/lib/axios';
+import axios, { fetcher, ALL_PAGES, endpoints, allPagesFetcher } from 'src/lib/axios';
 
 // ----------------------------------------------------------------------
 
@@ -79,6 +79,31 @@ export function useGetMyDogs(query: { page?: number; per_page?: number } = {}) {
       dogsLoading: isLoading,
       dogsError: error,
       dogsEmpty: !isLoading && !isValidating && !(data?.items?.length ?? 0),
+    }),
+    [data, error, isLoading, isValidating]
+  );
+}
+
+/**
+ * Все собаки пользователя — для выбора в формах (запись на выставку). Одна
+ * страница по умолчанию — 50 собак: у крупного питомника часть собак не
+ * попадала в список (ревью 2026-10-09, FE-07).
+ */
+export function useGetAllMyDogs() {
+  const key: [string, typeof ALL_PAGES] = [endpoints.auth.myDogs, ALL_PAGES];
+
+  const { data, isLoading, error, isValidating } = useSWR<IDogItem[]>(
+    key,
+    allPagesFetcher<IDogItem>,
+    swrOptions
+  );
+
+  return useMemo(
+    () => ({
+      dogs: data ?? [],
+      dogsLoading: isLoading,
+      dogsError: error,
+      dogsEmpty: !isLoading && !isValidating && !(data?.length ?? 0),
     }),
     [data, error, isLoading, isValidating]
   );

@@ -17,6 +17,9 @@ import { RouterLink } from 'src/routes/components';
 
 import { usePermissions } from 'src/hooks/use-permissions';
 
+import { canManageKennel } from 'src/utils/ownership';
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { deleteKennel, useGetKennelsList } from 'src/actions/kennel';
@@ -27,6 +30,8 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { useTable, TableNoData, TableHeadCustom, TablePaginationCustom } from 'src/components/table';
 
+import { useAuthContext } from 'src/auth/hooks';
+
 import { KennelTableRow } from '../kennel-table-row';
 import { KennelTableToolbar } from '../kennel-table-toolbar';
 
@@ -35,6 +40,7 @@ import { KennelTableToolbar } from '../kennel-table-toolbar';
 export function KennelListView() {
   const { t } = useTranslate(['kennel', 'common']);
   const { can } = usePermissions();
+  const { user } = useAuthContext();
 
   const TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'name', label: t('list.columns.name') },
@@ -63,7 +69,7 @@ export function KennelListView() {
         await deleteKennel(id);
         toast.success(t('toast.deleted'));
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : t('toast.deleteFailed'));
+        toast.error(t(apiErrorMessageKey(error, {}, 'toast.deleteFailed')));
       }
     },
     [t]
@@ -103,6 +109,7 @@ export function KennelListView() {
                     key={row.id}
                     row={row}
                     editHref={paths.dashboard.kennels.edit(row.id)}
+                    canManage={canManageKennel(row, user?.id, can)}
                     onDeleteRow={() => handleDelete(row.id)}
                   />
                 ))}

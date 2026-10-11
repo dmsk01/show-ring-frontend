@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { useTranslate } from 'src/locales';
-import { accountErrorMessage } from 'src/actions/account-errors';
+import { accountErrorKey } from 'src/actions/account-errors';
 import { useGetMySocials, updateMySocials } from 'src/actions/account';
 
 import { toast } from 'src/components/snackbar';
@@ -89,7 +89,7 @@ export function ProfileSocialsForm() {
       toast.success(t('profile:toast.socialsUpdated'));
     } catch (error) {
       console.error(error);
-      toast.error(accountErrorMessage(error));
+      toast.error(t(accountErrorKey(error)));
     }
   });
 

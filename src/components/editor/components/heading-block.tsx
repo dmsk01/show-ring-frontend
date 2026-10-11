@@ -9,19 +9,21 @@ import Menu from '@mui/material/Menu';
 import { listClasses } from '@mui/material/List';
 import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 
+import { useTranslate } from 'src/locales';
+
 import { Iconify } from '../../iconify';
 import { ToolbarItem } from './toolbar-item';
 
 // ----------------------------------------------------------------------
 
 const HEADING_OPTIONS = [
-  { label: 'Paragraph', level: null },
-  { label: 'Heading 1', level: 1 },
-  { label: 'Heading 2', level: 2 },
-  { label: 'Heading 3', level: 3 },
-  { label: 'Heading 4', level: 4 },
-  { label: 'Heading 5', level: 5 },
-  { label: 'Heading 6', level: 6 },
+  { level: null },
+  { level: 1 },
+  { level: 2 },
+  { level: 3 },
+  { level: 4 },
+  { level: 5 },
+  { level: 6 },
 ] as const;
 
 export type TextHeadingLevel = (typeof HEADING_OPTIONS)[number]['level'];
@@ -32,7 +34,11 @@ type HeadingBlock = {
 };
 
 export function HeadingBlock({ editor, isActive }: HeadingBlock) {
+  const { t } = useTranslate('common');
   const { anchorEl, open, onOpen, onClose } = usePopover();
+
+  const labelOf = (level: TextHeadingLevel) =>
+    level ? t('editor.heading', { level }) : t('editor.paragraph');
 
   const selectedOption = useMemo(
     () => HEADING_OPTIONS.find((option) => isActive(option.level)),
@@ -56,7 +62,7 @@ export function HeadingBlock({ editor, isActive }: HeadingBlock) {
 
   const buttonProps: ButtonBaseProps = {
     id: buttonId,
-    'aria-label': 'Heading menu',
+    'aria-label': t('editor.headingMenu'),
     'aria-controls': open ? menuId : undefined,
     'aria-haspopup': 'true',
     'aria-expanded': open ? 'true' : undefined,
@@ -78,7 +84,7 @@ export function HeadingBlock({ editor, isActive }: HeadingBlock) {
           border: `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.2)}`,
         })}
       >
-        {selectedOption?.label ?? 'Paragraph'}
+        {labelOf(selectedOption?.level ?? null)}
         <Iconify
           width={16}
           icon={open ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'}
@@ -110,10 +116,10 @@ export function HeadingBlock({ editor, isActive }: HeadingBlock) {
       >
         {HEADING_OPTIONS.map((option) => (
           <ToolbarItem
-            key={option.label}
+            key={option.level ?? 'p'}
             component="li"
-            aria-label={option.label}
-            label={option.label}
+            aria-label={labelOf(option.level)}
+            label={labelOf(option.level)}
             active={isActive(option.level)}
             onClick={() => handleSelect(option.level)}
             sx={{

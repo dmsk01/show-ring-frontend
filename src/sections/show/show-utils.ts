@@ -41,9 +41,20 @@ export const SHOW_STATUS_COLOR: Record<string, LabelColor> = {
 
 // ----------------------------------------------------------------------
 
+/** Сегодняшняя дата по Москве, 'YYYY-MM-DD' (бэкенд: app/utils/dates.py, today_local). */
+export function moscowToday(now: Date = new Date()): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Moscow',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(now);
+}
+
 /**
  * Можно ли записаться на выставку: регистрация открыта и дедлайн (если задан)
- * ещё не прошёл. Дедлайн сравниваем по концу дня (включительно).
+ * ещё не прошёл. Дедлайн включительный и считается по московской дате, как
+ * на бэкенде, — а не по поясу браузера (ревью 2026-10-09, FE-18).
  */
 export function canRegisterForShow(
   status: ShowStatus,
@@ -53,17 +64,15 @@ export function canRegisterForShow(
   if (status !== 'registration_open') return false;
   if (!registrationDeadline) return true;
 
-  const deadline = new Date(registrationDeadline);
-  if (Number.isNaN(deadline.getTime())) return true; // некорректную дату не считаем барьером
-  deadline.setHours(23, 59, 59, 999);
-  return now.getTime() <= deadline.getTime();
+  const deadline = registrationDeadline.slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(deadline)) return true; // некорректную дату не считаем барьером
+  return moscowToday(now) <= deadline;
 }
 
 /**
- * Кто может вносить/править результаты выставки. Зеркало бэкенда: ВЛАДЕЛЕЦ
- * выставки (`organizer_id`) ИЛИ admin (`*`). НЕ роль `judge` и НЕ привязка судьи
- * к рингу — бэкенд их не авторизует (отдаёт 403). Судья и прочие видят
- * результаты read-only. Аналог ownership-гейта `canManageDog` у собак.
+ * Управляет ли пользователь результатами выставки целиком: ВЛАДЕЛЕЦ выставки
+ * (`organizer_id`) ИЛИ admin (`*`). Права судьи — по строкам, см.
+ * canEditResultRow.
  */
 export function canEnterResults(
   show: IShowItem | undefined,
@@ -72,6 +81,47 @@ export function canEnterResults(
 ): boolean {
   if (!show || !userId) return false;
   return show.organizer_id === userId || can('*');
+}
+
+/** Назначение судьи на выставку (GET /shows/{id}/judges). */
+export type ShowJudgeAssignment = {
+  judge_id: string;
+  breed_id: string | null;
+  breed_group_id: string | null;
+};
+
+type ResultRowScope = { breedId: string | null; groupId: string | null };
+
+/** Назначен ли пользователь судьёй выставки (на любую породу/группу). */
+export function isShowJudge(userId: string | undefined, judges: ShowJudgeAssignment[]): boolean {
+  return !!userId && judges.some((j) => j.judge_id === userId);
+}
+
+/**
+ * Можно ли вносить/править результат строки. Зеркало бэкенда
+ * (`_can_modify_results`, app/services/result.py): организатор и admin —
+ * всегда; судья — если его назначение покрывает породу строки: та же
+ * порода, та же группа FCI или назначение без породы и группы (вся
+ * выставка). Ревью 2026-10-09, FE-09.
+ */
+export function canEditResultRow(
+  row: ResultRowScope,
+  ctx: {
+    show: IShowItem | undefined;
+    userId: string | undefined;
+    can: (permission: string) => boolean;
+    judges: ShowJudgeAssignment[];
+  }
+): boolean {
+  if (canEnterResults(ctx.show, ctx.userId, ctx.can)) return true;
+  if (!ctx.show || !ctx.userId) return false;
+  return ctx.judges.some(
+    (j) =>
+      j.judge_id === ctx.userId &&
+      ((j.breed_id == null && j.breed_group_id == null) ||
+        (j.breed_id != null && j.breed_id === row.breedId) ||
+        (j.breed_group_id != null && j.breed_group_id === row.groupId))
+  );
 }
 
 export const SHOW_AWARD_FLAGS: { key: keyof IShowResult; label: string }[] = [

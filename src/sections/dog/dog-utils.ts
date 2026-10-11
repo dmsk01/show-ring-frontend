@@ -18,17 +18,18 @@ export function dogPlaceholderImage(sex?: DogSex | null): string {
 // ----------------------------------------------------------------------
 
 /**
- * Может ли пользователь управлять собакой (edit/delete/фото).
- * Зеркало бэкендовского `_check_can_manage_dog` (app/services/dog.py)
- * с упрощением: ветку «владелец питомника» на фронте не проверяем — такой
- * пользователь это breeder, у него уже есть `dogs:edit` через право `dogs`.
- * Авторитет — бэкенд, он перепроверяет права независимо.
- * owner_id=null (легаси-собаки без владельца) — только по праву.
+ * Может ли пользователь управлять собакой (edit/delete/фото). Зеркало
+ * бэкендовского `can_manage_dog` (app/services/dog.py): владелец собаки,
+ * владелец её питомника или admin. Право `dogs:edit` есть у любого
+ * заводчика и доступа к чужим собакам НЕ даёт (ревью 2026-10-09, FE-33).
  */
 export function canManageDog(
-  dog: Pick<IDogItem, 'owner_id'>,
+  dog: Pick<IDogItem, 'owner_id'> & { kennel_id?: string | null },
   userId: string | null | undefined,
-  can: (perm: string) => boolean
+  can: (perm: string) => boolean,
+  ownKennelIds: ReadonlySet<string> = new Set()
 ): boolean {
-  return can('dogs:edit') || (!!userId && dog.owner_id === userId);
+  if (!userId) return false;
+  if (can('*') || dog.owner_id === userId) return true;
+  return !!dog.kennel_id && ownKennelIds.has(dog.kennel_id);
 }

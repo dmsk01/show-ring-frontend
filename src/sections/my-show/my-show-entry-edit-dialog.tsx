@@ -17,6 +17,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { updateShowEntry, useAvailableClasses } from 'src/actions/show-entry';
 
@@ -76,7 +78,7 @@ export function MyShowEntryEditDialog({ open, onClose, show, entry, entries }: P
       toast.success(t('myShows.toast.updated'));
       onClose();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('myShows.toast.failed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'myShows.toast.failed')));
     }
   });
 

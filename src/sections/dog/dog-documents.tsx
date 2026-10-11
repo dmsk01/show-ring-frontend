@@ -14,6 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
 import { fDate } from 'src/utils/format-time';
+import { apiErrorMessageKey } from 'src/utils/api-error';
 
 import { useTranslate } from 'src/locales';
 import {
@@ -67,7 +68,7 @@ export function DogDocuments({ dogId }: Props) {
       setValidUntil('');
       if (fileRef.current) fileRef.current.value = '';
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('documents.failed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'documents.failed')));
     } finally {
       setUploading(false);
     }
@@ -79,7 +80,7 @@ export function DogDocuments({ dogId }: Props) {
       await deleteDogDocument(dogId, deleting.id);
       toast.success(t('documents.deleted'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('documents.failed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'documents.failed')));
     } finally {
       setDeleting(null);
     }

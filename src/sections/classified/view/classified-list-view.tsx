@@ -17,6 +17,8 @@ import { RouterLink } from 'src/routes/components';
 
 import { usePermissions } from 'src/hooks/use-permissions';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { deleteClassified, updateClassified, useGetMyClassifieds } from 'src/actions/classified';
@@ -70,7 +72,7 @@ export function ClassifiedListView() {
       await deleteClassified(id);
       toast.success(t('toast.deleted'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('toast.deleteFailed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'toast.deleteFailed')));
     }
   }, [t]);
 
@@ -80,7 +82,7 @@ export function ClassifiedListView() {
         await updateClassified(id, { availability });
         toast.success(t('toast.updated'));
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : t('common:state.error'));
+        toast.error(t(apiErrorMessageKey(error, {}, 'common:state.error')));
       }
     },
     [t]

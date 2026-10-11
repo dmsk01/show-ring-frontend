@@ -7,6 +7,8 @@ import TableHead from '@mui/material/TableHead';
 import TableCell from '@mui/material/TableCell';
 import TableSortLabel from '@mui/material/TableSortLabel';
 
+import { useTranslate } from 'src/locales';
+
 // ----------------------------------------------------------------------
 
 const visuallyHidden: CSSObject = {
@@ -52,6 +54,8 @@ export function TableHeadCustom({
   numSelected = 0,
   onSelectAllRows,
 }: TableHeadCustomProps) {
+  const { t } = useTranslate('common');
+
   return (
     <TableHead sx={sx}>
       <TableRow>
@@ -66,7 +70,7 @@ export function TableHeadCustom({
               slotProps={{
                 input: {
                   id: `all-row-checkbox`,
-                  'aria-label': `All row Checkbox`,
+                  'aria-label': t('a11y.selectAll'),
                 },
               }}
             />
@@ -83,7 +87,12 @@ export function TableHeadCustom({
               ...(Array.isArray(headCell.sx) ? headCell.sx : [headCell.sx]),
             ]}
           >
-            {onSort ? (
+            {!headCell.label ? (
+              // Колонка действий без подписи: имя для скринридера (axe empty-table-header).
+              <Box component="span" sx={visuallyHidden}>
+                {t('table.actions')}
+              </Box>
+            ) : onSort ? (
               <TableSortLabel
                 hideSortIcon
                 active={orderBy === headCell.id}
@@ -94,7 +103,7 @@ export function TableHeadCustom({
 
                 {orderBy === headCell.id ? (
                   <Box component="span" sx={visuallyHidden}>
-                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                    {order === 'desc' ? t('table.sortedDesc') : t('table.sortedAsc')}
                   </Box>
                 ) : null}
               </TableSortLabel>

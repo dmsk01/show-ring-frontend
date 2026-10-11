@@ -12,7 +12,6 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 
 import { useTranslate } from 'src/locales';
-import { POST_SORT_OPTIONS } from 'src/_mock';
 import { useGetPosts } from 'src/actions/blog';
 
 import { EmptyContent } from 'src/components/empty-content';
@@ -20,6 +19,7 @@ import { EmptyContent } from 'src/components/empty-content';
 import { PostList } from '../post-list';
 import { PostSort } from '../post-sort';
 import { PostSearch } from '../post-search';
+import { POST_SORT_OPTIONS } from '../constants';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ export function PostListHomeView() {
 
   return (
     <Container sx={{ mb: 10 }}>
-      <Typography variant="h4" sx={[{ mb: 3, mt: { xs: 1, md: 3 } }]}>
+      <Typography variant="h4" component="h1" sx={[{ mb: 3, mt: { xs: 1, md: 3 } }]}>
         {t('list.title')}
       </Typography>
 

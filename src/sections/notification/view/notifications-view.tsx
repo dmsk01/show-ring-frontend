@@ -17,6 +17,8 @@ import CardHeader from '@mui/material/CardHeader';
 
 import { paths } from 'src/routes/paths';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { STATUS_TONE } from 'src/theme/semantic';
 import { useGetBreeds } from 'src/actions/reference';
@@ -74,7 +76,7 @@ export function NotificationsView() {
       setBreedId('');
       setRegion('');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('notification:toast.subscribeFailed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'notification:toast.subscribeFailed')));
     } finally {
       setBusy(false);
     }
@@ -85,9 +87,7 @@ export function NotificationsView() {
       await deleteSubscription(id);
       toast.success(t('notification:toast.unsubscribed'));
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : t('notification:toast.unsubscribeFailed')
-      );
+      toast.error(t(apiErrorMessageKey(error, {}, 'notification:toast.unsubscribeFailed')));
     }
   };
 
@@ -97,9 +97,7 @@ export function NotificationsView() {
     try {
       await markAllNotificationsRead();
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : t('notification:toast.markAllReadFailed')
-      );
+      toast.error(t(apiErrorMessageKey(error, {}, 'notification:toast.markAllReadFailed')));
     }
   };
 
@@ -222,7 +220,7 @@ export function NotificationsView() {
         />
         <Box sx={{ p: 3 }}>
           {notifications.length === 0 ? (
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               {t('notification:recent.empty')}
             </Typography>
           ) : (

@@ -14,6 +14,8 @@ import Typography from '@mui/material/Typography';
 
 import { useSearchParams } from 'src/routes/hooks';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { CONFIG } from 'src/global-config';
 import { useTranslate } from 'src/locales';
 import { getUserDisplay } from 'src/layouts/account/account-nav';
@@ -80,7 +82,7 @@ export function ProfileView() {
       });
       toast.success(t('profile:toast.profileUpdated'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('profile:toast.profileUpdateFailed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'profile:toast.profileUpdateFailed')));
     }
   });
 

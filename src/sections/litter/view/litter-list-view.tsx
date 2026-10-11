@@ -15,6 +15,9 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { usePermissions } from 'src/hooks/use-permissions';
+import { useMyKennelIds } from 'src/hooks/use-my-kennel-ids';
+
+import { canManageLitter } from 'src/utils/ownership';
 
 import { useTranslate } from 'src/locales';
 import { useGetLittersList } from 'src/actions/litter';
@@ -26,6 +29,8 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { useTable, TableNoData, TableHeadCustom, TablePaginationCustom } from 'src/components/table';
 
+import { useAuthContext } from 'src/auth/hooks';
+
 import { LitterTableRow } from '../litter-table-row';
 import { LitterTableToolbar } from '../litter-table-toolbar';
 
@@ -34,6 +39,8 @@ import { LitterTableToolbar } from '../litter-table-toolbar';
 export function LitterListView() {
   const { t } = useTranslate(['litter', 'common']);
   const { can } = usePermissions();
+  const { user } = useAuthContext();
+  const ownKennelIds = useMyKennelIds();
 
   const TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'breed', label: t('list.columns.breed') },
@@ -95,7 +102,11 @@ export function LitterListView() {
                     row={row}
                     breedName={breeds.find((breed) => breed.id === row.breed_id)?.name}
                     kennelName={kennels.find((kennel) => kennel.id === row.kennel_id)?.name}
-                    editHref={paths.dashboard.litters.edit(row.id)}
+                    editHref={
+                      canManageLitter(row, user?.id, can, ownKennelIds)
+                        ? paths.dashboard.litters.edit(row.id)
+                        : paths.showcase.litter(row.id)
+                    }
                   />
                 ))}
 

@@ -17,6 +17,7 @@ import { RouterLink } from 'src/routes/components';
 import { useRouter, usePathname, useSearchParams } from 'src/routes/hooks';
 
 import { usePermissions } from 'src/hooks/use-permissions';
+import { useMyKennelIds } from 'src/hooks/use-my-kennel-ids';
 
 import { useTranslate } from 'src/locales';
 import { useGetDogs } from 'src/actions/dog';
@@ -46,6 +47,7 @@ export function DogListView() {
   const { t } = useTranslate(['dog', 'common']);
   const { user } = useAuthContext();
   const { can } = usePermissions();
+  const ownKennelIds = useMyKennelIds();
 
   const TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'name', label: t('list.columns.name') },
@@ -148,7 +150,7 @@ export function DogListView() {
                     breedName={breeds.find((breed) => breed.id === row.breed_id)?.name}
                     detailsHref={paths.dashboard.dogs.details(row.id)}
                     editHref={paths.dashboard.dogs.edit(row.id)}
-                    canEdit={canManageDog(row, user?.id, can)}
+                    canEdit={canManageDog(row, user?.id, can, ownKennelIds)}
                   />
                 ))}
 

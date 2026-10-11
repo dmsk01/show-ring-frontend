@@ -8,6 +8,8 @@ import { mergeClasses } from 'minimal-shared/utils';
 import Collapse from '@mui/material/Collapse';
 import { useTheme } from '@mui/material/styles';
 
+import { useTranslate } from 'src/locales';
+
 import { NavList } from './nav-list';
 import { Nav, NavUl, NavLi, NavSubheader } from '../components';
 import { navSectionClasses, navSectionCssVars } from '../styles';
@@ -26,11 +28,13 @@ export function NavSectionVertical({
   ...other
 }: NavSectionProps) {
   const theme = useTheme();
+  const { t } = useTranslate('common');
 
   const cssVars = { ...navSectionCssVars.vertical(theme), ...overridesVars };
 
   return (
     <Nav
+      aria-label={t('a11y.navigation')}
       className={mergeClasses([navSectionClasses.vertical, className])}
       sx={[{ ...cssVars }, ...(Array.isArray(sx) ? sx : [sx])]}
       {...other}

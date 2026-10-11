@@ -14,6 +14,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { setCheckinEnabled } from 'src/actions/checkin';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -63,7 +65,7 @@ export function ShowEditView({ id }: Props) {
     try {
       await setCheckinEnabled(id, enabled);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('checkin:organizer.toggleFailed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'checkin:organizer.toggleFailed')));
     }
   };
 

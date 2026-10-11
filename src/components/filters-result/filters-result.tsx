@@ -6,6 +6,8 @@ import type { Theme, SxProps } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
+import { useTranslate } from 'src/locales';
+
 import { Iconify } from '../iconify';
 
 // ----------------------------------------------------------------------
@@ -25,11 +27,13 @@ export function FiltersResult({
   totalResults,
   ...other
 }: FiltersResultProps) {
+  const { t } = useTranslate('common');
+
   return (
     <ResultRoot sx={sx} {...other}>
       <ResultLabel>
         <strong>{totalResults}</strong>
-        <span> results found</span>
+        <span> {t('table.resultsFound', { count: totalResults })}</span>
       </ResultLabel>
 
       <ResultContent>
@@ -40,7 +44,7 @@ export function FiltersResult({
           onClick={onReset}
           startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
         >
-          Clear
+          {t('actions.clear')}
         </Button>
       </ResultContent>
     </ResultRoot>

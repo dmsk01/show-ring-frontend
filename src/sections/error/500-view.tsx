@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { SimpleLayout } from 'src/layouts/simple';
 import { ServerErrorIllustration } from 'src/assets/illustrations';
 
@@ -16,6 +17,8 @@ import { varBounce, MotionContainer } from 'src/components/animate';
 // ----------------------------------------------------------------------
 
 export function View500() {
+  const { t } = useTranslate('common');
+
   return (
     <SimpleLayout
       slotProps={{
@@ -24,15 +27,13 @@ export function View500() {
     >
       <Container component={MotionContainer}>
         <m.div variants={varBounce('in')}>
-          <Typography variant="h3" sx={{ mb: 2 }}>
-            500 Internal server error
+          <Typography variant="h3" component="h1" sx={{ mb: 2 }}>
+            {t('errorPages.serverTitle')}
           </Typography>
         </m.div>
 
         <m.div variants={varBounce('in')}>
-          <Typography sx={{ color: 'text.secondary' }}>
-            There was an error, please try again later.
-          </Typography>
+          <Typography sx={{ color: 'text.secondary' }}>{t('errorPages.serverText')}</Typography>
         </m.div>
 
         <m.div variants={varBounce('in')}>
@@ -40,7 +41,7 @@ export function View500() {
         </m.div>
 
         <Button component={RouterLink} href="/" size="large" variant="contained">
-          Go to home
+          {t('errorPages.goHome')}
         </Button>
       </Container>
     </SimpleLayout>

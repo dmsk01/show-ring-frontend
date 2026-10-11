@@ -5,6 +5,8 @@ import { m } from 'framer-motion';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 
+import { useTranslate } from 'src/locales';
+
 import { varTap, varHover, AnimateBorder, transitionTap } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
@@ -15,13 +17,15 @@ export type AccountButtonProps = IconButtonProps & {
 };
 
 export function AccountButton({ photoURL, displayName, sx, ...other }: AccountButtonProps) {
+  const { t } = useTranslate('common');
+
   return (
     <IconButton
       component={m.button}
       whileTap={varTap(0.96)}
       whileHover={varHover(1.04)}
       transition={transitionTap()}
-      aria-label="Account button"
+      aria-label={t('a11y.account')}
       sx={[{ p: 0 }, ...(Array.isArray(sx) ? sx : [sx])]}
       {...other}
     >

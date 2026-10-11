@@ -14,6 +14,8 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { createBanner } from 'src/actions/ad';
 
@@ -24,13 +26,24 @@ import { BANNER_PLACEMENTS } from 'src/types/ad';
 
 // ----------------------------------------------------------------------
 
+function isHttpsPublicUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && url.hostname.includes('.');
+  } catch {
+    return false;
+  }
+}
+
 export function getCampaignBannerSchema(t: TFunction) {
   return z.object({
     // Mirror backend BannerCreate: target_url maxLength 2048, title maxLength 255.
     target_url: z
       .string()
       .min(1, { error: t('form.validation.targetUrlRequired') })
-      .max(2048, { error: t('form.validation.tooLong', { max: 2048 }) }),
+      .max(2048, { error: t('form.validation.tooLong', { max: 2048 }) })
+      // Зеркало бэкенда (_validate_target_url): только https:// и домен с точкой (FE-11).
+      .refine(isHttpsPublicUrl, { error: t('form.validation.targetUrlHttps') }),
     placement: z.enum(['sidebar', 'top', 'inline', 'footer']),
     title: z
       .string()
@@ -82,7 +95,7 @@ export function CampaignBannerForm({ campaignId }: Props) {
       toast.success(t('toast.bannerAdded'));
       reset();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'common:state.error')));
     }
   });
 

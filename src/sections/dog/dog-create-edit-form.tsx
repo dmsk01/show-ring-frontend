@@ -7,7 +7,7 @@ import * as z from 'zod';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -20,17 +20,22 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { fileUrl, uploadFile } from 'src/actions/file';
 import { useGetBreeds, useGetKennels } from 'src/actions/reference';
 import { UploadError, uploadErrorMessage } from 'src/actions/file-errors';
-import { createDog, updateDog, useGetDogs, addDogImages, deleteDogImage } from 'src/actions/dog';
+import { createDog, updateDog, addDogImages, deleteDogImage } from 'src/actions/dog';
 
 import { Image } from 'src/components/image';
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+
+import { saveDogWithPhotos } from './save-dog';
+import { ParentDogField } from './parent-dog-field';
 
 // ----------------------------------------------------------------------
 
@@ -67,19 +72,8 @@ export function DogCreateEditForm({ currentDog }: Props) {
 
   const { breeds } = useGetBreeds();
   const { kennels } = useGetKennels();
-  const { dogs } = useGetDogs({ per_page: 200 });
 
   const schema = useMemo(() => getDogSchema(t), [t]);
-
-  // Parents must match sex: fathers are males, mothers are females. Exclude self.
-  const maleDogs = useMemo(
-    () => dogs.filter((dog) => dog.id !== currentDog?.id && dog.sex === 'male'),
-    [dogs, currentDog?.id]
-  );
-  const femaleDogs = useMemo(
-    () => dogs.filter((dog) => dog.id !== currentDog?.id && dog.sex === 'female'),
-    [dogs, currentDog?.id]
-  );
 
   const defaultValues: DogSchemaType = {
     name: '',
@@ -138,20 +132,6 @@ export function DogCreateEditForm({ currentDog }: Props) {
   } = methods;
 
   const photos = watch('photos');
-  const fatherId = watch('father_id');
-  const motherId = watch('mother_id');
-
-  // Clear a parent selection that no longer matches the allowed sex (e.g. left
-  // over from before the lists loaded) so we never submit an out-of-range value.
-  useEffect(() => {
-    if (!dogs.length) return;
-    if (fatherId && !maleDogs.some((dog) => dog.id === fatherId)) {
-      setValue('father_id', '');
-    }
-    if (motherId && !femaleDogs.some((dog) => dog.id === motherId)) {
-      setValue('mother_id', '');
-    }
-  }, [dogs.length, fatherId, motherId, maleDogs, femaleDogs, setValue]);
 
   const handleRemovePhoto = useCallback(
     (inputFile: File | string) => {
@@ -181,7 +161,7 @@ export function DogCreateEditForm({ currentDog }: Props) {
       setPhotoToDelete(null);
     } catch (error) {
       console.error(error);
-      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'common:state.error')));
     } finally {
       setDeletingPhoto(false);
     }
@@ -199,24 +179,26 @@ export function DogCreateEditForm({ currentDog }: Props) {
         date_of_birth: rest.date_of_birth ? dayjs(rest.date_of_birth).format('YYYY-MM-DD') : null,
       };
 
-      const dog = currentDog
-        ? await updateDog(currentDog.id, payload)
-        : await createDog(payload);
-
       // Newly dropped files (strings are already-attached previews — skip them).
       const newFiles = photoValues.filter((p): p is File => p instanceof File);
-      if (newFiles.length) {
-        const uploaded = await Promise.all(newFiles.map((file) => uploadFile(file)));
-        // Make the first photo the avatar only when the dog has none yet.
-        const hasAvatar = !!dog.avatar_file_id;
-        await addDogImages(
-          dog.id,
-          uploaded.map((f, i) => ({
-            file_id: f.id,
-            position: i,
-            is_primary: !hasAvatar && i === 0,
-          }))
+      const { dog, photoError } = await saveDogWithPhotos({
+        api: { createDog, updateDog, uploadFile, addDogImages },
+        currentDogId: currentDog?.id,
+        payload,
+        newFiles,
+      });
+
+      if (photoError) {
+        // Собака уже сохранена — не оставляем форму в режиме «новая», иначе
+        // повторная отправка создаст дубль (FE-17). Фото можно дозагрузить.
+        toast.warning(t('toast.savedWithoutPhotos'));
+        toast.error(
+          photoError instanceof UploadError
+            ? uploadErrorMessage(photoError)
+            : t(apiErrorMessageKey(photoError, {}, 'common:state.error'))
         );
+        router.push(paths.dashboard.dogs.edit(dog.id));
+        return;
       }
 
       toast.success(currentDog ? t('toast.updated') : t('toast.created'));
@@ -230,7 +212,7 @@ export function DogCreateEditForm({ currentDog }: Props) {
         // Выбранный отец/мать — потомок этой собаки: родословная замкнулась бы.
         toast.error(t('relatives.errors.pedigree_cycle'));
       } else {
-        toast.error(error instanceof Error ? error.message : t('common:state.error'));
+        toast.error(t(apiErrorMessageKey(error, {}, 'common:state.error')));
       }
     }
   });
@@ -267,22 +249,18 @@ export function DogCreateEditForm({ currentDog }: Props) {
               </MenuItem>
             ))}
           </Field.Select>
-          <Field.Select name="father_id" label={t('form.fields.father')}>
-            <MenuItem value="">—</MenuItem>
-            {maleDogs.map((dog) => (
-              <MenuItem key={dog.id} value={dog.id}>
-                {dog.name}
-              </MenuItem>
-            ))}
-          </Field.Select>
-          <Field.Select name="mother_id" label={t('form.fields.mother')}>
-            <MenuItem value="">—</MenuItem>
-            {femaleDogs.map((dog) => (
-              <MenuItem key={dog.id} value={dog.id}>
-                {dog.name}
-              </MenuItem>
-            ))}
-          </Field.Select>
+          {/* Поиск по всей базе; родитель вне первых 200 собак больше не
+              сбрасывается при правке (FE-07). Пол сверяет и бэкенд. */}
+          <ParentDogField
+            name="father_id"
+            label={t('form.fields.father')}
+            excludeId={currentDog?.id}
+          />
+          <ParentDogField
+            name="mother_id"
+            label={t('form.fields.mother')}
+            excludeId={currentDog?.id}
+          />
           <Field.DatePicker
             name="date_of_birth"
             label={t('form.fields.dateOfBirth')}

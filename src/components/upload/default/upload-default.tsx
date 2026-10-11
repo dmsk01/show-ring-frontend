@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import FormHelperText from '@mui/material/FormHelperText';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import { useTranslate } from 'src/locales';
 import { UploadIllustration } from 'src/assets/illustrations';
 
 import { Iconify } from '../../iconify';
@@ -37,6 +38,8 @@ export function Upload({
   previewOrientation = 'horizontal',
   ...dropzoneOptions
 }: UploadProps) {
+  const { t } = useTranslate('common');
+
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple,
     disabled,
@@ -90,7 +93,7 @@ export function Upload({
           <Box sx={{ gap: 1.5, display: 'flex', justifyContent: 'flex-end' }}>
             {onRemoveAll && (
               <Button size="small" variant="outlined" color="inherit" onClick={onRemoveAll}>
-                Remove All
+                {t('upload.removeAll')}
               </Button>
             )}
             {onUpload && (
@@ -121,7 +124,7 @@ export function Upload({
         })}
         sx={sx}
       >
-        <input {...getInputProps()} />
+        <input {...getInputProps({ 'aria-label': t('a11y.chooseFiles') })} />
         {isSingleFileSelected ? renderSingleFilePreview() : renderPlaceholder()}
       </UploadArea>
 

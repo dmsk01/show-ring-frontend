@@ -6,7 +6,7 @@ import { PostListHomeView } from 'src/sections/blog/view';
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = { title: `Post list - ${CONFIG.appName}` };
+export const metadata: Metadata = { title: `Блог - ${CONFIG.appName}` };
 
 export default function Page() {
   return <PostListHomeView />;

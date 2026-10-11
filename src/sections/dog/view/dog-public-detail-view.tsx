@@ -15,15 +15,17 @@ import { RouterLink } from 'src/routes/components';
 
 import { fDate } from 'src/utils/format-time';
 
+import { endpoints } from 'src/lib/axios';
 import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
 import { useGetBreeds } from 'src/actions/reference';
 import { useGetDog, useGetDogTitles, useGetDogPedigree } from 'src/actions/dog';
 
 import { Image } from 'src/components/image';
-import { Markdown } from 'src/components/markdown';
+import { UserText } from 'src/components/user-text';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { Lightbox, useLightbox } from 'src/components/lightbox';
+import { DetailLoadError } from 'src/components/detail-load-error';
 
 import { PedigreeTree } from '../pedigree-tree';
 import { dogPlaceholderImage } from '../dog-utils';
@@ -35,7 +37,7 @@ type Props = { id: string };
 
 export function DogPublicDetailView({ id }: Props) {
   const { t } = useTranslate(['dog', 'common']);
-  const { dog, dogLoading } = useGetDog(id);
+  const { dog, dogLoading, dogError } = useGetDog(id);
   const { titles } = useGetDogTitles(id);
   const { pedigree } = useGetDogPedigree(id);
   const { breeds } = useGetBreeds();
@@ -50,9 +52,11 @@ export function DogPublicDetailView({ id }: Props) {
   if (dogLoading) return <LoadingScreen />;
   if (!dog) {
     return (
-      <Container sx={{ pt: { xs: 8, md: 12 }, pb: 10 }}>
-        <Typography>{t('detail.notFound')}</Typography>
-      </Container>
+      <DetailLoadError
+        error={dogError}
+        notFoundText={t('detail.notFound')}
+        swrKey={endpoints.dog.details(id)}
+      />
     );
   }
 
@@ -190,7 +194,7 @@ export function DogPublicDetailView({ id }: Props) {
         {dog.description && (
           <>
             <Divider sx={{ borderStyle: 'dashed', my: 4 }} />
-            <Markdown>{dog.description}</Markdown>
+            <UserText>{dog.description}</UserText>
           </>
         )}
 

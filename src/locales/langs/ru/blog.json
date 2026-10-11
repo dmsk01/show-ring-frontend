@@ -21,7 +21,9 @@
     "comments": "Комментарии",
     "recentPosts": "Последние публикации",
     "sharePost": "Поделиться",
-    "home": "Главная"
+    "home": "Главная",
+    "notFound": "Пост не найден",
+    "backToList": "К списку постов"
   },
   "form": {
     "headingCreate": "Новая публикация",

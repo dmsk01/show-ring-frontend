@@ -34,6 +34,7 @@ import { timeline } from './timeline';
 import { checkbox } from './checkbox';
 import { accordion } from './accordion';
 import { textField } from './text-field';
+import { typography } from './typography';
 import { pagination } from './pagination';
 import { iconButton } from './button-icon';
 import { breadcrumbs } from './breadcrumbs';
@@ -64,6 +65,7 @@ export const components: Components<Theme> = {
   ...drawer,
   ...stepper,
   ...tooltip,
+  ...typography,
   ...popover,
   ...svgIcon,
   ...skeleton,

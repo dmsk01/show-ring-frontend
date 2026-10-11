@@ -1,7 +1,7 @@
 'use client';
 
 import type { TFunction } from 'i18next';
-import type { ILitterItem } from 'src/types/litter';
+import type { ILitterItem, ILitterCreate, ILitterUpdate } from 'src/types/litter';
 
 import * as z from 'zod';
 import { useMemo } from 'react';
@@ -17,8 +17,13 @@ import MenuItem from '@mui/material/MenuItem';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { usePermissions } from 'src/hooks/use-permissions';
+import { useMyKennelIds } from 'src/hooks/use-my-kennel-ids';
+
+import { isIsoDate } from 'src/utils/iso-date';
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
-import { useGetDogs } from 'src/actions/dog';
 import { createLitter, updateLitter } from 'src/actions/litter';
 import { useGetBreeds, useGetKennels } from 'src/actions/reference';
 
@@ -27,41 +32,82 @@ import { Form, Field } from 'src/components/hook-form';
 
 import { LITTER_STATUSES } from 'src/types/litter';
 
+import { ParentDogField } from '../dog/parent-dog-field';
+
 // ----------------------------------------------------------------------
 
 export const getLitterSchema = (t: TFunction) =>
-  z.object({
-    kennel_id: z.string().min(1, { error: t('form.validation.kennelRequired') }),
-    breed_id: z.string().min(1, { error: t('form.validation.breedRequired') }),
-    status: z.enum(['planned', 'born', 'available', 'sold_out', 'archived']),
-    father_id: z.string().nullable(),
-    mother_id: z.string().nullable(),
-    born_at: z.string().nullable(),
-    // Mirror backend LitterCreate: puppies_count 0..30, price_from/price_to ≥ 0.
-    puppies_count: z
-      .string()
-      .refine((v) => !v || (Number.isInteger(Number(v)) && Number(v) >= 0 && Number(v) <= 30), {
-        error: t('form.validation.puppiesRange'),
-      })
-      .nullable(),
-    price_from: z
-      .string()
-      .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
-        error: t('form.validation.priceInvalid'),
-      })
-      .nullable(),
-    price_to: z
-      .string()
-      .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
-        error: t('form.validation.priceInvalid'),
-      })
-      .nullable(),
-    description: z.string().nullable(),
-  });
+  z
+    .object({
+      kennel_id: z.string().min(1, { error: t('form.validation.kennelRequired') }),
+      breed_id: z.string().min(1, { error: t('form.validation.breedRequired') }),
+      status: z.enum(['planned', 'born', 'available', 'sold_out', 'archived']),
+      father_id: z.string().nullable(),
+      mother_id: z.string().nullable(),
+      born_at: z
+        .string()
+        .nullable()
+        .refine((v) => !v || isIsoDate(v), { error: t('form.validation.dateInvalid') }),
+      // Mirror backend LitterCreate: puppies_count 0..30, price_from/price_to ≥ 0.
+      puppies_count: z
+        .string()
+        .refine((v) => !v || (Number.isInteger(Number(v)) && Number(v) >= 0 && Number(v) <= 30), {
+          error: t('form.validation.puppiesRange'),
+        })
+        .nullable(),
+      price_from: z
+        .string()
+        .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
+          error: t('form.validation.priceInvalid'),
+        })
+        .nullable(),
+      price_to: z
+        .string()
+        .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), {
+          error: t('form.validation.priceInvalid'),
+        })
+        .nullable(),
+      description: z.string().nullable(),
+    })
+    // Зеркало бэкендового _validate_price_range (FE-34).
+    .superRefine((data, ctx) => {
+      if (data.price_from && data.price_to && Number(data.price_to) < Number(data.price_from)) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['price_to'],
+          message: t('form.validation.priceRange'),
+        });
+      }
+    });
 
 export type LitterSchemaType = z.infer<ReturnType<typeof getLitterSchema>>;
 
 const toNum = (v: string | null) => (v ? Number(v) : null);
+
+/**
+ * Тело запроса. Питомник и порода задаются только при создании: в
+ * LitterUpdate их нет, и бэкенд молча их отбрасывал (ревью 2026-10-09, FE-34).
+ */
+export function buildLitterPayload(data: LitterSchemaType, mode: 'create'): ILitterCreate;
+export function buildLitterPayload(data: LitterSchemaType, mode: 'edit'): ILitterUpdate;
+export function buildLitterPayload(
+  data: LitterSchemaType,
+  mode: 'create' | 'edit'
+): ILitterCreate | ILitterUpdate {
+  const common = {
+    status: data.status,
+    father_id: data.father_id || null,
+    mother_id: data.mother_id || null,
+    born_at: data.born_at || null,
+    description: data.description || null,
+    puppies_count: toNum(data.puppies_count),
+    price_from: toNum(data.price_from),
+    price_to: toNum(data.price_to),
+  };
+  return mode === 'create'
+    ? { kennel_id: data.kennel_id, breed_id: data.breed_id, ...common }
+    : common;
+}
 
 // ----------------------------------------------------------------------
 
@@ -73,7 +119,10 @@ export function LitterCreateEditForm({ currentLitter }: Props) {
 
   const { breeds } = useGetBreeds();
   const { kennels } = useGetKennels();
-  const { dogs } = useGetDogs({ per_page: 200 });
+  const { can } = usePermissions();
+  // Помёт можно завести только в своём питомнике (admin — в любом), FE-33.
+  const ownKennelIds = useMyKennelIds();
+  const kennelOptions = can('*') ? kennels : kennels.filter((k) => ownKennelIds.has(k.id));
 
   const schema = useMemo(() => getLitterSchema(t), [t]);
 
@@ -111,35 +160,26 @@ export function LitterCreateEditForm({ currentLitter }: Props) {
   });
 
   const {
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
+  const breedId = watch('breed_id');
+
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const payload = {
-        kennel_id: data.kennel_id,
-        breed_id: data.breed_id,
-        status: data.status,
-        father_id: data.father_id || null,
-        mother_id: data.mother_id || null,
-        born_at: data.born_at || null,
-        description: data.description || null,
-        puppies_count: toNum(data.puppies_count),
-        price_from: toNum(data.price_from),
-        price_to: toNum(data.price_to),
-      };
       if (currentLitter) {
-        await updateLitter(currentLitter.id, payload);
+        await updateLitter(currentLitter.id, buildLitterPayload(data, 'edit'));
         toast.success(t('toast.updated'));
       } else {
-        await createLitter(payload);
+        await createLitter(buildLitterPayload(data, 'create'));
         toast.success(t('toast.created'));
       }
       router.push(paths.dashboard.litters.root);
     } catch (error) {
       console.error(error);
-      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'common:state.error')));
     }
   });
 
@@ -154,16 +194,16 @@ export function LitterCreateEditForm({ currentLitter }: Props) {
             gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
           }}
         >
-          <Field.Select name="kennel_id" label={t('form.fields.kennel')}>
+          <Field.Select name="kennel_id" label={t('form.fields.kennel')} disabled={!!currentLitter}>
             <MenuItem value="">—</MenuItem>
-            {kennels.map((kennel) => (
+            {(currentLitter ? kennels : kennelOptions).map((kennel) => (
               <MenuItem key={kennel.id} value={kennel.id}>
                 {kennel.name}
               </MenuItem>
             ))}
           </Field.Select>
 
-          <Field.Select name="breed_id" label={t('form.fields.breed')}>
+          <Field.Select name="breed_id" label={t('form.fields.breed')} disabled={!!currentLitter}>
             <MenuItem value="">—</MenuItem>
             {breeds.map((breed) => (
               <MenuItem key={breed.id} value={breed.id}>
@@ -172,23 +212,22 @@ export function LitterCreateEditForm({ currentLitter }: Props) {
             ))}
           </Field.Select>
 
-          <Field.Select name="father_id" label={t('form.fields.father')}>
-            <MenuItem value="">—</MenuItem>
-            {dogs.map((dog) => (
-              <MenuItem key={dog.id} value={dog.id}>
-                {dog.name}
-              </MenuItem>
-            ))}
-          </Field.Select>
+          {/* Бэкенд требует у родителей помёта нужный пол и породу помёта —
+              ищем только среди подходящих собак, пока порода не выбрана, поле
+              недоступно (FE-07). */}
+          <ParentDogField
+            name="father_id"
+            label={t('form.fields.father')}
+            breedId={breedId}
+            disabled={!breedId}
+          />
 
-          <Field.Select name="mother_id" label={t('form.fields.mother')}>
-            <MenuItem value="">—</MenuItem>
-            {dogs.map((dog) => (
-              <MenuItem key={dog.id} value={dog.id}>
-                {dog.name}
-              </MenuItem>
-            ))}
-          </Field.Select>
+          <ParentDogField
+            name="mother_id"
+            label={t('form.fields.mother')}
+            breedId={breedId}
+            disabled={!breedId}
+          />
 
           <Field.Select name="status" label={t('form.fields.status')}>
             {LITTER_STATUSES.map((status) => (

@@ -16,6 +16,7 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { fDate } from 'src/utils/format-time';
+import { apiErrorMessageKey } from 'src/utils/api-error';
 
 import { useTranslate } from 'src/locales';
 import { useGetShow } from 'src/actions/show';
@@ -72,7 +73,7 @@ export function MyShowDetailView({ id }: Props) {
       toast.success(t('myShows.toast.deleted'));
       setDeleting(null);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('myShows.toast.failed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'myShows.toast.failed')));
     } finally {
       setIsDeleting(false);
     }

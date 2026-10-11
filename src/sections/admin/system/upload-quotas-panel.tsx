@@ -16,6 +16,7 @@ import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
 import { bytesToMb, mbToBytes, isValidQuota } from 'src/utils/quota';
 
 import { useTranslate } from 'src/locales';
@@ -50,7 +51,7 @@ function QuotaRow({ quota }: RowProps) {
       });
       toast.success(t('system.quotas.saved'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('system.quotas.saveFailed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'system.quotas.saveFailed')));
     } finally {
       setSaving(false);
     }

@@ -8,7 +8,8 @@ export const BreadcrumbsRoot = styled('div')(({ theme }) => ({
   gap: theme.spacing(2),
 }));
 
-export const BreadcrumbsHeading = styled('h6')(({ theme }) => ({
+// Заголовок страницы кабинета — <h1> (axe page-has-heading-one), выглядит как h4.
+export const BreadcrumbsHeading = styled('h1')(({ theme }) => ({
   ...theme.typography.h4,
   margin: 0,
   padding: 0,

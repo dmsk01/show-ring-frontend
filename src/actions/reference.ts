@@ -1,10 +1,10 @@
 import type { SWRConfiguration } from 'swr';
-import type { IBreed, IKennel, IBreedPage, IKennelPage } from 'src/types/reference';
+import type { IBreed, IKennel } from 'src/types/reference';
 
 import useSWR from 'swr';
 import { useMemo } from 'react';
 
-import { fetcher, endpoints } from 'src/lib/axios';
+import { ALL_PAGES, endpoints, allPagesFetcher } from 'src/lib/axios';
 
 // ----------------------------------------------------------------------
 
@@ -14,19 +14,19 @@ const swrOptions: SWRConfiguration = {
   revalidateOnReconnect: false,
 };
 
-// Reference lists are small and rarely change — fetch a large page once for selects.
-const LIST_PARAMS = { params: { per_page: 200 } };
+// Справочники редко меняются, но они длиннее одной страницы (пород FCI 362
+// при максимуме 200) — собираем все страницы (ревью 2026-10-09, FE-07).
 
 // ----------------------------------------------------------------------
 
 export function useGetBreeds() {
-  const key: [string, typeof LIST_PARAMS] = [endpoints.reference.breeds, LIST_PARAMS];
+  const key: [string, typeof ALL_PAGES] = [endpoints.reference.breeds, ALL_PAGES];
 
-  const { data, isLoading, error } = useSWR<IBreedPage>(key, fetcher, swrOptions);
+  const { data, isLoading, error } = useSWR<IBreed[]>(key, allPagesFetcher<IBreed>, swrOptions);
 
   return useMemo(
     () => ({
-      breeds: (data?.items ?? []) as IBreed[],
+      breeds: data ?? [],
       breedsLoading: isLoading,
       breedsError: error,
     }),
@@ -37,14 +37,14 @@ export function useGetBreeds() {
 // ----------------------------------------------------------------------
 
 export function useGetKennels() {
-  const key: [string, typeof LIST_PARAMS] = [endpoints.reference.kennels, LIST_PARAMS];
+  const key: [string, typeof ALL_PAGES] = [endpoints.reference.kennels, ALL_PAGES];
 
-  // GET /kennels returns a bare array (no { items, meta } wrapper); accept both.
-  const { data, isLoading, error } = useSWR<IKennel[] | IKennelPage>(key, fetcher, swrOptions);
+  // allPagesFetcher принимает и страницу { items, total }, и голый массив.
+  const { data, isLoading, error } = useSWR<IKennel[]>(key, allPagesFetcher<IKennel>, swrOptions);
 
   return useMemo(
     () => ({
-      kennels: (Array.isArray(data) ? data : (data?.items ?? [])) as IKennel[],
+      kennels: data ?? [],
       kennelsLoading: isLoading,
       kennelsError: error,
     }),

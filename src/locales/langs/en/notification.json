@@ -44,5 +44,10 @@
       "sent": "Sent",
       "failed": "Failed"
     }
+  },
+  "drawer": {
+    "all": "All",
+    "unread": "Unread",
+    "viewAll": "View all"
   }
 }

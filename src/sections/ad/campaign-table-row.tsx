@@ -14,6 +14,16 @@ import { STATUS_TONE } from 'src/theme/semantic';
 
 import { Label } from 'src/components/label';
 
+/**
+ * Кампания ждёт одобрения админа: владелец сам её не запустит (бэкенд:
+ * 403 moderation_required). Завершённые и отменённые не показываем (FE-13).
+ */
+export function isAwaitingModeration(campaign: Pick<ICampaign, 'approved_at' | 'status'>): boolean {
+  return (
+    !campaign.approved_at && campaign.status !== 'completed' && campaign.status !== 'cancelled'
+  );
+}
+
 // ----------------------------------------------------------------------
 
 const STATUS_COLOR: Record<CampaignStatus, LabelColor> = {
@@ -47,6 +57,11 @@ export function CampaignTableRow({ row, editHref }: Props) {
 
       <TableCell>
         <Label color={STATUS_COLOR[row.status]}>{t(`enums.status.${row.status}`)}</Label>
+        {isAwaitingModeration(row) && (
+          <Label color="warning" sx={{ ml: 1 }}>
+            {t('moderation.pending')}
+          </Label>
+        )}
       </TableCell>
 
       <TableCell>{row.budget}</TableCell>

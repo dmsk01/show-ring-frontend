@@ -32,7 +32,7 @@ export function LandingSeo() {
             <Typography
               key={index}
               variant="body2"
-              sx={{ color: 'text.disabled', lineHeight: 1.8 }}
+              sx={{ color: 'text.secondary', lineHeight: 1.8 }}
             >
               {paragraph}
             </Typography>

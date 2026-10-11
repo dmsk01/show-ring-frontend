@@ -9,6 +9,8 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { setFeatureFlag, useFeatureFlagsQuery } from 'src/actions/feature-flag';
 
@@ -30,7 +32,7 @@ function FlagRow({ name, enabled }: FlagRowProps) {
       await setFeatureFlag(name, checked);
       toast.success(t('system.flags.updated'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('system.flags.saveFailed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'system.flags.saveFailed')));
     } finally {
       setSaving(false);
     }

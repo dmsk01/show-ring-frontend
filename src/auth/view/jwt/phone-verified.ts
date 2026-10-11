@@ -11,12 +11,22 @@ export const WELCOME_PARAM = 'welcome';
  * returnTo приходит из query-строки — им может управлять кто угодно. Пускаем
  * только относительный путь внутри приложения: иначе ссылка вида
  * ?returnTo=https://evil.example или ?returnTo=javascript:... превращает вход
- * в open redirect / XSS. «//host» и «/\host» браузер трактует как другой домен.
+ * в open redirect / XSS. «//host», «/\host» и «/\t/host» (браузер вырезает
+ * \t \n \r до разбора) он трактует как другой домен — поэтому разбираем значение
+ * тем же URL-парсером и пропускаем только то, что осталось на нашем origin.
  */
+const RETURN_TO_BASE = 'https://return-to.invalid';
+
 export function safeReturnTo(value: string | null | undefined): string | null {
   if (!value || !value.startsWith('/')) return null;
-  if (value.startsWith('//') || value.startsWith('/\\')) return null;
-  return value;
+  let url: URL;
+  try {
+    url = new URL(value, RETURN_TO_BASE);
+  } catch {
+    return null;
+  }
+  if (url.origin !== RETURN_TO_BASE) return null;
+  return `${url.pathname}${url.search}${url.hash}`;
 }
 
 /**

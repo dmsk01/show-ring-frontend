@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import { SimpleLayout } from 'src/layouts/simple';
 import { ForbiddenIllustration } from 'src/assets/illustrations';
 
@@ -16,6 +17,8 @@ import { varBounce, MotionContainer } from 'src/components/animate';
 // ----------------------------------------------------------------------
 
 export function View403() {
+  const { t } = useTranslate('common');
+
   return (
     <SimpleLayout
       slotProps={{
@@ -24,16 +27,13 @@ export function View403() {
     >
       <Container component={MotionContainer}>
         <m.div variants={varBounce('in')}>
-          <Typography variant="h3" sx={{ mb: 2 }}>
-            No permission
+          <Typography variant="h3" component="h1" sx={{ mb: 2 }}>
+            {t('errorPages.forbiddenTitle')}
           </Typography>
         </m.div>
 
         <m.div variants={varBounce('in')}>
-          <Typography sx={{ color: 'text.secondary' }}>
-            The page you’re trying to access has restricted access. Please refer to your system
-            administrator.
-          </Typography>
+          <Typography sx={{ color: 'text.secondary' }}>{t('errorPages.forbiddenText')}</Typography>
         </m.div>
 
         <m.div variants={varBounce('in')}>
@@ -41,7 +41,7 @@ export function View403() {
         </m.div>
 
         <Button component={RouterLink} href="/" size="large" variant="contained">
-          Go to home
+          {t('errorPages.goHome')}
         </Button>
       </Container>
     </SimpleLayout>

@@ -10,6 +10,7 @@
       "dates": "Period"
     }
   },
+  "moderation": { "pending": "Awaiting moderation" },
   "form": {
     "headingNew": "Create a new campaign",
     "headingEdit": "Edit campaign",
@@ -27,8 +28,11 @@
       "nameRequired": "Name is required!",
       "budgetRequired": "Budget is required!",
       "dateStartRequired": "Start date is required!",
+      "dateInvalid": "Enter the date as YYYY-MM-DD",
+      "dateEndBeforeStart": "The end date cannot be earlier than the start date",
       "dateEndRequired": "End date is required!",
       "targetUrlRequired": "Target URL is required!",
+      "targetUrlHttps": "The link must start with https:// and point to a site with a domain",
       "tooLong": "Must be at most {{max}} characters",
       "budgetPositive": "Budget must be greater than 0",
       "cpiInvalid": "Cost per impression cannot be negative"

@@ -77,3 +77,18 @@ describe('getShowSchema — date cross-validation (mirrors backend ShowBase rule
     expect(issueAt(res, 'registration_deadline')).toBe('show:form.validation.deadlineAfterStart');
   });
 });
+
+// Ревью фронтенда 2026-10-09, FE-10: даты вводились свободным текстом —
+// «10.10.2026» проходило клиентскую проверку и давало 422 «Request failed».
+describe('getShowSchema — date format', () => {
+  it.each([
+    ['date_start', { date_start: '10.10.2026' }],
+    ['date_start', { date_start: '2026-13-01' }],
+    ['date_end', { date_end: '2026-02-30' }],
+    ['registration_deadline', { registration_deadline: '1 июля' }],
+  ])('rejects an invalid %s', (field, patch) => {
+    expect(issueAt(ShowSchema.safeParse({ ...base, ...patch }), field)).toBe(
+      'show:form.validation.dateInvalid'
+    );
+  });
+});

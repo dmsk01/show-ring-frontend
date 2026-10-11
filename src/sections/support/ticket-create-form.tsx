@@ -16,6 +16,8 @@ import MenuItem from '@mui/material/MenuItem';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { createTicket } from 'src/actions/support';
 
@@ -61,7 +63,7 @@ export function TicketCreateForm() {
       toast.success(t('toast.created'));
       router.push(paths.dashboard.support.root);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'common:state.error')));
     }
   });
 

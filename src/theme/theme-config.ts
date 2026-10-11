@@ -48,7 +48,8 @@ export const themeConfig: ThemeConfig = {
     primary: {
       lighter: '#FADAD1',
       light: '#F18F76',
-      main: '#E8441A',
+      // Было #E8441A: белый текст 3,98:1 < WCAG AA 4,5:1 (axe, FE-28). Тот же тон, темнее.
+      main: '#C9370F',
       dark: '#A73113',
       darker: '#6F210C',
       contrastText: '#FFFFFF',

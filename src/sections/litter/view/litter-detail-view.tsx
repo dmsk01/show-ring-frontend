@@ -13,6 +13,7 @@ import { RouterLink } from 'src/routes/components';
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 
+import { endpoints } from 'src/lib/axios';
 import { useTranslate } from 'src/locales';
 import { useGetBreeds } from 'src/actions/reference';
 import { useGetLitter, useGetLitterPuppies } from 'src/actions/litter';
@@ -20,6 +21,7 @@ import { useGetLitter, useGetLitterPuppies } from 'src/actions/litter';
 import { Label } from 'src/components/label';
 import { EmptyContent } from 'src/components/empty-content';
 import { LoadingScreen } from 'src/components/loading-screen';
+import { DetailLoadError } from 'src/components/detail-load-error';
 
 import { DogCardGrid } from 'src/sections/dog/dog-card-grid';
 
@@ -30,7 +32,7 @@ type Props = { id: string };
 export function LitterDetailView({ id }: Props) {
   const { t } = useTranslate(['litter', 'kennel', 'common']);
 
-  const { litter, litterLoading } = useGetLitter(id);
+  const { litter, litterLoading, litterError } = useGetLitter(id);
   const { puppies, puppiesLoading } = useGetLitterPuppies(id);
   const { breeds } = useGetBreeds();
 
@@ -39,9 +41,11 @@ export function LitterDetailView({ id }: Props) {
   if (litterLoading) return <LoadingScreen />;
   if (!litter) {
     return (
-      <Container sx={{ pt: { xs: 8, md: 12 }, pb: 10 }}>
-        <Typography>{t('page.notFound')}</Typography>
-      </Container>
+      <DetailLoadError
+        error={litterError}
+        notFoundText={t('page.notFound')}
+        swrKey={endpoints.litter.details(id)}
+      />
     );
   }
 

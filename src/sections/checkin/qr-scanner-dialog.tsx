@@ -11,6 +11,8 @@ import Typography from '@mui/material/Typography';
 
 import { useTranslate } from 'src/locales';
 
+import { cameraErrorKey } from './checkin-utils';
+
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -27,7 +29,8 @@ type Props = {
 export function QrScannerDialog({ open, onClose, onResult }: Props) {
   const { t } = useTranslate('checkin');
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [cameraError, setCameraError] = useState(false);
+  // i18n-ключ причины, по которой камера не запустилась (null — работает).
+  const [cameraError, setCameraError] = useState<string | null>(null);
 
   // onResult/onClose меняются на каждом рендере родителя — держим актуальные
   // в ref, чтобы не перезапускать камеру.
@@ -38,7 +41,7 @@ export function QrScannerDialog({ open, onClose, onResult }: Props) {
     if (!open) return undefined;
     let scanner: QrScanner | null = null;
     let cancelled = false;
-    setCameraError(false);
+    setCameraError(null);
 
     (async () => {
       const { default: Scanner } = await import('qr-scanner');
@@ -58,8 +61,8 @@ export function QrScannerDialog({ open, onClose, onResult }: Props) {
       );
       try {
         await scanner.start();
-      } catch {
-        if (!cancelled) setCameraError(true);
+      } catch (error) {
+        if (!cancelled) setCameraError(cameraErrorKey(error, window.isSecureContext));
       }
     })();
 
@@ -87,7 +90,7 @@ export function QrScannerDialog({ open, onClose, onResult }: Props) {
       >
         <Typography variant="subtitle1">{t('desk.scannerTitle')}</Typography>
         {cameraError ? (
-          <Typography sx={{ color: 'warning.light' }}>{t('desk.errors.camera')}</Typography>
+          <Typography sx={{ color: 'warning.light' }}>{t(cameraError)}</Typography>
         ) : (
           <Box
             component="video"

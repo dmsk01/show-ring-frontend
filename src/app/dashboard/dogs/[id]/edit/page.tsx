@@ -4,7 +4,7 @@ import { DogEditView } from 'src/sections/dog/view';
 
 // ----------------------------------------------------------------------
 
-export const metadata = { title: `Edit dog | Dashboard - ${CONFIG.appName}` };
+export const metadata = { title: `Редактирование собаки | Кабинет - ${CONFIG.appName}` };
 
 type Props = { params: Promise<{ id: string }> };
 

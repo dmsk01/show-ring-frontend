@@ -14,6 +14,8 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { setUserRole, setUserBlock } from 'src/actions/admin';
 
@@ -39,7 +41,7 @@ export function AdminUserRow({ row }: Props) {
       await setUserBlock(row.id, isActive);
       toast.success(isActive ? t('users.toast.unblocked') : t('users.toast.blocked'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('users.toast.updateFailed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'users.toast.updateFailed')));
     }
   };
 
@@ -48,7 +50,7 @@ export function AdminUserRow({ row }: Props) {
       await setUserRole(row.id, role, grant);
       toast.success(grant ? t('users.toast.roleGranted') : t('users.toast.roleRevoked'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('users.toast.roleFailed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'users.toast.roleFailed')));
     }
   };
 
@@ -81,14 +83,22 @@ export function AdminUserRow({ row }: Props) {
                 —
               </Box>
             )}
-            <IconButton size="small" onClick={grantMenu.onOpen}>
+            <IconButton
+              size="small"
+              onClick={grantMenu.onOpen}
+              aria-label={t('common:a11y.addRole')}
+            >
               <Iconify icon="mingcute:add-line" width={16} />
             </IconButton>
           </Box>
         </TableCell>
 
         <TableCell align="right">
-          <Switch checked={row.is_active} onChange={(_, checked) => handleBlock(checked)} />
+          <Switch
+            checked={row.is_active}
+            onChange={(_, checked) => handleBlock(checked)}
+            slotProps={{ input: { 'aria-label': `${t('users.columns.active')}: ${row.email}` } }}
+          />
         </TableCell>
       </TableRow>
 

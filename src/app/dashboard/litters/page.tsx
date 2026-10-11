@@ -6,7 +6,7 @@ import { PermissionGuard } from 'src/auth/guard';
 
 // ----------------------------------------------------------------------
 
-export const metadata = { title: `Litters | Dashboard - ${CONFIG.appName}` };
+export const metadata = { title: `Помёты | Кабинет - ${CONFIG.appName}` };
 
 export default function Page() {
   return (

@@ -7,6 +7,8 @@ import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import { styled } from '@mui/material/styles';
 
+import { useTranslate } from 'src/locales';
+
 import { LinkBlock } from './link-block';
 import { editorClasses } from '../classes';
 import { ImageBlock } from './image-block';
@@ -25,6 +27,7 @@ export function Toolbar({
   onToggleFullscreen,
   ...other
 }: StackProps & EditorToolbarProps) {
+  const { t } = useTranslate('common');
   const toolbarState = useToolbarState(editor);
 
   const chainCommands = () => editor.chain().focus();
@@ -41,28 +44,28 @@ export function Toolbar({
       {/* Text styles */}
       <ToolbarBlock>
         <ToolbarItem
-          aria-label="Bold (⌘B)"
+          aria-label={`${t('editor.bold')} (⌘B)`}
           active={toolbarState.isBold}
           className={editorClasses.toolbar.bold}
           onClick={() => chainCommands().toggleBold().run()}
           icon={toolbarIcons.bold}
         />
         <ToolbarItem
-          aria-label="Italic (⌘I)"
+          aria-label={`${t('editor.italic')} (⌘I)`}
           active={toolbarState.isItalic}
           className={editorClasses.toolbar.italic}
           onClick={() => chainCommands().toggleItalic().run()}
           icon={toolbarIcons.italic}
         />
         <ToolbarItem
-          aria-label="Underline (⌘U)"
+          aria-label={`${t('editor.underline')} (⌘U)`}
           active={toolbarState.isUnderline}
           className={editorClasses.toolbar.underline}
           onClick={() => chainCommands().toggleUnderline().run()}
           icon={toolbarIcons.underline}
         />
         <ToolbarItem
-          aria-label="Strike (⌘S)"
+          aria-label={`${t('editor.strike')} (⌘S)`}
           active={toolbarState.isStrike}
           className={editorClasses.toolbar.strike}
           onClick={() => chainCommands().toggleStrike().run()}
@@ -73,14 +76,14 @@ export function Toolbar({
       {/* Lists */}
       <ToolbarBlock>
         <ToolbarItem
-          aria-label="Bullet list (⌘⇧8)"
+          aria-label={`${t('editor.bulletList')} (⌘⇧8)`}
           active={toolbarState.isBulletList}
           className={editorClasses.toolbar.bulletList}
           onClick={() => chainCommands().toggleBulletList().run()}
           icon={toolbarIcons.bulletList}
         />
         <ToolbarItem
-          aria-label="Ordered list (⌘⇧7)"
+          aria-label={`${t('editor.orderedList')} (⌘⇧7)`}
           active={toolbarState.isOrderedList}
           className={editorClasses.toolbar.orderedList}
           onClick={() => chainCommands().toggleOrderedList().run()}
@@ -91,28 +94,28 @@ export function Toolbar({
       {/* Text alignment */}
       <ToolbarBlock>
         <ToolbarItem
-          aria-label="Align left (⌘⇧L)"
+          aria-label={`${t('editor.alignLeft')} (⌘⇧L)`}
           active={toolbarState.isAlign('left')}
           className={editorClasses.toolbar.alignLeft}
           onClick={() => chainCommands().toggleTextAlign('left').run()}
           icon={toolbarIcons.alignLeft}
         />
         <ToolbarItem
-          aria-label="Align center (⌘⇧E)"
+          aria-label={`${t('editor.alignCenter')} (⌘⇧E)`}
           active={toolbarState.isAlign('center')}
           className={editorClasses.toolbar.alignCenter}
           onClick={() => chainCommands().toggleTextAlign('center').run()}
           icon={toolbarIcons.alignCenter}
         />
         <ToolbarItem
-          aria-label="Align right (⌘⇧R)"
+          aria-label={`${t('editor.alignRight')} (⌘⇧R)`}
           active={toolbarState.isAlign('right')}
           className={editorClasses.toolbar.alignRight}
           onClick={() => chainCommands().toggleTextAlign('right').run()}
           icon={toolbarIcons.alignRight}
         />
         <ToolbarItem
-          aria-label="Align justify (⌘⇧J)"
+          aria-label={`${t('editor.alignJustify')} (⌘⇧J)`}
           active={toolbarState.isAlign('justify')}
           className={editorClasses.toolbar.alignJustify}
           onClick={() => chainCommands().toggleTextAlign('justify').run()}
@@ -124,14 +127,14 @@ export function Toolbar({
       {fullItem && (
         <ToolbarBlock>
           <ToolbarItem
-            aria-label="Code (⌘E)"
+            aria-label={`${t('editor.code')} (⌘E)`}
             active={toolbarState.isCode}
             className={editorClasses.toolbar.code}
             onClick={() => chainCommands().toggleCode().run()}
             icon={toolbarIcons.code}
           />
           <ToolbarItem
-            aria-label="Code block (⌘⌥C)"
+            aria-label={`${t('editor.codeBlock')} (⌘⌥C)`}
             active={toolbarState.isCodeBlock}
             className={editorClasses.toolbar.codeBlock}
             onClick={() => chainCommands().toggleCodeBlock().run()}
@@ -144,14 +147,14 @@ export function Toolbar({
       {fullItem && (
         <ToolbarBlock>
           <ToolbarItem
-            aria-label="Blockquote (⌘⇧B)"
+            aria-label={`${t('editor.blockquote')} (⌘⇧B)`}
             active={toolbarState.isBlockquote}
             className={editorClasses.toolbar.blockquote}
             onClick={() => chainCommands().toggleBlockquote().run()}
             icon={toolbarIcons.blockquote}
           />
           <ToolbarItem
-            aria-label="Horizontal rule"
+            aria-label={t('editor.horizontalRule')}
             className={editorClasses.toolbar.hr}
             onClick={() => chainCommands().setHorizontalRule().run()}
             icon={toolbarIcons.horizontalRule}
@@ -173,13 +176,13 @@ export function Toolbar({
       {/* Hard break - Clear format */}
       <ToolbarBlock>
         <ToolbarItem
-          aria-label="Hard break (⇧Enter)"
+          aria-label={`${t('editor.hardBreak')} (⇧Enter)`}
           className={editorClasses.toolbar.hardBreak}
           onClick={() => chainCommands().setHardBreak().run()}
           icon={toolbarIcons.hardBreak}
         />
         <ToolbarItem
-          aria-label="Clear format (⌘⇧X)"
+          aria-label={`${t('editor.clearFormat')} (⌘⇧X)`}
           className={editorClasses.toolbar.clear}
           onClick={() => chainCommands().clearNodes().unsetAllMarks().run()}
           icon={toolbarIcons.clear}
@@ -190,14 +193,14 @@ export function Toolbar({
       {fullItem && (
         <ToolbarBlock>
           <ToolbarItem
-            aria-label="Undo (⌘Z)"
+            aria-label={`${t('editor.undo')} (⌘Z)`}
             disabled={!toolbarState.canUndo}
             className={editorClasses.toolbar.undo}
             onClick={() => chainCommands().undo().run()}
             icon={toolbarIcons.undo}
           />
           <ToolbarItem
-            aria-label="Redo (⌘⇧Z)"
+            aria-label={`${t('editor.redo')} (⌘⇧Z)`}
             disabled={!toolbarState.canRedo}
             className={editorClasses.toolbar.redo}
             onClick={() => chainCommands().redo().run()}
@@ -209,7 +212,7 @@ export function Toolbar({
       {/* Fullscreen */}
       <ToolbarBlock>
         <ToolbarItem
-          aria-label="Fullscreen"
+          aria-label={t('editor.fullscreen')}
           active={fullscreen}
           className={editorClasses.toolbar.fullscreen}
           onClick={onToggleFullscreen}

@@ -16,6 +16,8 @@ import Button from '@mui/material/Button';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { createKennel, updateKennel } from 'src/actions/kennel';
 
@@ -127,7 +129,7 @@ export function KennelCreateEditForm({ currentKennel }: Props) {
       router.push(paths.dashboard.kennels.root);
     } catch (error) {
       console.error(error);
-      toast.error(error instanceof Error ? error.message : t('common:state.error'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'common:state.error')));
     }
   });
 

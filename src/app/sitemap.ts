@@ -18,10 +18,11 @@ const MAX_PAGES = 20;
 
 const BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:8000';
 
-type ListPage = { items: { id: string; updated_at?: string }[]; total: number };
+type ListItem = { id: string; slug?: string; updated_at?: string; created_at?: string };
+type ListPage = { items: ListItem[]; total: number };
 
-async function listIds(path: string): Promise<{ id: string; updated_at?: string }[]> {
-  const out: { id: string; updated_at?: string }[] = [];
+async function listIds(path: string): Promise<ListItem[]> {
+  const out: ListItem[] = [];
   try {
     for (let page = 1; page <= MAX_PAGES; page += 1) {
       const res = await fetch(`${BACKEND_URL}${path}?page=${page}&per_page=${PAGE_SIZE}`, {
@@ -56,7 +57,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  const [shows, kennels] = await Promise.all([listIds('/shows'), listIds('/kennels')]);
+  // Посты — только опубликованные (публичный список их и отдаёт), FE-24.
+  const [shows, kennels, posts] = await Promise.all([
+    listIds('/shows'),
+    listIds('/kennels'),
+    listIds('/posts'),
+  ]);
 
   return [
     ...staticPages,
@@ -66,6 +72,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     })),
+    ...posts
+      .filter((p) => p.slug)
+      .map((p) => ({
+        url: url(paths.post.details(p.slug!)),
+        lastModified: p.updated_at ?? p.created_at,
+        changeFrequency: 'monthly' as const,
+        priority: 0.5,
+      })),
     ...kennels.map((k) => ({
       url: url(paths.showcase.kennel(k.id)),
       lastModified: k.updated_at,

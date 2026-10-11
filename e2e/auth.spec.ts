@@ -28,6 +28,8 @@ test.describe('Auth — sign-up by phone', () => {
     await expect(page.locator('input[name="email"]')).toHaveCount(0);
 
     await page.getByLabel(t('auth', 'phone.label')).fill(phone);
+    // Согласие на обработку ПДн обязательно для нового аккаунта (152-ФЗ).
+    await page.getByRole('checkbox').check();
 
     const sendResp = page.waitForResponse(
       (r) => /\/api\/auth\/send-code\/?$/.test(r.url()) && r.request().method() === 'POST'
@@ -53,7 +55,8 @@ test.describe('Auth — sign-in negative', () => {
       .getByLabel(t('auth', 'fields.password'), { exact: true })
       .fill('definitely-wrong-password');
 
-    await page.getByRole('button', { name: t('auth', 'signIn.submit') }).click();
+    // exact: иначе совпадает и «Войти по номеру телефона» (strict mode).
+    await page.getByRole('button', { name: t('auth', 'signIn.submit'), exact: true }).click();
 
     // Inline-алерт с ошибкой (см. jwt-sign-in-view) и НЕТ редиректа из /auth.
     await expect(page.getByRole('alert')).toBeVisible();

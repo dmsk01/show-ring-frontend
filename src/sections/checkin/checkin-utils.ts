@@ -84,3 +84,23 @@ const SCAN_ERRORS: Record<string, string> = {
 export function scanErrorKey(detail: unknown): string {
   return (typeof detail === 'string' && SCAN_ERRORS[detail]) || 'desk.errors.generic';
 }
+
+/**
+ * i18n-ключ (namespace checkin) для ошибки запуска камеры. Камера доступна
+ * только на HTTPS (secure context); NotAllowedError на HTTP — это не отказ
+ * пользователя. qr-scanner без камеры отклоняет строкой 'Camera not found.'
+ * (ревью 2026-10-09, FE-22).
+ */
+export function cameraErrorKey(error: unknown, isSecureContext: boolean): string {
+  if (!isSecureContext) return 'desk.errors.cameraInsecure';
+  const name = (error as { name?: unknown } | null)?.name;
+  if (name === 'NotAllowedError' || name === 'SecurityError') return 'desk.errors.cameraDenied';
+  if (
+    name === 'NotFoundError' ||
+    name === 'OverconstrainedError' ||
+    error === 'Camera not found.'
+  ) {
+    return 'desk.errors.cameraNotFound';
+  }
+  return 'desk.errors.camera';
+}

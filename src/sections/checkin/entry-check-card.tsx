@@ -18,6 +18,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
 import { fDateTime } from 'src/utils/format-time';
+import { apiErrorMessageKey } from 'src/utils/api-error';
 
 import { useTranslate } from 'src/locales';
 import { fileUrl } from 'src/actions/file';
@@ -57,7 +58,7 @@ export function EntryCheckCard({ showId, card, canMark, onChanged }: Props) {
       setRejectOpen(false);
       setComment('');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('desk.errors.generic'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'desk.errors.generic')));
     } finally {
       setBusy(false);
     }

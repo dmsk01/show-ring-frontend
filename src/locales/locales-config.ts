@@ -47,7 +47,8 @@ export const allLangs: LangOption[] = [
     label: 'English',
     countryCode: 'GB',
     adapterLocale: 'en',
-    numberFormat: { code: 'en-US', currency: 'USD' },
+    // Все суммы на платформе — в рублях; от языка зависит только формат числа (FE-19).
+    numberFormat: { code: 'en-US', currency: 'RUB' },
     systemValue: {
       components: { ...enUSDate.components, ...enUSDataGrid.components },
     },

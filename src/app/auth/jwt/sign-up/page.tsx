@@ -6,7 +6,7 @@ import { JwtSignUpView } from 'src/auth/view/jwt';
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = { title: `Sign up | Jwt - ${CONFIG.appName}` };
+export const metadata: Metadata = { title: `Регистрация - ${CONFIG.appName}` };
 
 export default function Page() {
   return <JwtSignUpView />;

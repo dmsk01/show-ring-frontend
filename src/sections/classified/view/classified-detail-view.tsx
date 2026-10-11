@@ -16,7 +16,7 @@ import { useGetClassified } from 'src/actions/classified';
 import { Label } from 'src/components/label';
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
-import { Markdown } from 'src/components/markdown';
+import { UserText } from 'src/components/user-text';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { Lightbox, useLightbox } from 'src/components/lightbox';
 import { RevealContacts } from 'src/components/reveal-contacts';
@@ -137,7 +137,7 @@ export function ClassifiedDetailView({ id }: Props) {
 
         <Divider sx={{ borderStyle: 'dashed', my: 4 }} />
 
-        <Markdown children={classified.description} />
+        <UserText>{classified.description}</UserText>
 
         {!classified.contact_phone &&
           !classified.contact_email &&

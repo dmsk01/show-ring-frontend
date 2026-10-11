@@ -1,4 +1,4 @@
-import type { IShowEntry, IShowResult, TitleCacheItem } from 'src/types/show-result';
+import type { IShowEntry, IShowResult, IShowEntryRow, TitleCacheItem } from 'src/types/show-result';
 
 // ----------------------------------------------------------------------
 
@@ -87,17 +87,20 @@ export function buildResultRows(input: BuildResultRowsInput): IShowResultRow[] {
     breedId: string | null,
     groupId: string | null
   ): RingLite | null => {
+    // Ринг без класса (show_class_id: null) — на все классы породы/группы;
+    // ринг конкретного класса приоритетнее (ревью 2026-10-09, FE-36).
+    const matches: ((ring: RingLite) => boolean)[] = [];
     if (breedId != null) {
-      const byBreed = input.rings.find(
-        (ring) => ring.show_class_id === classId && ring.breed_id === breedId
-      );
-      if (byBreed) return byBreed;
+      matches.push((ring) => ring.breed_id === breedId && ring.show_class_id === classId);
+      matches.push((ring) => ring.breed_id === breedId && ring.show_class_id == null);
     }
     if (groupId != null) {
-      const byGroup = input.rings.find(
-        (ring) => ring.show_class_id === classId && ring.breed_group_id === groupId
-      );
-      if (byGroup) return byGroup;
+      matches.push((ring) => ring.breed_group_id === groupId && ring.show_class_id === classId);
+      matches.push((ring) => ring.breed_group_id === groupId && ring.show_class_id == null);
+    }
+    for (const match of matches) {
+      const ring = input.rings.find(match);
+      if (ring) return ring;
     }
     return null;
   };
@@ -248,4 +251,41 @@ export function groupRows(rows: IShowResultRow[], groupBy: GroupBy): ResultGroup
   });
 
   return groups;
+}
+
+/**
+ * Справочники для buildResultRows из обогащённых строк записей
+ * (/shows/{id}/entries/table): кличка, порода, питомник и класс приходят с
+ * сервера для каждой записи — не нужно склеивать с первой страницей /dogs,
+ * где гостю видны лишь 50 собак всей базы (ревью 2026-10-09, FE-08).
+ */
+export function referencesFromEntryRows(rows: IShowEntryRow[]) {
+  const dogs: DogLite[] = [];
+  const kennels = new Map<string, KennelLite>();
+  const breeds = new Map<string, BreedLite>();
+  const classes = new Map<string, RefLite>();
+  for (const row of rows) {
+    dogs.push({ id: row.dog_id, name: row.dog_name, breed_id: row.breed_id, kennel_id: row.kennel_id });
+    if (row.kennel_id && row.kennel_name) {
+      kennels.set(row.kennel_id, {
+        id: row.kennel_id,
+        name: row.kennel_name,
+        kennel_prefix: row.kennel_prefix,
+      });
+    }
+    if (row.breed_id && row.breed_name) {
+      breeds.set(row.breed_id, {
+        id: row.breed_id,
+        name: row.breed_name,
+        breed_group_id: row.breed_group_id,
+      });
+    }
+    if (row.class_name) classes.set(row.show_class_id, { id: row.show_class_id, name: row.class_name });
+  }
+  return {
+    dogs,
+    kennels: [...kennels.values()],
+    breeds: [...breeds.values()],
+    classes: [...classes.values()],
+  };
 }

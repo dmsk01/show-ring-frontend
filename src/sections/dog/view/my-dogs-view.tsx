@@ -14,6 +14,7 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { usePermissions } from 'src/hooks/use-permissions';
+import { useMyKennelIds } from 'src/hooks/use-my-kennel-ids';
 
 import { useTranslate } from 'src/locales';
 import { useGetMyDogs } from 'src/actions/dog';
@@ -54,6 +55,7 @@ export function MyDogsView() {
 
   const { user } = useAuthContext();
   const { can } = usePermissions();
+  const ownKennelIds = useMyKennelIds();
 
   const table = useTable({ defaultRowsPerPage: 25 });
   const { breeds } = useGetBreeds();
@@ -114,7 +116,7 @@ export function MyDogsView() {
                       editHref={paths.dashboard.dogs.edit(row.id)}
                       // Свои собаки редактируемы по определению; хелпер — на
                       // случай легаси-строк с owner_id=null.
-                      canEdit={canManageDog(row, user?.id, can)}
+                      canEdit={canManageDog(row, user?.id, can, ownKennelIds)}
                     />
                   ))}
 

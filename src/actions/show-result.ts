@@ -2,6 +2,7 @@ import type { SWRConfiguration } from 'swr';
 import type {
   IShowRing,
   IShowResult,
+  IShowEntryRow,
   IShowEntryPage,
   IShowResultCreate,
   IShowResultUpdate,
@@ -10,11 +11,10 @@ import type {
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 
-import { useGetDogs } from 'src/actions/dog';
-import axios, { fetcher, endpoints } from 'src/lib/axios';
 import { useReferenceList } from 'src/actions/admin-reference';
+import axios, { fetcher, ALL_PAGES, endpoints, allPagesFetcher } from 'src/lib/axios';
 
-import { buildResultRows } from 'src/sections/show/show-results-utils';
+import { buildResultRows, referencesFromEntryRows } from 'src/sections/show/show-results-utils';
 
 // ----------------------------------------------------------------------
 
@@ -87,43 +87,50 @@ export function useGetShowRings(showId?: string) {
 
 // ----------------------------------------------------------------------
 
-/** Builds enriched, joinable result rows for a show (used by dashboard + public). */
+/**
+ * Записи выставки с кличкой, породой, питомником и классом — все страницы
+ * GET /shows/{id}/entries/table (ревью 2026-10-09, FE-08).
+ */
+export function useShowEntryRows(showId?: string) {
+  const key = showId ? ([endpoints.show.entriesTable(showId), ALL_PAGES] as const) : null;
+  const { data, isLoading, error } = useSWR<IShowEntryRow[]>(
+    key,
+    allPagesFetcher<IShowEntryRow>,
+    swrOptions
+  );
+  return useMemo(
+    () => ({ entryRows: data ?? [], entryRowsLoading: isLoading, entryRowsError: error }),
+    [data, error, isLoading]
+  );
+}
+
+/** Строки таблицы результатов (кабинет и публичная страница). */
 export function useShowResultRows(showId?: string) {
-  // Lists are fetched at the backend's max page size (200; per_page > 200 → 422).
-  // Shows with more than 200 dogs/kennels would render "—" for the overflow rows;
-  // the planned backend enrichment (embed dog/breed/kennel into /results) removes
-  // these client-side joins — see the spec's future-work appendix.
-  // NB: /kennels returns a bare array (not {items}), so it goes through
-  // useReferenceList, which handles both array and {items} shapes.
-  const { entries, entriesLoading } = useGetShowEntries(showId);
+  // Кличка/порода/питомник/класс приходят в строках записей с сервера —
+  // раньше их склеивали с первой страницей /dogs, и гостю (50 собак всей
+  // базы) таблица показывала «—» (FE-08). Справочники — только групп и оценок.
+  const { entryRows, entryRowsLoading } = useShowEntryRows(showId);
   const { results, resultsLoading } = useGetShowResults(showId);
   const { rings } = useGetShowRings(showId);
-  const { dogs, dogsLoading } = useGetDogs({ per_page: 200 });
-  const { items: kennels } = useReferenceList('/kennels');
-  const { items: breeds } = useReferenceList('/references/breeds');
   const { items: breedGroups } = useReferenceList('/references/breed-groups');
-  const { items: classes } = useReferenceList('/references/show-classes');
   const { items: grades } = useReferenceList('/references/grades');
 
   const rows = useMemo(
     () =>
       buildResultRows({
-        entries,
+        ...referencesFromEntryRows(entryRows),
+        entries: entryRows,
         results,
-        dogs,
-        kennels: kennels as never,
-        breeds: breeds as never,
         breedGroups: breedGroups as never,
-        classes,
         grades,
         rings,
       }),
-    [entries, results, dogs, kennels, breeds, breedGroups, classes, grades, rings]
+    [entryRows, results, breedGroups, grades, rings]
   );
 
   return {
     rows,
-    loading: entriesLoading || resultsLoading || dogsLoading,
-    isEmpty: !entriesLoading && entries.length === 0,
+    loading: entryRowsLoading || resultsLoading,
+    isEmpty: !entryRowsLoading && entryRows.length === 0,
   };
 }

@@ -3,6 +3,8 @@ import type { UploadProps } from '../types';
 import { useDropzone } from 'react-dropzone';
 import { mergeClasses } from 'minimal-shared/utils';
 
+import { useTranslate } from 'src/locales';
+
 import { UploadArea } from './styles';
 import { Iconify } from '../../iconify';
 import { uploadClasses } from '../classes';
@@ -17,6 +19,8 @@ export function UploadBox({
   placeholder,
   ...dropzoneOptions
 }: UploadProps) {
+  const { t } = useTranslate('common');
+
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     disabled,
     ...dropzoneOptions,
@@ -34,7 +38,7 @@ export function UploadBox({
       })}
       sx={sx}
     >
-      <input {...getInputProps()} />
+      <input {...getInputProps({ 'aria-label': t('a11y.chooseFiles') })} />
       {placeholder ?? <Iconify icon="eva:cloud-upload-fill" width={28} />}
     </UploadArea>
   );

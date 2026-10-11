@@ -19,7 +19,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useTranslate } from 'src/locales';
-import { accountErrorMessage } from 'src/actions/account-errors';
+import { accountErrorKey } from 'src/actions/account-errors';
 import { useGetMe, updateMyEmail, updateMyPassword } from 'src/actions/account';
 
 import { toast } from 'src/components/snackbar';
@@ -132,7 +132,7 @@ function EmailCard() {
       reset();
     } catch (error) {
       console.error(error);
-      toast.error(accountErrorMessage(error));
+      toast.error(t(accountErrorKey(error)));
     }
   });
 
@@ -204,13 +204,18 @@ function PasswordCard() {
       router.replace(paths.auth.jwt.signIn);
     } catch (error) {
       console.error(error);
-      toast.error(accountErrorMessage(error));
+      toast.error(t(accountErrorKey(error)));
     }
   });
 
   const renderToggle = (field: ReturnType<typeof useBoolean>) => (
     <InputAdornment position="end">
-      <IconButton onClick={field.onToggle} edge="end">
+      <IconButton
+        onClick={field.onToggle}
+        edge="end"
+        aria-label={t(field.value ? 'common:a11y.hidePassword' : 'common:a11y.showPassword')}
+        aria-pressed={field.value}
+      >
         <Iconify icon={field.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
       </IconButton>
     </InputAdornment>

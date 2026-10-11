@@ -19,6 +19,7 @@ import IconButton from '@mui/material/IconButton';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import {
   useGetUnreadCount,
   useGetNotifications,
@@ -43,6 +44,7 @@ export type NotificationsDrawerProps = IconButtonProps;
 
 export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) {
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
+  const { t } = useTranslate(['notification', 'common']);
 
   const [currentTab, setCurrentTab] = useState('all');
 
@@ -54,8 +56,8 @@ export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) 
   const totalUnRead = items.filter((item) => item.isUnRead).length;
 
   const tabs = [
-    { value: 'all', label: 'All', count: items.length },
-    { value: 'unread', label: 'Unread', count: totalUnRead },
+    { value: 'all', label: t('drawer.all'), count: items.length },
+    { value: 'unread', label: t('drawer.unread'), count: totalUnRead },
   ];
 
   const handleChangeTab = useCallback((event: React.SyntheticEvent, newValue: string) => {
@@ -75,18 +77,22 @@ export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) 
   const renderHead = () => (
     <Box sx={{ py: 2, pr: 1, pl: 2.5, minHeight: 68, display: 'flex', alignItems: 'center' }}>
       <Typography variant="h6" sx={{ flexGrow: 1 }}>
-        Notifications
+        {t('heading')}
       </Typography>
 
       {unreadCount > 0 && (
-        <Tooltip title="Mark all as read">
+        <Tooltip title={t('recent.markAllRead')}>
           <IconButton color="primary" onClick={handleMarkAllRead}>
             <Iconify icon="eva:done-all-fill" />
           </IconButton>
         </Tooltip>
       )}
 
-      <IconButton onClick={onClose} sx={{ display: { xs: 'inline-flex', sm: 'none' } }}>
+      <IconButton
+        aria-label={t('common:a11y.close')}
+        onClick={onClose}
+        sx={{ display: { xs: 'inline-flex', sm: 'none' } }}
+      >
         <Iconify icon="mingcute:close-line" />
       </IconButton>
     </Box>
@@ -130,7 +136,7 @@ export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) 
         </Box>
       ) : (
         <Box sx={{ p: 5, textAlign: 'center', color: 'text.disabled', typography: 'body2' }}>
-          No notifications
+          {t('recent.empty')}
         </Box>
       )}
     </Scrollbar>
@@ -143,7 +149,7 @@ export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) 
         whileTap={varTap(0.96)}
         whileHover={varHover(1.04)}
         transition={transitionTap()}
-        aria-label="Notifications button"
+        aria-label={t('heading')}
         onClick={onOpen}
         sx={sx}
         {...other}
@@ -174,7 +180,7 @@ export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) 
             href={paths.dashboard.notifications}
             onClick={onClose}
           >
-            View all
+            {t('drawer.viewAll')}
           </Button>
         </Box>
       </Drawer>

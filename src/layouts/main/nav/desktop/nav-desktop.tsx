@@ -1,13 +1,18 @@
 import type { NavMainProps } from '../types';
 
+import { useTranslate } from 'src/locales';
+
 import { Nav, NavUl } from '../components';
 import { NavList } from './nav-desktop-list';
 
 // ----------------------------------------------------------------------
 
 export function NavDesktop({ data, sx, ...other }: NavMainProps) {
+  const { t } = useTranslate('common');
+
   return (
     <Nav
+      aria-label={t('a11y.siteNav')}
       sx={[
         () => ({
           /* Put styles */

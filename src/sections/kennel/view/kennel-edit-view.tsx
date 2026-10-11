@@ -5,6 +5,8 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
+import { apiErrorMessageKey } from 'src/utils/api-error';
+
 import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { updateKennel, useGetKennel } from 'src/actions/kennel';
@@ -32,7 +34,7 @@ export function KennelEditView({ id }: Props) {
     try {
       await updateKennel(id, { avatar_file_id: fileId });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('toast.avatarFailed'));
+      toast.error(t(apiErrorMessageKey(error, {}, 'toast.avatarFailed')));
     }
   };
 

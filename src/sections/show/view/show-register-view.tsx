@@ -25,7 +25,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
 import { useGetShow } from 'src/actions/show';
-import { useGetMyDogs } from 'src/actions/dog';
+import { useGetAllMyDogs } from 'src/actions/dog';
 import { createShowEntry, useMyShowEntries, useAvailableClasses } from 'src/actions/show-entry';
 
 import { toast } from 'src/components/snackbar';
@@ -44,7 +44,7 @@ type Props = { id: string };
 export function ShowRegisterView({ id }: Props) {
   const { t } = useTranslate(['show', 'common']);
   const { show, showLoading } = useGetShow(id);
-  const { dogs, dogsLoading, dogsEmpty } = useGetMyDogs();
+  const { dogs, dogsLoading, dogsEmpty } = useGetAllMyDogs();
   const { entries } = useMyShowEntries(id);
 
   if (showLoading || dogsLoading) return <LoadingScreen />;

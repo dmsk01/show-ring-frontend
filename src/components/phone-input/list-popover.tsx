@@ -14,6 +14,8 @@ import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import { useTranslate } from 'src/locales';
+
 import { Iconify } from '../iconify';
 import { FlagIcon } from '../flag-icon';
 import { SearchNotFound } from '../search-not-found';
@@ -30,6 +32,7 @@ export function CountryListPopover({
   onSelectedCountry,
   ...other
 }: CountryListProps) {
+  const { t } = useTranslate('common');
   const { open, onClose, onOpen, anchorEl } = usePopover();
 
   const dataFiltered = useMemo(
@@ -182,7 +185,7 @@ export function CountryListPopover({
           fullWidth
           value={searchCountry}
           onChange={(event) => onSearchCountry(event.target.value)}
-          placeholder="Search..."
+          placeholder={t('actions.search')}
           slotProps={{
             input: {
               startAdornment: (

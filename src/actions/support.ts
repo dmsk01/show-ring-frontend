@@ -30,9 +30,19 @@ export function useGetTickets() {
   );
 }
 
+// Открытый тикет — живая переписка: ответ оператора должен появиться без
+// перезагрузки страницы (ревью 2026-10-09, FE-35). Вебсокет support/ws —
+// следующий шаг; пока опрос раз в 15 с + обновление при возврате на вкладку.
+const liveTicketOptions: SWRConfiguration = {
+  revalidateIfStale: true,
+  revalidateOnFocus: true,
+  revalidateOnReconnect: true,
+  refreshInterval: 15_000,
+};
+
 export function useGetTicket(ticketId?: string) {
   const key = ticketId ? endpoints.support.ticket(ticketId) : null;
-  const { data, isLoading, error } = useSWR<ITicket>(key, fetcher, swrOptions);
+  const { data, isLoading, error } = useSWR<ITicket>(key, fetcher, liveTicketOptions);
   return useMemo(
     () => ({ ticket: data, ticketLoading: isLoading, ticketError: error }),
     [data, error, isLoading]
@@ -41,7 +51,7 @@ export function useGetTicket(ticketId?: string) {
 
 export function useGetTicketMessages(ticketId?: string) {
   const key = ticketId ? endpoints.support.messages(ticketId) : null;
-  const { data, isLoading, error } = useSWR<IMessage[]>(key, fetcher, swrOptions);
+  const { data, isLoading, error } = useSWR<IMessage[]>(key, fetcher, liveTicketOptions);
   return useMemo(
     () => ({ messages: data ?? [], messagesLoading: isLoading, messagesError: error }),
     [data, error, isLoading]

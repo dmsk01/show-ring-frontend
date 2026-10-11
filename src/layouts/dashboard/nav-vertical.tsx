@@ -6,6 +6,8 @@ import { varAlpha, mergeClasses } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
+import { useTranslate } from 'src/locales';
+
 import { Logo } from 'src/components/logo';
 import { Scrollbar } from 'src/components/scrollbar';
 import { NavSectionMini, NavSectionVertical } from 'src/components/nav-section';
@@ -38,6 +40,8 @@ export function NavVertical({
   layoutQuery = 'md',
   ...other
 }: NavVerticalProps) {
+  const { t } = useTranslate('common');
+
   const renderNavVertical = () => (
     <>
       {slots?.topArea ?? (
@@ -46,7 +50,7 @@ export function NavVertical({
         </Box>
       )}
 
-      <Scrollbar fillContent>
+      <Scrollbar fillContent ariaLabel={t('a11y.menuScroll')}>
         <NavSectionVertical
           data={data}
           cssVars={cssVars}
@@ -111,7 +115,8 @@ export function NavVertical({
 
 // ----------------------------------------------------------------------
 
-const NavRoot = styled('div', {
+// <aside>: логотип и меню — ориентир complementary (axe region).
+const NavRoot = styled('aside', {
   shouldForwardProp: (prop: string) => !['isNavMini', 'layoutQuery', 'sx'].includes(prop),
 })<Pick<NavVerticalProps, 'isNavMini' | 'layoutQuery'>>(
   ({ isNavMini, layoutQuery = 'md', theme }) => ({

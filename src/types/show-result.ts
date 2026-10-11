@@ -1,3 +1,5 @@
+import type { AttendanceStatus } from './checkin';
+
 export type TitleCacheItem = { code: string; name: string };
 
 export type IShowRing = {
@@ -23,7 +25,20 @@ export type IShowEntry = {
   registered_by: string;
   catalog_number: number | null;
   notes: string | null;
+  attendance_status: AttendanceStatus;
   created_at: string;
+};
+
+/** GET /shows/{id}/entries/table — запись + кличка, порода, питомник, класс (FE-08). */
+export type IShowEntryRow = IShowEntry & {
+  dog_name: string;
+  breed_id: string | null;
+  breed_name: string | null;
+  breed_group_id: string | null;
+  kennel_id: string | null;
+  kennel_name: string | null;
+  kennel_prefix: string | null;
+  class_name: string | null;
 };
 
 export type IShowEntryPage = {

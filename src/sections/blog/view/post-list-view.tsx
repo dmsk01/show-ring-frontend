@@ -15,7 +15,6 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
-import { POST_SORT_OPTIONS } from 'src/_mock';
 import { useGetPosts } from 'src/actions/blog';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -25,6 +24,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { PostSort } from '../post-sort';
 import { PostSearch } from '../post-search';
+import { POST_SORT_OPTIONS } from '../constants';
 import { PostListHorizontal } from '../post-list-horizontal';
 
 // ----------------------------------------------------------------------

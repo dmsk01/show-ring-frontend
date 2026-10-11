@@ -9,8 +9,9 @@ export const ru: LandingContent = {
     title: 'Выходите в ринг — без бумажной волокиты',
     subtitle:
       'Show Ring объединяет заводчиков, участников и организаторов: регистрация на выставки, учёт собак, заявки и результаты — в одном месте.',
-    ctaPrimary: 'Войти в ринг',
-    ctaSecondary: 'Войти',
+    ctaSignUp: 'Зарегистрироваться бесплатно',
+    haveAccount: 'Уже есть аккаунт?',
+    signInLink: 'Войти',
   },
   advantages: {
     caption: 'Почему Show Ring',

@@ -84,7 +84,7 @@ export function LandingHero() {
         delay={0.6}
       />
       <Stencil
-        name="cat"
+        name="paw"
         sx={{ bottom: 80, right: '12%', width: 56, display: { xs: 'none', md: 'block' } }}
         delay={1.8}
       />
@@ -147,7 +147,7 @@ export function LandingHero() {
 
           <m.div variants={varFade('in')}>
             <Stack direction="row" spacing={{ xs: 2, sm: 3 }} sx={{ mt: 6 }}>
-              {['dog', 'cat', 'trophy', 'medal'].map((icon) => (
+              {['dog', 'paw', 'trophy', 'medal'].map((icon) => (
                 <Box
                   key={icon}
                   component="img"

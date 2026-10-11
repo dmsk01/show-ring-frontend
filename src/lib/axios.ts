@@ -390,7 +390,7 @@ export const endpoints = {
     breeds: '/references/breeds',
     kennels: '/kennels',
   },
-  // Blog — backed by Show Ring (see docs/specs). baseURL '/api' + these →
+  // Blog — backed by Show Ring. baseURL '/api' + these →
   // proxied to the backend (e.g. /api/posts → :8000/posts). Posts are keyed
   // by `slug`; full-text search folds into the list endpoint via `?query=`.
   post: {

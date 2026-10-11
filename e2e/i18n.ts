@@ -18,6 +18,9 @@ import authRu from '../src/locales/langs/ru/auth.json';
 import kennelRu from '../src/locales/langs/ru/kennel.json';
 import commonRu from '../src/locales/langs/ru/common.json';
 import accountRu from '../src/locales/langs/ru/account.json';
+import adRu from '../src/locales/langs/ru/ad.json';
+import legalRu from '../src/locales/langs/ru/legal.json';
+import checkinRu from '../src/locales/langs/ru/checkin.json';
 import classifiedRu from '../src/locales/langs/ru/classified.json';
 
 export const E2E_LANG = 'ru';
@@ -30,6 +33,9 @@ const DICTS: Record<string, unknown> = {
   common: commonRu,
   account: accountRu,
   classified: classifiedRu,
+  ad: adRu,
+  legal: legalRu,
+  checkin: checkinRu,
 };
 
 /**

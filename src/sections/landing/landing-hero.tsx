@@ -147,7 +147,7 @@ export function LandingHero() {
 
           <m.div variants={varFade('in')}>
             <Stack direction="row" spacing={{ xs: 2, sm: 3 }} sx={{ mt: 6 }}>
-              {['dog', 'paw', 'trophy', 'medal'].map((icon) => (
+              {['dog', 'trophy', 'paw', 'medal'].map((icon) => (
                 <Box
                   key={icon}
                   component="img"

@@ -34,6 +34,7 @@ const EVENTS = [
   'captcha_failed',
   'login_failed',
   'account_locked',
+  'csp_violation',
 ] as const;
 
 const WINDOWS: Window[] = ['10m', '1h', '24h'];

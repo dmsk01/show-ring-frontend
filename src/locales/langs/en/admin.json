@@ -46,7 +46,8 @@
         "otp_verified": "Valid codes entered",
         "captcha_failed": "Rejected captchas",
         "login_failed": "Wrong passwords",
-        "account_locked": "Accounts locked"
+        "account_locked": "Accounts locked",
+        "csp_violation": "CSP violations (blocked by browser)"
       }
     }
   },

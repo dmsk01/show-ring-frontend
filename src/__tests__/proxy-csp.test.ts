@@ -11,6 +11,8 @@ describe('buildCsp', () => {
     expect(csp).not.toContain('unsafe-eval');
     expect(csp).toContain("frame-ancestors 'none'");
     expect(csp).toContain("object-src 'none'");
+    // Отчёты о нарушениях уходят на бэкенд (app/routers/csp_report.py).
+    expect(csp).toContain('report-uri /api/csp-report');
     expect(csp).toContain('upgrade-insecure-requests');
   });
 

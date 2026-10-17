@@ -47,6 +47,10 @@ export function buildCsp(nonce: string, { dev, https }: { dev: boolean; https: b
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
+    // Браузер шлёт сюда отчёт о каждом заблокированном ресурсе — в проде
+    // видно, что политика что-то сломала (бэкенд: app/routers/csp_report.py,
+    // счётчик csp_violation в метриках админки).
+    'report-uri /api/csp-report',
   ];
   // Только на HTTPS: на HTTP-сайте директива переписала бы ресурсы на https
   // и сломала их загрузку.

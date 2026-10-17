@@ -6,7 +6,7 @@ import { CONFIG } from 'src/global-config';
 
 // ----------------------------------------------------------------------
 // sitemap.xml — публичные страницы для Яндекса и Google. Динамические
-// разделы (выставки, питомники) берутся из API прямо с сервера Next.js
+// разделы (выставки, питомники, собаки, объявления, блог) берутся из API прямо с сервера Next.js
 // (BACKEND_URL, мимо nginx). Пересобирается раз в сутки.
 
 export const revalidate = 86400;
@@ -58,10 +58,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Посты — только опубликованные (публичный список их и отдаёт), FE-24.
-  const [shows, kennels, posts] = await Promise.all([
+  const [shows, kennels, posts, dogs, classifieds] = await Promise.all([
     listIds('/shows'),
     listIds('/kennels'),
     listIds('/posts'),
+    listIds('/dogs'),
+    // Публичный список отдаёт только активные объявления.
+    listIds('/classifieds'),
   ]);
 
   return [
@@ -85,6 +88,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: k.updated_at,
       changeFrequency: 'weekly' as const,
       priority: 0.6,
+    })),
+    ...classifieds.map((c) => ({
+      url: url(paths.showcase.classified(c.id)),
+      lastModified: c.updated_at,
+      changeFrequency: 'daily' as const,
+      priority: 0.6,
+    })),
+    ...dogs.map((d) => ({
+      url: url(paths.showcase.dog(d.id)),
+      lastModified: d.updated_at,
+      changeFrequency: 'monthly' as const,
+      priority: 0.4,
     })),
   ];
 }

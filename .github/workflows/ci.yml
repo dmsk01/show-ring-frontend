@@ -52,6 +52,19 @@ jobs:
       - run: npm ci
       - run: npm test
 
+  # Известные уязвимости в прод-зависимостях (аудит безопасности 03.10.2026,
+  # № 12). Отдельный job вне обязательных проверок main: новая CVE в
+  # зависимости — сигнал, а не блокировка несвязанных PR. Dev-зависимости
+  # в прод-образ не попадают, поэтому --omit=dev.
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm audit --omit=dev --audit-level=high
+
   deploy:
     needs: [lint, typecheck, test]
     if: github.ref == 'refs/heads/main'

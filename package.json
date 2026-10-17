@@ -55,7 +55,7 @@
     "@tiptap/extension-image": "^3.31.4",
     "@tiptap/extension-text-align": "^3.31.4",
     "@tiptap/extensions": "^3.31.4",
-    "@tiptap/pm": "^3.31.4",
+    "@tiptap/pm": "^3.32.0",
     "@tiptap/react": "^3.31.4",
     "@tiptap/starter-kit": "^3.31.4",
     "accept-language": "^3.0.20",

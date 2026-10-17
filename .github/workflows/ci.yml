@@ -1,12 +1,10 @@
 # CI/CD pipeline фронта Show Ring (GitHub Actions).
 #
-# Стадии: lint → typecheck → test → deploy.
-# - lint/typecheck/test — на каждый push и PR (облачные раннеры).
-# - deploy — только push в main, на self-hosted runner'е (на прод-сервере).
-#   Реестр (ghcr) НЕ используется: образ web собирается ЛОКАЛЬНО на сервере
-#   из этого репо (build: ../show-ring-frontend в compose бэка). Раннер
-#   просто запускает общий deploy.sh бэкенда — тот тянет ОБА репо и
-#   пересобирает стек.
+# Стадии: lint, typecheck, test, audit — на каждый push и PR.
+# Деплоя здесь нет: сервер сам забирает коммиты main с зелёным CI
+# (deploy/auto-deploy.sh в репозитории бэкенда, systemd-таймер) и собирает
+# образ web локально. Self-hosted runner на проде убран (аудит безопасности
+# 03.10.2026, № 3).
 
 name: CI
 
@@ -64,15 +62,3 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm audit --omit=dev --audit-level=high
-
-  deploy:
-    needs: [lint, typecheck, test]
-    if: github.ref == 'refs/heads/main'
-    # Тот же self-hosted runner на прод-сервере, что и у бэка (метка show-ring),
-    # но зарегистрированный в ЭТОМ репозитории (раннер привязан к одному репо).
-    # Деплой против рабочих копий в /opt — checkout не нужен. deploy.sh лежит
-    # в бэкенд-репо и тянет оба репо; путь — под реальную раскладку сервера.
-    runs-on: [self-hosted, show-ring]
-    steps:
-      - name: Pull repos & rebuild stack
-        run: bash /opt/show-ring-backend/deploy/deploy.sh

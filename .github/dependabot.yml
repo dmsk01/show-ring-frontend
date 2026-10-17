@@ -12,6 +12,12 @@ updates:
     # десятков минорных обновлений разом ломала проверку типов (MUI,
     # apexcharts), и разбирать такое одним PR невозможно.
     groups:
+      # Пакеты, которые обновляются только вместе: react и react-dom на
+      # разных версиях падают в рантайме, @tiptap/* — при сборке.
+      react:
+        patterns: [react, react-dom, "@types/react", "@types/react-dom"]
+      tiptap:
+        patterns: ["@tiptap/*"]
       patches:
         update-types: [patch]
     # Мажорные версии (MUI, i18next, eslint…) — отдельная миграция, не PR
@@ -19,6 +25,10 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      # Даже патч-версии меняют типы, на которые завязаны наши обёртки
+      # (layouts/slotProps, phone-input): обновлять вместе с правкой кода.
+      - dependency-name: minimal-shared
+      - dependency-name: react-phone-number-input
 
   - package-ecosystem: github-actions
     directory: /

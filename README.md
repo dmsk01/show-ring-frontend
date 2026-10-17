@@ -89,7 +89,6 @@ npm run test:e2e       # Playwright e2e (нужен живой бэкенд)
 ## Деплой
 
 Собирается в `standalone` Docker-образ (`Dockerfile`, non-root, порт 8082, healthcheck `/healthz`)
-прямо на сервере. CI: `lint → typecheck → test → deploy` (`.github/workflows/ci.yml`,
-`.gitlab-ci.yml`); деплой — self-hosted раннер на сервере запускает общий `deploy/deploy.sh`
-бэкенда. Фронт и бэкенд живут на одном VPS за общим nginx: `/api/*` → бэкенд, `/` → фронт.
+прямо на сервере. CI: `lint`, `typecheck`, `test`, `audit` (`.github/workflows/ci.yml`); деплой — сервер сам
+забирает коммиты `main` с зелёным CI (`deploy/auto-deploy.sh` бэкенда по systemd-таймеру). Фронт и бэкенд живут на одном VPS за общим nginx: `/api/*` → бэкенд, `/` → фронт.
 Подробности — `docs/deployment-linux.md` в репозитории бэкенда.

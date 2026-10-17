@@ -1,0 +1,18 @@
+# Обновления зависимостей (аудит безопасности 03.10.2026, № 12).
+# Раз в неделю — npm, раз в месяц — GitHub Actions. Лимит открытых PR,
+# чтобы не утонуть: мелкие версии сгруппированы в один PR.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

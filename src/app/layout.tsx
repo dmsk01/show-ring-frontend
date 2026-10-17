@@ -39,6 +39,9 @@ export const metadata: Metadata = {
       url: `${CONFIG.assetsDir}/favicon.ico`,
     },
   ],
+  // robots.txt лишь просит не обходить сайт; noindex не даёт показать в
+  // выдаче страницу, на которую сослались извне.
+  ...(CONFIG.siteIndexing ? {} : { robots: { index: false, follow: false } }),
 };
 
 // ----------------------------------------------------------------------

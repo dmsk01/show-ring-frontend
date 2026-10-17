@@ -192,7 +192,7 @@ export function Footer({
         </Grid>
 
         <Typography variant="body2" sx={{ mt: 10 }}>
-          © {new Date().getFullYear()} Show Ring. {t('rights')}
+          © {new Date().getFullYear()} BisShow. {t('rights')}
         </Typography>
       </Container>
     </FooterRoot>

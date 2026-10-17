@@ -8,14 +8,14 @@ export const en: LandingContent = {
     badge: 'Dog show platform',
     title: 'Step into the ring — without the paperwork',
     subtitle:
-      'Show Ring brings breeders, handlers and organizers together: show registration, dog records, entries and results — all in one place.',
-    ctaSignUp: 'Join Show Ring',
+      'BisShow brings breeders, handlers and organizers together: show registration, dog records, entries and results — all in one place.',
+    ctaSignUp: 'Join BisShow',
     signUpHint: 'Sign up with your phone number in under a minute',
     haveAccount: 'Already have an account?',
     signInLink: 'Sign in',
   },
   advantages: {
-    caption: 'Why Show Ring',
+    caption: 'Why BisShow',
     title: 'Everything you need to compete',
     items: [
       {
@@ -37,7 +37,7 @@ export const en: LandingContent = {
     ],
   },
   stats: {
-    caption: 'Show Ring in numbers',
+    caption: 'BisShow in numbers',
     title: 'A community that keeps growing',
     items: [
       { label: 'active users' },
@@ -69,7 +69,7 @@ export const en: LandingContent = {
     title: 'Frequently asked questions',
     items: [
       {
-        q: 'What is Show Ring?',
+        q: 'What is BisShow?',
         a: 'An online platform for managing animal shows: breeders run kennel profiles, handlers submit entries, and organizers create events and publish results.',
       },
       {
@@ -94,9 +94,9 @@ export const en: LandingContent = {
     contactCta: 'Contact us',
   },
   seo: {
-    title: 'Show Ring — dog shows online',
+    title: 'BisShow — dog shows online',
     paragraphs: [
-      'Show Ring is a modern platform for taking part in dog shows under RKF and FCI rules. Show registration, kennel profiles, pedigree and title records, entry submission and result viewing all live in a single dashboard.',
+      'BisShow is a modern platform for taking part in dog shows under RKF and FCI rules. Show registration, kennel profiles, pedigree and title records, entry submission and result viewing all live in a single dashboard.',
       'Browse the calendar of shows across Russia, pick events in your region and submit entries online. Breeders run kennel and litter pages, handlers prepare animals for the ring, and organizers publish schedules, ring line-ups and final results — with no paperwork and no queues.',
     ],
   },

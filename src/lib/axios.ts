@@ -242,7 +242,7 @@ export const allPagesFetcher = async <T = unknown>(
 // ----------------------------------------------------------------------
 
 export const endpoints = {
-  // --- Show Ring backend ---
+  // --- BisShow backend ---
   featureFlags: '/feature-flags',
   featureFlag: (name: string) => `/feature-flags/${name}`,
   auth: {
@@ -390,7 +390,7 @@ export const endpoints = {
     breeds: '/references/breeds',
     kennels: '/kennels',
   },
-  // Blog — backed by Show Ring. baseURL '/api' + these →
+  // Blog — backed by BisShow. baseURL '/api' + these →
   // proxied to the backend (e.g. /api/posts → :8000/posts). Posts are keyed
   // by `slug`; full-text search folds into the list endpoint via `?query=`.
   post: {

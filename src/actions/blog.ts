@@ -19,7 +19,7 @@ const swrOptions: SWRConfiguration = {
 const LIST_PER_PAGE = 100;
 
 // ----------------------------------------------------------------------
-// Backend (Show Ring) wire shapes — snake_case. `ApiPostCard` is what list and
+// Backend (BisShow) wire shapes — snake_case. `ApiPostCard` is what list and
 // related endpoints return; `ApiPost` adds the heavy `content`/meta/comments
 // fields served by GET /posts/{slug}.
 

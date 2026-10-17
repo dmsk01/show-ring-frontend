@@ -26,7 +26,7 @@ export type ConfigValue = {
 // ----------------------------------------------------------------------
 
 export const CONFIG: ConfigValue = {
-  appName: 'Show Ring',
+  appName: 'BisShow',
   // `||`, а не `??`: в Docker-сборку адрес приходит build-arg'ом, и незаданный
   // аргумент превращается в пустую строку, а не в undefined.
   siteUrl: (process.env.NEXT_PUBLIC_SITE_URL || 'https://showring.app').replace(/\/$/, ''),

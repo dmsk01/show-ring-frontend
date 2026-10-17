@@ -1,6 +1,6 @@
 import type { AttendanceStatus } from './checkin';
 
-// Запись собаки на выставку (Show Ring: /shows/{id}/entries).
+// Запись собаки на выставку (BisShow: /shows/{id}/entries).
 
 export type IShowEntry = {
   id: string;

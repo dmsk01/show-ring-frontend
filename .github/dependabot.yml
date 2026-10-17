@@ -11,6 +11,11 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+    # Мажорные версии (MUI, i18next, eslint…) — отдельная миграция, не PR
+    # «вслепую». Обновления безопасности приходят независимо от этого.
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /

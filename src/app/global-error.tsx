@@ -23,7 +23,7 @@ export default function GlobalError({
           textAlign: 'center',
         }}
       >
-        <title>Show Ring — ошибка</title>
+        <title>BisShow — ошибка</title>
         <h1 style={{ fontSize: 24, marginBottom: 8 }}>Что-то пошло не так</h1>
         <p style={{ color: '#555', marginBottom: 24 }}>
           Попробуйте ещё раз или вернитесь на главную.

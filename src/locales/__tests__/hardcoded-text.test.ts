@@ -19,12 +19,12 @@ const PROP_RE =
 const OBJECT_PROP_RE =
   /'(aria-label|title|label|placeholder)': ['`]([A-Za-z][^'`$]*[a-z][^'`$]*)['`]/g;
 // `(?<!=)` — не стрелка `=> Promise<…>` в типах; имя продукта не переводится.
-const JSX_TEXT_RE = /(?<!=)>\s*(?!Show Ring\s*<)([A-Z][a-z]+(?: [A-Za-z]+)*[.!?]?)\s*</g;
+const JSX_TEXT_RE = /(?<!=)>\s*(?!BisShow\s*<)([A-Z][a-z]+(?: [A-Za-z]+)*[.!?]?)\s*</g;
 
 // Заголовок вкладки в `metadata`: часть до разделителя — по-русски (кроме имени
 // продукта), как `Выставки - ${CONFIG.appName}`.
 const METADATA_TITLE_RE =
-  /\btitle: [`'](?!Show Ring)([A-Za-z0-9][^`'|]*[a-z][^`'|]*?)\s*(?:\||-|`|')/g;
+  /\btitle: [`'](?!BisShow)([A-Za-z0-9][^`'|]*[a-z][^`'|]*?)\s*(?:\||-|`|')/g;
 
 function tsxFiles(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {

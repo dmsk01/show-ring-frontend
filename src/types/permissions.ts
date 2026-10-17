@@ -1,5 +1,5 @@
 // Доменные константы — расширяем по мере развития продукта.
-// Роли соответствуют RoleEnum бэкенда Show Ring.
+// Роли соответствуют RoleEnum бэкенда BisShow.
 export type Role = 'admin' | 'organizer' | 'breeder' | 'judge' | 'buyer' | 'operator';
 
 export type Resource =

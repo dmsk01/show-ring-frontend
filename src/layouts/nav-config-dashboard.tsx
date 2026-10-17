@@ -48,7 +48,7 @@ const ICONS = {
 export function navData(t: TFunction): NavSectionProps['data'] {
   return [
     /**
-     * Show Ring
+     * BisShow
      */
     {
       subheader: t('show_ring.subheader'),

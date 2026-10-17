@@ -9,7 +9,7 @@
  * быть заменены реальными данными — ничего не выдумывать.
  */
 export type LegalOperator = {
-  /** «ИП Иванов Иван Иванович» / «ООО «Шоу Ринг»». */
+  /** «ИП Иванов Иван Иванович» / «ООО «БисШоу»». */
   name: string | null;
   /** ОГРН (юрлицо) или ОГРНИП (ИП). */
   ogrn: string | null;
@@ -47,7 +47,7 @@ export const LEGAL_OPERATOR: LegalOperator = {
 };
 
 export const LEGAL_SITE = {
-  name: 'Show Ring',
+  name: 'BisShow',
   url: 'https://showring.app',
 };
 

@@ -15,7 +15,16 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # Дефолты NEXT_PUBLIC_* (serverUrl='/api', auth=jwt) годятся для прода —
 # секреты на билде не нужны.
-ENV NEXT_TELEMETRY_DISABLED=1
+# NEXT_PUBLIC_* Next.js встраивает при сборке, поэтому это build-arg'и, а не
+# env runner'а; прод-compose бэкенда передаёт их из своего .env.
+# NEXT_PUBLIC_SITE_URL — адрес для sitemap.xml/robots.txt (пусто — дефолт
+# из src/global-config.ts). NEXT_PUBLIC_SITE_INDEXING=true — открыть сайт
+# поисковикам; по умолчанию скрыт.
+ARG NEXT_PUBLIC_SITE_URL=
+ARG NEXT_PUBLIC_SITE_INDEXING=false
+ENV NEXT_TELEMETRY_DISABLED=1 \
+    NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL \
+    NEXT_PUBLIC_SITE_INDEXING=$NEXT_PUBLIC_SITE_INDEXING
 RUN npm run build
 
 FROM node:22-slim AS runner

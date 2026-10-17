@@ -53,6 +53,17 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  // До публичного запуска — noindex на всех ответах, включая картинки и PDF,
+  // которым meta-тег не поставить. Флаг тот же, что CONFIG.siteIndexing.
+  async headers() {
+    if (process.env.NEXT_PUBLIC_SITE_INDEXING === 'true') return [];
+    return [
+      {
+        source: '/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+    ];
+  },
   // Правовые документы раньше были статикой public/legal/*.html — на эти
   // адреса могли ссылаться письма и внешние сайты. Постоянный редирект.
   async redirects() {

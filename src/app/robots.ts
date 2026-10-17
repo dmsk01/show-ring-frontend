@@ -29,6 +29,10 @@ const AI_CRAWLERS = [
 ];
 
 export default function robots(): MetadataRoute.Robots {
+  // До публичного запуска (и выбора торговой марки) — закрыто всем.
+  if (!CONFIG.siteIndexing) {
+    return { rules: { userAgent: '*', disallow: '/' } };
+  }
   return {
     rules: [
       {
